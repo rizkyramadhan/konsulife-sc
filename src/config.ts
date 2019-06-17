@@ -4,6 +4,7 @@ export const DEBUG = __DEV__;
 export const DEV = __DEV__;
 
 export const MainStyle: any = {
+  backgroundColor: "#f3f3f3",
   color: "#7E66B0",
   fieldColor: "#333333",
   primaryColor: "#613EEA",
@@ -11,7 +12,8 @@ export const MainStyle: any = {
   errorColor: "#dc3545",
   successColor: "#28a745",
   warningColor: "#ffc107",
-
+  iconBackButton: require('@app/images/arrow_back.png'),
+  iconMenuButton: require('@app/images/menu.png')
 };
 
 export default {

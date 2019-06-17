@@ -9,13 +9,15 @@ import UIText from '@app/libs/ui/UIText';
 import { observer } from 'mobx-react-lite';
 import React from "react";
 import { withRouter } from 'react-router';
-import { Platform } from 'reactxp';
+import { Platform, Image } from 'reactxp';
+import { isSize } from '@app/libs/ui/MediaQuery';
 
 const FormCustomer = withRouter(({ history, setSide }: any) => {
     return (
-        <UIButton size="small"
+        <UIButton size="compact"
+            fill="clear"
             onPress={() => {
-                history.replace('/customer/form');
+                history.push('/customer/form');
                 if (Platform.getType() !== "web") {
                     setSide(false);
                 }
@@ -24,32 +26,28 @@ const FormCustomer = withRouter(({ history, setSide }: any) => {
                 display: 'flex',
                 flexDirection: 'row',
                 justifyContent: 'flex-end',
-            }}>Create</UIButton>
+            }}>
+            <Image style={{ width: 28, height: 28 }}
+                source={require("@app/images/add.png")}
+            />
+            {isSize(["md", "lg"]) && <UIText style={{ color: '#613eea' }}>Create</UIText>}
+        </UIButton>
     );
 });
 
 export default observer(({ showSidebar, sidebar }: any) => {
     return (
         <UIContainer>
-            <UIHeader showSidebar={showSidebar} sidebar={sidebar} center="Customer" />
+            <UIHeader isBack={true} showSidebar={showSidebar} sidebar={sidebar} center="Customer" right={<FormCustomer />} />
             <UIBody>
                 <UICard>
-                    <UICardHeader style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexDirection: 'row',
-                        paddingTop: 0,
-                        paddingBottom: 0,
-                        width: '100%',
-                    }}>
+                    <UICardHeader>
                         <UIText style={{
                             flexShrink: 'none',
                             width: '100%'
                         }}>List Customer</UIText>
-                        <FormCustomer />
+                        <UISeparator />
                     </UICardHeader>
-                    <UISeparator />
                     <UICardBody>
                         <UIJsonTable
                             data={[

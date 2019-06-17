@@ -16,6 +16,7 @@ import Login from "./Login";
 import FormSO from "./so/FormSO";
 import ListSO from "./so/ListSO";
 import ListUser from "./user/ListUser";
+import MainMenu from './MainMenu';
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
@@ -25,7 +26,7 @@ const Menu = withRouter(({ history, setSide }: MenuProps) => {
   return (
     <UISimpleList
       data={[
-        { label: "Sales Order", path: "/" },
+        { label: "Sales Order", path: "/so" },
         { label: "User", path: "/user" },
         { label: "Customer", path: "/customer" },
         { label: "Login", path: "/login" }
@@ -35,7 +36,7 @@ const Menu = withRouter(({ history, setSide }: MenuProps) => {
           <View key={opt.index}>
             <UIButton
               onPress={() => {
-                history.replace(item.path);
+                history.push(item.path);
                 if (Platform.getType() !== "web") {
                   setSide(false);
                 }
@@ -122,6 +123,14 @@ export default (_props: any) => {
             hideNavBar={true}
             exact
             path="/"
+            component={() => {
+              return <MainMenu />;
+            }}
+          />
+          <Route
+            hideNavBar={true}
+            exact
+            path="/so"
             component={() => {
               return <ListSO showSidebar={setSide} sidebar={side} />;
             }}

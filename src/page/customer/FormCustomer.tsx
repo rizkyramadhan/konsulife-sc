@@ -46,6 +46,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
     return (
         <UIContainer>
             <UIHeader
+                isBack={true}
                 showSidebar={showSidebar}
                 sidebar={sidebar}
                 center="Customer"
