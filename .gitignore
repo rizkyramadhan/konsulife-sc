@@ -2,6 +2,9 @@
 #
 .DS_Store
 
+src/libs
+backend/.git
+
 # Xcode
 #
 build/

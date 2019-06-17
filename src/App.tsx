@@ -1,3 +1,3 @@
-import All from "./libs/sample/All";
+import Main from './page/Main';
 
-export const App = All;
+export const App = Main;
