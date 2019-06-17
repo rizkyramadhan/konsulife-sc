@@ -1,1 +1,3 @@
-export const search = (table: string) => {};
+export const search = (table: string) => {
+    
+};
