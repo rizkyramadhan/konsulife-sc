@@ -1,3 +1,7 @@
+backend/
+src/libs/
+windows/
+
 # OSX
 #
 .DS_Store
