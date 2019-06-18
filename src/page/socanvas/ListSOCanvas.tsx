@@ -7,11 +7,14 @@ import UIRow from "@app/libs/ui/UIRow";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { withRouter } from "react-router";
-import { Platform } from "reactxp";
+import { Platform, Image } from "reactxp";
+import { isSize } from '@app/libs/ui/MediaQuery';
+import UIText from '@app/libs/ui/UIText';
 
 const BtnCreate = withRouter(({ history, setSide }: any) => {
   return (
     <UIButton
+      fill="clear"
       color="primary"
       size="small"
       onPress={() => {
@@ -30,7 +33,10 @@ const BtnCreate = withRouter(({ history, setSide }: any) => {
         justifyContent: "flex-end"
       }}
     >
-      Create
+      <Image style={{ width: 28, height: 28 }}
+        source={require("@app/images/add.png")}
+      />
+      {isSize(["md", "lg"]) && <UIText style={{ color: '#613eea' }}>Create</UIText>}
     </UIButton>
   );
 });

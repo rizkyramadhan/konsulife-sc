@@ -2,6 +2,7 @@ import config from "@app/backend";
 import global from "@app/global";
 import getSession from "@app/libs/gql/session/getSession";
 import login from "@app/libs/gql/session/login";
+import { isSize } from '@app/libs/ui/MediaQuery';
 import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
 import UICard from "@app/libs/ui/UICard";
@@ -77,7 +78,7 @@ const LoginForm = withRouter(({ history, showSidebar }: FormProps) => {
                 } else {
                   global.setSession(res);
                   history.replace('/');
-                  showSidebar(true);
+                  isSize(['md', 'lg']) && showSidebar(true);
                 }
                 setLoading(false);
               }}

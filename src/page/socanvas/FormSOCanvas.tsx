@@ -2,12 +2,9 @@ import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
-import UICard, { UICardHeader, UICardBody } from "@app/libs/ui/UICard";
 import UIJsonField from "@app/libs/ui/UIJsonField";
 import UIJsonTable from "@app/libs/ui/UIJsonTable";
 import UIRow from "@app/libs/ui/UIRow";
-import UISeparator from "@app/libs/ui/UISeparator";
-import UIText from "@app/libs/ui/UIText";
 import UITextField from "@app/libs/ui/UITextField";
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
@@ -111,117 +108,63 @@ export default observer(({ showSidebar, sidebar }: any) => {
           }}
         />
 
-        <UICard>
-          <UICardHeader
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexDirection: "row",
-              paddingTop: 0,
-              paddingBottom: 0,
-              width: "100%"
-            }}
-          >
-            <UIText
-              style={{
-                flexShrink: "none",
-                width: "100%"
-              }}
-            >
-              Contents
-            </UIText>
-            <UIButton
-              color="success"
-              size="small"
-              onPress={() => {
-                setItems([
-                  ...items,
-                  {
-                    ItemCode: "",
-                    Dscription: "",
-                    UnitPrice: 0,
-                    DiscPrcnt: ""
-                  }
-                ]);
-              }}
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "flex-end"
-              }}
-            >
-              Add
-            </UIButton>
-          </UICardHeader>
-          <UISeparator />
-          <UICardBody>
-            <UIJsonTable
-              headers={[
-                {
-                  key: "ItemCode",
-                  label: "Item Code"
-                },
-                {
-                  key: "Dscription",
-                  label: "Item Description"
-                },
-                {
-                  key: "UnitPrice",
-                  label: "Unit Price"
-                },
-                {
-                  key: "DiscPrcnt",
-                  label: "Discount"
-                },
-                {
-                  key: "action",
-                  label: ""
-                }
-              ]}
-              data={items.map((item, index) => ({
-                ...item,
-                UnitPrice: item.UnitPrice.toLocaleString(),
-                DiscPrcnt: (
-                  <UITextField
-                    type="number"
-                    value={item.DiscPrcnt}
-                    setValue={e => (item.DiscPrcnt = e)}
-                  />
-                ),
-                action: (
-                  <UIRow>
-                    <UIButton
-                      size="small"
-                      color="secondary"
-                      onPress={() => {
-                        items.splice(index, 1);
-                        setItems([...items]);
-                      }}
-                      style={{
-                        paddingTop: 2,
-                        paddingBottom: 2,
-                        paddingLeft: 5,
-                        paddingRight: 5,
-                        marginTop: 0,
-                        marginBottom: 2,
-                        fontColor: "#000"
-                      }}
-                    >
-                      Remove
+        <UIJsonTable
+          headers={[
+            {
+              key: "ItemCode",
+              label: "Item Code"
+            },
+            {
+              key: "Dscription",
+              label: "Item Description"
+            },
+            {
+              key: "UnitPrice",
+              label: "Unit Price"
+            },
+            {
+              key: "DiscPrcnt",
+              label: "Discount"
+            },
+            {
+              key: "action",
+              label: ""
+            }
+          ]}
+          data={items.map((item, index) => ({
+            ...item,
+            UnitPrice: item.UnitPrice.toLocaleString(),
+            DiscPrcnt: (
+              <UITextField
+                type="number"
+                value={item.DiscPrcnt}
+
+                setValue={e => (item.DiscPrcnt = e)}
+              />
+            ),
+            action: (
+              <UIRow>
+                <UIButton
+                  size="small"
+                  color="error"
+                  onPress={() => {
+                    items.splice(index, 1);
+                    setItems([...items]);
+                  }}
+                  fill="clear"
+                >
+                  Remove
                     </UIButton>
-                  </UIRow>
-                )
-              }))}
-              colWidth={[
-                {
-                  index: 4,
-                  width: 90
-                }
-              ]}
-            />
-          </UICardBody>
-        </UICard>
+              </UIRow>
+            )
+          }))}
+          colWidth={[
+            {
+              index: 4,
+              width: 90
+            }
+          ]}
+        />
       </UIBody>
     </UIContainer>
   );

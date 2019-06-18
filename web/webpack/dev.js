@@ -12,7 +12,9 @@ module.exports = (env, argv) =>
       publicPath: "/"
     },
     plugins: [new webpack.HotModuleReplacementPlugin()],
-
+    output: {
+      publicPath: '/'
+    },
     devServer: {
       contentBase: APP_PATH,
       historyApiFallback: {

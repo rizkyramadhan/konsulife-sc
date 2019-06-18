@@ -1,12 +1,12 @@
 import { isSize } from '@app/libs/ui/MediaQuery';
 import UIBody from '@app/libs/ui/UIBody';
 import UIButton from '@app/libs/ui/UIButton';
-import UICard, { UICardBody } from '@app/libs/ui/UICard';
+import UICard from '@app/libs/ui/UICard';
 import UIContainer from '@app/libs/ui/UIContainer';
 import UIHeader from '@app/libs/ui/UIHeader';
 import UIJsonTable from '@app/libs/ui/UIJsonTable';
+import UIRow from '@app/libs/ui/UIRow';
 import UIText from '@app/libs/ui/UIText';
-import { observer } from 'mobx-react-lite';
 import React from "react";
 import { withRouter } from 'react-router';
 import { Image, Platform } from 'reactxp';
@@ -34,49 +34,116 @@ const FormCustomer = withRouter(({ history, setSide }: any) => {
     );
 });
 
-export default observer(({ showSidebar, sidebar }: any) => {
+const sample = [
+    {
+        CardCode: "JYP00003",
+        CardName: "AMAN SALIM",
+        CardFName: "AMAN SALIM - JAYAPURA",
+        CardType: "CUSTOMER",
+        LicTradNum: "07.754.763.6-952.000",
+    },
+    {
+        CardCode: "TIM0002",
+        CardName: "BOLEH SAJA",
+        CardFName: "BOLEH SAJA - PT FREEPOT INDONESIA",
+        CardType: "CUSTOMER",
+        LicTradNum: "07.754.763.6-952.000",
+    },
+    {
+        CardCode: "TIM0002",
+        CardName: "BOLEH SAJA",
+        CardFName: "BOLEH SAJA - PT FREEPOT INDONESIA",
+        CardType: "CUSTOMER",
+        LicTradNum: "07.754.763.6-952.000",
+    },
+    {
+        CardCode: "TIM0002",
+        CardName: "BOLEH SAJA",
+        CardFName: "BOLEH SAJA - PT FREEPOT INDONESIA",
+        CardType: "CUSTOMER",
+        LicTradNum: "07.754.763.6-952.000",
+    }
+];
+
+export default () => {
+    const data = sample;
+
     return (
         <UIContainer>
-            <UIHeader isBack={true} showSidebar={showSidebar} sidebar={sidebar} center="Customer" right={<FormCustomer />} />
+            <UIHeader center="Customer" right={<FormCustomer />} />
             <UIBody>
                 <UICard>
-                    <UICardBody>
-                        <UIJsonTable
-                            data={[
-                                {
-                                    no: 1,
-                                    test: 'qwe',
-                                    coba: "halo"
-                                },
-                                {
-                                    no: 2,
-                                    test: "asdasd",
-                                    coba: "halo"
-                                },
-                                {
-                                    no: 3,
-                                    test: "asdasd",
-                                    coba: "halo"
-                                },
-                                {
-                                    no: 4,
-                                    test: "asdasd",
-                                    coba: "halo"
-                                }
-                            ]}
-                            colWidth={[{
+                    <UIJsonTable
+                        headers={[
+                            {
+                                key: "CardCode",
+                                label: "Code"
+                            },
+                            {
+                                key: "LicTradNum",
+                                label: "Federal Tax ID"
+                            },
+                            {
+                                key: "CardName",
+                                label: "Name"
+                            },
+                            {
+                                key: "CardFName",
+                                label: "Foreign Name"
+                            },
+                            {
+                                key: "CardType",
+                                label: "Type"
+                            },
+                            {
+                                key: "action",
+                                label: ""
+                            }
+                        ]}
+                        data={data.map(item => ({
+                            ...item,
+                            action: (
+                                <UIRow>
+                                    <UIButton
+                                        size="small"
+                                        fill="outline"
+                                        color="primary"
+                                        style={{
+                                            paddingTop: 2,
+                                            paddingBottom: 2,
+                                            paddingLeft: 5,
+                                            paddingRight: 5,
+                                            marginTop: 0,
+                                            marginBottom: 2,
+                                            fontColor: "#000"
+                                        }}
+                                    >
+                                        View
+                                        </UIButton>
+                                </UIRow>
+                            )
+                        }))}
+                        colWidth={[
+                            {
                                 index: 0,
-                                width: 45
+                                width: 100
                             },
                             {
                                 index: 2,
                                 width: 150
+                            },
+                            {
+                                index: 4,
+                                width: 150
+                            },
+                            {
+                                index: 5,
+                                width: 80
                             }
-                            ]}
-                        />
-                    </UICardBody>
+                        ]}
+                    />
                 </UICard>
             </UIBody>
         </UIContainer>
     );
-})
+}
