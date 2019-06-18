@@ -2,13 +2,12 @@ import UIBody from "@app/libs/ui/UIBody";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import { observer } from "mobx-react-lite";
-import React from "react";
+import React, { useState } from "react";
 import UICard, { UICardHeader, UICardBody } from "@app/libs/ui/UICard";
 import UIText from "@app/libs/ui/UIText";
 import UISeparator from "@app/libs/ui/UISeparator";
 import UIJsonField from "@app/libs/ui/UIJsonField";
 import UIJsonTable from "@app/libs/ui/UIJsonTable";
-import UIField from "@app/libs/ui/UIField";
 import UIRow from "@app/libs/ui/UIRow";
 import UIButton from "@app/libs/ui/UIButton";
 import UITextField from "@app/libs/ui/UITextField";
@@ -39,7 +38,7 @@ const sampleList = [
 
 export default observer(({ showSidebar, sidebar }: any) => {
   const data = sample;
-  const items = sampleList;
+  const [items, setItems] = useState(sampleList);
 
   return (
     <UIContainer>
@@ -47,20 +46,28 @@ export default observer(({ showSidebar, sidebar }: any) => {
         showSidebar={showSidebar}
         sidebar={sidebar}
         center="Form Sales Order"
-      />
+      >
+        <UIButton
+          color="primary"
+          size="small"
+          onPress={() => {
+            alert("Saved!");
+          }}
+          style={{
+            height: 40,
+            marginRight: 28,
+            paddingLeft: 20,
+            paddingRight: 20,
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "flex-end"
+          }}
+        >
+          Save
+        </UIButton>
+      </UIHeader>
       <UIBody>
         <UICard>
-          <UICardHeader>
-            <UIText
-              style={{
-                flexShrink: "none",
-                width: "100%"
-              }}
-            >
-              Detail
-            </UIText>
-          </UICardHeader>
-          <UISeparator />
           <UICardBody>
             <UIJsonField
               items={data}
@@ -92,7 +99,17 @@ export default observer(({ showSidebar, sidebar }: any) => {
         </UICard>
 
         <UICard>
-          <UICardHeader>
+          <UICardHeader
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "row",
+              paddingTop: 0,
+              paddingBottom: 0,
+              width: "100%"
+            }}
+          >
             <UIText
               style={{
                 flexShrink: "none",
@@ -101,6 +118,28 @@ export default observer(({ showSidebar, sidebar }: any) => {
             >
               Contents
             </UIText>
+            <UIButton
+              color="success"
+              size="small"
+              onPress={() => {
+                setItems([
+                  ...items,
+                  {
+                    ItemCode: "",
+                    Dscription: "",
+                    UnitPrice: 0,
+                    DiscPrcnt: ""
+                  }
+                ]);
+              }}
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "flex-end"
+              }}
+            >
+              Add
+            </UIButton>
           </UICardHeader>
           <UISeparator />
           <UICardBody>
@@ -127,7 +166,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
                   label: ""
                 }
               ]}
-              data={items.map(item => ({
+              data={items.map((item, index) => ({
                 ...item,
                 UnitPrice: item.UnitPrice.toLocaleString(),
                 DiscPrcnt: (
@@ -142,6 +181,10 @@ export default observer(({ showSidebar, sidebar }: any) => {
                     <UIButton
                       size="small"
                       color="secondary"
+                      onPress={() => {
+                        items.splice(index, 1);
+                        setItems([...items]);
+                      }}
                       style={{
                         paddingTop: 2,
                         paddingBottom: 2,
