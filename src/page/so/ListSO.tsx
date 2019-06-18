@@ -1,17 +1,16 @@
 import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
-import UICard, { UICardBody, UICardHeader } from "@app/libs/ui/UICard";
+import UICard, { UICardBody } from "@app/libs/ui/UICard";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIJsonTable from "@app/libs/ui/UIJsonTable";
 import UISeparator from "@app/libs/ui/UISeparator";
-import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { withRouter } from "react-router";
 import { Platform } from "reactxp";
 
-const FormCustomer = withRouter(({ history, setSide }: any) => {
+const FormSO = withRouter(({ history, setSide }: any) => {
     return (
         <UIButton
             size="small"
@@ -39,31 +38,10 @@ export default observer(({ showSidebar, sidebar }: any) => {
                 showSidebar={showSidebar}
                 sidebar={sidebar}
                 center={"Sales Order"}
+                right={<FormSO />}
             />
             <UIBody>
                 <UICard>
-                    <UICardHeader
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            flexDirection: "row",
-                            paddingTop: 0,
-                            paddingBottom: 0,
-                            width: "100%"
-                        }}
-                    >
-                        <UIText
-                            style={{
-                                flexShrink: "none",
-                                width: "100%"
-                            }}
-                        >
-                            List Sales Order
-                        </UIText>
-                        <FormCustomer />
-                    </UICardHeader>
-                    <UISeparator />
                     <UICardBody>
                         <UIJsonTable
                             data={[
