@@ -4,7 +4,6 @@ import UICard, { UICardBody } from "@app/libs/ui/UICard";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIJsonTable from "@app/libs/ui/UIJsonTable";
-import UISeparator from "@app/libs/ui/UISeparator";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { withRouter } from "react-router";
