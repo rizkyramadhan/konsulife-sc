@@ -12,7 +12,7 @@ import UISeparator from "@app/libs/ui/UISeparator";
 import UIJsonTable from "@app/libs/ui/UIJsonTable";
 import UIRow from "@app/libs/ui/UIRow";
 
-const FormCustomer = withRouter(({ history, setSide }: any) => {
+const BtnCreate = withRouter(({ history, setSide }: any) => {
   return (
     <UIButton
       color="primary"
@@ -24,6 +24,10 @@ const FormCustomer = withRouter(({ history, setSide }: any) => {
         }
       }}
       style={{
+        height: 40,
+        marginRight: 28,
+        paddingLeft: 20,
+        paddingRight: 20,
         display: "flex",
         flexDirection: "row",
         justifyContent: "flex-end"
@@ -66,20 +70,12 @@ export default observer(({ showSidebar, sidebar }: any) => {
         showSidebar={showSidebar}
         sidebar={sidebar}
         center={"SO Canvasing"}
-      />
+      >
+        <BtnCreate />
+      </UIHeader>
       <UIBody>
         <UICard>
-          <UICardHeader
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexDirection: "row",
-              paddingTop: 0,
-              paddingBottom: 0,
-              width: "100%"
-            }}
-          >
+          <UICardHeader>
             <UIText
               style={{
                 flexShrink: "none",
@@ -88,7 +84,6 @@ export default observer(({ showSidebar, sidebar }: any) => {
             >
               List Sales Order
             </UIText>
-            <FormCustomer />
           </UICardHeader>
           <UISeparator />
           <UICardBody>
