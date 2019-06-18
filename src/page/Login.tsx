@@ -1,48 +1,40 @@
 import config from "@app/backend";
+import global from "@app/global";
 import getSession from "@app/libs/gql/session/getSession";
 import login from "@app/libs/gql/session/login";
-import logout from "@app/libs/gql/session/logout";
 import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
+import UICard from "@app/libs/ui/UICard";
 import UICol from "@app/libs/ui/UICol";
 import UIContainer from "@app/libs/ui/UIContainer";
-import UIJsonDetail from "@app/libs/ui/UIJsonDetail";
+import UILoading from '@app/libs/ui/UILoading';
 import UIRow from "@app/libs/ui/UIRow";
 import UIText from "@app/libs/ui/UIText";
 import UITextField from "@app/libs/ui/UITextField";
-import { observer, useObservable } from "mobx-react-lite";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { RouteComponentProps, withRouter } from 'react-router';
 import { Alert } from "reactxp";
-import UICard from "@app/libs/ui/UICard";
 
-const Logedin = ({ data, setSession, showSidebar }: any) => {
-  return (
-    <UICol size={4} xs={12} sm={12}>
-      <UIText size="extralarge" style={{ paddingTop: 50, textAlign: "center" }}>
-        Logged in
-      </UIText>
-      <UIJsonDetail data={data} />
-      <UIRow>
-        <UIButton
-          onPress={async () => {
-            setSession(false); // session loading
-            await logout();
-            setSession(null);
-            showSidebar(false);
-          }}
-        >
-          Logout
-        </UIButton>
-      </UIRow>
-    </UICol>
-  );
-};
+interface FormProps extends RouteComponentProps {
+  showSidebar?: any;
+}
 
-const LoginForm = observer(({ setSession, showSidebar }: any) => {
-  const data = useObservable({
-    username: "coba",
-    password: "123"
-  });
+const LoginForm = withRouter(({ history, showSidebar }: FormProps) => {
+  const [username, setUsername] = useState("coba");
+  const [password, setPassword] = useState("123");
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    (async () => {
+      const session = await getSession();
+      global.setSession(session);
+      if (!global.session.uid) {
+        showSidebar(false);
+      } else {
+        history.replace('/');
+      }
+    })();
+  }, []);
+
   return (
     <UICol size={4} xs={12} sm={12}>
       <UICard style={{ padding: 25 }}>
@@ -60,56 +52,46 @@ const LoginForm = observer(({ setSession, showSidebar }: any) => {
         <UITextField
           label="Username"
           type="text"
-          value={data.username}
+          value={username}
           setValue={value => {
-            data.username = value;
+            setUsername(value);
           }}
         />
 
         <UITextField
           label="Password"
           type="password"
-          value={data.password}
+          value={password}
           setValue={value => {
-            data.password = value;
+            setPassword(value);
           }}
         />
         <UIRow>
-          <UIButton
-            onPress={async () => {
-              setSession(false); // set session as loading
-              let res = await login(data.username, data.password);
-
-              setSession(res);
-              if (!res) {
-                Alert.show("Gagal Login");
-              } else {
-                showSidebar(true);
-              }
-            }}
-          >
-            Login
+          {loading ? <UILoading /> :
+            <UIButton
+              onPress={async () => {
+                setLoading(true);
+                const res = await login(username, password);
+                if (!res) {
+                  Alert.show("Gagal Login");
+                } else {
+                  global.setSession(res);
+                  history.replace('/');
+                  showSidebar(true);
+                }
+                setLoading(false);
+              }}
+            >
+              Login
           </UIButton>
+          }
         </UIRow>
       </UICard>
     </UICol>
   );
 });
 
-export default observer(({ showSidebar }: any) => {
-  const data = useObservable({
-    session: false as any
-  });
-
-  useEffect(() => {
-    (async () => {
-      data.session = await getSession();
-    })();
-  }, []);
-
-  const setSession = (session: any) => {
-    data.session = session;
-  };
+export default ({ showSidebar }: any) => {
   return (
     <UIContainer>
       <UIBody
@@ -125,22 +107,10 @@ export default observer(({ showSidebar }: any) => {
           }}
         >
           <UICol size={4} xs={0} sm={0} />
-          {data.session === false ? (
-            <UIText style={{ textAlign: "center", padding: 100 }}>
-              Loading...
-            </UIText>
-          ) : data.session === null ? (
-            <LoginForm setSession={setSession} showSidebar={showSidebar} />
-          ) : (
-            <Logedin
-              data={data.session}
-              setSession={setSession}
-              showSidebar={showSidebar}
-            />
-          )}
+          <LoginForm showSidebar={showSidebar} />
           <UICol size={4} xs={0} sm={0} />
         </UIRow>
       </UIBody>
     </UIContainer>
   );
-});
+};

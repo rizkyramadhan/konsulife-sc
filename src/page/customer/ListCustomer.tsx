@@ -1,16 +1,15 @@
+import { isSize } from '@app/libs/ui/MediaQuery';
 import UIBody from '@app/libs/ui/UIBody';
 import UIButton from '@app/libs/ui/UIButton';
-import UICard, { UICardBody, UICardHeader } from '@app/libs/ui/UICard';
+import UICard, { UICardBody } from '@app/libs/ui/UICard';
 import UIContainer from '@app/libs/ui/UIContainer';
 import UIHeader from '@app/libs/ui/UIHeader';
 import UIJsonTable from '@app/libs/ui/UIJsonTable';
-import UISeparator from '@app/libs/ui/UISeparator';
 import UIText from '@app/libs/ui/UIText';
 import { observer } from 'mobx-react-lite';
 import React from "react";
 import { withRouter } from 'react-router';
-import { Platform, Image } from 'reactxp';
-import { isSize } from '@app/libs/ui/MediaQuery';
+import { Image, Platform } from 'reactxp';
 
 const FormCustomer = withRouter(({ history, setSide }: any) => {
     return (
@@ -41,13 +40,6 @@ export default observer(({ showSidebar, sidebar }: any) => {
             <UIHeader isBack={true} showSidebar={showSidebar} sidebar={sidebar} center="Customer" right={<FormCustomer />} />
             <UIBody>
                 <UICard>
-                    <UICardHeader>
-                        <UIText style={{
-                            flexShrink: 'none',
-                            width: '100%'
-                        }}>List Customer</UIText>
-                        <UISeparator />
-                    </UICardHeader>
                     <UICardBody>
                         <UIJsonTable
                             data={[

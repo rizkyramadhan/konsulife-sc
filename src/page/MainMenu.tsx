@@ -22,37 +22,37 @@ const Menu = withRouter(({ history }: RouteComponentProps) => {
             title: 'Sales Order',
             subtitle: 'Lorem Ipsum is simply dummy text.',
             icon: require('@app/images/order.png'),
-            url: '/so'
+            path: '/so'
         },
         {
             title: 'Sales Order Canvas',
             subtitle: 'Lorem Ipsum is simply dummy text.',
             icon: require('@app/images/order.png'),
-            url: '/so-canvas'
+            path: '/so-canvas'
         },
         {
             title: 'Work Order',
             subtitle: 'Lorem Ipsum is simply dummy text.',
             icon: require('@app/images/order2.png'),
-            url: '/wo'
+            path: '/wo'
         },
         {
             title: 'AR Invoice',
             subtitle: 'Lorem Ipsum is simply dummy text.',
             icon: require('@app/images/invoice.png'),
-            url: '/ar-invoice'
+            path: '/ar-invoice'
         },
         {
             title: 'Customer',
             subtitle: 'Lorem Ipsum is simply dummy text.',
             icon: require('@app/images/customer.png'),
-            url: '/customer'
+            path: '/customer'
         },
         {
             title: 'User',
             subtitle: 'Lorem Ipsum is simply dummy text.',
             icon: require('@app/images/user.png'),
-            url: '/user'
+            path: '/user'
         }
     ]
     return (
@@ -61,7 +61,7 @@ const Menu = withRouter(({ history }: RouteComponentProps) => {
                 return (
                     <UICol size={6} key={key}>
                         <Button onPress={() => {
-                            history.push(item.url);
+                            history.push(item.path);
                         }}>
                             <UICard style={{
                                 border: 0

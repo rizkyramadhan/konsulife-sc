@@ -1,4 +1,6 @@
+import global from '@app/global';
 import getSession from "@app/libs/gql/session/getSession";
+import logout from '@app/libs/gql/session/logout';
 import { Route, Router, Switch } from "@app/libs/router/Routing";
 import { isSize } from "@app/libs/ui/MediaQuery";
 import UIButton from "@app/libs/ui/UIButton";
@@ -6,30 +8,40 @@ import UIGradient from "@app/libs/ui/UIGradient";
 import UISeparator from "@app/libs/ui/UISeparator";
 import UISidebar from "@app/libs/ui/UISidebar";
 import UISimpleList from "@app/libs/ui/UISimpleList";
-import { observable } from "mobx";
 import React, { useEffect, useState } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 import { Image, Platform, View } from "reactxp";
 import FormCustomer from "./customer/FormCustomer";
 import ListCustomer from "./customer/ListCustomer";
 import Login from "./Login";
+import MainMenu from './MainMenu';
 import FormSO from "./so/FormSO";
 import ListSO from "./so/ListSO";
 import ListUser from "./user/ListUser";
-import MainMenu from './MainMenu';
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
 }
 
 const Menu = withRouter(({ history, setSide }: MenuProps) => {
+  useEffect(() => {
+    const check = async () => {
+      global.setSession(await getSession());
+      if (!global.session.uid) {
+        history.replace('/login');
+        setSide(false);
+      } else {
+        setSide(true);
+      }
+    };
+    check();
+  }, []);
   return (
     <UISimpleList
       data={[
         { label: "Sales Order", path: "/so" },
         { label: "User", path: "/user" },
         { label: "Customer", path: "/customer" },
-        { label: "Login", path: "/login" }
       ]}
       renderItems={(item, opt) => {
         return (
@@ -59,26 +71,37 @@ const Menu = withRouter(({ history, setSide }: MenuProps) => {
           </View>
         );
       }}
-    />
-  );
-});
+    >
+      <View>
+        <UIButton
+          onPress={async () => {
+            await logout();
+            global.removeSession();
+            history.replace('/login');
+            setSide(false);
+          }}
+          animation={false}
+          fill="clear"
+          style={{ width: "100%" }}
+          color="#fff"
+        >
+          Logout
+        </UIButton>
 
-export const global = observable({
-  session: null as any
+        <UISeparator
+          style={{
+            opacity: 0.2,
+            marginTop: 0,
+            marginBottom: 0
+          }}
+        />
+      </View>
+    </UISimpleList>
+  );
 });
 
 export default (_props: any) => {
   const [side, setSide] = useState(isSize(["md", "lg"]));
-  useEffect(() => {
-    const check = async () => {
-      global.session = await getSession();
-      if (!global.session) {
-        setSide(false);
-      }
-    };
-    check();
-  }, []);
-
   return (
     <Router>
       <UISidebar
