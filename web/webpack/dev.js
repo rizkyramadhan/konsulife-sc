@@ -8,6 +8,9 @@ module.exports = (env, argv) =>
     entry: path.join(WEB_PATH, "index.hmr.js"),
     devtool: "inline-source-map",
 
+    output: {
+      publicPath: "/"
+    },
     plugins: [new webpack.HotModuleReplacementPlugin()],
 
     devServer: {
