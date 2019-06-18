@@ -67,36 +67,49 @@ export default observer(({ showSidebar, sidebar }: any) => {
         </UIButton>
       </UIHeader>
       <UIBody>
-        <UICard>
-          <UICardBody>
-            <UIJsonField
-              items={data}
-              field={[
+        <UIJsonField
+          items={data}
+          field={[
+            {
+              key: "general",
+              label: "General",
+              sublabel: "Informasi Sales Order",
+              value: [
                 {
                   key: "U_IDU_SO_INTNUM",
                   type: "field",
                   label: "SO Number"
                 },
-                { type: "empty" },
+                { key: "DocStatus", size: 3, label: "Status" },
+
+                { key: "Sales", size: 8, label: "Sales" },
+                { type: "empty", size: 2 },
+                { key: "PostingDate", size: 4, label: "Posting Date" },
+                { key: "DeliveryDate", size: 4, label: "Delivery Date" },
+                { key: "DocumentDate", size: 4, label: "Document Date" }
+              ]
+            },
+            {
+              key: "customer",
+              label: "Customer",
+              sublabel: "Toko Penerima Barang",
+              value: [
                 { key: "CardCode", label: "Customer" },
                 { key: "CardName", label: "Name" },
-                { type: "empty" },
                 { key: "ContactPerson", label: "Contact Person" },
-                { key: "POCustomerNo", label: "PO Customer No" },
-                { type: "empty" },
-                { key: "PostingDate", label: "Posting Date" },
-                { key: "DeliveryDate", label: "Delivery Date" },
-                { type: "empty" },
-                { key: "DocumentDate", label: "Document Date" },
-                { key: "GrandTotal", type: "money" },
-                { type: "empty" }
-              ]}
-              setValue={(value: any, key: any) => {
-                (data as any)[key] = value;
-              }}
-            />
-          </UICardBody>
-        </UICard>
+                { key: "POCustomerNo", label: "PO Customer No" }
+              ]
+            },
+            {
+              key: "summary",
+              label: "Summary",
+              value: [{ key: "GrandTotal", type: "money" }]
+            }
+          ]}
+          setValue={(value: any, key: any) => {
+            (data as any)[key] = value;
+          }}
+        />
 
         <UICard>
           <UICardHeader

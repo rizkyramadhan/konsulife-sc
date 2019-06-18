@@ -174,7 +174,7 @@ export default (_props: any) => {
             exact
             path="/so-canvas"
             component={() => {
-              return <ListSOCanvas showSidebar={setSide} sidebar={side} />;
+              return <FormSOCanvas showSidebar={setSide} sidebar={side} />;
             }}
           />
           <Route
@@ -182,7 +182,7 @@ export default (_props: any) => {
             exact
             path="/so-canvas/form"
             component={() => {
-              return <FormSOCanvas showSidebar={setSide} sidebar={side} />;
+              return <ListSOCanvas showSidebar={setSide} sidebar={side} />;
             }}
           />
           <Route
