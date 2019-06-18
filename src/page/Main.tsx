@@ -41,8 +41,12 @@ const Menu = withRouter(({ history, setSide }: MenuProps) => {
   return (
     <UISimpleList
       data={[
+        { label: "Work Order", path: "/wo" },
         { label: "SO Taking Order", path: "/so" },
         { label: "SO Canvasing", path: "/so-canvas" },
+        { label: "Delivery Order", path: "/do" },
+        { label: "AR Invoice", path: "/ar-invoice" },
+        { label: "Payent Receipt", path: "/payment-receipt" },
         { label: "User", path: "/user" },
         { label: "Customer", path: "/customer" }
       ]}

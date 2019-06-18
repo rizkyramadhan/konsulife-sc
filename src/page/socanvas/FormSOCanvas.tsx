@@ -3,11 +3,13 @@ import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIJsonField from "@app/libs/ui/UIJsonField";
-import UIJsonTable from "@app/libs/ui/UIJsonTable";
-import UIRow from "@app/libs/ui/UIRow";
-import UITextField from "@app/libs/ui/UITextField";
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
+import UIText from "@app/libs/ui/UIText";
+import { View } from "reactxp/dist/web/ReactXP";
+import UITabs from "@app/libs/ui/UITabs";
+import FormSOCanvasDetailItems from "./FormSOCanvasDetailItems";
+import FormSOCanvasPayment from "./FormSOCanvasPayment";
 
 const sample = {
   CardCode: "TIM0002",
@@ -15,6 +17,9 @@ const sample = {
   DocStatus: "Open",
   U_IDU_SO_INTNUM: "SO/TIM-0002/19/VI/0001",
   Sales: "Dwi",
+  DiscPrcnt: 0,
+  DiscSum: 0,
+  VatSum: 0,
   GrandTotal: 1000000
 };
 
@@ -33,8 +38,14 @@ const sampleList = [
   }
 ];
 
+const samplePayment = {
+  Address: "TIM0002",
+  PaymentMethod: "Cash"
+};
+
 export default observer(({ showSidebar, sidebar }: any) => {
   const data = sample;
+  const dataPayment = samplePayment;
   const [items, setItems] = useState(sampleList);
 
   return (
@@ -42,7 +53,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
       <UIHeader
         showSidebar={showSidebar}
         sidebar={sidebar}
-        center="Form Sales Order"
+        center="Form SO Canvasing"
       >
         <UIButton
           color="primary"
@@ -91,16 +102,27 @@ export default observer(({ showSidebar, sidebar }: any) => {
               label: "Customer",
               sublabel: "Toko Penerima Barang",
               value: [
-                { key: "CardCode", label: "Customer" },
+                { key: "CardCode", label: "Customer", size: 3 },
                 { key: "CardName", label: "Name" },
                 { key: "ContactPerson", label: "Contact Person" },
-                { key: "POCustomerNo", label: "PO Customer No" }
+                { key: "POCustomerNo", label: "PO Customer No", size: 8 }
               ]
             },
             {
               key: "summary",
               label: "Summary",
-              value: [{ key: "GrandTotal", type: "money" }]
+              sublabel: "Informasi Total Order",
+              value: [
+                {
+                  key: "DiscPrcnt",
+                  type: "money",
+                  label: "Disc %",
+                  size: 2
+                },
+                { key: "DiscSum", type: "money", label: "Discount", size: 7 },
+                { key: "VatSum", type: "money", label: "Tax", size: 7 },
+                { key: "GrandTotal", type: "money", size: 7 }
+              ]
             }
           ]}
           setValue={(value: any, key: any) => {
@@ -108,63 +130,53 @@ export default observer(({ showSidebar, sidebar }: any) => {
           }}
         />
 
-        <UIJsonTable
-          headers={[
-            {
-              key: "ItemCode",
-              label: "Item Code"
-            },
-            {
-              key: "Dscription",
-              label: "Item Description"
-            },
-            {
-              key: "UnitPrice",
-              label: "Unit Price"
-            },
-            {
-              key: "DiscPrcnt",
-              label: "Discount"
-            },
-            {
-              key: "action",
-              label: ""
-            }
-          ]}
-          data={items.map((item, index) => ({
-            ...item,
-            UnitPrice: item.UnitPrice.toLocaleString(),
-            DiscPrcnt: (
-              <UITextField
-                type="number"
-                value={item.DiscPrcnt}
-
-                setValue={e => (item.DiscPrcnt = e)}
-              />
-            ),
-            action: (
-              <UIRow>
-                <UIButton
-                  size="small"
-                  color="error"
-                  onPress={() => {
-                    items.splice(index, 1);
-                    setItems([...items]);
-                  }}
-                  fill="clear"
-                >
-                  Remove
-                    </UIButton>
-              </UIRow>
-            )
-          }))}
-          colWidth={[
-            {
-              index: 4,
-              width: 90
-            }
-          ]}
-        />
+        <View style={{ marginTop: 50 }}>
+          <UITabs
+            tabs={[
+              {
+                label: () => {
+                  return (
+                    <UIText
+                      style={{
+                        fontSize: 19,
+                        color: "#333",
+                        fontWeight: 400
+                      }}
+                    >
+                      Detail Items
+                    </UIText>
+                  );
+                },
+                content: (
+                  <FormSOCanvasDetailItems items={items} setItems={setItems} />
+                )
+              },
+              {
+                label: () => {
+                  return (
+                    <UIText
+                      style={{
+                        fontSize: 19,
+                        color: "#333",
+                        fontWeight: 400
+                      }}
+                    >
+                      Payment
+                    </UIText>
+                  );
+                },
+                content: (
+                  <FormSOCanvasPayment
+                    data={dataPayment}
+                    setData={(value: any, key: any) => {
+                      (dataPayment as any)[key] = value;
+                    }}
+                  />
+                )
+              }
+            ]}
+          />
+        </View>
       </UIBody>
     </UIContainer>
   );

@@ -8,8 +8,8 @@ import { observer } from "mobx-react-lite";
 import React from "react";
 import { withRouter } from "react-router";
 import { Platform, Image } from "reactxp";
-import { isSize } from '@app/libs/ui/MediaQuery';
-import UIText from '@app/libs/ui/UIText';
+import { isSize } from "@app/libs/ui/MediaQuery";
+import UIText from "@app/libs/ui/UIText";
 
 const BtnCreate = withRouter(({ history, setSide }: any) => {
   return (
@@ -24,19 +24,18 @@ const BtnCreate = withRouter(({ history, setSide }: any) => {
         }
       }}
       style={{
-        height: 40,
-        marginRight: 28,
-        paddingLeft: 20,
-        paddingRight: 20,
         display: "flex",
         flexDirection: "row",
         justifyContent: "flex-end"
       }}
     >
-      <Image style={{ width: 28, height: 28 }}
+      <Image
+        style={{ width: 22, height: 22 }}
         source={require("@app/images/add.png")}
       />
-      {isSize(["md", "lg"]) && <UIText style={{ color: '#613eea' }}>Create</UIText>}
+      {isSize(["md", "lg"]) && (
+        <UIText style={{ color: "#613eea" }}>Create</UIText>
+      )}
     </UIButton>
   );
 });
