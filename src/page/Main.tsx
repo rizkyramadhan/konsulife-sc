@@ -1,6 +1,6 @@
-import global from '@app/global';
+import global from "@app/global";
 import getSession from "@app/libs/gql/session/getSession";
-import logout from '@app/libs/gql/session/logout';
+import logout from "@app/libs/gql/session/logout";
 import { Route, Router, Switch } from "@app/libs/router/Routing";
 import { isSize } from "@app/libs/ui/MediaQuery";
 import UIButton from "@app/libs/ui/UIButton";
@@ -14,10 +14,12 @@ import { Image, Platform, View } from "reactxp";
 import FormCustomer from "./customer/FormCustomer";
 import ListCustomer from "./customer/ListCustomer";
 import Login from "./Login";
-import MainMenu from './MainMenu';
+import MainMenu from "./MainMenu";
 import FormSO from "./so/FormSO";
 import ListSO from "./so/ListSO";
 import ListUser from "./user/ListUser";
+import FormSOCanvas from "./socanvas/FormSOCanvas";
+import ListSOCanvas from "./socanvas/ListSOCanvas";
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
@@ -28,7 +30,7 @@ const Menu = withRouter(({ history, setSide }: MenuProps) => {
     const check = async () => {
       global.setSession(await getSession());
       if (!global.session.uid) {
-        history.replace('/login');
+        history.replace("/login");
         setSide(false);
       } else {
         setSide(true);
@@ -39,9 +41,10 @@ const Menu = withRouter(({ history, setSide }: MenuProps) => {
   return (
     <UISimpleList
       data={[
-        { label: "Sales Order", path: "/so" },
+        { label: "SO Taking Order", path: "/so" },
+        { label: "SO Canvasing", path: "/so-canvas" },
         { label: "User", path: "/user" },
-        { label: "Customer", path: "/customer" },
+        { label: "Customer", path: "/customer" }
       ]}
       renderItems={(item, opt) => {
         return (
@@ -77,7 +80,7 @@ const Menu = withRouter(({ history, setSide }: MenuProps) => {
           onPress={async () => {
             await logout();
             global.removeSession();
-            history.replace('/login');
+            history.replace("/login");
             setSide(false);
           }}
           animation={false}
@@ -164,6 +167,22 @@ export default (_props: any) => {
             path="/so/form"
             component={() => {
               return <FormSO showSidebar={setSide} sidebar={side} />;
+            }}
+          />
+          <Route
+            hideNavBar={true}
+            exact
+            path="/so-canvas"
+            component={() => {
+              return <ListSOCanvas showSidebar={setSide} sidebar={side} />;
+            }}
+          />
+          <Route
+            hideNavBar={true}
+            exact
+            path="/so-canvas/form"
+            component={() => {
+              return <FormSOCanvas showSidebar={setSide} sidebar={side} />;
             }}
           />
           <Route
