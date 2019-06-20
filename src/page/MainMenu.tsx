@@ -1,3 +1,6 @@
+import React from "react";
+import { RouteComponentProps, withRouter } from 'react-router';
+import { Button, Image, View } from 'reactxp';
 import { isSize } from '@app/libs/ui/MediaQuery';
 import UIBody from '@app/libs/ui/UIBody';
 import UIButton from '@app/libs/ui/UIButton';
@@ -7,9 +10,6 @@ import UIContainer from '@app/libs/ui/UIContainer';
 import UIHeader from '@app/libs/ui/UIHeader';
 import UIRow from '@app/libs/ui/UIRow';
 import UIText from '@app/libs/ui/UIText';
-import React from "react";
-import { RouteComponentProps, withRouter } from 'react-router';
-import { Button, Image, View } from 'reactxp';
 
 const Menu = withRouter(({ history }: RouteComponentProps) => {
     isSize(['md', 'lg']) && history.push('/so');
@@ -21,37 +21,37 @@ const Menu = withRouter(({ history }: RouteComponentProps) => {
         {
             title: 'Sales Order',
             subtitle: 'Lorem Ipsum is simply dummy text.',
-            icon: require('@app/images/order.png'),
+            icon: require('@icon/order.png'),
             path: '/so'
         },
         {
             title: 'Sales Order Canvas',
             subtitle: 'Lorem Ipsum is simply dummy text.',
-            icon: require('@app/images/order.png'),
+            icon: require('@icon/order.png'),
             path: '/so-canvas'
         },
         {
             title: 'Work Order',
             subtitle: 'Lorem Ipsum is simply dummy text.',
-            icon: require('@app/images/order2.png'),
+            icon: require('@icon/order2.png'),
             path: '/wo'
         },
         {
             title: 'AR Invoice',
             subtitle: 'Lorem Ipsum is simply dummy text.',
-            icon: require('@app/images/invoice.png'),
+            icon: require('@icon/invoice.png'),
             path: '/ar-invoice'
         },
         {
             title: 'Customer',
             subtitle: 'Lorem Ipsum is simply dummy text.',
-            icon: require('@app/images/customer.png'),
+            icon: require('@icon/customer.png'),
             path: '/customer'
         },
         {
             title: 'User',
             subtitle: 'Lorem Ipsum is simply dummy text.',
-            icon: require('@app/images/user.png'),
+            icon: require('@icon/user.png'),
             path: '/user'
         }
     ]
@@ -122,7 +122,7 @@ export default () => {
                 >
                     <Image
                         style={{ width: 28, height: 28 }}
-                        source={require("@app/images/account.png")}
+                        source={require("@icon/account.png")}
                     />
                 </UIButton>
             } />

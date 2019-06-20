@@ -19,7 +19,8 @@ const Session = types.model({
 
 const Store = types
   .model({
-    session: Session
+    session: Session,
+    sidebar: types.boolean
   })
   .views(self => ({
     getSession() {
@@ -45,6 +46,9 @@ const Store = types
           warehouse_id: ""
         }
       };
+    },
+    setSidebar(s: boolean) {
+      self.sidebar = s
     }
   }));
 
@@ -63,5 +67,6 @@ export default Store.create({
       username: "",
       warehouse_id: ""
     }
-  }
+  },
+  sidebar: false
 });

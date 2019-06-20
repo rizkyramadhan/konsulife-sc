@@ -1,4 +1,4 @@
-module.exports = function(api) {
+module.exports = function (api) {
   api.cache.forever();
 
   const presets = [["module:metro-react-native-babel-preset"]];
@@ -9,7 +9,8 @@ module.exports = function(api) {
       "module-resolver",
       {
         alias: {
-          "@app": "./src"
+          "@app": "./src",
+          "@icon": "./src/assets/icon"
         }
       }
     ]

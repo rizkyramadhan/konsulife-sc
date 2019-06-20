@@ -5,6 +5,9 @@
     "paths": {
       "@app/*": [
         "./*"
+      ],
+      "@icon/*": [
+        "./assets/icon/*"
       ]
     },
     "forceConsistentCasingInFileNames": true,
@@ -28,8 +31,16 @@
     "module": "es2015",
     "target": "es2015",
     "jsx": "react",
-    "lib": ["es5", "es2015", "dom"]
+    "lib": [
+      "es5",
+      "es2015",
+      "dom"
+    ]
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

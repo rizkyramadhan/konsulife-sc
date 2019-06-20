@@ -1,17 +1,17 @@
+import { isSize } from '@app/libs/ui/MediaQuery';
 import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIJsonTable from "@app/libs/ui/UIJsonTable";
 import UIRow from "@app/libs/ui/UIRow";
+import UIText from '@app/libs/ui/UIText';
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { withRouter } from "react-router";
-import { Platform, Image } from "reactxp";
-import { isSize } from "@app/libs/ui/MediaQuery";
-import UIText from "@app/libs/ui/UIText";
+import { Image } from "reactxp";
 
-const BtnCreate = withRouter(({ history, setSide }: any) => {
+const BtnCreate = withRouter(({ history }: any) => {
   return (
     <UIButton
       fill="clear"
@@ -19,9 +19,6 @@ const BtnCreate = withRouter(({ history, setSide }: any) => {
       size="small"
       onPress={() => {
         history.replace("/so-canvas/form");
-        if (Platform.getType() !== "web") {
-          setSide(false);
-        }
       }}
       style={{
         display: "flex",
@@ -31,7 +28,7 @@ const BtnCreate = withRouter(({ history, setSide }: any) => {
     >
       <Image
         style={{ width: 22, height: 22 }}
-        source={require("@app/images/add.png")}
+        source={require("@icon/add.png")}
       />
       {isSize(["md", "lg"]) && (
         <UIText style={{ color: "#613eea" }}>Create</UIText>
