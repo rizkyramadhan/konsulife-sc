@@ -14,13 +14,18 @@ import FormSOCanvasPayment from "./FormSOCanvasPayment";
 const sample = {
   CardCode: "TIM0002",
   CardName: "PT FREEPOT INDONESIA",
-  DocStatus: "Open",
+  NumAtCard: "",
+  DocDate: "",
+  DocDueDate: "",
+  DocCur: "",
+  DocRate: "",
   U_IDU_SO_INTNUM: "SO/TIM-0002/19/VI/0001",
-  Sales: "Dwi",
-  DiscPrcnt: 0,
-  DiscSum: 0,
-  VatSum: 0,
-  GrandTotal: 1000000
+  GroupNum: "",
+  SlpCode: "",
+  CntctCode: "",
+  Address2: "",
+  Address: "",
+  Comments: ""
 };
 
 const sampleList = [
@@ -86,15 +91,16 @@ export default observer(({ showSidebar, sidebar }: any) => {
                 {
                   key: "U_IDU_SO_INTNUM",
                   type: "field",
-                  label: "SO Number"
+                  label: "SO Number",
+                  size: 7
                 },
-                { key: "DocStatus", size: 3, label: "Status" },
-
-                { key: "Sales", size: 8, label: "Sales" },
+                { type: "empty", size: 5 },
+                { key: "DocDate", size: 4, label: "Posting Date" },
+                { key: "DocDueDate", size: 4, label: "Delivery Date" },
                 { type: "empty", size: 2 },
-                { key: "PostingDate", size: 4, label: "Posting Date" },
-                { key: "DeliveryDate", size: 4, label: "Delivery Date" },
-                { key: "DocumentDate", size: 4, label: "Document Date" }
+                { key: "DocCur", size: 4, label: "Document Currency" },
+                { key: "DocRate", size: 4, label: "Document Rate" },
+                { key: "SlpCode", label: "Sales Employee" }
               ]
             },
             {
@@ -104,24 +110,42 @@ export default observer(({ showSidebar, sidebar }: any) => {
               value: [
                 { key: "CardCode", label: "Customer", size: 3 },
                 { key: "CardName", label: "Name" },
-                { key: "ContactPerson", label: "Contact Person" },
-                { key: "POCustomerNo", label: "PO Customer No", size: 8 }
+                { key: "CntctCode", label: "Contact Person" },
+                { key: "NumAtCard", label: "PO Customer No", size: 8 }
               ]
             },
             {
-              key: "summary",
-              label: "Summary",
-              sublabel: "Informasi Total Order",
+              key: "payment",
+              label: "Payment",
+              sublabel: "Informasi Pembayaran",
               value: [
                 {
-                  key: "DiscPrcnt",
-                  type: "money",
-                  label: "Disc %",
-                  size: 2
+                  key: "Address2",
+                  label: "Ship To",
+                  size: 8
                 },
-                { key: "DiscSum", type: "money", label: "Discount", size: 7 },
-                { key: "VatSum", type: "money", label: "Tax", size: 7 },
-                { key: "GrandTotal", type: "money", size: 7 }
+                {
+                  key: "Address",
+                  label: "Bill To",
+                  size: 8
+                },
+                {
+                  key: "GroupNum",
+                  label: "Payment Method",
+                  size: 8
+                }
+              ]
+            },
+            { type: "empty" },
+            {
+              key: "optional",
+              label: "Optional",
+              value: [
+                {
+                  key: "Comments",
+                  label: "Remark",
+                  size: 12
+                }
               ]
             }
           ]}
