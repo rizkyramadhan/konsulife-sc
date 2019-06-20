@@ -1,15 +1,16 @@
+import { isSize } from '@app/libs/ui/MediaQuery';
 import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIJsonField from "@app/libs/ui/UIJsonField";
+import UITabs from "@app/libs/ui/UITabs";
+import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
-import UIText from "@app/libs/ui/UIText";
-import { View } from "reactxp/dist/web/ReactXP";
-import UITabs from "@app/libs/ui/UITabs";
-import FormSOCanvasDetailItems from "./FormSOCanvasDetailItems";
-import FormSOCanvasPayment from "./FormSOCanvasPayment";
+import { Alert, Image, View } from "reactxp";
+import FormSOCanvasDetailItems from './FormSOCanvasDetailItems';
+import FormSOCanvasPayment from './FormSOCanvasPayment';
 
 const sample = {
   CardCode: "TIM0002",
@@ -55,23 +56,15 @@ export default observer(({ showSidebar, sidebar }: any) => {
         sidebar={sidebar}
         center="Form SO Canvasing"
       >
-        <UIButton
+        <UIButton fill="clear"
           color="primary"
           size="small"
           onPress={() => {
-            alert("Saved!");
-          }}
-          style={{
-            height: 40,
-            marginRight: 28,
-            paddingLeft: 20,
-            paddingRight: 20,
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "flex-end"
+            Alert.show("Saved!");
           }}
         >
-          Save
+          <Image source={require("@icon/save.png")} style={{ width: 28, height: 28 }}></Image>
+          {isSize(["md", "lg"]) && <UIText style={{ color: '#613eea' }}> Save</UIText>}
         </UIButton>
       </UIHeader>
       <UIBody>

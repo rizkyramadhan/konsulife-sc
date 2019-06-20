@@ -1,25 +1,26 @@
-import global from "@app/global";
-import getSession from "@app/libs/gql/session/getSession";
-import logout from "@app/libs/gql/session/logout";
+import global from '@app/global';
+import getSession from '@app/libs/gql/session/getSession';
+import logout from '@app/libs/gql/session/logout';
 import { Route, Router, Switch } from "@app/libs/router/Routing";
-import { isSize } from "@app/libs/ui/MediaQuery";
-import UIButton from "@app/libs/ui/UIButton";
-import UIGradient from "@app/libs/ui/UIGradient";
-import UISeparator from "@app/libs/ui/UISeparator";
-import UISidebar from "@app/libs/ui/UISidebar";
-import UISimpleList from "@app/libs/ui/UISimpleList";
-import React, { useEffect, useState } from "react";
-import { RouteComponentProps, withRouter } from "react-router";
-import { Image, Platform, View } from "reactxp";
-import FormCustomer from "./customer/FormCustomer";
-import ListCustomer from "./customer/ListCustomer";
-import Login from "./Login";
-import MainMenu from "./MainMenu";
-import FormSO from "./so/FormSO";
-import ListSO from "./so/ListSO";
-import ListUser from "./user/ListUser";
-import FormSOCanvas from "./socanvas/FormSOCanvas";
-import ListSOCanvas from "./socanvas/ListSOCanvas";
+import { isSize } from '@app/libs/ui/MediaQuery';
+import UIButton from '@app/libs/ui/UIButton';
+import UISeparator from '@app/libs/ui/UISeparator';
+import UISidebar from '@app/libs/ui/UISidebar';
+import UISimpleList from '@app/libs/ui/UISimpleList';
+import UIText from '@app/libs/ui/UIText';
+import { observer } from 'mobx-react-lite';
+import React, { useEffect } from 'react';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { Image, Platform, View } from 'reactxp';
+import FormCustomer from './customer/FormCustomer';
+import ListCustomer from './customer/ListCustomer';
+import Login from './Login';
+import MainMenu from './MainMenu';
+import FormSO from './so/FormSO';
+import ListSO from './so/ListSO';
+import FormSOCanvas from './socanvas/FormSOCanvas';
+import ListSOCanvas from './socanvas/ListSOCanvas';
+import ListUser from './user/ListUser';
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
@@ -33,23 +34,66 @@ const Menu = withRouter(({ history, setSide }: MenuProps) => {
         history.replace("/login");
         setSide(false);
       } else {
-        setSide(true);
+        setSide(isSize(['md', 'lg']));
       }
     };
     check();
   }, []);
   return (
     <UISimpleList
-      data={[
-        { label: "Work Order", path: "/wo" },
-        { label: "SO Taking Order", path: "/so" },
-        { label: "SO Canvasing", path: "/so-canvas" },
-        { label: "Delivery Order", path: "/do" },
-        { label: "AR Invoice", path: "/ar-invoice" },
-        { label: "Payent Receipt", path: "/payment-receipt" },
-        { label: "User", path: "/user" },
-        { label: "Customer", path: "/customer" }
-      ]}
+      style={{ paddingTop: 0, paddingBottom: 0, paddingLeft: 15, paddingRight: 15 }
+      }
+      data={
+        [
+          {
+            title: 'Working Order',
+            subtitle: 'Lorem Ipsum is simply dummy text.',
+            icon: require('@icon/order2.png'),
+            path: '/wo'
+          },
+          {
+            title: 'SO Taking Order',
+            subtitle: 'Lorem Ipsum is simply dummy text.',
+            icon: require('@icon/order.png'),
+            path: '/so'
+          },
+          {
+            title: 'SO Canvasing',
+            subtitle: 'Lorem Ipsum is simply dummy text.',
+            icon: require('@icon/order.png'),
+            path: '/so-canvas'
+          },
+          {
+            title: 'Delivery Order',
+            subtitle: 'Lorem Ipsum is simply dummy text.',
+            icon: require('@icon/order2.png'),
+            path: '/do'
+          },
+          {
+            title: 'Payment Receipt',
+            subtitle: 'Lorem Ipsum is simply dummy text.',
+            icon: require('@icon/invoice.png'),
+            path: '/payment-receipt'
+          },
+          {
+            title: 'AR Invoice',
+            subtitle: 'Lorem Ipsum is simply dummy text.',
+            icon: require('@icon/invoice.png'),
+            path: '/ar-invoice'
+          },
+          {
+            title: 'Customer',
+            subtitle: 'Lorem Ipsum is simply dummy text.',
+            icon: require('@icon/customer.png'),
+            path: '/customer'
+          },
+          {
+            title: 'User',
+            subtitle: 'Lorem Ipsum is simply dummy text.',
+            icon: require('@icon/user.png'),
+            path: '/user'
+          }
+        ]}
       renderItems={(item, opt) => {
         return (
           <View key={opt.index}>
@@ -62,17 +106,18 @@ const Menu = withRouter(({ history, setSide }: MenuProps) => {
               }}
               animation={false}
               fill="clear"
-              style={{ width: "100%" }}
-              color="#fff"
+              style={{ width: "100%", justifyContent: "flex-start" }}
             >
-              {item.label}
+              <Image source={item.icon} style={{ width: 24, height: 24 }} />
+              <UIText style={{ color: "#1D6EF7", paddingLeft: 15 }}> {item.title}</UIText>
             </UIButton>
 
             <UISeparator
               style={{
                 opacity: 0.2,
                 marginTop: 0,
-                marginBottom: 0
+                marginBottom: 0,
+                borderColor: '#9c9c9c'
               }}
             />
           </View>
@@ -89,43 +134,48 @@ const Menu = withRouter(({ history, setSide }: MenuProps) => {
           }}
           animation={false}
           fill="clear"
-          style={{ width: "100%" }}
+          style={{ width: "100%", justifyContent: 'flex-start' }}
           color="#fff"
         >
-          Logout
+          <Image source={require('@icon/order.png')} style={{ width: 24, height: 24 }} />
+          <UIText style={{ color: "#1D6EF7", paddingLeft: 15 }}> Logout</UIText>
         </UIButton>
 
         <UISeparator
           style={{
             opacity: 0.2,
             marginTop: 0,
-            marginBottom: 0
+            marginBottom: 0,
+            borderColor: '#9c9c9c'
           }}
         />
       </View>
-    </UISimpleList>
+    </UISimpleList >
   );
 });
 
-export default (_props: any) => {
-  const [side, setSide] = useState(isSize(["md", "lg"]));
+export default observer((_props: any) => {
+  // global.setSidebar(isSize(['md', 'lg']));
   return (
     <Router>
       <UISidebar
         style={{ width: 300 }}
-        visible={side}
-        setVisible={setSide}
+        visible={global.sidebar}
+        setVisible={global.setSidebar}
         sidebar={
-          <UIGradient
-            style={{ flex: 1 }}
-            angle={30}
-            colors={["#7F53AC", "#647DEE"]}
-          >
+          // <UIGradient
+          //   style={{ flex: 1 }}
+          //   angle={30}
+          //   colors={["#7F53AC", "#647DEE"]}
+          // >
+          <View>
             <Image
               source={require("@app/libs/sample/imgs/logo.png")}
               resizeMode="contain"
               style={{
-                margin: 30,
+                margin: 0,
+                marginLeft: 15,
+                marginRight: 15,
                 width: 115,
                 height: 115,
                 alignSelf: "center"
@@ -138,8 +188,9 @@ export default (_props: any) => {
                 marginBottom: 0
               }}
             />
-            <Menu setSide={setSide} />
-          </UIGradient>
+            <Menu setSide={global.setSidebar} />
+          </View>
+          // </UIGradient>
         }
       >
         <Switch>
@@ -147,7 +198,7 @@ export default (_props: any) => {
             hideNavBar={true}
             exact
             path="/login"
-            component={() => <Login showSidebar={setSide} />}
+            component={() => <Login />}
           />
           <Route
             hideNavBar={true}
@@ -162,7 +213,7 @@ export default (_props: any) => {
             exact
             path="/so"
             component={() => {
-              return <ListSO showSidebar={setSide} sidebar={side} />;
+              return <ListSO />;
             }}
           />
           <Route
@@ -170,7 +221,7 @@ export default (_props: any) => {
             exact
             path="/so/form"
             component={() => {
-              return <FormSO showSidebar={setSide} sidebar={side} />;
+              return <FormSO />;
             }}
           />
           <Route
@@ -178,7 +229,7 @@ export default (_props: any) => {
             exact
             path="/so-canvas"
             component={() => {
-              return <ListSOCanvas showSidebar={setSide} sidebar={side} />;
+              return <ListSOCanvas />;
             }}
           />
           <Route
@@ -186,7 +237,7 @@ export default (_props: any) => {
             exact
             path="/so-canvas/form"
             component={() => {
-              return <FormSOCanvas showSidebar={setSide} sidebar={side} />;
+              return <FormSOCanvas />;
             }}
           />
           <Route
@@ -202,7 +253,7 @@ export default (_props: any) => {
             exact
             path="/customer/form"
             component={() => {
-              return <FormCustomer showSidebar={setSide} sidebar={side} />;
+              return <FormCustomer />;
             }}
           />
           <Route
@@ -210,11 +261,11 @@ export default (_props: any) => {
             exact
             path="/user"
             component={() => {
-              return <ListUser showSidebar={setSide} sidebar={side} />;
+              return <ListUser />;
             }}
           />
         </Switch>
       </UISidebar>
     </Router>
   );
-};
+});

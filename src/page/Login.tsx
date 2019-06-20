@@ -2,7 +2,6 @@ import config from "@app/backend";
 import global from "@app/global";
 import getSession from "@app/libs/gql/session/getSession";
 import login from "@app/libs/gql/session/login";
-import { isSize } from '@app/libs/ui/MediaQuery';
 import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
 import UICard from "@app/libs/ui/UICard";
@@ -16,11 +15,7 @@ import React, { useEffect, useState } from "react";
 import { RouteComponentProps, withRouter } from 'react-router';
 import { Alert } from "reactxp";
 
-interface FormProps extends RouteComponentProps {
-  showSidebar?: any;
-}
-
-const LoginForm = withRouter(({ history, showSidebar }: FormProps) => {
+const LoginForm = withRouter(({ history }: RouteComponentProps) => {
   const [username, setUsername] = useState("coba");
   const [password, setPassword] = useState("123");
   const [loading, setLoading] = useState(false);
@@ -29,7 +24,7 @@ const LoginForm = withRouter(({ history, showSidebar }: FormProps) => {
       const session = await getSession();
       global.setSession(session);
       if (!global.session.uid) {
-        showSidebar(false);
+        global.setSession(false);
       } else {
         history.replace('/');
       }
@@ -78,7 +73,7 @@ const LoginForm = withRouter(({ history, showSidebar }: FormProps) => {
                 } else {
                   global.setSession(res);
                   history.replace('/');
-                  isSize(['md', 'lg']) && showSidebar(true);
+                  // global.setSidebar(isSize(['md', 'lg']));
                 }
                 setLoading(false);
               }}
@@ -92,7 +87,7 @@ const LoginForm = withRouter(({ history, showSidebar }: FormProps) => {
   );
 });
 
-export default ({ showSidebar }: any) => {
+export default () => {
   return (
     <UIContainer>
       <UIBody
@@ -108,7 +103,7 @@ export default ({ showSidebar }: any) => {
           }}
         >
           <UICol size={4} xs={0} sm={0} />
-          <LoginForm showSidebar={showSidebar} />
+          <LoginForm />
           <UICol size={4} xs={0} sm={0} />
         </UIRow>
       </UIBody>
