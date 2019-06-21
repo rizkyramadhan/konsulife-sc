@@ -21,6 +21,8 @@ import ListSO from './so/ListSO';
 import FormSOCanvas from './socanvas/FormSOCanvas';
 import ListSOCanvas from './socanvas/ListSOCanvas';
 import ListUser from './user/ListUser';
+import ListARInvoice from './arinvoice/ListARInvoice';
+import FormARInvoice from './arinvoice/FormARInvoice';
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
@@ -238,6 +240,22 @@ export default observer((_props: any) => {
             path="/so-canvas/form"
             component={() => {
               return <FormSOCanvas />;
+            }}
+          />
+          <Route
+            hideNavBar={true}
+            exact
+            path="/ar-invoice"
+            component={() => {
+              return <ListARInvoice />;
+            }}
+          />
+          <Route
+            hideNavBar={true}
+            exact
+            path="/ar-invoice/form"
+            component={() => {
+              return <FormARInvoice />;
             }}
           />
           <Route
