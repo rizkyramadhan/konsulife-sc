@@ -18,7 +18,7 @@ const BtnCreate = withRouter(({ history }: any) => {
       color="primary"
       size="small"
       onPress={() => {
-        history.replace("/ar-invoice/form");
+        history.push("/ar-invoice/form");
       }}
       style={{
         display: "flex",
