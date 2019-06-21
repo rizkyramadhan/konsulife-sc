@@ -18,7 +18,7 @@ const BtnCreate = withRouter(({ history }: any) => {
       color="primary"
       size="small"
       onPress={() => {
-        history.replace("/so-canvas/form");
+        history.push("/so-canvas/form");
       }}
       style={{
         display: "flex",
