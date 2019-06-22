@@ -35,34 +35,34 @@ const BtnCreate = withRouter(({ history }: any) => {
 });
 
 const sample = [
-  {
-    CardCode: "JYP00003",
-    CardName: "AMAN SALIM",
-    CardFName: "AMAN SALIM - JAYAPURA",
-    CardType: "CUSTOMER",
-    LicTradNum: "07.754.763.6-952.000"
-  },
-  {
-    CardCode: "TIM0002",
-    CardName: "BOLEH SAJA",
-    CardFName: "BOLEH SAJA - PT FREEPOT INDONESIA",
-    CardType: "CUSTOMER",
-    LicTradNum: "07.754.763.6-952.000"
-  },
-  {
-    CardCode: "TIM0002",
-    CardName: "BOLEH SAJA",
-    CardFName: "BOLEH SAJA - PT FREEPOT INDONESIA",
-    CardType: "CUSTOMER",
-    LicTradNum: "07.754.763.6-952.000"
-  },
-  {
-    CardCode: "TIM0002",
-    CardName: "BOLEH SAJA",
-    CardFName: "BOLEH SAJA - PT FREEPOT INDONESIA",
-    CardType: "CUSTOMER",
-    LicTradNum: "07.754.763.6-952.000"
-  }
+    {
+        CardCode: "JYP00003",
+        CardName: "AMAN SALIM",
+        CardFName: "AMAN SALIM - JAYAPURA",
+        CardType: "CUSTOMER",
+        LicTradNum: "07.754.763.6-952.000"
+    },
+    {
+        CardCode: "TIM0002",
+        CardName: "BOLEH SAJA",
+        CardFName: "BOLEH SAJA - PT FREEPOT INDONESIA",
+        CardType: "CUSTOMER",
+        LicTradNum: "07.754.763.6-952.000"
+    },
+    {
+        CardCode: "TIM0002",
+        CardName: "BOLEH SAJA",
+        CardFName: "BOLEH SAJA - PT FREEPOT INDONESIA",
+        CardType: "CUSTOMER",
+        LicTradNum: "07.754.763.6-952.000"
+    },
+    {
+        CardCode: "TIM0002",
+        CardName: "BOLEH SAJA",
+        CardFName: "BOLEH SAJA - PT FREEPOT INDONESIA",
+        CardType: "CUSTOMER",
+        LicTradNum: "07.754.763.6-952.000"
+    }
 ];
 
 export default observer(({ showSidebar, sidebar }: any) => {
