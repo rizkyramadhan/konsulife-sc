@@ -80,7 +80,6 @@ export default observer(({ showSidebar, sidebar }: any) => {
       <UIBody>
         <UIList
           style={{ backgroundColor: "#fff" }}
-          itemHeight={80}
           items={data.map(item => ({
             ...item,
             action: (

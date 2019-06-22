@@ -7,7 +7,6 @@ import IconRemove from "@app/libs/ui/Icons/IconRemove";
 export default ({ items, setItems }: any) => {
   return (
     <UIList
-      itemHeight={80}
       items={items.map((item: any, index: any) => ({
         ...item,
         UnitPrice: item.UnitPrice.toLocaleString(),
