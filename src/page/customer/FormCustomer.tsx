@@ -1,19 +1,23 @@
-import UIBody from '@app/libs/ui/UIBody';
-import UIContainer from '@app/libs/ui/UIContainer';
-import UIHeader from '@app/libs/ui/UIHeader';
-import UIJsonField from '@app/libs/ui/UIJsonField';
-import UITabs from '@app/libs/ui/UITabs';
-import UIText from '@app/libs/ui/UIText';
-import { observer } from 'mobx-react-lite';
-import React from "react";
-import { View } from 'reactxp';
-import FormAddress from './FormAddress';
-import FormContactPerson from './FormContactPerson';
+import { isSize } from '@app/libs/ui/MediaQuery';
+import UIBody from "@app/libs/ui/UIBody";
+import UIButton from "@app/libs/ui/UIButton";
+import UIContainer from "@app/libs/ui/UIContainer";
+import UIHeader from "@app/libs/ui/UIHeader";
+import UITabs from "@app/libs/ui/UITabs";
+import UIJsonField from "@app/libs/ui/UIJsonField";
+import UIText from "@app/libs/ui/UIText";
+import { observer } from "mobx-react-lite";
+import React, { useState } from "react";
+import { View } from "reactxp";
+import FormCustomerCPItems from './FormCustomerCPItems';
+import FormCustomerBillToItems from './FormCustomerBillToItems';
+import FormCustomerShipToItems from './FormCustomerShipToItems';
+import IconSave from "@app/libs/ui/Icons/IconSave";
 
 const sample = {
     Series: "",
     CardName: "",
-    CardType: "LEAD",
+    CardType: "",
     GroupCode: "",
     LicTradNum: "",
     AddID: "",
@@ -23,126 +27,168 @@ const sample = {
     Fax: "",
     Cellular: "",
     E_Mail: "",
-    U_IDU_AREA: "PAPUA",
-    U_IDU_BRANCH: "JYP"
+    U_IDU_AREA: "",
+    U_IDU_BRANCH: "",
+    GroupNum: ""
 };
 
-const sampleContactP = {
-    Name: "",
-    FirstName: "",
-    MiddleName: "",
-    LastName: "",
-    Tel1: "",
-    Tel2: "",
-    Cellolar: ""
-};
+const cpList = [
+    {
+        Name: "Jon",
+        FirstName: "Joni",
+        MiddleName: "",
+        LastName: "",
+        Tel1: "",
+        Tel2: "",
+        Cellolar: ""
+    }
+];
 
-const sampleAddress = {
-    AddressId: "",
-    Address: "",
-    ZipCode: "",
-    City: "",
-    State1: "",
-    AddressIdS: "",
-    MailAddress: "",
-    MailZipCode: "",
-    MailCity: "",
-    State2: ""
-};
+const billToList = [
+    {
+        AddressId: "GAYUNGSARI",
+        Address: "Jl. Gayung Sari No.xx",
+        ZipCode: "",
+        City: "SURABAYA",
+        State1: 10,
+        AddressType: "B"
+    }
+];
+
+const shipToList = [
+    {
+        AddressId: "GAYUNGSARI",
+        MailAddress: "Jl. Gayung Sari No.xx",
+        MailZipCod: "",
+        MailCity: "SURABAYA",
+        State2: 10,
+        AddressType: "S"
+    }
+];
 
 export default observer(({ showSidebar, sidebar }: any) => {
     const data = sample;
-    const dataContactP = sampleContactP;
-    const dataAddress = sampleAddress;
+    const [itemCP, setItemCP] = useState(cpList);
+    const [itemBillTo, setItemBillTo] = useState(billToList);
+    const [itemShipTo, setItemShipTo] = useState(shipToList);
+
     return (
         <UIContainer>
             <UIHeader
                 isBack={true}
                 showSidebar={showSidebar}
                 sidebar={sidebar}
-                center="Customer"
-            />
+                center="Form Master Customer"
+            >
+                <UIButton
+                    color="primary"
+                    size="small"
+                    onPress={() => {
+                        alert("Saved!");
+                    }}
+                >
+                <IconSave color="#fff" />
+                    {isSize(["md", "lg"]) && (
+                        <UIText style={{ color: "#fff" }}>{" Save"}</UIText>
+                    )}
+                </UIButton>
+            </UIHeader>
             <UIBody>
                 <UIJsonField
-                    items={data}
-                    field={[
-                        {
-                            key: "general",
-                            label: "General",
-                            sublabel: "Informasi Customer",
-                            value: [
-                                { key: "CardType", type: 'field', size: 6, label: "BP Type" },
-                                { key: "U_IDU_BRANCH", type: 'field', size: 6, label: "Branch" },
-                                { key: "U_IDU_AREA", type: 'field', size: 12, label: "Area" },
-                                { key: "Series", size: 12, label: "Series" },
-                                { key: "GroupCode", size: 6, label: "Group Code" },
-                                { key: "SlpCode", size: 6, label: "Sales Employee Code" },
-                                { key: "CardName", size: 12, label: "BP Name" },
-                                { key: "LicTradNum", size: 12, label: "NPWP" },
-                                { key: "AddID", size: 12, label: "No KTP" },
-                            ]
-                        },
-                        {
-                            key: "general",
-                            label: "Contact",
-                            sublabel: "Informasi Contact",
-                            value: [
-                                { key: "Phone1", size: 6, label: "Telephone 1" },
-                                { key: "Phone2", size: 6, label: "Telephone 1" },
-                                { key: "Fax", size: 6, label: "Fax Number" },
-                                { key: "Cellular", size: 6, label: "Mobile Phone" },
-                                { key: "E_Mail", size: 12, label: "E-Mail" }
-                            ]
-                        }
-                    ]}
-                    setValue={(value: any, key: any) => {
-                        (data as any)[key] = value;
-                    }}
+                items={data}
+                field={[
+                    {
+                        key: "general",
+                        label: "General",
+                        value: [
+                            { key: "Series", size: 7, label: "Series" },
+                            { key: "CardName", size: 7, label: "BP Name" },
+                            { key: "CardType", size: 7, label: "BP Type" },
+                            { key: "GroupCode", size: 7, label: "Group Code" },
+                            { key: "U_IDU_AREA", size: 7, label: "Area" },
+                            { key: "U_IDU_BRANCH", size: 7, label: "Branch" },
+                            { key: "SlpCode", size: 7, label: "Sales Employee Code" },
+                        ]
+                    },
+                    {
+                        key:"info",
+                        label:"Customer Info",
+                        value: [
+                            { key: "LicTradNum", size: 7, label: "NPWP" },
+                            { key: "AddID", size: 7, label: "No KTP" },
+                            { key: "Phone1", size: 7, label: "Telephone 1" },
+                            { key: "Phone2", size: 7, label: "Telephone 2" },
+                            { key: "Fax", size: 7, label: "Fax Number" },
+                            { key: "Cellular", size: 7, label: "Mobile Phone" },
+                            { key: "E_Mail", size: 7, label: "E-Mail" },
+                        ]
+                    },
+                    {
+                        key: "payment",
+                        label: "Payment Terms",
+                        value: [
+                            { key: "GroupNum", label: "Payment Terms Code", size: 7}
+                        ]
+                    }
+                ]}
+                setValue={(value: any, key: any) => {
+                    (data as any)[key] = value;
+                }}
                 />
+
                 <View style={{ marginTop: 50 }}>
                     <UITabs
                         tabs={[
                             {
                                 label: () => {
-                                    return (
-                                        <UIText
-                                            style={{
-                                                fontSize: 19,
-                                                color: "#333",
-                                                fontWeight: 400
-                                            }}
-                                        >
-                                            Contact Person
-                                         </UIText>
+                                return (
+                                    <UIText
+                                        style={{
+                                            fontSize: 19,
+                                            color: "#333",
+                                            fontWeight: 400
+                                        }}
+                                    >
+                                    Contact Person
+                                    </UIText>
+                                    );
+                                },
+                                content: (<FormCustomerCPItems items={itemCP} setItems={setItemCP} />)
+                            },
+                            {
+                                label: () => {
+                                return (
+                                    <UIText
+                                        style={{
+                                            fontSize: 19,
+                                            color: "#333",
+                                            fontWeight: 400
+                                        }}
+                                    >
+                                    Bill To
+                                    </UIText>
                                     );
                                 },
                                 content: (
-                                    <FormContactPerson data={dataContactP} setItems={(value: any, key: any) => {
-                                        (dataContactP as any)[key] = value;
-                                    }} />
+                                <FormCustomerBillToItems items={itemBillTo} setItems={setItemBillTo} />
                                 )
                             },
                             {
                                 label: () => {
-                                    return (
-                                        <UIText
-                                            style={{
-                                                fontSize: 19,
-                                                color: "#333",
-                                                fontWeight: 400
-                                            }}
-                                        >
-                                            Address
-                                        </UIText>
+                                return (
+                                    <UIText
+                                        style={{
+                                            fontSize: 19,
+                                            color: "#333",
+                                            fontWeight: 400
+                                        }}
+                                    >
+                                    Ship To
+                                    </UIText>
                                     );
                                 },
                                 content: (
-                                    <FormAddress
-                                        data={dataAddress}
-                                        setData={(value: any, key: any) => {
-                                            (dataAddress as any)[key] = value;
-                                        }}
-                                    />
+                                <FormCustomerShipToItems items={itemShipTo} setItems={setItemShipTo} />
                                 )
                             }
                         ]}

@@ -9,14 +9,14 @@ import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { withRouter } from "react-router";
-import { Image } from "reactxp";
+import IconRemove from "@app/libs/ui/Icons/IconRemove";
+import IconAdd from "@app/libs/ui/Icons/IconAdd";
 
 const BtnCreate = withRouter(({ history }: any) => {
   return (
     <UIButton
-      fill="clear"
-      color="primary"
       size="small"
+      color="primary"
       onPress={() => {
         history.push("/ar-invoice/form");
       }}
@@ -26,12 +26,9 @@ const BtnCreate = withRouter(({ history }: any) => {
         justifyContent: "flex-end"
       }}
     >
-      <Image
-        style={{ width: 22, height: 22 }}
-        source={require("@icon/add.png")}
-      />
+      <IconAdd color="#fff" />
       {isSize(["md", "lg"]) && (
-        <UIText style={{ color: "#613eea" }}>Create</UIText>
+        <UIText style={{ color: "#fff" }}>Create</UIText>
       )}
     </UIButton>
   );
@@ -75,51 +72,31 @@ export default observer(({ showSidebar, sidebar }: any) => {
       <UIBody>
         <UIList
           style={{ backgroundColor: "#fff" }}
-          fields={{
-            U_IDU_SO_INTNUM: {
-              index: 0,
-              table: { header: "SO Number" }
-            },
-            U_IDU_DO_INTNUM: {
-              index: 1,
-              table: { header: "DO Number" }
-            },
-            CardCode: {
-              index: 2,
-              table: { header: "Cust. Number" }
-            },
-            CardName: {
-              index: 3,
-              table: { header: "Cust. Name" }
-            },
-            DocDate: {
-              index: 4,
-              table: { header: "Posting Date" }
-            },
-            action: {
-              index: 5,
-              table: { width: 70 }
-            }
-          }}
+          itemHeight={80}
           items={data.map(item => ({
             ...item,
             GrandTotal: item.GrandTotal.toLocaleString(),
             action: (
-              <UIRow>
+              <UIRow style={{ marginTop: -10 }}>
                 <UIButton
                   size="small"
-                  color="#40c4ff"
+                  fill="clear"
                   style={{
-                    paddingTop: 2,
-                    paddingBottom: 2,
-                    paddingLeft: 5,
-                    paddingRight: 5,
                     marginTop: 0,
-                    marginBottom: 2,
-                    fontColor: "#000"
+                    marginBottom: 0
+                  }}
+                  onPress={() => {
+                    alert("remove!");
                   }}
                 >
-                  View
+                  <IconRemove
+                    height={18}
+                    width={18}
+                    color="red"
+                    onPress={() => {
+                      alert("remove!");
+                    }}
+                  />
                 </UIButton>
               </UIRow>
             )

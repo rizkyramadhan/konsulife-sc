@@ -1,5 +1,3 @@
-import global from "@app/global";
-import IconPlus from "@app/libs/ui/Icons/IconPlus";
 import { isSize } from "@app/libs/ui/MediaQuery";
 import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
@@ -8,133 +6,104 @@ import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
 import UIRow from "@app/libs/ui/UIRow";
 import UIText from "@app/libs/ui/UIText";
+import { observer } from "mobx-react-lite";
 import React from "react";
 import { withRouter } from "react-router";
+import IconRemove from "@app/libs/ui/Icons/IconRemove";
+import IconAdd from "@app/libs/ui/Icons/IconAdd";
 
-const FormCustomer = withRouter(({ history }: any) => {
+const BtnCreate = withRouter(({ history }: any) => {
   return (
     <UIButton
-      size="compact"
-      fill="clear"
+      size="small"
+      color="primary"
       onPress={() => {
         history.push("/customer/form");
       }}
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "flex-end"
+      }}
     >
-      <IconPlus width={20} height={20} color="#1d6ef7" />
+      <IconAdd color="#fff" />
       {isSize(["md", "lg"]) && (
-        <UIText style={{ color: "#1d6ef7" }}> Create</UIText>
+        <UIText style={{ color: "#fff" }}>Create</UIText>
       )}
     </UIButton>
   );
 });
 
 const sample = [
-  {
-    CardCode: "JYP00003",
-    CardName: "AMAN SALIM",
-    CardFName: "AMAN SALIM - JAYAPURA",
-    CardType: "CUSTOMER",
-    LicTradNum: "07.754.763.6-952.000"
-  },
-  {
-    CardCode: "TIM0002",
-    CardName: "BOLEH SAJA",
-    CardFName: "BOLEH SAJA - PT FREEPOT INDONESIA",
-    CardType: "CUSTOMER",
-    LicTradNum: "07.754.763.6-952.000"
-  },
-  {
-    CardCode: "TIM0002",
-    CardName: "BOLEH SAJA",
-    CardFName: "BOLEH SAJA - PT FREEPOT INDONESIA",
-    CardType: "CUSTOMER",
-    LicTradNum: "07.754.763.6-952.000"
-  },
-  {
-    CardCode: "TIM0002",
-    CardName: "BOLEH SAJA",
-    CardFName: "BOLEH SAJA - PT FREEPOT INDONESIA",
-    CardType: "CUSTOMER",
-    LicTradNum: "07.754.763.6-952.000"
-  }
+    {
+        CardCode: "JYP00003",
+        CardName: "AMAN SALIM",
+        CardFName: "AMAN SALIM - JAYAPURA",
+        CardType: "CUSTOMER",
+        LicTradNum: "07.754.763.6-952.000"
+    },
+    {
+        CardCode: "TIM0002",
+        CardName: "BOLEH SAJA",
+        CardFName: "BOLEH SAJA - PT FREEPOT INDONESIA",
+        CardType: "CUSTOMER",
+        LicTradNum: "07.754.763.6-952.000"
+    },
+    {
+        CardCode: "TIM0002",
+        CardName: "BOLEH SAJA",
+        CardFName: "BOLEH SAJA - PT FREEPOT INDONESIA",
+        CardType: "CUSTOMER",
+        LicTradNum: "07.754.763.6-952.000"
+    },
+    {
+        CardCode: "TIM0002",
+        CardName: "BOLEH SAJA",
+        CardFName: "BOLEH SAJA - PT FREEPOT INDONESIA",
+        CardType: "CUSTOMER",
+        LicTradNum: "07.754.763.6-952.000"
+    }
 ];
 
-export default () => {
+export default observer(({ showSidebar, sidebar }: any) => {
   const data = sample;
+
   return (
     <UIContainer>
       <UIHeader
-        showSidebar={global.setSidebar}
-        sidebar={global.sidebar}
-        center="Customer"
-        right={<FormCustomer />}
-      />
+        showSidebar={showSidebar}
+        sidebar={sidebar}
+        center={"Customer"}
+      >
+        <BtnCreate />
+      </UIHeader>
       <UIBody>
         <UIList
-          //   headers={[
-          //     {
-          //       key: "CardCode",
-          //       label: "Code"
-          //     },
-          //     {
-          //       key: "LicTradNum",
-          //       label: "Federal Tax ID"
-          //     },
-          //     {
-          //       key: "CardName",
-          //       label: "Name"
-          //     },
-          //     {
-          //       key: "CardFName",
-          //       label: "Foreign Name"
-          //     },
-          //     {
-          //       key: "CardType",
-          //       label: "Type"
-          //     },
-          //     {
-          //       key: "action",
-          //       label: ""
-          //     }
-          //   ]}
-
-        //   colWidth={[
-        //     {
-        //       index: 0,
-        //       width: 100
-        //     },
-        //     {
-        //       index: 2,
-        //       width: 150
-        //     },
-        //     {
-        //       index: 4,
-        //       width: 150
-        //     },
-        //     {
-        //       index: 5,
-        //       width: 80
-        //     }
-        //   ]}
+          style={{ backgroundColor: "#fff" }}
+          itemHeight={80}
           items={data.map(item => ({
             ...item,
             action: (
-              <UIRow>
+              <UIRow style={{ marginTop: -10 }}>
                 <UIButton
                   size="small"
-                  fill="outline"
-                  color="primary"
+                  fill="clear"
                   style={{
-                    paddingTop: 2,
-                    paddingBottom: 2,
-                    paddingLeft: 5,
-                    paddingRight: 5,
                     marginTop: 0,
-                    marginBottom: 2,
-                    fontColor: "#000"
+                    marginBottom: 0
+                  }}
+                  onPress={() => {
+                    alert("remove!");
                   }}
                 >
-                  View
+                  <IconRemove
+                    height={18}
+                    width={18}
+                    color="red"
+                    onPress={() => {
+                      alert("remove!");
+                    }}
+                  />
                 </UIButton>
               </UIRow>
             )
@@ -143,4 +112,4 @@ export default () => {
       </UIBody>
     </UIContainer>
   );
-};
+});

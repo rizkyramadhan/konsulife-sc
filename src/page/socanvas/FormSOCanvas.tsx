@@ -8,7 +8,6 @@ import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
 import { View } from "reactxp";
-// import FormSOCanvasDetailItems from "./FormSOCanvasDetailItems";
 import IconSave from "@app/libs/ui/Icons/IconSave";
 import FormSOCanvasDetailItems from "./FormSOCanvasDetailItems";
 import IconAdd from "@app/libs/ui/Icons/IconAdd";
