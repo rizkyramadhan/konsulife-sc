@@ -1,5 +1,5 @@
 import UIButton from "@app/libs/ui/UIButton";
-import UIJsonTable from "@app/libs/ui/UIJsonTable";
+import UIList from "@app/libs/ui/UIList";
 import UIRow from "@app/libs/ui/UIRow";
 import React from "react";
 
@@ -23,66 +23,73 @@ import React from "react";
 
 export default ({ items, setItems }: any) => {
   return (
-    <UIJsonTable
-      headers={[
-        {
-          key: "ItemCode",
-          label: "Item Code"
-        },
-        {
-          key: "Dscription",
-          label: "Item Description"
-        },
-        // {
-        //   key: "U_IDU_PARTNUM",
-        //   label: "Part Number"
-        // },
-        {
-          key: "UseBaseUn",
-          label: "Invt. UoM"
-        },
-        {
-          key: "Quantity",
-          label: "QTY"
-        },
-        {
-          key: "UoMCode",
-          label: "UOM Code"
-        },
-        // {
-        //   key: "WhsCode",
-        //   label: "Warehouse Code"
-        // },
-        // {
-        //   key: "ShipDate",
-        //   label: "Row Delivery Date"
-        // },
-        // {
-        //   key: "OcrCode",
-        //   label: "Distribution Rule"
-        // },
-        // {
-        //   key: "OcrCode2",
-        //   label: "Distribution Rule2"
-        // },
-        {
-          key: "PriceBefDi",
-          label: "Unit Price"
-        },
-        {
-          key: "DiscPrcnt",
-          label: "Disc. %"
-        },
-        {
-          key: "TaxCode",
-          label: "Tax Code"
-        },
-        {
-          key: "action",
-          label: ""
-        }
-      ]}
-      data={items.map((item: any, index: any) => ({
+    <UIList
+      // headers={[
+      //   {
+      //     key: "ItemCode",
+      //     label: "Item Code"
+      //   },
+      //   {
+      //     key: "Dscription",
+      //     label: "Item Description"
+      //   },
+      //   // {
+      //   //   key: "U_IDU_PARTNUM",
+      //   //   label: "Part Number"
+      //   // },
+      //   {
+      //     key: "UseBaseUn",
+      //     label: "Invt. UoM"
+      //   },
+      //   {
+      //     key: "Quantity",
+      //     label: "QTY"
+      //   },
+      //   {
+      //     key: "UoMCode",
+      //     label: "UOM Code"
+      //   },
+      //   // {
+      //   //   key: "WhsCode",
+      //   //   label: "Warehouse Code"
+      //   // },
+      //   // {
+      //   //   key: "ShipDate",
+      //   //   label: "Row Delivery Date"
+      //   // },
+      //   // {
+      //   //   key: "OcrCode",
+      //   //   label: "Distribution Rule"
+      //   // },
+      //   // {
+      //   //   key: "OcrCode2",
+      //   //   label: "Distribution Rule2"
+      //   // },
+      //   {
+      //     key: "PriceBefDi",
+      //     label: "Unit Price"
+      //   },
+      //   {
+      //     key: "DiscPrcnt",
+      //     label: "Disc. %"
+      //   },
+      //   {
+      //     key: "TaxCode",
+      //     label: "Tax Code"
+      //   },
+      //   {
+      //     key: "action",
+      //     label: ""
+      //   }
+      // ]}
+
+      // colWidth={[
+      //   {
+      //     index: 4,
+      //     width: 90
+      //   }
+      // ]}
+      items={items.map((item: any, index: any) => ({
         ...item,
         UnitPrice: item.UnitPrice.toLocaleString(),
         // DiscPrcnt: (
@@ -108,12 +115,6 @@ export default ({ items, setItems }: any) => {
           </UIRow>
         )
       }))}
-      colWidth={[
-        {
-          index: 4,
-          width: 90
-        }
-      ]}
     />
   );
 };

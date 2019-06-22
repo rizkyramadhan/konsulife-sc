@@ -1,11 +1,11 @@
-import { isSize } from '@app/libs/ui/MediaQuery';
+import { isSize } from "@app/libs/ui/MediaQuery";
 import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
-import UIJsonTable from "@app/libs/ui/UIJsonTable";
+import UIList from "@app/libs/ui/UIList";
 import UIRow from "@app/libs/ui/UIRow";
-import UIText from '@app/libs/ui/UIText';
+import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { withRouter } from "react-router";
@@ -73,35 +73,43 @@ export default observer(({ showSidebar, sidebar }: any) => {
         <BtnCreate />
       </UIHeader>
       <UIBody>
-        <UIJsonTable
+        <UIList
           style={{ backgroundColor: "#fff" }}
-          headers={[
-            {
-              key: "U_IDU_SO_INTNUM",
-              label: "SO Number"
-            },
-            {
-              key: "CardCode",
-              label: "Cust Number"
-            },
-            {
-              key: "CardName",
-              label: "Cust Name"
-            },
-            {
-              key: "DocDate",
-              label: "Posting Date"
-            },
-            {
-              key: "GrandTotal",
-              label: "Grand Total"
-            },
-            {
-              key: "action",
-              label: ""
-            }
-          ]}
-          data={data.map(item => ({
+          fields={{}}
+          // headers={[
+          //   {
+          //     key: "U_IDU_SO_INTNUM",
+          //     label: "SO Number"
+          //   },
+          //   {
+          //     key: "CardCode",
+          //     label: "Cust Number"
+          //   },
+          //   {
+          //     key: "CardName",
+          //     label: "Cust Name"
+          //   },
+          //   {
+          //     key: "DocDate",
+          //     label: "Posting Date"
+          //   },
+          //   {
+          //     key: "GrandTotal",
+          //     label: "Grand Total"
+          //   },
+          //   {
+          //     key: "action",
+          //     label: ""
+          //   }
+          // ]}
+
+          // colWidth={[
+          //   {
+          //     index: 5,
+          //     width: 70
+          //   }
+          // ]}
+          items={data.map(item => ({
             ...item,
             GrandTotal: item.GrandTotal.toLocaleString(),
             action: (
@@ -124,12 +132,6 @@ export default observer(({ showSidebar, sidebar }: any) => {
               </UIRow>
             )
           }))}
-          colWidth={[
-            {
-              index: 5,
-              width: 70
-            }
-          ]}
         />
       </UIBody>
     </UIContainer>

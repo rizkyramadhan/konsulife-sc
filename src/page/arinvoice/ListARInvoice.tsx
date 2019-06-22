@@ -1,11 +1,11 @@
-import { isSize } from '@app/libs/ui/MediaQuery';
+import { isSize } from "@app/libs/ui/MediaQuery";
 import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
-import UIJsonTable from "@app/libs/ui/UIJsonTable";
+import UIList from "@app/libs/ui/UIList";
 import UIRow from "@app/libs/ui/UIRow";
-import UIText from '@app/libs/ui/UIText';
+import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { withRouter } from "react-router";
@@ -73,35 +73,35 @@ export default observer(({ showSidebar, sidebar }: any) => {
         <BtnCreate />
       </UIHeader>
       <UIBody>
-        <UIJsonTable
+        <UIList
           style={{ backgroundColor: "#fff" }}
-          headers={[
-            {
-              key: "U_IDU_SO_INTNUM",
-              label: "SO Number"
+          fields={{
+            U_IDU_SO_INTNUM: {
+              index: 0,
+              table: { header: "SO Number" }
             },
-            {
-                key: "U_IDU_DO_INTNUM",
-                label: "DO Number"
+            U_IDU_DO_INTNUM: {
+              index: 1,
+              table: { header: "DO Number" }
             },
-            {
-              key: "CardCode",
-              label: "Cust Number"
+            CardCode: {
+              index: 2,
+              table: { header: "Cust. Number" }
             },
-            {
-              key: "CardName",
-              label: "Cust Name"
+            CardName: {
+              index: 3,
+              table: { header: "Cust. Name" }
             },
-            {
-              key: "DocDate",
-              label: "Posting Date"
+            DocDate: {
+              index: 4,
+              table: { header: "Posting Date" }
             },
-            {
-              key: "action",
-              label: ""
+            action: {
+              index: 5,
+              table: { width: 70 }
             }
-          ]}
-          data={data.map(item => ({
+          }}
+          items={data.map(item => ({
             ...item,
             GrandTotal: item.GrandTotal.toLocaleString(),
             action: (
@@ -124,12 +124,6 @@ export default observer(({ showSidebar, sidebar }: any) => {
               </UIRow>
             )
           }))}
-          colWidth={[
-            {
-              index: 5,
-              width: 70
-            }
-          ]}
         />
       </UIBody>
     </UIContainer>

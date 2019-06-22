@@ -1,46 +1,46 @@
 import UIButton from "@app/libs/ui/UIButton";
-import UIJsonTable from "@app/libs/ui/UIJsonTable";
+import UIList from "@app/libs/ui/UIList";
 import UIRow from "@app/libs/ui/UIRow";
 import React from "react";
 
 export default ({ items, setItems }: any) => {
   return (
-    <UIJsonTable
-      headers={[
-        {
-            key: "ItemCode",
-            label: "Item Code"
+    <UIList
+      fields={{
+        ItemCode: {
+          index: 0,
+          table: { header: "Item Code" }
         },
-        {
-            key: "ItemName",
-            label: "Item Name"
+        ItemName: {
+          index: 1,
+          table: { header: "Item Name" }
         },
-        {
-            key: "U_IDU_PARTNUM",
-            label: "Part Number"
+        U_IDU_PARTNUM: {
+          index: 2,
+          table: { header: "Part Number" }
         },
-        {
-            key: "WhsCode",
-            label: "Warehouse Code"
+        WhsCode: {
+          index: 3,
+          table: { header: "Warehouse Code" }
         },
-        {
-            key: "Quantity",
-            label: "QTY"
+        Quantity: {
+          index: 4,
+          table: { header: "QTY", width: 90 }
         },
-        {
-            key: "UnitMsr",
-            label: "UoM"
+        UnitMsr: {
+          index: 5,
+          table: { header: "UoM" }
         },
-        {
-            key: "OpenCreQty",
-            label: "Open QTY"
+        UnitCreQty: {
+          index: 6,
+          table: { header: "Open QTY" }
         },
-        {
-            key: "action",
-            label: ""
+        action: {
+          index: 7,
+          table: {}
         }
-      ]}
-      data={items.map((item: any, index: any) => ({
+      }}
+      items={items.map((item: any, index: any) => ({
         ...item,
         action: (
           <UIRow>
@@ -58,12 +58,6 @@ export default ({ items, setItems }: any) => {
           </UIRow>
         )
       }))}
-      colWidth={[
-        {
-          index: 4,
-          width: 90
-        }
-      ]}
     />
   );
 };
