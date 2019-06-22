@@ -3,7 +3,7 @@ import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
-import UIJsonTable from "@app/libs/ui/UIJsonTable";
+import UIList from '@app/libs/ui/UIList';
 import UIText from "@app/libs/ui/UIText";
 import React from "react";
 import { withRouter } from "react-router";
@@ -34,8 +34,8 @@ export default () => {
     <UIContainer>
       <UIHeader center={"Sales Order"} right={<FormSO />} />
       <UIBody>
-        <UIJsonTable
-          data={[
+        <UIList
+          items={[
             {
               no: 1,
               test: "qwe",
@@ -55,16 +55,6 @@ export default () => {
               no: 4,
               test: "asdasd",
               coba: "halo"
-            }
-          ]}
-          colWidth={[
-            {
-              index: 0,
-              width: 45
-            },
-            {
-              index: 2,
-              width: 150
             }
           ]}
         />

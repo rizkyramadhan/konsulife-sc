@@ -7,8 +7,10 @@ import UIJsonField from "@app/libs/ui/UIJsonField";
 import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
-import { Alert, Image, View } from "reactxp";
+import { View } from "reactxp";
 import FormSOCanvasDetailItems from "./FormDODetailItems";
+import IconSave from "@app/libs/ui/Icons/IconSave";
+import IconCopy from "@app/libs/ui/Icons/IconCopy";
 
 const sample = {
   CardCode: "TIM0002",
@@ -75,19 +77,15 @@ export default observer(({ showSidebar, sidebar }: any) => {
     <UIContainer>
       <UIHeader showSidebar={showSidebar} sidebar={sidebar} center="Form DO">
         <UIButton
-          fill="clear"
           color="primary"
           size="small"
           onPress={() => {
-            Alert.show("Saved!");
+            alert("Saved!");
           }}
         >
-          <Image
-            source={require("@icon/save.png")}
-            style={{ width: 22, height: 22 }}
-          />
+          <IconSave color="#fff" />
           {isSize(["md", "lg"]) && (
-            <UIText style={{ color: "#613eea" }}> Save</UIText>
+            <UIText style={{ color: "#fff" }}>{" Save"}</UIText>
           )}
         </UIButton>
       </UIHeader>
@@ -230,12 +228,16 @@ export default observer(({ showSidebar, sidebar }: any) => {
             <UIButton
               color="success"
               size="small"
-              fill="clear"
-              style={{
-                color: "#613eea"
+              onPress={() => {
+                alert("Copy!");
               }}
             >
-              <UIText> Copy From SO</UIText>
+              <IconCopy color="#fff" height={24} width={24} />
+              {isSize(["md", "lg"]) && (
+                <UIText style={{ color: "#fff" }} size="small">
+                  {" Copy From SO"}
+                </UIText>
+              )}
             </UIButton>
           </View>
           <FormSOCanvasDetailItems items={items} setItems={setItems} />

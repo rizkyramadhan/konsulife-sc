@@ -8,8 +8,10 @@ import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
 import { View } from "reactxp";
-import FormSOCanvasDetailItems from "./FormSOCanvasDetailItems";
+// import FormSOCanvasDetailItems from "./FormSOCanvasDetailItems";
 import IconSave from "@app/libs/ui/Icons/IconSave";
+import FormSOCanvasDetailItems from "./FormSOCanvasDetailItems";
+import IconAdd from "@app/libs/ui/Icons/IconAdd";
 
 const sample = {
   CardCode: "TIM0002",
@@ -63,9 +65,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
         >
           <IconSave color="#fff" />
           {isSize(["md", "lg"]) && (
-            <UIText style={{ color: "#fff" }} size="small">
-              {" Save"}
-            </UIText>
+            <UIText style={{ color: "#fff" }}>{" Save"}</UIText>
           )}
         </UIButton>
       </UIHeader>
@@ -145,15 +145,38 @@ export default observer(({ showSidebar, sidebar }: any) => {
         />
 
         <View style={{ marginTop: 50 }}>
-          <UIText
+          <View
             style={{
-              fontSize: 19,
-              color: "#333",
-              fontWeight: 400
+              justifyContent: "space-between",
+              flex: 1,
+              flexDirection: "row",
+              alignItems: "center"
             }}
           >
-            Detail Items
-          </UIText>
+            <UIText
+              style={{
+                fontSize: 19,
+                color: "#333",
+                fontWeight: 400
+              }}
+            >
+              Detail Items
+            </UIText>
+            <UIButton
+              color="success"
+              size="small"
+              onPress={() => {
+                alert("Add!");
+              }}
+            >
+              <IconAdd color="#fff" height={24} width={24} />
+              {isSize(["md", "lg"]) && (
+                <UIText style={{ color: "#fff" }} size="small">
+                  {" Add"}
+                </UIText>
+              )}
+            </UIButton>
+          </View>
           <FormSOCanvasDetailItems items={items} setItems={setItems} />
         </View>
       </UIBody>

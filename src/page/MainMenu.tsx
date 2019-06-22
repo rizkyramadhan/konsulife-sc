@@ -1,6 +1,12 @@
-import React from "react";
-import { RouteComponentProps, withRouter } from 'react-router';
-import { Button, Image, View } from 'reactxp';
+import IconAddressCard from '@app/libs/ui/Icons/IconAddressCard';
+import IconCartPlus from '@app/libs/ui/Icons/IconCartPlus';
+import IconInvoice from '@app/libs/ui/Icons/IconInvoice';
+import IconLuggageCart from '@app/libs/ui/Icons/IconLuggageCart';
+import IconReceipt from '@app/libs/ui/Icons/IconReceipt';
+import IconShoppingCart from '@app/libs/ui/Icons/IconShoppingCart';
+import IconTruck from '@app/libs/ui/Icons/IconTruck';
+import IconUser from '@app/libs/ui/Icons/IconUser';
+import IconUserCircle from '@app/libs/ui/Icons/IconUserCircle';
 import { isSize } from '@app/libs/ui/MediaQuery';
 import UIBody from '@app/libs/ui/UIBody';
 import UIButton from '@app/libs/ui/UIButton';
@@ -10,15 +16,9 @@ import UIContainer from '@app/libs/ui/UIContainer';
 import UIHeader from '@app/libs/ui/UIHeader';
 import UIRow from '@app/libs/ui/UIRow';
 import UIText from '@app/libs/ui/UIText';
-import IconLuggageCart from '@app/libs/ui/Icons/IconLuggageCart';
-import IconCartPlus from '@app/libs/ui/Icons/IconCartPlus';
-import IconShoppingCart from '@app/libs/ui/Icons/IconShoppingCart';
-import IconTruck from '@app/libs/ui/Icons/IconTruck';
-import IconReceipt from '@app/libs/ui/Icons/IconReceipt';
-import IconInvoice from '@app/libs/ui/Icons/IconInvoice';
-import IconAddressCard from '@app/libs/ui/Icons/IconAddressCard';
-import IconUser from '@app/libs/ui/Icons/IconUser';
-import IconUserCircle from '@app/libs/ui/Icons/IconUserCircle';
+import React from "react";
+import { RouteComponentProps, withRouter } from 'react-router';
+import { Button, View } from 'reactxp';
 
 const menuList = [
     {
