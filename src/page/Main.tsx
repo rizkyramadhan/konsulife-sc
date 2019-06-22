@@ -108,7 +108,7 @@ const Menu = withRouter(({ history, setSide }: MenuProps) => {
       data={menuList}
       renderItems={(item, opt) => {
         return (
-          <View key={opt.index}>
+          <View key={opt.index} style={{ padding: 0 }}>
             <UIButton
               onPress={() => {
                 history.replace(item.path);
@@ -129,7 +129,6 @@ const Menu = withRouter(({ history, setSide }: MenuProps) => {
 
             <UISeparator
               style={{
-                opacity: 0.2,
                 marginTop: 0,
                 marginBottom: 0,
                 borderColor: "#9c9c9c"
@@ -202,18 +201,18 @@ export default observer((_props: any) => {
       {!global.session.uid ? (
         <Login />
       ) : (
-        <UISidebar
-          style={{ width: 300, background: "#2a2525" }}
-          visible={global.sidebar}
-          setVisible={global.setSidebar}
-          sidebar={
-            // <UIGradient
-            //   style={{ flex: 1 }}
-            //   angle={30}
-            //   colors={["#7F53AC", "#647DEE"]}
-            // >
-            <View style={{ flex: 1 }}>
-              {/* <Image
+          <UISidebar
+            style={{ width: 300, background: "#fff" }}
+            visible={global.sidebar}
+            setVisible={global.setSidebar}
+            sidebar={
+              // <UIGradient
+              //   style={{ flex: 1 }}
+              //   angle={30}
+              //   colors={["#7F53AC", "#647DEE"]}
+              // >
+              <View style={{ flex: 1 }}>
+                {/* <Image
                 source={require("@app/libs/sample/imgs/logo.png")}
                 resizeMode="contain"
                 style={{
@@ -225,36 +224,36 @@ export default observer((_props: any) => {
                   alignSelf: "center"
                 }}
               /> */}
-              <UISeparator
-                style={{
-                  opacity: 0.2,
-                  marginTop: 0,
-                  marginBottom: 0
-                }}
-              />
-              <Menu setSide={global.setSidebar} />
-            </View>
-            // </UIGradient>
-          }
-        >
-          <SwitchRoute
-            routes={{
-              "/": <MainMenu />,
-              "/so": <ListSO />,
-              "/so/form": <FormSO />,
-              "/so-canvas": <ListSOCanvas />,
-              "/so-canvas/form": <FormSOCanvas />,
-              "/do": <ListDO />,
-              "/do/form": <FormDO />,
-              "/ar-invoice": <ListARInvoice />,
-              "/ar-invoice/form": <FormARInvoice />,
-              "/customer": <ListCustomer />,
-              "/customer/form": <FormCustomer />,
-              "/user": <ListUser />
-            }}
-          />
-        </UISidebar>
-      )}
+                <UISeparator
+                  style={{
+                    opacity: 0.2,
+                    marginTop: 0,
+                    marginBottom: 0
+                  }}
+                />
+                <Menu setSide={global.setSidebar} />
+              </View>
+              // </UIGradient>
+            }
+          >
+            <SwitchRoute
+              routes={{
+                "/": <MainMenu />,
+                "/so": <ListSO />,
+                "/so/form": <FormSO />,
+                "/so-canvas": <ListSOCanvas />,
+                "/so-canvas/form": <FormSOCanvas />,
+                "/do": <ListDO />,
+                "/do/form": <FormDO />,
+                "/ar-invoice": <ListARInvoice />,
+                "/ar-invoice/form": <FormARInvoice />,
+                "/customer": <ListCustomer />,
+                "/customer/form": <FormCustomer />,
+                "/user": <ListUser />
+              }}
+            />
+          </UISidebar>
+        )}
     </Router>
   );
 });
