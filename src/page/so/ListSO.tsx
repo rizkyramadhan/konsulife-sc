@@ -34,7 +34,6 @@ export default () => {
     <UIContainer>
       <UIHeader center={"Sales Order"} right={<FormSO />} />
       <UIBody>
-        {/* <IconBack /> */}
         <UIJsonTable
           data={[
             {

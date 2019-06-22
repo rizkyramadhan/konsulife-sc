@@ -10,6 +10,66 @@ import UIContainer from '@app/libs/ui/UIContainer';
 import UIHeader from '@app/libs/ui/UIHeader';
 import UIRow from '@app/libs/ui/UIRow';
 import UIText from '@app/libs/ui/UIText';
+import IconLuggageCart from '@app/libs/ui/Icons/IconLuggageCart';
+import IconCartPlus from '@app/libs/ui/Icons/IconCartPlus';
+import IconShoppingCart from '@app/libs/ui/Icons/IconShoppingCart';
+import IconTruck from '@app/libs/ui/Icons/IconTruck';
+import IconReceipt from '@app/libs/ui/Icons/IconReceipt';
+import IconInvoice from '@app/libs/ui/Icons/IconInvoice';
+import IconAddressCard from '@app/libs/ui/Icons/IconAddressCard';
+import IconUser from '@app/libs/ui/Icons/IconUser';
+import IconUserCircle from '@app/libs/ui/Icons/IconUserCircle';
+
+const menuList = [
+    {
+        title: 'Working Order',
+        subtitle: 'Lorem Ipsum is simply dummy text.',
+        icon: <IconLuggageCart width={50} height={50} color="#1D6EF7" />,
+        path: '/wo'
+    },
+    {
+        title: 'SO Taking Order',
+        subtitle: 'Lorem Ipsum is simply dummy text.',
+        icon: <IconCartPlus width={50} height={50} color="#1D6EF7" />,
+        path: '/so'
+    },
+    {
+        title: 'SO Canvasing',
+        subtitle: 'Lorem Ipsum is simply dummy text.',
+        icon: <IconShoppingCart width={50} height={50} color="#1D6EF7" />,
+        path: '/so-canvas'
+    },
+    {
+        title: 'Delivery Order',
+        subtitle: 'Lorem Ipsum is simply dummy text.',
+        icon: <IconTruck width={50} height={50} color="#1D6EF7" />,
+        path: '/do'
+    },
+    {
+        title: 'Payment Receipt',
+        subtitle: 'Lorem Ipsum is simply dummy text.',
+        icon: <IconReceipt width={50} height={50} color="#1D6EF7" />,
+        path: '/payment-receipt'
+    },
+    {
+        title: 'AR Invoice',
+        subtitle: 'Lorem Ipsum is simply dummy text.',
+        icon: <IconInvoice width={50} height={50} color="#1D6EF7" />,
+        path: '/ar-invoice'
+    },
+    {
+        title: 'Customer',
+        subtitle: 'Lorem Ipsum is simply dummy text.',
+        icon: <IconAddressCard width={50} height={50} color="#1D6EF7" />,
+        path: '/customer'
+    },
+    {
+        title: 'User',
+        subtitle: 'Lorem Ipsum is simply dummy text.',
+        icon: <IconUser width={50} height={50} color="#1D6EF7" />,
+        path: '/user'
+    }
+];
 
 const Menu = withRouter(({ history }: RouteComponentProps) => {
     isSize(['md', 'lg']) && history.push('/so');
@@ -17,44 +77,7 @@ const Menu = withRouter(({ history }: RouteComponentProps) => {
         flexShrink: 'none',
         overflow: 'visible'
     };
-    const data = [
-        {
-            title: 'Sales Order',
-            subtitle: 'Lorem Ipsum is simply dummy text.',
-            icon: require('@icon/order.png'),
-            path: '/so'
-        },
-        {
-            title: 'Sales Order Canvas',
-            subtitle: 'Lorem Ipsum is simply dummy text.',
-            icon: require('@icon/order.png'),
-            path: '/so-canvas'
-        },
-        {
-            title: 'Work Order',
-            subtitle: 'Lorem Ipsum is simply dummy text.',
-            icon: require('@icon/order2.png'),
-            path: '/wo'
-        },
-        {
-            title: 'AR Invoice',
-            subtitle: 'Lorem Ipsum is simply dummy text.',
-            icon: require('@icon/invoice.png'),
-            path: '/ar-invoice'
-        },
-        {
-            title: 'Customer',
-            subtitle: 'Lorem Ipsum is simply dummy text.',
-            icon: require('@icon/customer.png'),
-            path: '/customer'
-        },
-        {
-            title: 'User',
-            subtitle: 'Lorem Ipsum is simply dummy text.',
-            icon: require('@icon/user.png'),
-            path: '/user'
-        }
-    ]
+    const data = menuList;
     return (
         <UIRow>
             {data.map((item, key) => {
@@ -73,15 +96,7 @@ const Menu = withRouter(({ history }: RouteComponentProps) => {
                                     padding: 10
                                 }}>
                                     <View style={iconStyle}>
-                                        <Image
-                                            source={item.icon}
-                                            resizeMode="contain"
-                                            style={{
-                                                width: 50,
-                                                height: 50,
-                                                alignSelf: "center"
-                                            }}
-                                        />
+                                        {item.icon}
                                     </View>
                                     <View style={{
                                         ...iconStyle,
@@ -120,10 +135,7 @@ export default () => {
                     animation={false}
                     style={{ margin: 0 }}
                 >
-                    <Image
-                        style={{ width: 28, height: 28 }}
-                        source={require("@icon/account.png")}
-                    />
+                    <IconUserCircle width={32} height={32} color="#1D6EF7" />
                 </UIButton>
             } />
             <UIBody style={{

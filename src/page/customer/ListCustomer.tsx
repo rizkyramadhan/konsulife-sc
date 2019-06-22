@@ -1,4 +1,5 @@
 import global from '@app/global';
+import IconPlus from '@app/libs/ui/Icons/IconPlus';
 import { isSize } from '@app/libs/ui/MediaQuery';
 import UIBody from '@app/libs/ui/UIBody';
 import UIButton from '@app/libs/ui/UIButton';
@@ -9,7 +10,6 @@ import UIRow from '@app/libs/ui/UIRow';
 import UIText from '@app/libs/ui/UIText';
 import React from "react";
 import { withRouter } from 'react-router';
-import { Image } from 'reactxp';
 
 const FormCustomer = withRouter(({ history }: any) => {
     return (
@@ -18,8 +18,8 @@ const FormCustomer = withRouter(({ history }: any) => {
             onPress={() => {
                 history.push('/customer/form');
             }}>
-            <Image source={require("@icon/add.png")} style={{ width: 28, height: 28 }}></Image>
-            {isSize(["md", "lg"]) && <UIText style={{ color: '#613eea' }}>Create</UIText>}
+            <IconPlus width={20} height={20} color="#1d6ef7" />
+            {isSize(["md", "lg"]) && <UIText style={{ color: '#1d6ef7' }}> Create</UIText>}
         </UIButton>
     );
 });
