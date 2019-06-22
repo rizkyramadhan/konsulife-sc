@@ -1,69 +1,40 @@
 import UIButton from "@app/libs/ui/UIButton";
-import UIJsonTable from "@app/libs/ui/UIJsonTable";
+import UIList from "@app/libs/ui/UIList";
 import UIRow from "@app/libs/ui/UIRow";
 import React from "react";
+import IconRemove from "@app/libs/ui/Icons/IconRemove";
 
 export default ({ items, setItems }: any) => {
   return (
-    <UIJsonTable
-      headers={[
-        {
-            key: "Name",
-            label: "Contact Person Name"
-        },
-        {
-            key: "FirstName",
-            label: "First Name"
-        },
-        {
-            key: "MiddleName",
-            label: "Middle Name"
-        },
-        {
-            key: "LastName",
-            label: "Last Name"
-        },
-        {
-            key: "Tel1",
-            label: "Telephone 1"
-        },
-        {
-            key: "Tel2",
-            label: "Telephone 2"
-        },
-        {
-            key: "Cellolar",
-            label: "Mobile Phone"
-        },
-        {
-            key: "action",
-            label: ""
-        }
-      ]}
-      data={items.map((item: any, index: any) => ({
+    <UIList
+      items={items.map((item: any, index: any) => ({
         ...item,
         action: (
-          <UIRow>
+          <UIRow style={{ marginTop: -10 }}>
             <UIButton
               size="small"
-              color="error"
-              onPress={() => {
-                items.splice(index, 1);
-                setItems([...items]);
-              }}
               fill="clear"
+              style={{
+                marginTop: 0,
+                marginBottom: 0
+              }}
+              onPress={() => {
+                alert("remove!");
+              }}
             >
-              Remove
+              <IconRemove
+                height={18}
+                width={18}
+                color="red"
+                onPress={() => {
+                  items.splice(index, 1);
+                  setItems([...items]);
+                }}
+              />
             </UIButton>
           </UIRow>
         )
       }))}
-      colWidth={[
-        {
-          index: 4,
-          width: 90
-        }
-      ]}
     />
   );
 };

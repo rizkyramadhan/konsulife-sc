@@ -8,9 +8,9 @@ import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
 import { View } from "reactxp";
+import FormSOCanvasDetailItems from "./FormDODetailItems";
 import IconSave from "@app/libs/ui/Icons/IconSave";
-import FormSOCanvasDetailItems from "./FormSOCanvasDetailItems";
-import IconAdd from "@app/libs/ui/Icons/IconAdd";
+import IconCopy from "@app/libs/ui/Icons/IconCopy";
 
 const sample = {
   CardCode: "TIM0002",
@@ -20,7 +20,14 @@ const sample = {
   DocDueDate: "",
   DocCur: "",
   DocRate: "",
-  U_IDU_SO_INTNUM: "SO/TIM-0002/19/VI/0001",
+  U_IDU_DO_TRANSCODE: "",
+  U_IDU_DO_INTNUM: "",
+  U_IDU_CONTNUM: "",
+  U_IDU_NOSEAL: "",
+  U_IDU_NOPL: "",
+  U_IDU_NOPOL: "",
+  U_IDU_DRIVER: "",
+  U_IDU_SO_INTNUM: "",
   GroupNum: "",
   SlpCode: "",
   CntctCode: "",
@@ -33,14 +40,32 @@ const sampleList = [
   {
     ItemCode: "BSLSR000001",
     Dscription: "750R16-8PR-TL L310-T",
+    U_IDU_PARTNUM: "",
+    UseBaseUn: "",
+    Quantity: 0,
+    UoMCode: "",
+    WhsCode: "",
+    ShipDate: "",
+    OcrCode: "",
+    OcrCode2: "",
     UnitPrice: 1950000,
-    DiscPrcnt: ""
+    DiscPrcnt: "",
+    TaxCode: ""
   },
   {
     ItemCode: "BSLSR000001",
     Dscription: "750R16-8PR-TL L310-T",
+    U_IDU_PARTNUM: "",
+    UseBaseUn: "",
+    Quantity: 0,
+    UoMCode: "",
+    WhsCode: "",
+    ShipDate: "",
+    OcrCode: "",
+    OcrCode2: "",
     UnitPrice: 1950000,
-    DiscPrcnt: ""
+    DiscPrcnt: "",
+    TaxCode: ""
   }
 ];
 
@@ -50,11 +75,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
 
   return (
     <UIContainer>
-      <UIHeader
-        showSidebar={showSidebar}
-        sidebar={sidebar}
-        center="Form SO Canvasing"
-      >
+      <UIHeader showSidebar={showSidebar} sidebar={sidebar} center="Form DO">
         <UIButton
           color="primary"
           size="small"
@@ -75,12 +96,23 @@ export default observer(({ showSidebar, sidebar }: any) => {
             {
               key: "general",
               label: "General",
-              sublabel: "Informasi Sales Order",
+              sublabel: "Informasi Delivery Order",
               value: [
                 {
-                  key: "U_IDU_SO_INTNUM",
+                  key: "U_IDU_DO_TRANSCODE",
+                  label: "Trans Code (DO)",
+                  size: 5
+                },
+                {
+                  key: "U_IDU_DO_INTNUM",
+                  label: "Delivery No.",
                   type: "field",
+                  size: 7
+                },
+                {
+                  key: "U_IDU_SO_INTNUM",
                   label: "SO Number",
+                  type: "field",
                   size: 7
                 },
                 { type: "empty", size: 5 },
@@ -101,6 +133,39 @@ export default observer(({ showSidebar, sidebar }: any) => {
                 { key: "CardName", label: "Name" },
                 { key: "CntctCode", label: "Contact Person" },
                 { key: "NumAtCard", label: "PO Customer No", size: 8 }
+              ]
+            },
+
+            {
+              key: "driver",
+              label: "Driver",
+              sublabel: "Informasi Driver",
+              value: [
+                {
+                  key: "U_IDU_CONTNUM",
+                  label: "No. Container",
+                  size: 5
+                },
+                {
+                  key: "U_IDU_NOSEAL",
+                  label: "No. Seal",
+                  size: 5
+                },
+                {
+                  key: "U_IDU_NOPL",
+                  label: "No. PL",
+                  size: 5
+                },
+                {
+                  key: "U_IDU_NOPOL",
+                  label: "Nopol",
+                  size: 5
+                },
+                {
+                  key: "U_IDU_DRIVER",
+                  label: "Driver",
+                  size: 7
+                }
               ]
             },
             {
@@ -125,7 +190,6 @@ export default observer(({ showSidebar, sidebar }: any) => {
                 }
               ]
             },
-            { type: "empty" },
             {
               key: "optional",
               label: "Optional",
@@ -165,13 +229,13 @@ export default observer(({ showSidebar, sidebar }: any) => {
               color="success"
               size="small"
               onPress={() => {
-                alert("Add!");
+                alert("Copy!");
               }}
             >
-              <IconAdd color="#fff" height={24} width={24} />
+              <IconCopy color="#fff" height={24} width={24} />
               {isSize(["md", "lg"]) && (
                 <UIText style={{ color: "#fff" }} size="small">
-                  {" Add"}
+                  {" Copy From SO"}
                 </UIText>
               )}
             </UIButton>

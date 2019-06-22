@@ -1,15 +1,16 @@
-import { isSize } from '@app/libs/ui/MediaQuery';
+import { isSize } from "@app/libs/ui/MediaQuery";
 import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIJsonField from "@app/libs/ui/UIJsonField";
-import UITabs from "@app/libs/ui/UITabs";
 import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
-import { Alert, Image, View } from "reactxp";
+import { View } from "reactxp";
 import FormARInvoiceDetailItems from './FormARInvoiceDetailItems';
+import IconSave from "@app/libs/ui/Icons/IconSave";
+import IconAdd from "@app/libs/ui/Icons/IconAdd";
 
 const sample = {
     CardCode: "TIM0002",
@@ -24,20 +25,20 @@ const sampleList = [
   {
     ItemCode: "BSLSR000001",
     ItemName: "750R16-8PR-TL L310-T",
-    U_IDU_PARTNUM: "",
+    //U_IDU_PARTNUM: "",
     WhsCode: "TIM001",
     Quantity: 10,
     UnitMsr: "Unit",
-    OpenCreQty: 50
+    //OpenCreQty: 50
   },
   {
     ItemCode: "BSLSR000001",
     ItemName: "750R16-8PR-TL L310-T",
-    U_IDU_PARTNUM: "",
+    //U_IDU_PARTNUM: "",
     WhsCode: "TIM001",
     Quantity: 10,
     UnitMsr: "Unit",
-    OpenCreQty: 50
+    //OpenCreQty: 50
   }
 ];
 
@@ -52,15 +53,17 @@ export default observer(({ showSidebar, sidebar }: any) => {
         sidebar={sidebar}
         center="Form AR Invoice"
       >
-        <UIButton fill="clear"
+        <UIButton
           color="primary"
           size="small"
           onPress={() => {
-            Alert.show("Saved!");
+            alert("Saved!");
           }}
         >
-          <Image source={require("@icon/save.png")} style={{ width: 28, height: 28 }}></Image>
-          {isSize(["md", "lg"]) && <UIText style={{ color: '#613eea' }}> Save</UIText>}
+          <IconSave color="#fff" />
+          {isSize(["md", "lg"]) && (
+            <UIText style={{ color: "#fff" }}>{" Save"}</UIText>
+          )}
         </UIButton>
       </UIHeader>
       <UIBody>
@@ -123,28 +126,39 @@ export default observer(({ showSidebar, sidebar }: any) => {
         />
 
         <View style={{ marginTop: 50 }}>
-          <UITabs
-            tabs={[
-              {
-                label: () => {
-                  return (
-                    <UIText
-                      style={{
-                        fontSize: 19,
-                        color: "#333",
-                        fontWeight: 400
-                      }}
-                    >
-                      Detail Items
-                    </UIText>
-                  );
-                },
-                content: (
-                  <FormARInvoiceDetailItems items={items} setItems={setItems} />
-                )
-              }
-            ]}
-          />
+          <View
+            style={{
+              justifyContent: "space-between",
+              flex: 1,
+              flexDirection: "row",
+              alignItems: "center"
+            }}
+          >
+            <UIText
+              style={{
+                fontSize: 19,
+                color: "#333",
+                fontWeight: 400
+              }}
+            >
+              Detail Items
+            </UIText>
+            <UIButton
+              color="success"
+              size="small"
+              onPress={() => {
+                alert("Add!");
+              }}
+            >
+              <IconAdd color="#fff" height={24} width={24} />
+              {isSize(["md", "lg"]) && (
+                <UIText style={{ color: "#fff" }} size="small">
+                  {" Add"}
+                </UIText>
+              )}
+            </UIButton>
+          </View>
+          <FormARInvoiceDetailItems items={items} setItems={setItems} />
         </View>
       </UIBody>
     </UIContainer>

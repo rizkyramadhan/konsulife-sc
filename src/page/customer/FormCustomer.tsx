@@ -8,10 +8,11 @@ import UIJsonField from "@app/libs/ui/UIJsonField";
 import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
-import { Alert, Image, View } from "reactxp";
+import { View } from "reactxp";
 import FormCustomerCPItems from './FormCustomerCPItems';
 import FormCustomerBillToItems from './FormCustomerBillToItems';
 import FormCustomerShipToItems from './FormCustomerShipToItems';
+import IconSave from "@app/libs/ui/Icons/IconSave";
 
 const sample = {
     Series: "",
@@ -79,15 +80,17 @@ export default observer(({ showSidebar, sidebar }: any) => {
                 sidebar={sidebar}
                 center="Form Master Customer"
             >
-                <UIButton fill="clear"
+                <UIButton
                     color="primary"
                     size="small"
                     onPress={() => {
-                        Alert.show("Saved!");
+                        alert("Saved!");
                     }}
-                    >
-                    <Image source={require("@icon/save.png")} style={{ width: 28, height: 28 }}></Image>
-                    {isSize(["md", "lg"]) && <UIText style={{ color: '#613eea' }}> Save</UIText>}
+                >
+                <IconSave color="#fff" />
+                    {isSize(["md", "lg"]) && (
+                        <UIText style={{ color: "#fff" }}>{" Save"}</UIText>
+                    )}
                 </UIButton>
             </UIHeader>
             <UIBody>
@@ -140,33 +143,31 @@ export default observer(({ showSidebar, sidebar }: any) => {
                                 label: () => {
                                 return (
                                     <UIText
-                                    style={{
-                                        fontSize: 19,
-                                        color: "#333",
-                                        fontWeight: 400
-                                    }}
+                                        style={{
+                                            fontSize: 19,
+                                            color: "#333",
+                                            fontWeight: 400
+                                        }}
                                     >
                                     Contact Person
                                     </UIText>
-                                );
+                                    );
                                 },
-                                content: (
-                                <FormCustomerCPItems items={itemCP} setItems={setItemCP} />
-                                )
+                                content: (<FormCustomerCPItems items={itemCP} setItems={setItemCP} />)
                             },
                             {
                                 label: () => {
                                 return (
                                     <UIText
-                                    style={{
-                                        fontSize: 19,
-                                        color: "#333",
-                                        fontWeight: 400
-                                    }}
+                                        style={{
+                                            fontSize: 19,
+                                            color: "#333",
+                                            fontWeight: 400
+                                        }}
                                     >
                                     Bill To
                                     </UIText>
-                                );
+                                    );
                                 },
                                 content: (
                                 <FormCustomerBillToItems items={itemBillTo} setItems={setItemBillTo} />
@@ -176,15 +177,15 @@ export default observer(({ showSidebar, sidebar }: any) => {
                                 label: () => {
                                 return (
                                     <UIText
-                                    style={{
-                                        fontSize: 19,
-                                        color: "#333",
-                                        fontWeight: 400
-                                    }}
+                                        style={{
+                                            fontSize: 19,
+                                            color: "#333",
+                                            fontWeight: 400
+                                        }}
                                     >
                                     Ship To
                                     </UIText>
-                                );
+                                    );
                                 },
                                 content: (
                                 <FormCustomerShipToItems items={itemShipTo} setItems={setItemShipTo} />

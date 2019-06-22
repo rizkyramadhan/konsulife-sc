@@ -3,13 +3,12 @@ import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
-import UIList from "@app/libs/ui/UIList";
 import UIRow from "@app/libs/ui/UIRow";
 import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { withRouter } from "react-router";
-import IconRemove from "@app/libs/ui/Icons/IconRemove";
+import UIList from "@app/libs/ui/UIList";
 import IconAdd from "@app/libs/ui/Icons/IconAdd";
 
 const BtnCreate = withRouter(({ history }: any) => {
@@ -18,7 +17,7 @@ const BtnCreate = withRouter(({ history }: any) => {
       size="small"
       color="primary"
       onPress={() => {
-        history.push("/customer/form");
+        history.push("/do/form");
       }}
       style={{
         display: "flex",
@@ -36,32 +35,24 @@ const BtnCreate = withRouter(({ history }: any) => {
 
 const sample = [
   {
-    CardCode: "JYP00003",
-    CardName: "AMAN SALIM",
-    CardFName: "AMAN SALIM - JAYAPURA",
-    CardType: "CUSTOMER",
-    LicTradNum: "07.754.763.6-952.000"
+    CardCode: "TIM0002",
+    CardName: "PT FREEPOT INDONESIA",
+    DocDate: "12.08.19",
+    DocDueDate: "12.08.19",
+    DocStatus: "Open",
+    U_IDU_SO_INTNUM: "SO/TIM-0002/19/VI/0001",
+    Sales: "Dwi",
+    GrandTotal: 1000000
   },
   {
     CardCode: "TIM0002",
-    CardName: "BOLEH SAJA",
-    CardFName: "BOLEH SAJA - PT FREEPOT INDONESIA",
-    CardType: "CUSTOMER",
-    LicTradNum: "07.754.763.6-952.000"
-  },
-  {
-    CardCode: "TIM0002",
-    CardName: "BOLEH SAJA",
-    CardFName: "BOLEH SAJA - PT FREEPOT INDONESIA",
-    CardType: "CUSTOMER",
-    LicTradNum: "07.754.763.6-952.000"
-  },
-  {
-    CardCode: "TIM0002",
-    CardName: "BOLEH SAJA",
-    CardFName: "BOLEH SAJA - PT FREEPOT INDONESIA",
-    CardType: "CUSTOMER",
-    LicTradNum: "07.754.763.6-952.000"
+    CardName: "PT FREEPOT INDONESIA",
+    DocDate: "12.08.19",
+    DocDueDate: "12.08.19",
+    DocStatus: "Open",
+    U_IDU_SO_INTNUM: "SO/TIM-0002/19/VI/0001",
+    Sales: "Dwi",
+    GrandTotal: 1000000
   }
 ];
 
@@ -73,37 +64,32 @@ export default observer(({ showSidebar, sidebar }: any) => {
       <UIHeader
         showSidebar={showSidebar}
         sidebar={sidebar}
-        center={"Customer"}
+        center={"Delivery Order"}
       >
         <BtnCreate />
       </UIHeader>
       <UIBody>
         <UIList
-          style={{ backgroundColor: "#fff" }}
           itemHeight={80}
           items={data.map(item => ({
             ...item,
+            GrandTotal: item.GrandTotal.toLocaleString(),
             action: (
-              <UIRow style={{ marginTop: -10 }}>
+              <UIRow>
                 <UIButton
                   size="small"
-                  fill="clear"
+                  color="#40c4ff"
                   style={{
+                    paddingTop: 2,
+                    paddingBottom: 2,
+                    paddingLeft: 5,
+                    paddingRight: 5,
                     marginTop: 0,
-                    marginBottom: 0
-                  }}
-                  onPress={() => {
-                    alert("remove!");
+                    marginBottom: 2,
+                    fontColor: "#000"
                   }}
                 >
-                  <IconRemove
-                    height={18}
-                    width={18}
-                    color="red"
-                    onPress={() => {
-                      alert("remove!");
-                    }}
-                  />
+                  View
                 </UIButton>
               </UIRow>
             )

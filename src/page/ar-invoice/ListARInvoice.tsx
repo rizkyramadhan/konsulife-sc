@@ -3,22 +3,22 @@ import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
-import UIList from "@app/libs/ui/UIList";
 import UIRow from "@app/libs/ui/UIRow";
 import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { withRouter } from "react-router";
-import IconRemove from "@app/libs/ui/Icons/IconRemove";
-import IconAdd from "@app/libs/ui/Icons/IconAdd";
+import { Image } from "reactxp";
+import UIList from "@app/libs/ui/UIList";
 
 const BtnCreate = withRouter(({ history }: any) => {
   return (
     <UIButton
-      size="small"
+      fill="clear"
       color="primary"
+      size="small"
       onPress={() => {
-        history.push("/ar-invoice/form");
+        history.push("/do/form");
       }}
       style={{
         display: "flex",
@@ -26,9 +26,12 @@ const BtnCreate = withRouter(({ history }: any) => {
         justifyContent: "flex-end"
       }}
     >
-      <IconAdd color="#fff" />
+      <Image
+        style={{ width: 22, height: 22 }}
+        source={require("@icon/add.png")}
+      />
       {isSize(["md", "lg"]) && (
-        <UIText style={{ color: "#fff" }}>Create</UIText>
+        <UIText style={{ color: "#613eea" }}>Create</UIText>
       )}
     </UIButton>
   );
@@ -65,38 +68,31 @@ export default observer(({ showSidebar, sidebar }: any) => {
       <UIHeader
         showSidebar={showSidebar}
         sidebar={sidebar}
-        center={"AR Invoice"}
+        center={"Delivery Order"}
       >
         <BtnCreate />
       </UIHeader>
       <UIBody>
         <UIList
-          style={{ backgroundColor: "#fff" }}
-          itemHeight={80}
           items={data.map(item => ({
             ...item,
             GrandTotal: item.GrandTotal.toLocaleString(),
             action: (
-              <UIRow style={{ marginTop: -10 }}>
+              <UIRow>
                 <UIButton
                   size="small"
-                  fill="clear"
+                  color="#40c4ff"
                   style={{
+                    paddingTop: 2,
+                    paddingBottom: 2,
+                    paddingLeft: 5,
+                    paddingRight: 5,
                     marginTop: 0,
-                    marginBottom: 0
-                  }}
-                  onPress={() => {
-                    alert("remove!");
+                    marginBottom: 2,
+                    fontColor: "#000"
                   }}
                 >
-                  <IconRemove
-                    height={18}
-                    width={18}
-                    color="red"
-                    onPress={() => {
-                      alert("remove!");
-                    }}
-                  />
+                  View
                 </UIButton>
               </UIRow>
             )

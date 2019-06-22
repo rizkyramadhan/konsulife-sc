@@ -1,12 +1,13 @@
 import UIButton from "@app/libs/ui/UIButton";
-import UIList from "@app/libs/ui/UIList";
 import UIRow from "@app/libs/ui/UIRow";
 import React from "react";
+import UIList from "@app/libs/ui/UIList";
 import IconRemove from "@app/libs/ui/Icons/IconRemove";
 
 export default ({ items, setItems }: any) => {
   return (
     <UIList
+      itemHeight={80}
       items={items.map((item: any, index: any) => ({
         ...item,
         UnitPrice: item.UnitPrice.toLocaleString(),
