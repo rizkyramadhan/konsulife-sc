@@ -13,8 +13,6 @@ export const MainStyle: any = {
   errorColor: "#dc3545",
   successColor: "#28a745",
   warningColor: "#ffc107",
-  iconBackButton: require('@icon/arrow_back.png'),
-  iconMenuButton: require('@icon/menu.png'),
   backgroundSidebar: '#fff'
 };
 

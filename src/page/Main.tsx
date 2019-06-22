@@ -3,6 +3,7 @@ import getSession from '@app/libs/gql/session/getSession';
 import logout from '@app/libs/gql/session/logout';
 import { Router } from "@app/libs/router/Routing";
 import SwitchRoute, { RouteState } from '@app/libs/router/SwitchRoute';
+import IconSignOut from '@app/libs/ui/Icons/IconSignOut';
 import UIBody from '@app/libs/ui/UIBody';
 import UIButton from '@app/libs/ui/UIButton';
 import UIContainer from '@app/libs/ui/UIContainer';
@@ -15,6 +16,8 @@ import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { Image, Platform, View } from 'reactxp';
+import FormARInvoice from './arinvoice/FormARInvoice';
+import ListARInvoice from './arinvoice/ListARInvoice';
 import FormCustomer from './customer/FormCustomer';
 import ListCustomer from './customer/ListCustomer';
 import Login from './Login';
@@ -24,65 +27,71 @@ import ListSO from './so/ListSO';
 import FormSOCanvas from './socanvas/FormSOCanvas';
 import ListSOCanvas from './socanvas/ListSOCanvas';
 import ListUser from './user/ListUser';
-import ListARInvoice from './arinvoice/ListARInvoice';
-import FormARInvoice from './arinvoice/FormARInvoice';
+import IconUser from '@app/libs/ui/Icons/IconUser';
+import IconAddressCard from '@app/libs/ui/Icons/IconAddressCard';
+import IconInvoice from '@app/libs/ui/Icons/IconInvoice';
+import IconReceipt from '@app/libs/ui/Icons/IconReceipt';
+import IconCartPlus from '@app/libs/ui/Icons/IconCartPlus';
+import IconShoppingCart from '@app/libs/ui/Icons/IconShoppingCart';
+import IconTruck from '@app/libs/ui/Icons/IconTruck';
+import IconLuggageCart from '@app/libs/ui/Icons/IconLuggageCart';
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
 }
 
-const Menu = withRouter(({ history, setSide }: MenuProps) => {
-  const menuList = [
-    {
-      title: 'Working Order',
-      subtitle: 'Lorem Ipsum is simply dummy text.',
-      icon: require('@icon/order2.png'),
-      path: '/wo'
-    },
-    {
-      title: 'SO Taking Order',
-      subtitle: 'Lorem Ipsum is simply dummy text.',
-      icon: require('@icon/order.png'),
-      path: '/so'
-    },
-    {
-      title: 'SO Canvasing',
-      subtitle: 'Lorem Ipsum is simply dummy text.',
-      icon: require('@icon/order.png'),
-      path: '/so-canvas'
-    },
-    {
-      title: 'Delivery Order',
-      subtitle: 'Lorem Ipsum is simply dummy text.',
-      icon: require('@icon/order2.png'),
-      path: '/do'
-    },
-    {
-      title: 'Payment Receipt',
-      subtitle: 'Lorem Ipsum is simply dummy text.',
-      icon: require('@icon/invoice.png'),
-      path: '/payment-receipt'
-    },
-    {
-      title: 'AR Invoice',
-      subtitle: 'Lorem Ipsum is simply dummy text.',
-      icon: require('@icon/invoice.png'),
-      path: '/ar-invoice'
-    },
-    {
-      title: 'Customer',
-      subtitle: 'Lorem Ipsum is simply dummy text.',
-      icon: require('@icon/customer.png'),
-      path: '/customer'
-    },
-    {
-      title: 'User',
-      subtitle: 'Lorem Ipsum is simply dummy text.',
-      icon: require('@icon/user.png'),
-      path: '/user'
-    }
-  ];
+export const menuList = [
+  {
+    title: 'Working Order',
+    subtitle: 'Lorem Ipsum is simply dummy text.',
+    icon: <IconLuggageCart width={20} height={20} color="#1D6EF7" />,
+    path: '/wo'
+  },
+  {
+    title: 'SO Taking Order',
+    subtitle: 'Lorem Ipsum is simply dummy text.',
+    icon: <IconCartPlus width={20} height={20} color="#1D6EF7" />,
+    path: '/so'
+  },
+  {
+    title: 'SO Canvasing',
+    subtitle: 'Lorem Ipsum is simply dummy text.',
+    icon: <IconShoppingCart width={20} height={20} color="#1D6EF7" />,
+    path: '/so-canvas'
+  },
+  {
+    title: 'Delivery Order',
+    subtitle: 'Lorem Ipsum is simply dummy text.',
+    icon: <IconTruck width={20} height={20} color="#1D6EF7" />,
+    path: '/do'
+  },
+  {
+    title: 'Payment Receipt',
+    subtitle: 'Lorem Ipsum is simply dummy text.',
+    icon: <IconReceipt width={20} height={20} color="#1D6EF7" />,
+    path: '/payment-receipt'
+  },
+  {
+    title: 'AR Invoice',
+    subtitle: 'Lorem Ipsum is simply dummy text.',
+    icon: <IconInvoice width={20} height={20} color="#1D6EF7" />,
+    path: '/ar-invoice'
+  },
+  {
+    title: 'Customer',
+    subtitle: 'Lorem Ipsum is simply dummy text.',
+    icon: <IconAddressCard width={20} height={20} color="#1D6EF7" />,
+    path: '/customer'
+  },
+  {
+    title: 'User',
+    subtitle: 'Lorem Ipsum is simply dummy text.',
+    icon: <IconUser width={20} height={20} color="#1D6EF7" />,
+    path: '/user'
+  }
+];
 
+const Menu = withRouter(({ history, setSide }: MenuProps) => {
   RouteState.setRootPaths(menuList.map(item => item.path));
   return (
     <UISimpleList
@@ -109,7 +118,7 @@ const Menu = withRouter(({ history, setSide }: MenuProps) => {
               fill="clear"
               style={{ width: "100%", justifyContent: "flex-start" }}
             >
-              <Image source={item.icon} style={{ width: 24, height: 24 }} />
+              {item.icon}
               <UIText style={{ color: "#1D6EF7", paddingLeft: 15 }}> {item.title}</UIText>
             </UIButton>
 
@@ -138,7 +147,7 @@ const Menu = withRouter(({ history, setSide }: MenuProps) => {
           style={{ width: "100%", justifyContent: 'flex-start' }}
           color="#fff"
         >
-          <Image source={require('@icon/order.png')} style={{ width: 24, height: 24 }} />
+          <IconSignOut width={20} height={20} color="#1D6EF7" />
           <UIText style={{ color: "#1D6EF7", paddingLeft: 15 }}> Logout</UIText>
         </UIButton>
 
