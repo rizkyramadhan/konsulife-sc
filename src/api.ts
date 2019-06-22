@@ -1,6 +1,6 @@
 import Axios from "axios";
 
-const urlDev: string = "http://mock.rx.plansys.co";
+// const urlDev: string = "http://mock.rx.plansys.co";
 const url: string = "http://172.16.145.3:8087/MBGPService/Api/Search";
 
 interface SearchProps {
