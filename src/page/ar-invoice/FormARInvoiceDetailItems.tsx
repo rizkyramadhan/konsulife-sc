@@ -2,7 +2,6 @@ import UIButton from "@app/libs/ui/UIButton";
 import UIJsonTable from "@app/libs/ui/UIJsonTable";
 import UIRow from "@app/libs/ui/UIRow";
 import React from "react";
-import IconRemove from "@app/libs/ui/Icons/IconRemove";
 
 // const _modalId = "ErrorDialog";
 // const showDialog = () => {
@@ -94,27 +93,17 @@ export default ({ items, setItems }: any) => {
         //   />
         // ),
         action: (
-          <UIRow style={{ marginTop: -10 }}>
+          <UIRow>
             <UIButton
               size="small"
-              fill="clear"
-              style={{
-                marginTop: 0,
-                marginBottom: 0
-              }}
+              color="error"
               onPress={() => {
-                alert("remove!");
+                items.splice(index, 1);
+                setItems([...items]);
               }}
+              fill="clear"
             >
-              <IconRemove
-                height={18}
-                width={18}
-                color="red"
-                onPress={() => {
-                  items.splice(index, 1);
-                  setItems([...items]);
-                }}
-              />
+              Remove
             </UIButton>
           </UIRow>
         )
@@ -123,10 +112,6 @@ export default ({ items, setItems }: any) => {
         {
           index: 4,
           width: 90
-        },
-        {
-          index: 8,
-          width: 80
         }
       ]}
     />

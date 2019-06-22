@@ -8,7 +8,6 @@ import UIText from "@app/libs/ui/UIText";
 import React from "react";
 import { withRouter } from "react-router";
 import { Image } from "reactxp";
-import IconBack from "@app/libs/ui/Icons/IconBack";
 
 const FormSO = withRouter(({ history }: any) => {
   return (
@@ -35,7 +34,7 @@ export default () => {
     <UIContainer>
       <UIHeader center={"Sales Order"} right={<FormSO />} />
       <UIBody>
-        <IconBack color="red" />
+        {/* <IconBack /> */}
         <UIJsonTable
           data={[
             {
