@@ -3,62 +3,105 @@ import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
-import UIList from '@app/libs/ui/UIList';
+import UIList from "@app/libs/ui/UIList";
+import UIRow from "@app/libs/ui/UIRow";
 import UIText from "@app/libs/ui/UIText";
+import { observer } from "mobx-react-lite";
 import React from "react";
 import { withRouter } from "react-router";
-import { Image } from "reactxp";
+import IconRemove from "@app/libs/ui/Icons/IconRemove";
+import IconAdd from "@app/libs/ui/Icons/IconAdd";
 
-const FormSO = withRouter(({ history }: any) => {
+const BtnCreate = withRouter(({ history }: any) => {
   return (
     <UIButton
-      size="compact"
-      fill="clear"
+      size="small"
+      color="primary"
       onPress={() => {
-        history.replace("/so/form");
+        history.push("/so-canvas/form");
+      }}
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "flex-end"
       }}
     >
-      <Image
-        style={{ width: 28, height: 28 }}
-        source={require("@icon/add.png")}
-      />
+      <IconAdd color="#fff" />
       {isSize(["md", "lg"]) && (
-        <UIText style={{ color: "#613eea" }}>Create</UIText>
+        <UIText style={{ color: "#fff" }}>Create</UIText>
       )}
     </UIButton>
   );
 });
 
-export default () => {
+const sample = [
+  {
+    CardCode: "TIM0002",
+    CardName: "PT FREEPOT INDONESIA",
+    DocDate: "12.08.19",
+    DocDueDate: "12.08.19",
+    DocStatus: "Open",
+    U_IDU_SO_INTNUM: "SO/TIM-0002/19/VI/0001",
+    Sales: "Dwi",
+    GrandTotal: 1000000
+  },
+  {
+    CardCode: "TIM0002",
+    CardName: "PT FREEPOT INDONESIA",
+    DocDate: "12.08.19",
+    DocDueDate: "12.08.19",
+    DocStatus: "Open",
+    U_IDU_SO_INTNUM: "SO/TIM-0002/19/VI/0001",
+    Sales: "Dwi",
+    GrandTotal: 1000000
+  }
+];
+
+export default observer(({ showSidebar, sidebar }: any) => {
+  const data = sample;
+
   return (
     <UIContainer>
-      <UIHeader center={"Sales Order"} right={<FormSO />} />
+      <UIHeader
+        showSidebar={showSidebar}
+        sidebar={sidebar}
+        center={"SO Taking Order"}
+      >
+        <BtnCreate />
+      </UIHeader>
       <UIBody>
         <UIList
-          items={[
-            {
-              no: 1,
-              test: "qwe",
-              coba: "halo"
-            },
-            {
-              no: 2,
-              test: "asdasd",
-              coba: "halo"
-            },
-            {
-              no: 3,
-              test: "asdasd",
-              coba: "halo"
-            },
-            {
-              no: 4,
-              test: "asdasd",
-              coba: "halo"
-            }
-          ]}
+          style={{ backgroundColor: "#fff" }}
+          items={data.map(item => ({
+            ...item,
+            GrandTotal: item.GrandTotal.toLocaleString(),
+            action: (
+              <UIRow style={{ marginTop: -10 }}>
+                <UIButton
+                  size="small"
+                  fill="clear"
+                  style={{
+                    marginTop: 0,
+                    marginBottom: 0
+                  }}
+                  onPress={() => {
+                    alert("remove!");
+                  }}
+                >
+                  <IconRemove
+                    height={18}
+                    width={18}
+                    color="red"
+                    onPress={() => {
+                      alert("remove!");
+                    }}
+                  />
+                </UIButton>
+              </UIRow>
+            )
+          }))}
         />
       </UIBody>
     </UIContainer>
   );
-};
+});

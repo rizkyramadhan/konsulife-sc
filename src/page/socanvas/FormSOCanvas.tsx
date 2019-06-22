@@ -33,14 +33,32 @@ const sampleList = [
   {
     ItemCode: "BSLSR000001",
     Dscription: "750R16-8PR-TL L310-T",
+    U_IDU_PARTNUM: "",
+    UseBaseUn: "",
+    Quantity: 0,
+    UoMCode: "",
+    WhsCode: "",
+    ShipDate: "",
+    OcrCode: "",
+    OcrCode2: "",
     UnitPrice: 1950000,
-    DiscPrcnt: ""
+    DiscPrcnt: "",
+    TaxCode: ""
   },
   {
     ItemCode: "BSLSR000001",
     Dscription: "750R16-8PR-TL L310-T",
+    U_IDU_PARTNUM: "",
+    UseBaseUn: "",
+    Quantity: 0,
+    UoMCode: "",
+    WhsCode: "",
+    ShipDate: "",
+    OcrCode: "",
+    OcrCode2: "",
     UnitPrice: 1950000,
-    DiscPrcnt: ""
+    DiscPrcnt: "",
+    TaxCode: ""
   }
 ];
 

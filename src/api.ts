@@ -14,7 +14,7 @@ export interface APISearchProps {
   Fields?: string[];
   Sort?: string;
   Page?: number;
-  Limit?: number
+  Limit?: number;
 }
 
 export const APISearch = (p: APISearchProps) => {
@@ -35,10 +35,10 @@ export const APISearch = (p: APISearchProps) => {
   let cond: string = "";
   if (!!p.Condition && p.Condition.length > 0) {
     p.Condition.forEach((c: any) => {
-      if (c.cond === 'AND' || c.cond === 'OR' || c.cond === 'XOR') {
+      if (c.cond === "AND" || c.cond === "OR" || c.cond === "XOR") {
         cond += ` ${c.cond} `;
       } else {
-        cond += `[${c.field}] ${c.cond} '${c.value || ''}'`;
+        cond += `[${c.field}] ${c.cond} '${c.value || ""}'`;
       }
     });
   }
@@ -48,14 +48,16 @@ export const APISearch = (p: APISearchProps) => {
   return new Promise((resolve, reject) => {
     Axios.post(url, JSON.stringify(params), {
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       }
-    }).then(res => {
-      console.log(res);
-      resolve(res);
-    }).catch(err => {
-      console.log(err);
-      reject(err);
     })
-  })
+      .then((res: any) => {
+        console.log(res);
+        resolve(res);
+      })
+      .catch((err: any) => {
+        console.log(err);
+        reject(err);
+      });
+  });
 };

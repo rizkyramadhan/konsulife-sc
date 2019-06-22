@@ -10,6 +10,7 @@ import React from "react";
 import { withRouter } from "react-router";
 import UIList from "@app/libs/ui/UIList";
 import IconAdd from "@app/libs/ui/Icons/IconAdd";
+import IconInvoice from "@app/libs/ui/Icons/IconInvoice";
 
 const BtnCreate = withRouter(({ history }: any) => {
   return (
@@ -74,21 +75,19 @@ export default observer(({ showSidebar, sidebar }: any) => {
             ...item,
             GrandTotal: item.GrandTotal.toLocaleString(),
             action: (
-              <UIRow>
+              <UIRow style={{ marginTop: -10 }}>
                 <UIButton
                   size="small"
-                  color="#40c4ff"
+                  fill="clear"
                   style={{
-                    paddingTop: 2,
-                    paddingBottom: 2,
-                    paddingLeft: 5,
-                    paddingRight: 5,
                     marginTop: 0,
-                    marginBottom: 2,
-                    fontColor: "#000"
+                    marginBottom: 0
+                  }}
+                  onPress={() => {
+                    alert("view!");
                   }}
                 >
-                  View
+                  <IconInvoice height={18} width={18} color="blue" />
                 </UIButton>
               </UIRow>
             )

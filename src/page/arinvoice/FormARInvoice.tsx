@@ -8,37 +8,49 @@ import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
 import { View } from "reactxp";
-import FormARInvoiceDetailItems from './FormARInvoiceDetailItems';
+import FormARInvoiceDetailItems from "./FormARInvoiceDetailItems";
 import IconSave from "@app/libs/ui/Icons/IconSave";
-import IconAdd from "@app/libs/ui/Icons/IconAdd";
+import IconCopy from "@app/libs/ui/Icons/IconCopy";
 
 const sample = {
-    CardCode: "TIM0002",
-    CardName: "PT FREEPOT INDONESIA",
-    U_IDU_SO_INTNUM: "SO/TIM-0002/19/VI/0001",
-    U_IDU_DO_INTNUM: "",
-    U_BRANCH: "",
-    Comments: "",
+  CardCode: "TIM0002",
+  CardName: "PT FREEPOT INDONESIA",
+  U_IDU_SO_INTNUM: "SO/TIM-0002/19/VI/0001",
+  U_IDU_DO_INTNUM: "",
+  U_BRANCH: "",
+  Comments: ""
 };
 
 const sampleList = [
   {
     ItemCode: "BSLSR000001",
-    ItemName: "750R16-8PR-TL L310-T",
-    //U_IDU_PARTNUM: "",
-    WhsCode: "TIM001",
-    Quantity: 10,
-    UnitMsr: "Unit",
-    //OpenCreQty: 50
+    Dscription: "750R16-8PR-TL L310-T",
+    U_IDU_PARTNUM: "",
+    UseBaseUn: "",
+    Quantity: 0,
+    UoMCode: "",
+    WhsCode: "",
+    ShipDate: "",
+    OcrCode: "",
+    OcrCode2: "",
+    UnitPrice: 1950000,
+    DiscPrcnt: "",
+    TaxCode: ""
   },
   {
     ItemCode: "BSLSR000001",
-    ItemName: "750R16-8PR-TL L310-T",
-    //U_IDU_PARTNUM: "",
-    WhsCode: "TIM001",
-    Quantity: 10,
-    UnitMsr: "Unit",
-    //OpenCreQty: 50
+    Dscription: "750R16-8PR-TL L310-T",
+    U_IDU_PARTNUM: "",
+    UseBaseUn: "",
+    Quantity: 0,
+    UoMCode: "",
+    WhsCode: "",
+    ShipDate: "",
+    OcrCode: "",
+    OcrCode2: "",
+    UnitPrice: 1950000,
+    DiscPrcnt: "",
+    TaxCode: ""
   }
 ];
 
@@ -82,21 +94,21 @@ export default observer(({ showSidebar, sidebar }: any) => {
                   size: 7
                 },
                 {
-                    key: "U_IDU_DO_INTNUM",
-                    type: "field",
-                    label: "DO Number",
-                    size: 7
+                  key: "U_IDU_DO_INTNUM",
+                  type: "field",
+                  label: "DO Number",
+                  size: 7
                 },
                 { type: "empty", size: 5 },
                 { key: "DocDate", size: 4, label: "Posting Date" },
                 { key: "DocDueDate", size: 4, label: "Delivery Date" },
                 { type: "empty", size: 2 },
                 {
-                    key: "U_BRANCH",
-                    type: "field",
-                    label: "Cabang",
-                    size: 7
-                },
+                  key: "U_BRANCH",
+                  type: "field",
+                  label: "Cabang",
+                  size: 7
+                }
               ]
             },
             {
@@ -105,7 +117,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
               sublabel: "Toko Penerima Barang",
               value: [
                 { key: "CardCode", label: "Customer", size: 3 },
-                { key: "CardName", label: "Name" },
+                { key: "CardName", label: "Name" }
               ]
             },
             {
@@ -147,13 +159,13 @@ export default observer(({ showSidebar, sidebar }: any) => {
               color="success"
               size="small"
               onPress={() => {
-                alert("Add!");
+                alert("Copy!");
               }}
             >
-              <IconAdd color="#fff" height={24} width={24} />
+              <IconCopy color="#fff" height={24} width={24} />
               {isSize(["md", "lg"]) && (
                 <UIText style={{ color: "#fff" }} size="small">
-                  {" Add"}
+                  {" Copy From SO"}
                 </UIText>
               )}
             </UIButton>
