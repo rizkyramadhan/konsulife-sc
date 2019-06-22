@@ -18,13 +18,14 @@ export default (p: SAPDropdownProps) => {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-    let query = fieldSAP[p.field];
+    let query = (fieldSAP as any)[p.field];
     if (!!p.where && p.where.length > 0) {
       p.where.forEach(item => {
         let idx = (query.Condition as any).findIndex((x: any) => x.Field == item.field);
         (query.Condition as any)[idx].value = item.value;
       });
     }
+    console.log(query);
 
     APISearch(query).then((res: any) => {
       let items = res.map((item: any) => {

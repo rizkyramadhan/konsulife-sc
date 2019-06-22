@@ -38,7 +38,8 @@ export const APISearch = (p: APISearchProps) => {
       if (c.cond === 'AND' || c.cond === 'OR' || c.cond === 'XOR') {
         cond += ` ${c.cond} `;
       } else {
-        cond += `[${c.field}] ${c.cond} '${c.value || ''}'`;
+        let val = parseInt(c.value) != NaN ? parseInt(c.value) : `'${c.value}'`; 
+        cond += `[${c.field}] ${c.cond} ${val}`;
       }
     });
   }
@@ -48,7 +49,8 @@ export const APISearch = (p: APISearchProps) => {
   return new Promise((resolve, reject) => {
     Axios.post(url, JSON.stringify(params), {
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
       }
     }).then(res => {
       console.log(res);
