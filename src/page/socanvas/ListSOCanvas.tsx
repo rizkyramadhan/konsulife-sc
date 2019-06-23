@@ -94,7 +94,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
               table: { header: "Grand Total " }
             }
           }}
-          primaryKey="CardCode"
+          primaryKey="ItemCode"
           items={data.map(item => ({
             ...item,
             GrandTotal: item.GrandTotal.toLocaleString(),

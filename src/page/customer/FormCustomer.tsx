@@ -15,6 +15,7 @@ import FormCustomerShipToItems from './FormCustomerShipToItems';
 import IconSave from "@app/libs/ui/Icons/IconSave";
 import SAPDropdown from '@app/components/SAPDropdown';
 import UISelectField from '@app/libs/ui/UISelectField';
+import IconAdd from '@app/libs/ui/Icons/IconAdd';
 
 const customer = {
   Series: "",
@@ -70,7 +71,96 @@ export default observer(({ showSidebar, sidebar }: any) => {
   const [itemCP, setItemCP] = useState(cpList);
   const [itemBillTo, setItemBillTo] = useState(billToList);
   const [itemShipTo, setItemShipTo] = useState(shipToList);
-
+  const ActionCP = () => {
+    return (<UIButton
+      style={{
+        flexShrink: 'none'
+      }}
+      color="success"
+      size="small"
+      onPress={() => {
+        setItemCP([...itemCP, {
+          Id: itemCP.length + 1,
+          Name: "",
+          FirstName: "",
+          MiddleName: "",
+          LastName: "",
+          Tel1: "",
+          Tel2: "",
+          Cellolar: ""
+        }])
+      }}
+    >
+      <IconAdd color="#fff" height={18} width={18} style={{
+        marginTop: -9
+      }} />
+      {isSize(["md", "lg"]) && (
+        <UIText style={{ color: "#fff" }} size="small">
+          {" Add"}
+        </UIText>
+      )}
+    </UIButton>);
+  }
+  const ActionShip = () => {
+    return (<UIButton
+      style={{
+        flexShrink: 'none'
+      }}
+      color="success"
+      size="small"
+      onPress={() => {
+        setItemShipTo([...itemShipTo, {
+          Id: itemShipTo.length + 1,
+          Address: "",
+          Street: "",
+          ZipCode: "",
+          City: "",
+          State: 0,
+          AdresType: "S",
+          IsDefault: itemShipTo.length === 0 ? 'Y' : 'N'
+        }])
+      }}
+    >
+      <IconAdd color="#fff" height={18} width={18} style={{
+        marginTop: -9
+      }} />
+      {isSize(["md", "lg"]) && (
+        <UIText style={{ color: "#fff" }} size="small">
+          {" Add"}
+        </UIText>
+      )}
+    </UIButton>);
+  }
+  const ActionBill = () => {
+    return (<UIButton
+      style={{
+        flexShrink: 'none'
+      }}
+      color="success"
+      size="small"
+      onPress={() => {
+        setItemBillTo([...itemBillTo, {
+          Id: itemBillTo.length + 1,
+          Address: "",
+          Street: "",
+          ZipCode: "",
+          City: "",
+          State: 0,
+          AdresType: "B",
+          IsDefault: itemBillTo.length === 0 ? 'Y' : 'N'
+        }])
+      }}
+    >
+      <IconAdd color="#fff" height={18} width={18} style={{
+        marginTop: -9
+      }} />
+      {isSize(["md", "lg"]) && (
+        <UIText style={{ color: "#fff" }} size="small">
+          {" Add"}
+        </UIText>
+      )}
+    </UIButton>);
+  }
   return (
     <UIContainer>
       <UIHeader
@@ -142,50 +232,23 @@ export default observer(({ showSidebar, sidebar }: any) => {
           <UITabs
             tabs={[
               {
-                label: () => {
-                  return (
-                    <UIText
-                      style={{
-                        fontSize: 19,
-                        color: "#333",
-                        fontWeight: 400
-                      }}
-                    >Contact Person</UIText>
-                  );
-                },
-                content: () => (<FormCustomerCPItems items={itemCP} setItems={setItemCP} />)
+                label: "Contact Person",
+                content: () => (<FormCustomerCPItems items={itemCP} setItems={setItemCP} />),
+                action: ActionCP()
               },
               {
-                label: () => {
-                  return (
-                    <UIText
-                      style={{
-                        fontSize: 19,
-                        color: "#333",
-                        fontWeight: 400
-                      }}
-                    >Bill To</UIText>
-                  );
-                },
+                label: "Bill To",
                 content: () => (
                   <FormCustomerBillToItems items={itemBillTo} setItems={setItemBillTo} />
-                )
+                ),
+                action: ActionBill()
               },
               {
-                label: () => {
-                  return (
-                    <UIText
-                      style={{
-                        fontSize: 19,
-                        color: "#333",
-                        fontWeight: 400
-                      }}
-                    >Ship To</UIText>
-                  );
-                },
+                label: "Ship To",
                 content: (
                   <FormCustomerShipToItems items={itemShipTo} setItems={setItemShipTo} />
-                )
+                ),
+                action: ActionShip()
               }
             ]}
           />
