@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 interface SAPDropdownProps extends UIProps {
   value: string | number;
   setValue: (value: any) => any;
-  field: 'Series' | 'BPGroup' | 'Currency' | 'CustomerCode' | 'PaymentTerms' | 'ContactPerson' | 'ShipTo' | 'BillTo' | 'TaxCode' | 'ItemCodeCanvas' | 'ItemCodeAll' | 'UoMCode' | 'WarehouseCodeCanvas' | 'WarehouseCodeAll' | 'VendorCode';
+  field: 'Series' | 'BPGroup' | 'Currency' | 'CustomerCode' | 'PaymentTerms' | 'ContactPerson' | 'ShipTo' | 'BillTo' | 'TaxCode' | 'ItemCodeCanvas' | 'ItemCodeAll' | 'UomCode' | 'WarehouseCodeCanvas' | 'WarehouseCodeAll' | 'VendorCode';
   search?: string;
   where?: {
     field: string;
@@ -21,8 +21,9 @@ export default (p: SAPDropdownProps) => {
     let query: APISearchProps = (SAPFieldMap as any)[p.field];
     if (!!p.where && p.where.length > 0) {
       p.where.forEach(item => {
-        let idx = (query.Condition as any).findIndex((x: any) => x.Field == item.field);
-        (query.Condition as any)[idx].value = item.value;
+        let idx = (query.Condition as any).findIndex((x: any) => x.field == item.field);
+        if (idx > -1)
+          (query.Condition as any)[idx].value = item.value;
       });
     }
 

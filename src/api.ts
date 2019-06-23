@@ -82,7 +82,7 @@ export const SAPFieldMap = {
     Table: "OCRG",
     Fields: ['GroupCode', 'GroupName'],
     Condition: [{
-      field: 'GroupType',
+      field: 'CardType',
       value: 'C',
       cond: '=',
     }]
@@ -115,9 +115,9 @@ export const SAPFieldMap = {
   } as APISearchProps,
   CustomerCode: {
     Table: "OCRD",
-    Fields: ["BPCode", "BPName"],
+    Fields: ["CardCode", "CardName"],
     Condition: [{
-      field: "GroupType",
+      field: "CardType",
       cond: "=",
       value: "C"
     },
@@ -125,7 +125,7 @@ export const SAPFieldMap = {
       cond: "OR"
     },
     {
-      field: "GroupType",
+      field: "CardType",
       cond: "=",
       value: "L"
     }]
@@ -218,14 +218,9 @@ export const SAPFieldMap = {
     Table: "OITM",
     Fields: ["ItemCode", "ItemName"]
   } as APISearchProps,
-  UoMCode: {
+  UomCode: {
     Table: "OUOM",
-    Fields: ["UoMCode", "UoMName"],
-    Condition: [{
-      field: "CardCode",
-      cond: "=",
-      value: ""
-    }]
+    Fields: ["UomCode", "UomName"]
   } as APISearchProps,
   WarehouseCodeCanvas: {
     Table: "OWHS",
@@ -300,9 +295,9 @@ export const SAPFieldMap = {
   } as APISearchProps,
   VendorCode: {
     Table: "OCRD",
-    Fields: ["BPCode", "BPName"],
+    Fields: ["CardCode", "CardName"],
     Condition: [{
-      field: "GroupType",
+      field: "CardType",
       cond: "=",
       value: "S"
     }]
