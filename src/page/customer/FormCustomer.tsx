@@ -14,6 +14,7 @@ import FormCustomerBillToItems from './FormCustomerBillToItems';
 import FormCustomerShipToItems from './FormCustomerShipToItems';
 import IconSave from "@app/libs/ui/Icons/IconSave";
 import SAPDropdown from '@app/components/SAPDropdown';
+import UISelectField from '@app/libs/ui/UISelectField';
 
 const customer = {
   Series: "",
@@ -104,7 +105,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
                     <SAPDropdown label="Series" field="Series" value={data.Series} setValue={(v) => { setData({ ...data, Series: v }) }} />)
                 },
                 { key: "CardName", size: 7, label: "BP Name" },
-                { key: "CardType", size: 5, label: "BP Type" },
+                { key: "CardType", size: 5, component: (<UISelectField label="BP Type" items={[{ label: 'Customer', value: 'C' }, { label: 'Vendor', value: 'V' }]} value={data.CardType} setValue={(v) => { setData({ ...data, CardType: v }) }} />) },
                 {
                   key: "GroupCode", size: 6, component: (
                     <SAPDropdown label="Group Code" field="BPGroup" value={data.GroupCode} setValue={(v) => { setData({ ...data, GroupCode: v }) }} />)
@@ -133,6 +134,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
           ]}
           setValue={(value: any, key: any) => {
             (data as any)[key] = value;
+            setData(data);
           }}
         />
 
