@@ -1,4 +1,4 @@
-import { APISearch, SAPFieldMap, APISearchProps } from '@app/api';
+import { APISearch, APISearchProps, SAPFieldMap } from '@app/api';
 import { UIProps } from "@app/libs/ui/Styles/Style";
 import UISelectField from "@app/libs/ui/UISelectField";
 import React, { useEffect, useState } from "react";
@@ -44,12 +44,13 @@ export default (p: SAPDropdownProps) => {
       let items = res.map((item: any) => {
         let field = Object.keys(item);
         return {
-          label: (item[field[0]] as any),
-          value: (item[!!field[1] ? field[1] : field[0]] as any)
+          value: (item[field[0]] as any),
+          label: (item[!!field[1] ? field[1] : field[0]] as any)
         }
       });
       setItems(items);
-    }).catch(() => {
+    }).catch((err) => {
+      console.error(err);
       setItems([]);
     })
     // const fetch = async () => {

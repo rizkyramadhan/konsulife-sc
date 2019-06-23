@@ -40,7 +40,7 @@ export const APISearch = (p: APISearchProps) => {
       if (c.cond === "AND" || c.cond === "OR" || c.cond === "XOR") {
         cond += ` ${c.cond} `;
       } else {
-        let val = parseInt(c.value) != NaN ? parseInt(c.value) : `'${c.value}'`;
+        let val = typeof c.value == "number" ? parseInt(c.value) : `'${c.value}'`;
         cond += `[${c.field}] ${c.cond} ${val}`;
       }
     });
@@ -56,10 +56,13 @@ export const APISearch = (p: APISearchProps) => {
       }
     })
       .then((res: any) => {
-        resolve(res);
+        if (typeof res.data == 'object' && !!res.data && !!res.data.ErrorCode) {
+          reject(res.data);
+        }
+        resolve(res.data);
       })
       .catch((err: any) => {
-        console.log(err);
+        console.error(err);
         reject(err);
       });
   });

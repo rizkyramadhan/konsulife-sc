@@ -11,7 +11,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
         <UIContainer>
             <UIHeader showSidebar={showSidebar} sidebar={sidebar} center="User" />
             <UIBody>
-                <SAPDropdown field="Series" value={value} setValue={setValue}></SAPDropdown>
+                <SAPDropdown field="BillTo" value={value} setValue={setValue}></SAPDropdown>
                 {value}
             </UIBody>
         </UIContainer>
