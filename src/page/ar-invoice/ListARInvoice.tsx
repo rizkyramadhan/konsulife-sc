@@ -39,7 +39,7 @@ const BtnCreate = withRouter(({ history }: any) => {
 
 const sample = [
   {
-    CardCode: "TIM0002",
+    CardCode: "TIM0001",
     CardName: "PT FREEPOT INDONESIA",
     DocDate: "12.08.19",
     DocDueDate: "12.08.19",
@@ -74,6 +74,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
       </UIHeader>
       <UIBody>
         <UIList
+          primaryKey="CardCode"
           items={data.map(item => ({
             ...item,
             GrandTotal: item.GrandTotal.toLocaleString(),

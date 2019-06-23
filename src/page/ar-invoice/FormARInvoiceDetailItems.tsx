@@ -6,6 +6,7 @@ import UIList from "@app/libs/ui/UIList";
 export default ({ items, setItems }: any) => {
   return (
     <UIList
+      primaryKey="CardCode"
       items={items.map((item: any, index: any) => ({
         ...item,
         UnitPrice: item.UnitPrice.toLocaleString(),

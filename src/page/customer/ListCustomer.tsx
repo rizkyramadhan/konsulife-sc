@@ -35,34 +35,34 @@ const BtnCreate = withRouter(({ history }: any) => {
 });
 
 const sample = [
-    {
-        CardCode: "JYP00003",
-        CardName: "AMAN SALIM",
-        CardFName: "AMAN SALIM - JAYAPURA",
-        CardType: "CUSTOMER",
-        LicTradNum: "07.754.763.6-952.000"
-    },
-    {
-        CardCode: "TIM0002",
-        CardName: "BOLEH SAJA",
-        CardFName: "BOLEH SAJA - PT FREEPOT INDONESIA",
-        CardType: "CUSTOMER",
-        LicTradNum: "07.754.763.6-952.000"
-    },
-    {
-        CardCode: "TIM0002",
-        CardName: "BOLEH SAJA",
-        CardFName: "BOLEH SAJA - PT FREEPOT INDONESIA",
-        CardType: "CUSTOMER",
-        LicTradNum: "07.754.763.6-952.000"
-    },
-    {
-        CardCode: "TIM0002",
-        CardName: "BOLEH SAJA",
-        CardFName: "BOLEH SAJA - PT FREEPOT INDONESIA",
-        CardType: "CUSTOMER",
-        LicTradNum: "07.754.763.6-952.000"
-    }
+  {
+    CardCode: "JYP00003",
+    CardName: "AMAN SALIM",
+    CardFName: "AMAN SALIM - JAYAPURA",
+    CardType: "CUSTOMER",
+    LicTradNum: "07.754.763.6-952.000"
+  },
+  {
+    CardCode: "TIM0001",
+    CardName: "BOLEH SAJA",
+    CardFName: "BOLEH SAJA - PT FREEPOT INDONESIA",
+    CardType: "CUSTOMER",
+    LicTradNum: "07.754.763.6-952.000"
+  },
+  {
+    CardCode: "TIM0002",
+    CardName: "BOLEH SAJA",
+    CardFName: "BOLEH SAJA - PT FREEPOT INDONESIA",
+    CardType: "CUSTOMER",
+    LicTradNum: "07.754.763.6-952.000"
+  },
+  {
+    CardCode: "TIM0003",
+    CardName: "BOLEH SAJA",
+    CardFName: "BOLEH SAJA - PT FREEPOT INDONESIA",
+    CardType: "CUSTOMER",
+    LicTradNum: "07.754.763.6-952.000"
+  }
 ];
 
 export default observer(({ showSidebar, sidebar }: any) => {
@@ -70,15 +70,12 @@ export default observer(({ showSidebar, sidebar }: any) => {
 
   return (
     <UIContainer>
-      <UIHeader
-        showSidebar={showSidebar}
-        sidebar={sidebar}
-        center={"Customer"}
-      >
+      <UIHeader showSidebar={showSidebar} sidebar={sidebar} center={"Customer"}>
         <BtnCreate />
       </UIHeader>
       <UIBody>
         <UIList
+          primaryKey="CardCode"
           style={{ backgroundColor: "#fff" }}
           items={data.map(item => ({
             ...item,
