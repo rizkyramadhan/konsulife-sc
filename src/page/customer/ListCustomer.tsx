@@ -4,12 +4,10 @@ import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
-import UIRow from "@app/libs/ui/UIRow";
 import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { withRouter } from "react-router";
-import IconRemove from "@app/libs/ui/Icons/IconRemove";
 import IconAdd from "@app/libs/ui/Icons/IconAdd";
 
 const BtnCreate = withRouter(({ history }: any) => {
@@ -65,7 +63,7 @@ const sample = [
   }
 ];
 
-export default observer(({ showSidebar, sidebar }: any) => {
+export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const data = sample;
 
   return (
@@ -75,37 +73,35 @@ export default observer(({ showSidebar, sidebar }: any) => {
       </UIHeader>
       <UIBody>
         <UIList
+          style={{ flex: 1 }}
           primaryKey="CardCode"
-          style={{ backgroundColor: "#fff" }}
-          items={data.map(item => ({
-            ...item,
-            action: (
-              <UIRow style={{ marginTop: -10 }}>
-                <UIButton
-                  size="small"
-                  fill="clear"
-                  style={{
-                    marginTop: 0,
-                    marginBottom: 0
-                  }}
-                  onPress={() => {
-                    alert("remove!");
-                  }}
-                >
-                  <IconRemove
-                    height={18}
-                    width={18}
-                    color="red"
-                    onPress={() => {
-                      alert("remove!");
-                    }}
-                  />
-                </UIButton>
-              </UIRow>
-            )
-          }))}
+          selection="single"
+          onSelect={() => { history.push('customer/form') }}
+          fields={{
+            CardCode: {
+              table: {
+                header: 'BP Code'
+              }
+            },
+            CardName: {
+              table: {
+                header: 'BP Name'
+              }
+            },
+            CardFName: {
+              table: {
+                header: 'Foreign Name'
+              }
+            },
+            CardType: {
+              table: {
+                header: 'BP Type'
+              }
+            }
+          }}
+          items={data}
         />
       </UIBody>
     </UIContainer>
   );
-});
+}));
