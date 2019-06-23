@@ -161,7 +161,7 @@ export const SAPFieldMap = {
   } as APISearchProps,
   ContactPerson: {
     Table: "OCPR",
-    Fields: ["Name"],
+    Fields: ["Name","FirstName","MiddleName","LastName"],
     Condition: [{
       field: "CardCode",
       cond: "=",
@@ -170,7 +170,7 @@ export const SAPFieldMap = {
   } as APISearchProps,
   ShipTo: {
     Table: "CRD1",
-    Fields: ["Address"],
+    Fields: ["Address","Street","City"],
     Condition: [{
       field: "CardCode",
       cond: "=",
@@ -187,7 +187,7 @@ export const SAPFieldMap = {
   } as APISearchProps,
   BillTo: {
     Table: "CRD1",
-    Fields: ["Address"],
+    Fields: ["Address","Street","City"],
     Condition: [{
       field: "CardCode",
       cond: "=",
@@ -196,7 +196,7 @@ export const SAPFieldMap = {
   } as APISearchProps,
   TaxCode: {
     Table: "OVTG",
-    Fields: ["Code", "TaxCode"],
+    Fields: ["Code", "Name"],
     Condition: [{
       field: "Inactive",
       cond: "=",
@@ -306,7 +306,7 @@ export const SAPFieldMap = {
   } as APISearchProps,
   POHeader: {
     Table: "OPOR",
-    Fields: ["DocNum"],
+    Fields: ["DocNum","CardCode","CardName","U_IDU_PO_INTNUM","U_IDU_SUP_SONUM","U_BRANCH","Comments"],
     Condition: [{
       field: "CardCode",
       cond: "=",
@@ -320,5 +320,105 @@ export const SAPFieldMap = {
       cond: "=",
       value: "O"
     }]
-  } as APISearchProps
+  } as APISearchProps,
+  PODetail: {
+    Table: "POR1",
+    Fields: ["LineNum","DocEntry","ItemCode","ItemName","U_IDU_PARTNUM","WhsCode","Quantity","UnitMsr","OpenCreQty"],
+    Condition: [{
+      field: "DocEntry",
+      cond: "=",
+      value: ""
+    }]
+  } as APISearchProps,
+  SOHeader: {
+    Table: "ORDR",
+    Fields: ["DocNum","CardCode","CardName","U_IDU_SO_INTNUM","U_BRANCH","Comments"],
+    Condition: [{
+      field: "CardCode",
+      cond: "=",
+      value: ""
+    },
+    {
+      cond: "AND"
+    },
+    {
+      field: "DocStatus",
+      cond: "=",
+      value: "O"
+    }]
+  } as APISearchProps,
+  SODetail: {
+    Table: "RDR1",
+    Fields: ["LineNum","DocEntry","ItemCode","ItemName","U_IDU_PARTNUM","WhsCode","Quantity","UnitMsr","OpenCreQty"],
+    Condition: [{
+      field: "DocEntry",
+      cond: "=",
+      value: ""
+    }]
+  } as APISearchProps,
+  DOHeader: {
+    Table: "ODLN",
+    Fields: ["DocNum","CardCode","CardName","U_IDU_DO_INTNUM","U_BRANCH","Comments"],
+    Condition: [{
+      field: "CardCode",
+      cond: "=",
+      value: ""
+    },
+    {
+      cond: "AND"
+    },
+    {
+      field: "DocStatus",
+      cond: "=",
+      value: "O"
+    }]
+  } as APISearchProps,
+  DODetail: {
+    Table: "DLN1",
+    Fields: ["LineNum","DocEntry","ItemCode","ItemName","U_IDU_PARTNUM","WhsCode","Quantity","UnitMsr","OpenCreQty"],
+    Condition: [{
+      field: "DocEntry",
+      cond: "=",
+      value: ""
+    }]
+  } as APISearchProps,
+  UoMGroup: {
+    Table: "OUGP",
+    Fields: ["UgpCode", "UgpName"]
+  } as APISearchProps,
+  ITRHeader: {
+    Table: "OWTQ",
+    Fields: ["DocNum","CardCode","CardName","U_IDU_ITR_INTNUM","Filler","ToWhsCode","U_BRANCH","Comments"],
+    Condition: [{
+      field: "Filler",
+      cond: "=",
+      value: ""
+    },
+    {
+      cond: "AND"
+    },
+    {
+      field: "DocStatus",
+      cond: "=",
+      value: "O"
+    }]
+  } as APISearchProps,
+  ITRDetail: {
+    Table: "WTQ1",
+    Fields: ["ItemCode","ItemName","U_IDU_PARTNUM","WhsCode","Quantity","UnitMsr","OpenCreQty"],
+    Condition: [{
+      field: "DocEntry",
+      cond: "=",
+      value: ""
+    }]
+  } as APISearchProps,
+  CartOfAccount: {
+    Table: "OACT",
+    Fields: ["AcctCode","AcctName"],
+    Condition: [{
+      field: "Finance",
+      cond: "=",
+      value: "Cash Account"
+    }]
+  } as APISearchProps,
 }
