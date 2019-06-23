@@ -68,6 +68,27 @@ export const APISearch = (p: APISearchProps) => {
   });
 };
 
+export const APIPost = (api: string, data: any) => {
+  return new Promise((resolve, reject) => {
+    Axios.post('http://172.16.145.3:8087/MBGPService/Api/' + api, JSON.stringify(data), {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+      .then((res: any) => {
+        if (typeof res.data == 'object' && !!res.data && !!res.data.ErrorCode) {
+          reject(res.data);
+        }
+        resolve(res.data);
+      })
+      .catch((err: any) => {
+        console.error(err);
+        reject(err);
+      });
+  });
+};
+
 export const SAPFieldMap = {
   Series: {
     Table: "NNM1",
@@ -164,7 +185,7 @@ export const SAPFieldMap = {
   } as APISearchProps,
   ContactPerson: {
     Table: "OCPR",
-    Fields: ["Name","FirstName","MiddleName","LastName"],
+    Fields: ["Name", "FirstName", "MiddleName", "LastName"],
     Condition: [{
       field: "CardCode",
       cond: "=",
@@ -173,7 +194,7 @@ export const SAPFieldMap = {
   } as APISearchProps,
   ShipTo: {
     Table: "CRD1",
-    Fields: ["Address","Street","City"],
+    Fields: ["Address", "Street", "City"],
     Condition: [{
       field: "CardCode",
       cond: "=",
@@ -190,7 +211,7 @@ export const SAPFieldMap = {
   } as APISearchProps,
   BillTo: {
     Table: "CRD1",
-    Fields: ["Address","Street","City"],
+    Fields: ["Address", "Street", "City"],
     Condition: [{
       field: "CardCode",
       cond: "=",
@@ -304,7 +325,7 @@ export const SAPFieldMap = {
   } as APISearchProps,
   POHeader: {
     Table: "OPOR",
-    Fields: ["DocNum","CardCode","CardName","U_IDU_PO_INTNUM","U_IDU_SUP_SONUM","U_BRANCH","Comments"],
+    Fields: ["DocNum", "CardCode", "CardName", "U_IDU_PO_INTNUM", "U_IDU_SUP_SONUM", "U_BRANCH", "Comments"],
     Condition: [{
       field: "CardCode",
       cond: "=",
@@ -321,7 +342,7 @@ export const SAPFieldMap = {
   } as APISearchProps,
   PODetail: {
     Table: "POR1",
-    Fields: ["LineNum","DocEntry","ItemCode","ItemName","U_IDU_PARTNUM","WhsCode","Quantity","UnitMsr","OpenCreQty"],
+    Fields: ["LineNum", "DocEntry", "ItemCode", "ItemName", "U_IDU_PARTNUM", "WhsCode", "Quantity", "UnitMsr", "OpenCreQty"],
     Condition: [{
       field: "DocEntry",
       cond: "=",
@@ -330,7 +351,7 @@ export const SAPFieldMap = {
   } as APISearchProps,
   SOHeader: {
     Table: "ORDR",
-    Fields: ["DocNum","CardCode","CardName","U_IDU_SO_INTNUM","U_BRANCH","Comments"],
+    Fields: ["DocNum", "CardCode", "CardName", "U_IDU_SO_INTNUM", "U_BRANCH", "Comments"],
     Condition: [{
       field: "CardCode",
       cond: "=",
@@ -347,7 +368,7 @@ export const SAPFieldMap = {
   } as APISearchProps,
   SODetail: {
     Table: "RDR1",
-    Fields: ["LineNum","DocEntry","ItemCode","ItemName","U_IDU_PARTNUM","WhsCode","Quantity","UnitMsr","OpenCreQty"],
+    Fields: ["LineNum", "DocEntry", "ItemCode", "ItemName", "U_IDU_PARTNUM", "WhsCode", "Quantity", "UnitMsr", "OpenCreQty"],
     Condition: [{
       field: "DocEntry",
       cond: "=",
@@ -356,7 +377,7 @@ export const SAPFieldMap = {
   } as APISearchProps,
   DOHeader: {
     Table: "ODLN",
-    Fields: ["DocNum","CardCode","CardName","U_IDU_DO_INTNUM","U_BRANCH","Comments"],
+    Fields: ["DocNum", "CardCode", "CardName", "U_IDU_DO_INTNUM", "U_BRANCH", "Comments"],
     Condition: [{
       field: "CardCode",
       cond: "=",
@@ -373,7 +394,7 @@ export const SAPFieldMap = {
   } as APISearchProps,
   DODetail: {
     Table: "DLN1",
-    Fields: ["LineNum","DocEntry","ItemCode","ItemName","U_IDU_PARTNUM","WhsCode","Quantity","UnitMsr","OpenCreQty"],
+    Fields: ["LineNum", "DocEntry", "ItemCode", "ItemName", "U_IDU_PARTNUM", "WhsCode", "Quantity", "UnitMsr", "OpenCreQty"],
     Condition: [{
       field: "DocEntry",
       cond: "=",
@@ -386,7 +407,7 @@ export const SAPFieldMap = {
   } as APISearchProps,
   ITRHeader: {
     Table: "OWTQ",
-    Fields: ["DocNum","CardCode","CardName","U_IDU_ITR_INTNUM","Filler","ToWhsCode","U_BRANCH","Comments"],
+    Fields: ["DocNum", "CardCode", "CardName", "U_IDU_ITR_INTNUM", "Filler", "ToWhsCode", "U_BRANCH", "Comments"],
     Condition: [{
       field: "Filler",
       cond: "=",
@@ -403,7 +424,7 @@ export const SAPFieldMap = {
   } as APISearchProps,
   ITRDetail: {
     Table: "WTQ1",
-    Fields: ["ItemCode","ItemName","U_IDU_PARTNUM","WhsCode","Quantity","UnitMsr","OpenCreQty"],
+    Fields: ["ItemCode", "ItemName", "U_IDU_PARTNUM", "WhsCode", "Quantity", "UnitMsr", "OpenCreQty"],
     Condition: [{
       field: "DocEntry",
       cond: "=",
@@ -412,7 +433,7 @@ export const SAPFieldMap = {
   } as APISearchProps,
   CartOfAccount: {
     Table: "OACT",
-    Fields: ["AcctCode","AcctName"],
+    Fields: ["AcctCode", "AcctName"],
     Condition: [{
       field: "Finance",
       cond: "=",

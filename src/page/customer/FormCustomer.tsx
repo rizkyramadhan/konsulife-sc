@@ -16,6 +16,7 @@ import IconSave from "@app/libs/ui/Icons/IconSave";
 import SAPDropdown from '@app/components/SAPDropdown';
 import UISelectField from '@app/libs/ui/UISelectField';
 import IconAdd from '@app/libs/ui/Icons/IconAdd';
+import { APIPost } from '@app/api';
 
 const customer = {
   Series: "",
@@ -34,36 +35,36 @@ const customer = {
 };
 
 const cpList = [{
-  Id: 1,
-  Name: "Jon",
-  FirstName: "Joni",
-  MiddleName: "asasa",
-  LastName: "asas",
-  Tel1: "asasa",
+  No: 1,
+  Name: "",
+  FirstName: "",
+  MiddleName: "",
+  LastName: "",
+  Tel1: "",
   Tel2: "",
   Cellolar: ""
 }];
 
 const billToList = [{
-  Id: 1,
-  Address: "GAYUNGSARI",
-  Street: "Jl. Gayung Sari No.xx",
+  No: 1,
+  Address: "",
+  Street: "",
   ZipCode: "",
-  City: "SURABAYA",
-  State: 10,
+  City: "",
+  State: 0,
   AdresType: "B",
-  IsDefault: 'Y'
+  IsDefault: "Y"
 }];
 
 const shipToList = [{
-  Id: 1,
-  Address: "GAYUNGSARI",
-  Street: "Jl. Gayung Sari No.xx",
+  No: 1,
+  Address: "",
+  Street: "",
   ZipCode: "",
-  City: "SURABAYA",
-  State: 10,
+  City: "",
+  State: 0,
   AdresType: "S",
-  IsDefault: 'Y'
+  IsDefault: "Y"
 }];
 
 export default observer(({ showSidebar, sidebar }: any) => {
@@ -71,6 +72,8 @@ export default observer(({ showSidebar, sidebar }: any) => {
   const [itemCP, setItemCP] = useState(cpList);
   const [itemBillTo, setItemBillTo] = useState(billToList);
   const [itemShipTo, setItemShipTo] = useState(shipToList);
+  const [saving, setSaving] = useState(false);
+
   const ActionCP = () => {
     return (<UIButton
       style={{
@@ -80,7 +83,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
       size="small"
       onPress={() => {
         setItemCP([...itemCP, {
-          Id: itemCP.length + 1,
+          No: Math.floor(Math.random() * Math.floor(999)),
           Name: "",
           FirstName: "",
           MiddleName: "",
@@ -101,6 +104,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
       )}
     </UIButton>);
   }
+
   const ActionShip = () => {
     return (<UIButton
       style={{
@@ -110,7 +114,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
       size="small"
       onPress={() => {
         setItemShipTo([...itemShipTo, {
-          Id: itemShipTo.length + 1,
+          No: Math.floor(Math.random() * Math.floor(999)),
           Address: "",
           Street: "",
           ZipCode: "",
@@ -131,6 +135,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
       )}
     </UIButton>);
   }
+
   const ActionBill = () => {
     return (<UIButton
       style={{
@@ -140,7 +145,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
       size="small"
       onPress={() => {
         setItemBillTo([...itemBillTo, {
-          Id: itemBillTo.length + 1,
+          No: Math.floor(Math.random() * Math.floor(999)),
           Address: "",
           Street: "",
           ZipCode: "",
@@ -161,6 +166,41 @@ export default observer(({ showSidebar, sidebar }: any) => {
       )}
     </UIButton>);
   }
+
+  const save = async () => {
+    setSaving(true);
+    const Lines_CP = itemCP.map(d => {
+      delete d.No;
+      return d;
+    });
+
+    const Lines_BT = itemBillTo.map(d => {
+      delete d.No;
+      return d;
+    })
+
+    const Lines_ST = itemShipTo.map(d => {
+      delete d.No;
+      return d;
+    })
+
+    try {
+      await APIPost('Customer', {
+        ...data, Lines_CP: [...Lines_CP], Lines_Address: [...Lines_BT, ...Lines_ST],
+      });
+    }
+    catch (e) {
+      alert(e.Message)
+      console.error({
+        ...data, Lines_CP: [...Lines_CP], Lines_Address: [...Lines_BT, ...Lines_ST],
+      });
+    }
+    finally {
+      setSaving(false);
+    }
+
+  }
+
   return (
     <UIContainer>
       <UIHeader
@@ -173,12 +213,12 @@ export default observer(({ showSidebar, sidebar }: any) => {
           color="primary"
           size="small"
           onPress={() => {
-            alert("Saved!");
+            save();
           }}
         >
           <IconSave color="#fff" />
           {isSize(["md", "lg"]) && (
-            <UIText style={{ color: "#fff" }}>{" Save"}</UIText>
+            <UIText style={{ color: "#fff" }}>{saving ? " Saving..." : " Save"}</UIText>
           )}
         </UIButton>
       </UIHeader>
@@ -195,7 +235,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
                     <SAPDropdown label="Series" field="Series" value={data.Series} setValue={(v) => { setData({ ...data, Series: v }) }} />)
                 },
                 { key: "CardName", size: 7, label: "BP Name" },
-                { key: "CardType", size: 5, component: (<UISelectField label="BP Type" items={[{ label: 'Customer', value: 'C' }, { label: 'Vendor', value: 'V' }]} value={data.CardType} setValue={(v) => { setData({ ...data, CardType: v }) }} />) },
+                { key: "CardType", size: 5, component: (<UISelectField label="BP Type" items={[{ label: 'Customer', value: 'C' }, { label: 'Vendor', value: 'S' }]} value={data.CardType} setValue={(v) => { setData({ ...data, CardType: v }) }} />) },
                 {
                   key: "GroupCode", size: 6, component: (
                     <SAPDropdown label="Group Code" field="BPGroup" value={data.GroupCode} setValue={(v) => { setData({ ...data, GroupCode: v }) }} />)

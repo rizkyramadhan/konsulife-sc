@@ -5,13 +5,15 @@ import UISeparator from '@app/libs/ui/UISeparator';
 import UIText from '@app/libs/ui/UIText';
 import React from "react";
 import { Button, View } from 'reactxp/dist/web/ReactXP';
+import UIButton from '@app/libs/ui/UIButton';
+import IconRemove from '@app/libs/ui/Icons/IconRemove';
 
 export default ({ items, setItems }: any) => {
   return (
     <View>
       <UIList
         style={{ flex: 1 }}
-        primaryKey="Id"
+        primaryKey="No"
         items={items}
         selection="detail"
         detailComponent={(item) => (
@@ -46,7 +48,7 @@ export default ({ items, setItems }: any) => {
                 <UIText>{item.pkval}</UIText>
               </View>
               <View style={{ justifyContent: "center", alignItems: "center" }}>
-                <Button onPress={item.close}>
+                <Button onPress={() => { setItems([...items]); item.close; }}>
                   <UIText size="large">&times;</UIText>
                 </Button>
               </View>
@@ -55,15 +57,15 @@ export default ({ items, setItems }: any) => {
             <UIJsonField
               items={item.item}
               setValue={(val: any, key: string) => {
-                const idx = items.findIndex((x: any) => x.Id === item.item.Id);
+                const idx = items.findIndex((x: any) => x.No === item.item.No);
                 items[idx][key] = val;
                 setItems(items);
               }}
               style={{
                 padding: 10
               }}
+              except={['No']}
               field={[
-                { key: 'Id', size: 12, type: 'field' },
                 { key: 'Name', size: 12 },
                 { key: 'FirstName', size: 12 },
                 { key: 'MiddleName', size: 12 },
@@ -73,6 +75,23 @@ export default ({ items, setItems }: any) => {
                 { key: 'Cellolar', size: 12 },
               ]}
             />
+
+            <UIButton
+              style={{
+                flexShrink: 'none'
+              }}
+              color="error"
+              size="small"
+              onPress={() => {
+                const idx = items.findIndex((x: any) => x.No === item.item.No);
+                items.splice(idx, 1);
+                setItems([...items]);
+              }}
+            >
+              <IconRemove color="#fff" height={18} width={18} style={{
+                marginTop: -9
+              }} />
+            </UIButton>
           </View>
         )}
       />
