@@ -1,5 +1,6 @@
 import { APISearch, APISearchProps, SAPFieldMap } from '@app/api';
 import { UIProps } from "@app/libs/ui/Styles/Style";
+import UIField from '@app/libs/ui/UIField';
 import UISelectField from "@app/libs/ui/UISelectField";
 import React, { useEffect, useState } from "react";
 
@@ -12,6 +13,8 @@ interface SAPDropdownProps extends UIProps {
     field: string;
     value: any;
   }[];
+  label?: string;
+  color?: "default" | "error" | "success";
 }
 
 export default (p: SAPDropdownProps) => {
@@ -60,5 +63,9 @@ export default (p: SAPDropdownProps) => {
     // fetch();
   }, []);
 
-  return <UISelectField items={items} value={p.value} setValue={p.setValue} />;
+  return (
+    <UIField label={p.label} style={p.style} color={p.color}>
+      <UISelectField items={items} value={p.value} setValue={p.setValue} />
+    </UIField>
+  );
 };
