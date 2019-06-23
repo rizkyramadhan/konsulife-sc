@@ -46,7 +46,7 @@ const sampleList = [
     TaxCode: ""
   },
   {
-    ItemCode: "BSLSR000001",
+    ItemCode: "BSLSR000002",
     Dscription: "750R16-8PR-TL L310-T",
     U_IDU_PARTNUM: "",
     UseBaseUn: "",

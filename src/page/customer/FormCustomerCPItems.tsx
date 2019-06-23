@@ -1,51 +1,14 @@
-import UIButton from "@app/libs/ui/UIButton";
-import UIList from "@app/libs/ui/UIList";
-import React from "react";
-import { View, Button } from 'reactxp/dist/web/ReactXP';
-import IconAdd from '@app/libs/ui/Icons/IconAdd';
-import { isSize } from '@app/libs/ui/MediaQuery';
-import UIText from '@app/libs/ui/UIText';
 import { MainStyle } from '@app/config';
-import UISeparator from '@app/libs/ui/UISeparator';
 import UIJsonField from '@app/libs/ui/UIJsonField';
+import UIList from "@app/libs/ui/UIList";
+import UISeparator from '@app/libs/ui/UISeparator';
+import UIText from '@app/libs/ui/UIText';
+import React from "react";
+import { Button, View } from 'reactxp/dist/web/ReactXP';
 
 export default ({ items, setItems }: any) => {
   return (
     <View>
-      <View style={{
-        flexDirection: "row-reverse"
-      }}>
-        <UIButton
-          style={{
-            margin: 0,
-            marginBottom: 8
-          }}
-          color="success"
-          size="small"
-          onPress={() => {
-            setItems([...items, {
-              Id: items.length + 1,
-              Name: "",
-              FirstName: "",
-              MiddleName: "",
-              LastName: "",
-              Tel1: "",
-              Tel2: "",
-              Cellolar: ""
-            }])
-          }}
-        >
-          <IconAdd color="#fff" height={18} width={18} style={{
-            marginTop: -9
-          }} />
-          {isSize(["md", "lg"]) && (
-            <UIText style={{ color: "#fff" }} size="small">
-              {" Add"}
-            </UIText>
-          )}
-        </UIButton>
-      </View>
-
       <UIList
         style={{ flex: 1 }}
         primaryKey="Id"
