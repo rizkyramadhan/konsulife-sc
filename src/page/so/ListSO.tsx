@@ -72,8 +72,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
       <UIBody>
         <UIList
           primaryKey="CardCode"
-          selectedStyle={{ backgroundColor: "red" }}
-          selection="detail-side"
+          selection="detail"
           items={data.map(item => ({
             ...item,
             GrandTotal: item.GrandTotal.toLocaleString(),

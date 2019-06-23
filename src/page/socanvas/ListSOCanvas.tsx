@@ -1,3 +1,5 @@
+import IconAdd from "@app/libs/ui/Icons/IconAdd";
+import IconRemove from "@app/libs/ui/Icons/IconRemove";
 import { isSize } from "@app/libs/ui/MediaQuery";
 import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
@@ -9,8 +11,6 @@ import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { withRouter } from "react-router";
-import IconRemove from "@app/libs/ui/Icons/IconRemove";
-import IconAdd from "@app/libs/ui/Icons/IconAdd";
 
 const BtnCreate = withRouter(({ history }: any) => {
   return (
@@ -71,8 +71,30 @@ export default observer(({ showSidebar, sidebar }: any) => {
       </UIHeader>
       <UIBody>
         <UIList
+          fields={{
+            U_IDU_SO_INTNUM: {
+              table: { header: "No. SO " }
+            },
+            CardName: {
+              table: { header: "Nama " }
+            },
+            DocDate: {
+              table: { header: "Tgl Dokumen " }
+            },
+            DocDueDate: {
+              table: { header: "Tgl Due Date " }
+            },
+            DocStatus: {
+              table: { header: "Status " }
+            },
+            Sales: {
+              table: { header: "Sales " }
+            },
+            GrandTotal: {
+              table: { header: "Grand Total " }
+            }
+          }}
           primaryKey="CardCode"
-          style={{ backgroundColor: "#fff" }}
           items={data.map(item => ({
             ...item,
             GrandTotal: item.GrandTotal.toLocaleString(),

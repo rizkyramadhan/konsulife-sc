@@ -1,16 +1,14 @@
+import IconAdd from "@app/libs/ui/Icons/IconAdd";
 import { isSize } from "@app/libs/ui/MediaQuery";
 import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
-import UIRow from "@app/libs/ui/UIRow";
+import UIList from "@app/libs/ui/UIList";
 import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { withRouter } from "react-router";
-import UIList from "@app/libs/ui/UIList";
-import IconAdd from "@app/libs/ui/Icons/IconAdd";
-import IconInvoice from "@app/libs/ui/Icons/IconInvoice";
 
 const BtnCreate = withRouter(({ history }: any) => {
   return (
@@ -71,27 +69,12 @@ export default observer(({ showSidebar, sidebar }: any) => {
       </UIHeader>
       <UIBody>
         <UIList
+          style={{ flex: 1 }}
+          selection="detail"
           primaryKey="CardCode"
           items={data.map(item => ({
             ...item,
-            GrandTotal: item.GrandTotal.toLocaleString(),
-            action: (
-              <UIRow style={{ marginTop: -10 }}>
-                <UIButton
-                  size="small"
-                  fill="clear"
-                  style={{
-                    marginTop: 0,
-                    marginBottom: 0
-                  }}
-                  onPress={() => {
-                    alert("view!");
-                  }}
-                >
-                  <IconInvoice height={18} width={18} color="blue" />
-                </UIButton>
-              </UIRow>
-            )
+            GrandTotal: item.GrandTotal.toLocaleString()
           }))}
         />
       </UIBody>
