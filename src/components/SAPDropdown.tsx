@@ -1,12 +1,12 @@
-import UISelectField from "@app/libs/ui/UISelectField";
-import React, { useState, useEffect } from "react";
+import { APISearch, SAPFieldMap, APISearchProps } from '@app/api';
 import { UIProps } from "@app/libs/ui/Styles/Style";
-import { APISearch, APISearchProps } from '@app/api';
+import UISelectField from "@app/libs/ui/UISelectField";
+import React, { useEffect, useState } from "react";
 
 interface SAPDropdownProps extends UIProps {
   value: string | number;
   setValue: (value: any) => any;
-  field: 'Series' | 'BPGroup' | 'DocumentRate';
+  field: 'Series' | 'BPGroup' | 'Currency' | 'CustomerCode' | 'PaymentTerms' | 'ContactPerson' | 'ShipTo' | 'BillTo' | 'TaxCode' | 'ItemCodeCanvas' | 'ItemCodeAll' | 'UoMCode' | 'WarehouseCodeCanvas' | 'WarehouseCodeAll' | 'VendorCode';
   search?: string;
   where?: {
     field: string;
@@ -18,14 +18,27 @@ export default (p: SAPDropdownProps) => {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-    let query = (fieldSAP as any)[p.field];
+    let query: APISearchProps = (SAPFieldMap as any)[p.field];
     if (!!p.where && p.where.length > 0) {
       p.where.forEach(item => {
         let idx = (query.Condition as any).findIndex((x: any) => x.Field == item.field);
         (query.Condition as any)[idx].value = item.value;
       });
     }
-    console.log(query);
+
+    if (!!p.search) {
+      if (!query.Condition) query.Condition = [];
+      if (query.Condition.length > 0) {
+        query.Condition.push({
+          cond: "AND"
+        })
+      }
+      query.Condition.push({
+        field: query.Fields && query.Fields[1] ? query.Fields[1] : (query.Fields && query.Fields[0]),
+        cond: "like",
+        value: p.search
+      })
+    }
 
     APISearch(query).then((res: any) => {
       let items = res.map((item: any) => {
@@ -47,43 +60,3 @@ export default (p: SAPDropdownProps) => {
 
   return <UISelectField items={items} value={p.value} setValue={p.setValue} />;
 };
-
-const fieldSAP = {
-  Series: {
-    Table: "NNM1",
-    Condition: [{
-      field: 'ObjectCode',
-      value: 2,
-      cond: '=',
-    }],
-    Fields: ['Series', 'SeriesName']
-  } as APISearchProps,
-  BPGroup: {
-    Table: "OCRG",
-    Condition: [{
-      field: 'GroupType',
-      value: 'C',
-      cond: '=',
-    }],
-    Fields: ['GroupCode', 'GroupName']
-  } as APISearchProps,
-  DocumentRate: {
-    Table: "ORTT",
-    Condition: [
-      {
-        field: 'Currency',
-        value: '',
-        cond: '='
-      },
-      {
-        cond: 'AND'
-      },
-      {
-        field: 'RateDate',
-        value: '',
-        cond: '='
-      }
-    ],
-    Fields: ['Rate']
-  } as APISearchProps,
-}
