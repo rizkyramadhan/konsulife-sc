@@ -86,7 +86,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
           )}
         </UIButton>
       </UIHeader>
-      <UIBody>
+      <UIBody scroll={true}>
         <UIJsonField
           items={data}
           field={[
@@ -184,6 +184,9 @@ export default observer(({ showSidebar, sidebar }: any) => {
               size="small"
               onPress={() => {
                 alert("Add!");
+              }}
+              style={{
+                height: 'auto'
               }}
             >
               <IconAdd color="#fff" height={24} width={24} />

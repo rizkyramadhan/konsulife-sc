@@ -7,7 +7,7 @@ import IconRemove from "@app/libs/ui/Icons/IconRemove";
 export default ({ items, setItems }: any) => {
   return (
     <UIList
-      primaryKey="CardCode"
+      primaryKey="ItemCode"
       items={items.map((item: any, index: any) => ({
         ...item,
         action: (

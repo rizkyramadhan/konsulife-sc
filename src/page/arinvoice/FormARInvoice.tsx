@@ -38,7 +38,7 @@ const sampleList = [
     TaxCode: ""
   },
   {
-    ItemCode: "BSLSR000001",
+    ItemCode: "BSLSR000002",
     Dscription: "750R16-8PR-TL L310-T",
     U_IDU_PARTNUM: "",
     UseBaseUn: "",
@@ -78,7 +78,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
           )}
         </UIButton>
       </UIHeader>
-      <UIBody>
+      <UIBody scroll={true}>
         <UIJsonField
           items={data}
           field={[
@@ -161,6 +161,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
               onPress={() => {
                 alert("Copy!");
               }}
+              style={{ height: 'auto' }}
             >
               <IconCopy color="#fff" height={24} width={24} />
               {isSize(["md", "lg"]) && (
