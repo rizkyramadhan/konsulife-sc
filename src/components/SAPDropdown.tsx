@@ -64,8 +64,6 @@ export default (p: SAPDropdownProps) => {
   }, []);
 
   return (
-    <UIField label={p.label} style={p.style} color={p.color}>
-      <UISelectField items={items} value={p.value} setValue={p.setValue} />
-    </UIField>
+    <UISelectField items={items} value={p.value} setValue={p.setValue} label={p.label} style={p.style} color={p.color} />
   );
 };
