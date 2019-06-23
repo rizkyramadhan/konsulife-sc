@@ -13,6 +13,7 @@ import FormCustomerCPItems from './FormCustomerCPItems';
 import FormCustomerBillToItems from './FormCustomerBillToItems';
 import FormCustomerShipToItems from './FormCustomerShipToItems';
 import IconSave from "@app/libs/ui/Icons/IconSave";
+import SAPDropdown from '@app/components/SAPDropdown';
 
 const customer = {
   Series: "",
@@ -27,8 +28,6 @@ const customer = {
   Fax: "",
   Cellular: "",
   E_Mail: "",
-  U_IDU_AREA: "",
-  U_IDU_BRANCH: "",
   GroupNum: ""
 };
 
@@ -66,7 +65,7 @@ const shipToList = [{
 }];
 
 export default observer(({ showSidebar, sidebar }: any) => {
-  const data = customer;
+  const [data, setData] = useState(customer);
   const [itemCP, setItemCP] = useState(cpList);
   const [itemBillTo, setItemBillTo] = useState(billToList);
   const [itemShipTo, setItemShipTo] = useState(shipToList);
@@ -100,12 +99,20 @@ export default observer(({ showSidebar, sidebar }: any) => {
               key: "general",
               label: "General",
               value: [
-                { key: "Series", size: 6, label: "Series" },
-                { key: "CardType", size: 6, label: "BP Type" },
-                { key: "CardName", size: 8, label: "BP Name" },
-                { key: "GroupCode", size: 7, label: "Group Code" },
-                { key: "U_IDU_AREA", size: 6, label: "Area" },
-                { key: "U_IDU_BRANCH", size: 6, label: "Branch" },
+                {
+                  key: "Series", size: 7, component: (
+                    <SAPDropdown label="Series" field="Series" value={data.Series} setValue={(v) => { setData({ ...data, Series: v }) }} />)
+                },
+                { key: "CardName", size: 7, label: "BP Name" },
+                { key: "CardType", size: 5, label: "BP Type" },
+                {
+                  key: "GroupCode", size: 6, component: (
+                    <SAPDropdown label="Group Code" field="BPGroup" value={data.GroupCode} setValue={(v) => { setData({ ...data, GroupCode: v }) }} />)
+                },
+                {
+                  key: "GroupNum", size: 7, component: (
+                    <SAPDropdown label="Payment Terms Code" field="PaymentTerms" value={data.GroupNum} setValue={(v) => { setData({ ...data, GroupNum: v }) }} />)
+                },
                 { key: "SlpCode", size: 7, label: "Sales Employee Code" },
               ]
             },
@@ -114,8 +121,8 @@ export default observer(({ showSidebar, sidebar }: any) => {
               label: "Customer",
               sublabel: 'Informasi Customer',
               value: [
-                { key: "LicTradNum", size: 7, label: "NPWP" },
-                { key: "AddID", size: 7, label: "No KTP" },
+                { key: "LicTradNum", size: 8, label: "NPWP" },
+                { key: "AddID", size: 8, label: "No KTP" },
                 { key: "Phone1", size: 6, label: "Telephone 1" },
                 { key: "Phone2", size: 6, label: "Telephone 2" },
                 { key: "Fax", size: 6, label: "Fax Number" },
@@ -123,14 +130,6 @@ export default observer(({ showSidebar, sidebar }: any) => {
                 { key: "E_Mail", size: 7, label: "E-Mail" },
               ]
             },
-            {
-              key: "payment",
-              label: "Payment Terms",
-              sublabel: "Informsi Pembayaran",
-              value: [
-                { key: "GroupNum", label: "Payment Terms Code", size: 7 }
-              ]
-            }
           ]}
           setValue={(value: any, key: any) => {
             (data as any)[key] = value;

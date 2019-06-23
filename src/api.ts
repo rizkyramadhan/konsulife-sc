@@ -82,7 +82,7 @@ export const SAPFieldMap = {
     Table: "OCRG",
     Fields: ['GroupCode', 'GroupName'],
     Condition: [{
-      field: 'CardType',
+      field: 'GroupType',
       value: 'C',
       cond: '=',
     }]
