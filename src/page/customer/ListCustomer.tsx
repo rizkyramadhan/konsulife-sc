@@ -10,6 +10,8 @@ import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
 import IconAdd from "@app/libs/ui/Icons/IconAdd";
 import { APISearch, APISearchProps } from '@app/api';
+import UIRow from '@app/libs/ui/UIRow';
+import IconRemove from '@app/libs/ui/Icons/IconRemove';
 
 const BtnCreate = withRouter(({ history }: any) => {
   return (
@@ -39,9 +41,9 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
     let query: APISearchProps = {
       Table: "OCRD",
       Fields: [
-        "CardName", 
-        "CardCode", 
-        "CardType", 
+        "CardName",
+        "CardCode",
+        "CardType",
         "GroupCode",
         "LicTradNum",
         "AddID",
@@ -51,20 +53,20 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
         "U_IDU_AREA",
         "U_IDU_BRANCH"
       ],
-      Condition:[{
-          field:"CardType",
-          cond:"=",
-          value:"C"
+      Condition: [{
+        field: "CardType",
+        cond: "=",
+        value: "C"
       },
       {
-        cond:"OR"
+        cond: "OR"
       },
       {
-        field:"CardType",
-        cond:"=",
-        value:"L"
+        field: "CardType",
+        cond: "=",
+        value: "L"
       }
-    ]
+      ]
     };
     APISearch(query).then((res: any) => {
       setData(res);
@@ -81,7 +83,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
           style={{ flex: 1 }}
           primaryKey="CardCode"
           selection="single"
-          onSelect={() => { history.push('customer/form') }}
+          onSelect={(item) => { history.push('customer/form/' + item.CardCode) }}
           fields={{
             CardCode: {
               table: {
@@ -102,9 +104,40 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
               table: {
                 header: 'BP Type'
               }
+            },
+            action: {
+              table: {
+                header: 'Action'
+              }
             }
           }}
-          items={data}
+          items={data.map((item: any) => ({
+            ...item,
+            action: (
+              <UIRow style={{ marginTop: -10 }}>
+                <UIButton
+                  size="small"
+                  fill="clear"
+                  style={{
+                    marginTop: 0,
+                    marginBottom: 0
+                  }}
+                  onPress={() => {
+                    alert("remove!");
+                  }}
+                >
+                  <IconRemove
+                    height={18}
+                    width={18}
+                    color="red"
+                    onPress={() => {
+                      alert("remove!");
+                    }}
+                  />
+                </UIButton>
+              </UIRow>
+            )
+          }))}
         />
       </UIBody>
     </UIContainer>
