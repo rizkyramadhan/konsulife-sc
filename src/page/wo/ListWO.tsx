@@ -1,102 +1,98 @@
+import { APISearch, APISearchProps } from '@app/api';
 import UIBody from "@app/libs/ui/UIBody";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
 import { observer } from "mobx-react-lite";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
-import BtnCreate from "@app/components/BtnCreate";
-
-const sample = [{
-    id: 1,
-    number: "WO/BPP-01/VI/19",
-    sales_id: 1,
-    sales_name: "RICKY SUSANTO",
-    sopir: "SAMINA",
-    sopir_sim: "12345",
-    nopol: 'KT 9800 OK',
-    branch: "BPP",
-    rute: "BPP-001",
-    periode_start: "2019-06-01",
-    periode_end: "2019-06-05"
-}, {
-    id: 2,
-    number: "WO/BPP-01/VI/19",
-    sales_id: 1,
-    sales_name: "RICKY SUSANTO",
-    sopir: "SAMINA",
-    sopir_sim: "12345",
-    nopol: 'KT 9800 OK',
-    branch: "BPP",
-    rute: "BPP-001",
-    periode_start: "2019-06-01",
-    periode_end: "2019-06-05"
-}]
+import UIRow from '@app/libs/ui/UIRow';
+import UIButton from '@app/libs/ui/UIButton';
+import IconRemove from '@app/libs/ui/Icons/IconRemove';
 
 export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
-    const [data, setData]: any[] = useState([]);
+    const [data, setData] = useState([]);
     useEffect(() => {
-        setData([...sample]);
+        let query: APISearchProps = {
+            Table: "OWTQ",
+            Fields: ["DocNum", "CardName", "CardCode", "U_IDU_ITR_INTNUM", "DocDate"],
+            Condition: [
+                {
+                    field: "DocStatus",
+                    cond: "=",
+                    value: "O"
+                }
+            ]
+        };
+        APISearch(query).then((res: any) => {
+            setData(res);
+        })
     }, []);
 
     return (
         <UIContainer>
-            <UIHeader
-                showSidebar={showSidebar}
-                sidebar={sidebar}
-                center={"Working Order"}
-            >
-                <BtnCreate path="wo/form" />
+            <UIHeader showSidebar={showSidebar} sidebar={sidebar} center={"Working Order"}>
             </UIHeader>
             <UIBody>
                 <UIList
                     style={{ flex: 1 }}
-                    primaryKey="id"
+                    primaryKey="DocNum"
                     selection="single"
-                    onSelect={() => { history.push("/wo/form") }}
+                    onSelect={(item) => { history.push('/it/form/' + item.DocNum) }}
                     fields={{
-                        sales_name: {
+                        CardName: {
                             table: {
-                                header: "Sales"
+                                header: 'Customer/Vendor'
                             }
                         },
-                        sopir: {
+                        CardCode: {
                             table: {
-                                header: "Sopir"
+                                header: 'Code'
                             }
                         },
-                        sopir_sim: {
+                        U_IDU_ITR_INTNUM: {
                             table: {
-                                header: "No SIM"
+                                header: 'Request No.'
                             }
                         },
-                        nopol: {
+                        DocDate: {
                             table: {
-                                header: "Nopol"
+                                header: 'Posting Date'
                             }
                         },
-                        branch: {
+                        action: {
                             table: {
-                                header: "Cabang"
-                            }
-                        },
-                        rute: {
-                            table: {
-                                header: "Rute"
-                            }
-                        },
-                        periode_start: {
-                            table: {
-                                header: "Start"
-                            }
-                        },
-                        periode_end: {
-                            table: {
-                                header: "End"
+                                header: 'Action'
                             }
                         }
                     }}
-                    items={data}
+                    items={data.map((item: any) => ({
+                        ...item,
+                        action: (
+                            <UIRow style={{ marginTop: -10 }}>
+                                <UIButton
+                                    size="small"
+                                    fill="clear"
+                                    style={{
+                                        marginTop: 0,
+                                        marginBottom: 0
+                                    }}
+                                    onPress={() => {
+                                        alert("remove!");
+                                    }}
+                                >
+                                    <IconRemove
+                                        height={18}
+                                        width={18}
+                                        color="red"
+                                        onPress={() => {
+                                            alert("remove!");
+                                        }}
+                                    />
+                                </UIButton>
+                            </UIRow>
+                        )
+                    }))}
                 />
             </UIBody>
         </UIContainer>

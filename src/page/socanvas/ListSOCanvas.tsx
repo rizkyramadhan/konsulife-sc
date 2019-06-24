@@ -7,9 +7,11 @@ import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
 import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
-import { APISearch, APISearchProps } from '@app/api';
+import { APISearchProps, APISearch } from '@app/api';
+import UIRow from '@app/libs/ui/UIRow';
+import IconRemove from '@app/libs/ui/Icons/IconRemove';
 
 const BtnCreate = withRouter(({ history }: any) => {
   return (
@@ -33,17 +35,17 @@ const BtnCreate = withRouter(({ history }: any) => {
   );
 });
 
-export default withRouter(observer(({ showSidebar, sidebar }: any) =>{
+export default withRouter(observer(({ showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
   useEffect(() => {
     let query: APISearchProps = {
       Table: "ORDR",
-      Fields: ["DocNum","U_IDU_SO_INTNUM", "CardName", "CardCode", "DocDate", "DocDueDate"],
-      Condition:[{
-          field:"DocStatus",
-          cond:"=",
-          value:"O"
-      }]
+      Fields: ["DocNum", "U_IDU_SO_INTNUM", "CardName", "CardCode", "DocDate", "DocDueDate"],
+      Condition: [{
+        field: "DocStatus",
+        cond: "=",
+        value: "O"
+      }, { cond: "AND" }, { field: "ObjType", cond: "=", value: 17 }]
     };
     APISearch(query).then((res: any) => {
       setData(res);
@@ -61,12 +63,12 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) =>{
       </UIHeader>
       <UIBody>
         <UIList
-           style={{ flex: 1 }}
-           primaryKey="DocNum"
-           selection="detail"
-           fields={{
-            U_IDU_SO_INTNUM:{
-              table:{
+          style={{ flex: 1 }}
+          primaryKey="DocNum"
+          selection="detail"
+          fields={{
+            U_IDU_SO_INTNUM: {
+              table: {
                 header: "No. SO"
               }
             },
@@ -89,9 +91,40 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) =>{
               table: {
                 header: 'Due Date'
               }
+            },
+            action: {
+              table: {
+                header: 'Action'
+              }
             }
           }}
-           items={data}
+          items={data.map((item: any) => ({
+            ...item,
+            action: (
+              <UIRow style={{ marginTop: -10 }}>
+                <UIButton
+                  size="small"
+                  fill="clear"
+                  style={{
+                    marginTop: 0,
+                    marginBottom: 0
+                  }}
+                  onPress={() => {
+                    alert("remove!");
+                  }}
+                >
+                  <IconRemove
+                    height={18}
+                    width={18}
+                    color="red"
+                    onPress={() => {
+                      alert("remove!");
+                    }}
+                  />
+                </UIButton>
+              </UIRow>
+            )
+          }))}
         />
       </UIBody>
     </UIContainer>

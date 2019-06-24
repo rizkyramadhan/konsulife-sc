@@ -43,6 +43,8 @@ import ListPR from './pr/ListPR';
 import FormPR from './pr/FormPR';
 import ListWO from './wo/ListWO';
 import FormWO from './wo/FormWO';
+import FormUser from './user/FormUser';
+import ListPayment from './payment/ListPayment';
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
@@ -268,12 +270,15 @@ export default observer((_props: any) => {
                 "/it": <ListInvTransfer />,
                 "/it/form": <FormInvTransfer />,
                 "/pr": <ListPR />,
-                "/pr/form/:id": <FormPR />,
+                "/payment-receipt": <ListPayment />,
+                "/pr/form/:id?": <FormPR />,
+                "/it/form/:id?": <FormInvTransfer />,
                 "/ar-invoice": <ListARInvoice />,
                 "/ar-invoice/form": <FormARInvoice />,
                 "/customer": <ListCustomer />,
-                "/customer/form": <FormCustomer />,
-                "/user": <ListUser />
+                "/customer/form/:id?": <FormCustomer />,
+                "/user": <ListUser />,
+                "/user/form/:id?": <FormUser />
               }}
             />
           </UISidebar>

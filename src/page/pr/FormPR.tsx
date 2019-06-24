@@ -10,7 +10,7 @@ import React, { useState, useEffect } from "react";
 import { withRouter } from 'react-router';
 import { APISearchProps, APISearch } from '@app/api';
 import { View } from 'reactxp';
-import IconAdd from '@app/libs/ui/Icons/IconAdd';
+// import IconAdd from '@app/libs/ui/Icons/IconAdd';
 import FormPRDetailItems from './FormPRDetailItems';
 import UIJsonField from '@app/libs/ui/UIJsonField';
 
@@ -81,7 +81,6 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
         })
     }, []);
 
-    console.log(data, item);
     return (
         <UIContainer>
             <UIHeader
@@ -112,22 +111,22 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                             value: [
                                 { key: "U_IDU_PO_INTNUM",type: "field", label: "PO Number",size: 7 },
                                 { type: "empty", size: 5 },
-                                { key: "DocDate", size: 4, label: "Posting Date" },
-                                { key: "DocDueDate", size: 4, label: "Delivery Date" },
+                                { key: "DocDate", size: 4, type:"date" ,label: "Posting Date" },
+                                { key: "DocDueDate", size: 4, type:"date",label: "Delivery Date" },
                                 { type: "empty", size: 2 },
-                                { key: "DocCur", size: 4, label: "Document Currency" },
-                                { key: "DocRate", size: 4, label: "Document Rate" },
-                                { key: "SlpCode", label: "Sales Employee" }
+                                { key: "DocCur", size: 4,type: "field", label: "Document Currency" },
+                                { key: "DocRate", size: 4,type: "field", label: "Document Rate" },
+                                { key: "SlpCode",type: "field", label: "Sales Employee" }
                             ]
                         },
                         {
                             key: "vendor",
                             label: "Vendor",
                             value: [
-                                { key: "CardCode", label: "Customer", size: 3 },
-                                { key: "CardName", label: "Name" },
-                                { key: "CntctCode", label: "Contact Person" },
-                                { key: "NumAtCard", label: "Ref No.", size: 8 }
+                                { key: "CardCode",type: "field", label: "Customer", size: 3 },
+                                { key: "CardName",type: "field", label: "Name" },
+                                { key: "CntctCode",type: "field", label: "Contact Person" },
+                                { key: "NumAtCard",type: "field", label: "Ref No.", size: 8 }
                             ]
                         },
                         {
@@ -135,21 +134,9 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                             label: "Payment",
                             sublabel: "Informasi Pembayaran",
                             value: [
-                                {
-                                    key: "Address2",
-                                    label: "Ship To",
-                                    size: 8
-                                },
-                                {
-                                    key: "Address",
-                                    label: "Bill To",
-                                    size: 8
-                                },
-                                {
-                                    key: "GroupNum",
-                                    label: "Payment Method",
-                                    size: 8
-                                }
+                                { key: "Address2",type: "field",label: "Ship To",size: 8},
+                                { key: "Address",type: "field",label: "Bill To",size: 8},
+                                { key: "GroupNum",type: "field",label: "Payment Method",size: 8}
                             ]
                         },
                         { type: "empty" },
@@ -157,11 +144,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                             key: "optional",
                             label: "Optional",
                             value: [
-                                {
-                                    key: "Comments",
-                                    label: "Remark",
-                                    size: 12
-                                }
+                                { key: "Comments",type: "field", label: "Remark", size: 12}
                             ]
                         }
                     ]}
@@ -188,23 +171,6 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                         >
                             Detail Items
                         </UIText>
-                        <UIButton
-                            color="success"
-                            size="small"
-                            onPress={() => {
-                                alert("Add!");
-                            }}
-                            style={{
-                                height: 'auto'
-                            }}
-                        >
-                            <IconAdd color="#fff" height={24} width={24} />
-                            {isSize(["md", "lg"]) && (
-                                <UIText style={{ color: "#fff" }} size="small">
-                                    {" Add"}
-                                </UIText>
-                            )}
-                        </UIButton>
                     </View>
                     <FormPRDetailItems items={item} setItems={setItem} />
                 </View>

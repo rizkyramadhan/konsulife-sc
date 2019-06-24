@@ -1,4 +1,7 @@
 import Axios from "axios";
+import createRecord from './libs/gql/data/createRecord';
+import query from './libs/gql/data/query';
+import updateRecord from './libs/gql/data/updateRecord';
 
 // const urlDev: string = "http://mock.rx.plansys.co";
 const url: string = "http://172.16.145.3:8087/MBGPService/Api/Search";
@@ -17,7 +20,7 @@ export interface APISearchProps {
   Limit?: number;
 }
 
-export const APISearch = (p: APISearchProps) => {
+export const APISearch = async (p: APISearchProps) => {
   const params = {
     CustomQuery: p.CustomQuery ? p.CustomQuery : "",
     Fields: "",
@@ -48,7 +51,9 @@ export const APISearch = (p: APISearchProps) => {
 
   params.Condition = cond;
 
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
+    const cache = await query("cache", ['data'], { where: { id: url + params.Table + params.Condition } });
+
     Axios.post(url, JSON.stringify(params), {
       headers: {
         'Content-Type': 'application/json',
@@ -57,14 +62,32 @@ export const APISearch = (p: APISearchProps) => {
     })
       .then((res: any) => {
         if (typeof res.data == 'object' && !!res.data && !!res.data.ErrorCode) {
-          reject(res.data);
+          console.error(res.data);
+          reject();
         }
+
+        if (!cache || (!!cache && cache.length == 0)) {
+          createRecord("cache", {
+            id: url + params.Table + params.Condition,
+            data: res.data
+          })
+        } else {
+          updateRecord("cache", {
+            id: url + params.Table + params.Condition,
+            data: res.data
+          });
+        }
+
         resolve(res.data);
       })
       .catch((err: any) => {
         console.error(err);
-        reject(err);
+        reject();
       });
+
+    if (!!cache) {
+      resolve(cache.data);
+    }
   });
 };
 

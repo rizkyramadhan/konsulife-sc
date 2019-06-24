@@ -7,10 +7,11 @@ import UIList from "@app/libs/ui/UIList";
 import UIRow from "@app/libs/ui/UIRow";
 import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
 import IconRemove from "@app/libs/ui/Icons/IconRemove";
 import IconAdd from "@app/libs/ui/Icons/IconAdd";
+import { APISearch, APISearchProps } from '@app/api';
 
 const BtnCreate = withRouter(({ history }: any) => {
   return (
@@ -34,31 +35,16 @@ const BtnCreate = withRouter(({ history }: any) => {
   );
 });
 
-const sample = [
-  {
-    CardCode: "TIM0001",
-    CardName: "PT FREEPOT INDONESIA",
-    DocDate: "12.08.19",
-    DocDueDate: "12.08.19",
-    DocStatus: "Open",
-    U_IDU_SO_INTNUM: "SO/TIM-0002/19/VI/0001",
-    Sales: "Dwi",
-    GrandTotal: 1000000
-  },
-  {
-    CardCode: "TIM0002",
-    CardName: "PT FREEPOT INDONESIA",
-    DocDate: "12.08.19",
-    DocDueDate: "12.08.19",
-    DocStatus: "Open",
-    U_IDU_SO_INTNUM: "SO/TIM-0002/19/VI/0001",
-    Sales: "Dwi",
-    GrandTotal: 1000000
-  }
-];
-
 export default observer(({ showSidebar, sidebar }: any) => {
-  const data = sample;
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    let query: APISearchProps = {
+      Table: "OINV"
+    };
+    APISearch(query).then((res: any) => {
+      setData(res);
+    })
+  }, []);
 
   return (
     <UIContainer>
@@ -71,11 +57,42 @@ export default observer(({ showSidebar, sidebar }: any) => {
       </UIHeader>
       <UIBody>
         <UIList
-          primaryKey="CardCode"
+          primaryKey="DocEntry"
           style={{ backgroundColor: "#fff" }}
-          items={data.map(item => ({
+          fields={{
+            CardName: {
+              table: {
+                header: 'Customer/Vendor'
+              }
+            },
+            CardCode: {
+              table: {
+                header: 'Code'
+              }
+            },
+            U_IDU_SI_INTNUM: {
+              table: {
+                header: 'Sales Invoice No.'
+              }
+            },
+            U_IDU_DO_INTNUM: {
+              table: {
+                header: 'Delivery No.'
+              }
+            },
+            DocDate: {
+              table: {
+                header: 'Posting Date'
+              }
+            },
+            action: {
+              table: {
+                header: 'Action',
+              }
+            }
+          }}
+          items={data.map((item: any) => ({
             ...item,
-            GrandTotal: item.GrandTotal.toLocaleString(),
             action: (
               <UIRow style={{ marginTop: -10 }}>
                 <UIButton

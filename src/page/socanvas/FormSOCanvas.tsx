@@ -101,10 +101,10 @@ export default observer(({ showSidebar, sidebar }: any) => {
                   label: "SO Number",
                   size: 7
                 },
-                { type: "empty", size: 5 },
+                { type: "empty", size: 5, key: "a" },
                 { key: "DocDate", size: 4, label: "Posting Date" },
                 { key: "DocDueDate", size: 4, label: "Delivery Date" },
-                { type: "empty", size: 2 },
+                { type: "empty", size: 2, key: "b" },
                 { key: "DocCur", size: 4, label: "Document Currency" },
                 { key: "DocRate", size: 4, label: "Document Rate" },
                 { key: "SlpCode", label: "Sales Employee" }
@@ -143,7 +143,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
                 }
               ]
             },
-            { type: "empty" },
+            { type: "empty", key: "c" },
             {
               key: "optional",
               label: "Optional",
