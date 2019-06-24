@@ -18,9 +18,10 @@ export default ({ items, setItems }: any) => {
       selection="detail"
       detailComponent={(item) => {
         const setValue = (val: any, key: string) => {
-          const idx = items.findIndex((x: any) => x.No === item.item.No);
+          console.log(item)
+          const idx = items.findIndex((x: any) => x.id === item.item.id);
           items[idx][key] = val;
-          setItems(items);
+          setItems([...items]);
         };
         return (
           <View

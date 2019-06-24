@@ -1,6 +1,7 @@
-import { isSize } from "@app/libs/ui/MediaQuery";
+import BtnAdd from '@app/components/BtnAdd';
+import BtnSave from '@app/components/BtnSave';
+import SAPDropdown from '@app/components/SAPDropdown';
 import UIBody from "@app/libs/ui/UIBody";
-import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIJsonField from "@app/libs/ui/UIJsonField";
@@ -9,9 +10,6 @@ import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
 import { View } from "reactxp";
 import FormSOCanvasDetailItems from "./FormWODetailItems";
-import BtnSave from '@app/components/BtnSave';
-import BtnAdd from '@app/components/BtnAdd';
-import SAPDropdown from '@app/components/SAPDropdown';
 
 const wo = {
   id: 1,

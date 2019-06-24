@@ -463,13 +463,8 @@ export const SAPFieldMap = {
       value: ""
     }]
   } as APISearchProps,
-  CartOfAccount: {
+  ChartOfAccount: {
     Table: "OACT",
     Fields: ["AcctCode", "AcctName"],
-    Condition: [{
-      field: "Finance",
-      cond: "=",
-      value: "Cash Account"
-    }]
   } as APISearchProps,
 }
