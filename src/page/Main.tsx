@@ -47,6 +47,7 @@ import FormUser from './user/FormUser';
 import ListPayment from './payment/ListPayment';
 import ListARInvoiceTO from './arinvoice-to/ListARInvoiceTO';
 import FormARInvoiceTO from './arinvoice-to/FormARInvoiceTO';
+import FormPayment from './payment/FormPayment';
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
@@ -279,6 +280,7 @@ export default observer((_props: any) => {
                 "/it/form": <FormInvTransfer />,
                 "/pr": <ListPR />,
                 "/payment-receipt": <ListPayment />,
+                "/payment-receipt/form": <FormPayment />,
                 "/pr/form/:id?": <FormPR />,
                 "/it/form/:id?": <FormInvTransfer />,
                 "/ar-invoice": <ListARInvoice />,

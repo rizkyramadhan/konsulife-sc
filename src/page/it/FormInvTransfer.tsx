@@ -9,11 +9,12 @@ import UIText from '@app/libs/ui/UIText';
 import { observer } from 'mobx-react-lite';
 import React, { useState, useEffect } from "react";
 import { withRouter } from 'react-router';
-import { APISearch, APISearchProps } from '@app/api';
+import { APISearch, APISearchProps, APIPost } from '@app/api';
 import FormInvTransferDetail from './FormInvTransferDetail';
 import { View } from 'reactxp';
 
 export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
+    const [saving, setSaving] = useState(false);
     const [data, setData] = useState([]);
     useEffect(() => {
         let query: APISearchProps = {
@@ -79,6 +80,21 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
         })
     }, []);
 
+    const save = async () => {
+        setSaving(true);
+        try {
+          await APIPost('InventoryTransfer', {
+            ...data, Lines: item,
+          });
+        }
+        catch (e) {
+          alert(e.Message);
+        }
+        finally {
+          setSaving(false);
+        }
+      }
+
     return (
         <UIContainer>
             <UIHeader
@@ -89,12 +105,12 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                     color="primary"
                     size="small"
                     onPress={() => {
-                        alert("Saved!");
+                        save();
                     }}
                 >
                     <IconSave color="#fff" />
                     {isSize(["md", "lg"]) && (
-                        <UIText style={{ color: "#fff" }}>{" Save"}</UIText>
+                        <UIText style={{ color: "#fff" }}>{saving ? " Saving..." : " Save"}</UIText>
                     )}
                 </UIButton>
             </UIHeader>

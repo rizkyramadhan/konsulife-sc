@@ -9,8 +9,33 @@ import { withRouter } from "react-router";
 import UIRow from '@app/libs/ui/UIRow';
 import UIButton from '@app/libs/ui/UIButton';
 import IconRemove from '@app/libs/ui/Icons/IconRemove';
+import { isSize } from '@app/libs/ui/MediaQuery';
+import IconAdd from '@app/libs/ui/Icons/IconAdd';
+import UIText from '@app/libs/ui/UIText';
 
-export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
+const BtnCreate = withRouter(({ history }: any) => {
+    return (
+      <UIButton
+        size="small"
+        color="primary"
+        onPress={() => {
+          history.push("/payment-receipt/form");
+        }}
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "flex-end"
+        }}
+      >
+        <IconAdd color="#fff" />
+        {isSize(["md", "lg"]) && (
+          <UIText style={{ color: "#fff" }}>Create</UIText>
+        )}
+      </UIButton>
+    );
+  });
+
+export default withRouter(observer(({ showSidebar, sidebar }: any) => {
     const [data, setData] = useState([]);
     useEffect(() => {
         let query: APISearchProps = {
@@ -24,14 +49,13 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
 
     return (
         <UIContainer>
-            <UIHeader showSidebar={showSidebar} sidebar={sidebar} center={"Inventory Transfer"}>
+            <UIHeader showSidebar={showSidebar} sidebar={sidebar} center={"Payment Receipt"}>
+            <BtnCreate />
             </UIHeader>
             <UIBody>
                 <UIList
                     style={{ flex: 1 }}
                     primaryKey="DocEntry"
-                    selection="single"
-                    onSelect={(item) => { history.push('/it/form/' + item.DocNum) }}
                     fields={{
                         CardName: {
                             table: {

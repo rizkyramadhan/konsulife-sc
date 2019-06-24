@@ -14,7 +14,12 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
   useEffect(() => {
     let query: APISearchProps = {
-      Table: "ODLN"
+      Table: "ODLN",
+      Condition: [{
+        field: "DocStatus",
+        cond: "=",
+        value: "O"
+      }]
     };
     APISearch(query).then((res: any) => {
       setData(res);

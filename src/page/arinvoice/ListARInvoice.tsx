@@ -14,7 +14,12 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
   useEffect(() => {
     let query: APISearchProps = {
-      Table: "ORDR"
+      Table: "ORDR",
+      Condition: [{
+        field: "DocStatus",
+        cond: "=",
+        value: "O"
+      }]
     };
     APISearch(query).then((res: any) => {
       setData(res);
@@ -31,7 +36,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
       </UIHeader>
       <UIBody>
         <UIList
-          primaryKey="DocEntry"
+          primaryKey="DocNum"
           style={{ backgroundColor: "#fff" }}
           selection="single"
           onSelect={(item) => { history.push('/ar-invoice/form/' + item.DocEntry) }}

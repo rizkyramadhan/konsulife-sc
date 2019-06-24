@@ -19,7 +19,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
     useEffect(() => {
         let query: APISearchProps = {
-            Table: "ORDR",
+            Table: "ODRF",
             Fields: [
                 "CardCode",
                 "NumAtCard",
@@ -50,7 +50,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
     const [item, setItem] = useState([]);
     useEffect(() => {
         let query: APISearchProps = {
-            Table: "RDR1",
+            Table: "DRF1",
             Fields: [
                 "DocEntry",
                 "BaseEntry",
@@ -79,7 +79,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
 
         APISearch(query).then((res: any) => {
           res.forEach((item:any) => {
-            item.BaseType = "17";
+            item.BaseType = "112";
             item.BaseLine = item.LineNum;
             item.BaseEntry = item.DocEntry;
 

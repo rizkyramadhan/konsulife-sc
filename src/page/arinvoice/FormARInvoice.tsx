@@ -79,7 +79,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
 
         APISearch(query).then((res: any) => {
           res.forEach((item:any) => {
-            item.BaseType = "15";
+            item.BaseType = "17";
             item.BaseLine = item.LineNum;
             item.BaseEntry = item.DocEntry;
 

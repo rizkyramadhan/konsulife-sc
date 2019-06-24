@@ -8,13 +8,14 @@ import UIText from '@app/libs/ui/UIText';
 import { observer } from 'mobx-react-lite';
 import React, { useState, useEffect } from "react";
 import { withRouter } from 'react-router';
-import { APISearchProps, APISearch } from '@app/api';
+import { APISearchProps, APISearch, APIPost } from '@app/api';
 import { View } from 'reactxp';
 // import IconAdd from '@app/libs/ui/Icons/IconAdd';
 import FormPRDetailItems from './FormPRDetailItems';
 import UIJsonField from '@app/libs/ui/UIJsonField';
 
 export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
+    const [saving, setSaving] = useState(false);
     const [data, setData] = useState([]);
     useEffect(() => {
         let query: APISearchProps = {
@@ -34,6 +35,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                 "CardName",
                 "CardCode",
                 "U_IDU_PO_INTNUM",
+                "U_IDU_SO_INTNUM",
                 "U_IDU_SUP_SONUM"
             ],
             Condition: [{
@@ -79,10 +81,30 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
             }]
         };
         APISearch(query).then((res: any) => {
+            res.forEach((item:any) => {
+            item.BaseType = "22";
+            item.BaseLine = item.LineNum;
+            item.BaseEntry = item.DocEntry;
+            });
             setItem(res);
         })
     }, []);
-    console.log(data,item);
+
+    const save = async () => {
+        setSaving(true);
+        try {
+          await APIPost('PurchaseReceipt', {
+            ...data, Lines: item,
+          });
+        }
+        catch (e) {
+          alert(e.Message);
+        }
+        finally {
+          setSaving(false);
+        }
+      }
+      
     return (
         <UIContainer>
             <UIHeader
@@ -93,12 +115,12 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                     color="primary"
                     size="small"
                     onPress={() => {
-                        alert("Saved!");
+                        save();
                     }}
                 >
                     <IconSave color="#fff" />
                     {isSize(["md", "lg"]) && (
-                        <UIText style={{ color: "#fff" }}>{" Save"}</UIText>
+                        <UIText style={{ color: "#fff" }}>{saving ? " Saving..." : " Save"}</UIText>
                     )}
                 </UIButton>
             </UIHeader>
