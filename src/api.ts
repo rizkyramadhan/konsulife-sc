@@ -326,7 +326,11 @@ export const SAPFieldMap = {
   } as APISearchProps,
   SAPSalesCode: {
     Table: "OSLP",
-    Fields: ["SlpCode"],
+    Fields: ["SlpCode", "SlpName"]
+  } as APISearchProps,
+  SAPSalesCodeUser: {
+    Table: "OSLP",
+    Fields: ["SlpCode", "SlpName"],
     Condition: [{
       field: "SlpCode",
       cond: "=",
@@ -459,13 +463,8 @@ export const SAPFieldMap = {
       value: ""
     }]
   } as APISearchProps,
-  CartOfAccount: {
+  ChartOfAccount: {
     Table: "OACT",
     Fields: ["AcctCode", "AcctName"],
-    Condition: [{
-      field: "Finance",
-      cond: "=",
-      value: "Cash Account"
-    }]
   } as APISearchProps,
 }

@@ -42,6 +42,7 @@ import FormInvTransfer from './it/FormInvTransfer';
 import ListPR from './pr/ListPR';
 import FormPR from './pr/FormPR';
 import ListWO from './wo/ListWO';
+import FormWO from './wo/FormWO';
 import FormUser from './user/FormUser';
 import ListPayment from './payment/ListPayment';
 import ListARInvoiceTO from './arinvoice-to/ListARInvoiceTO';
@@ -266,11 +267,12 @@ export default observer((_props: any) => {
             <SwitchRoute
               routes={{
                 "/": <MainMenu />,
+                "/wo": <ListWO />,
+                "/wo/form": <FormWO />,
                 "/so": <ListSO />,
                 "/so/form": <FormSO />,
                 "/so-canvas": <ListSOCanvas />,
                 "/so-canvas/form": <FormSOCanvas />,
-                "/wo": <ListWO />,
                 "/do": <ListDO />,
                 "/do/form/:id?": <FormDO />,
                 "/it": <ListInvTransfer />,

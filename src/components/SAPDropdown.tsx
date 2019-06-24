@@ -6,12 +6,13 @@ import React, { useEffect, useState } from "react";
 interface SAPDropdownProps extends UIProps {
   value: string | number;
   setValue: (value: any) => any;
-  field: 'Series' | 'State' | 'BPGroup' | 'Currency' | 'CustomerCode' | 'PaymentTerms' | 'ContactPerson' | 'ShipTo' | 'BillTo' | 'TaxCode' | 'ItemCodeCanvas' | 'ItemCodeAll' | 'UomCode' | 'WarehouseCodeCanvas' | 'WarehouseCodeAll' | 'VendorCode';
+  field: 'Series' | 'State' | 'BPGroup' | 'Currency' | 'CustomerCode' | 'PaymentTerms' | 'ContactPerson' | 'ShipTo' | 'BillTo' | 'TaxCode' | 'ItemCodeCanvas' | 'ItemCodeAll' | 'UomCode' | 'WarehouseCodeCanvas' | 'WarehouseCodeAll' | 'VendorCode' | 'SAPSalesCode' | 'Area' | 'Branch' | 'ChartOfAccount' | 'Custom';
   search?: string;
   where?: {
     field: string;
     value: any;
   }[];
+  customQuery?: APISearchProps;
   label?: string;
   color?: "default" | "error" | "success";
 }
@@ -20,27 +21,32 @@ export default (p: SAPDropdownProps) => {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-    let query: APISearchProps = (SAPFieldMap as any)[p.field];
-    if (!!p.where && p.where.length > 0) {
-      p.where.forEach(item => {
-        let idx = (query.Condition as any).findIndex((x: any) => x.field == item.field);
-        if (idx > -1)
-          (query.Condition as any)[idx].value = item.value;
-      });
-    }
+    let query: APISearchProps;
+    if (p.field === 'Custom' && p.customQuery) {
+      query = p.customQuery;
+    } else {
+      query = (SAPFieldMap as any)[p.field];
+      if (!!p.where && p.where.length > 0) {
+        p.where.forEach(item => {
+          let idx = (query.Condition as any).findIndex((x: any) => x.field == item.field);
+          if (idx > -1)
+            (query.Condition as any)[idx].value = item.value;
+        });
+      }
 
-    if (!!p.search) {
-      if (!query.Condition) query.Condition = [];
-      if (query.Condition.length > 0) {
+      if (!!p.search) {
+        if (!query.Condition) query.Condition = [];
+        if (query.Condition.length > 0) {
+          query.Condition.push({
+            cond: "AND"
+          })
+        }
         query.Condition.push({
-          cond: "AND"
+          field: query.Fields && query.Fields[1] ? query.Fields[1] : (query.Fields && query.Fields[0]),
+          cond: "like",
+          value: p.search
         })
       }
-      query.Condition.push({
-        field: query.Fields && query.Fields[1] ? query.Fields[1] : (query.Fields && query.Fields[0]),
-        cond: "like",
-        value: p.search
-      })
     }
 
     APISearch(query).then((res: any) => {
