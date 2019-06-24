@@ -39,8 +39,12 @@ import ListDO from './do/ListDO';
 import FormDO from './do/FormDO';
 import ListInvTransfer from './it/ListInvTransfer';
 import FormInvTransfer from './it/FormInvTransfer';
+<<<<<<< Updated upstream
 import ListPR from './pr/ListPR';
 import FormPR from './pr/FormPR';
+=======
+import ListWO from './wo/ListWO';
+>>>>>>> Stashed changes
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
@@ -259,12 +263,17 @@ export default observer((_props: any) => {
                 "/so/form": <FormSO />,
                 "/so-canvas": <ListSOCanvas />,
                 "/so-canvas/form": <FormSOCanvas />,
+                "/wo": <ListWO />,
                 "/do": <ListDO />,
                 "/do/form": <FormDO />,
                 "/it": <ListInvTransfer />,
+<<<<<<< Updated upstream
                 "/it/form": <FormInvTransfer />,
                 "/pr": <ListPR />,
                 "/pr/form/:id": <FormPR />,
+=======
+                "/it/form/:id": <FormInvTransfer />,
+>>>>>>> Stashed changes
                 "/ar-invoice": <ListARInvoice />,
                 "/ar-invoice/form": <FormARInvoice />,
                 "/customer": <ListCustomer />,

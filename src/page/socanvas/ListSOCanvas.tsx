@@ -7,9 +7,15 @@ import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
 import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
+<<<<<<< Updated upstream
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 import { APISearch, APISearchProps } from '@app/api';
+=======
+import React, { useState, useEffect } from "react";
+import { withRouter } from "react-router";
+import { APISearchProps, APISearch } from '@app/api';
+>>>>>>> Stashed changes
 
 const BtnCreate = withRouter(({ history }: any) => {
   return (
@@ -33,17 +39,31 @@ const BtnCreate = withRouter(({ history }: any) => {
   );
 });
 
+<<<<<<< Updated upstream
 export default withRouter(observer(({ showSidebar, sidebar }: any) =>{
+=======
+export default observer(({ showSidebar, sidebar }: any) => {
+>>>>>>> Stashed changes
   const [data, setData] = useState([]);
   useEffect(() => {
     let query: APISearchProps = {
       Table: "ORDR",
+<<<<<<< Updated upstream
       Fields: ["DocNum","U_IDU_SO_INTNUM", "CardName", "CardCode", "DocDate", "DocDueDate"],
       Condition:[{
           field:"DocStatus",
           cond:"=",
           value:"O"
       }]
+=======
+      Condition: [
+        {
+          field: "DocStatus",
+          cond: "=",
+          value: "O"
+        }
+      ]
+>>>>>>> Stashed changes
     };
     APISearch(query).then((res: any) => {
       setData(res);
@@ -86,12 +106,49 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) =>{
               }
             },
             DocDueDate: {
+<<<<<<< Updated upstream
               table: {
                 header: 'Due Date'
               }
             }
           }}
            items={data}
+=======
+              table: { header: "Tgl Due Date " }
+            },
+            DocStatus: {
+              table: { header: "Status " }
+            }
+          }}
+          primaryKey="DocNum"
+          items={data.map((item: any) => ({
+            ...item,
+            action: (
+              <UIRow style={{ marginTop: -10 }}>
+                <UIButton
+                  size="small"
+                  fill="clear"
+                  style={{
+                    marginTop: 0,
+                    marginBottom: 0
+                  }}
+                  onPress={() => {
+                    alert("remove!");
+                  }}
+                >
+                  <IconRemove
+                    height={18}
+                    width={18}
+                    color="red"
+                    onPress={() => {
+                      alert("remove!");
+                    }}
+                  />
+                </UIButton>
+              </UIRow>
+            )
+          }))}
+>>>>>>> Stashed changes
         />
       </UIBody>
     </UIContainer>
