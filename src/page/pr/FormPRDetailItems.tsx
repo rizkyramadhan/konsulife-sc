@@ -2,7 +2,6 @@ import UIList from "@app/libs/ui/UIList";
 import React from "react";
 
 export default ({ items }: any) => {
-    console.log(items);
     return (
         <UIList
             selection="multi"

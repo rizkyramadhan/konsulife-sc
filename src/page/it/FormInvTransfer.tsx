@@ -1,4 +1,3 @@
-import SAPDropdown from '@app/components/SAPDropdown';
 import IconSave from '@app/libs/ui/Icons/IconSave';
 import { isSize } from '@app/libs/ui/MediaQuery';
 import UIBody from '@app/libs/ui/UIBody';
@@ -8,41 +7,77 @@ import UIHeader from '@app/libs/ui/UIHeader';
 import UIJsonField from '@app/libs/ui/UIJsonField';
 import UIText from '@app/libs/ui/UIText';
 import { observer } from 'mobx-react-lite';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { withRouter } from 'react-router';
-
-const general = {
-    DocDate: "",
-    DocDueDate: "",
-    CardCode: "",
-    CardName: "",
-    Address: "",
-    Comments: "",
-    SlpCode: "",
-    Filler: "",
-    ToWhsCode: "",
-    U_IDU_IT_INTNUM: "",
-    U_IDU_CONTNUM: "",
-    U_IDU_NOSEAL: "",
-    U_IDU_NOPL: "",
-    U_IDU_NOPOL: "",
-    U_IDU_DRIVER: ""
-};
-
-const detail = {
-    ItemCode: "",
-    Dscription: "",
-    UseBaseUn: "",
-    Quantity: "",
-    UoMCode: "",
-    SerialNum: "",
-    WhsCode: ""
-}
+import { APISearch, APISearchProps } from '@app/api';
+import FormInvTransferDetail from './FormInvTransferDetail';
+import { View } from 'reactxp';
 
 export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
-    const [data, setData] = useState(general);
+    const [data, setData] = useState([]);
+    useEffect(() => {
+        let query: APISearchProps = {
+            Table: "OWTQ",
+            Fields: [
+                "DocNum",
+                "DocEntry",
+                "CardName",
+                "CardCode",
+                "U_IDU_ITR_INTNUM",
+                "Address",
+                "Filler",
+                "ToWhsCode",
+                "U_BRANCH",
+                "Comments",
+                "SlpCode",
+                "U_IDU_IT_INTNUM",
+                "U_IDU_CONTNUM",
+                "U_IDU_NOSEAL",
+                "U_IDU_NOPL",
+                "U_IDU_NOPOL",
+                "U_IDU_DRIVER"
+            ],
+            Condition: [{
+                field: "DocEntry",
+                cond: "=",
+                value: match.params.id
+            }]
+        };
+        APISearch(query).then((res: any) => {
+            if (res.length > 0)
+                setData(res[0]);
+        })
+    }, []);
 
-    console.log(match);
+    const [item, setItem] = useState([]);
+    useEffect(() => {
+        let query: APISearchProps = {
+            Table: "WTQ1",
+            Fields: [
+                "LineNum",
+                "ItemCode",
+                "Dscription",
+                "U_IDU_PARTNUM",
+                "WhsCode",
+                "Quantity",
+                "UomCode",
+                "OpenCreQty",
+
+                "UseBaseUn",
+                "SerialNum",
+            ],
+            Condition: [{
+                field: "DocEntry",
+                cond: "=",
+                value: match.params.id
+            }]
+        };
+        APISearch(query).then((res: any) => {
+            setItem(res);
+        })
+    }, []);
+
+    console.log(data,item);
     return (
         <UIContainer>
             <UIHeader
@@ -62,7 +97,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                     )}
                 </UIButton>
             </UIHeader>
-            <UIBody>
+            <UIBody scroll={true}>
                 <UIJsonField
                     items={data}
                     field={[
@@ -70,24 +105,24 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                             key: "general",
                             label: "General",
                             value: [
-                                { key: "DocDate", size: 6, label: "Posting Date" },
-                                { key: "DocDueDate", size: 6, label: "Due Date" },
-                                {
-                                    key: "CardCode", size: 7, component: (
-                                        <SAPDropdown label="Customer/Vendor Code" field="CustomerCode" value={data.CardCode} setValue={(v) => { setData({ ...data, CardCode: v }) }} />)
-                                },
-                                { key: "CardName", size: 12, label: "Customer/Vendor Name" },
-                                { key: "Address", size: 7, label: "Ship To" },
-                                { key: "Comments", size: 7, label: "Remarks" },
-                                { key: "SlpCode", size: 7, label: "Sales Employee", type: "field" },
-                                {
-                                    key: "Filler", size: 5, component: (
-                                        <SAPDropdown label="From Warehouse Code" field="WarehouseCodeAll" value={data.Filler} setValue={(v) => { setData({ ...data, Filler: v }) }} />)
-                                },
-                                {
-                                    key: "ToWhsCode", size: 6, component: (
-                                        <SAPDropdown label="To Warehouse Code" field="WarehouseCodeAll" value={data.ToWhsCode} setValue={(v) => { setData({ ...data, ToWhsCode: v }) }} />)
-                                }
+                                { key: "U_IDU_ITR_INTNUM",type: "field", label: "ITR No.",size: 7 },
+                                { type: "empty", size: 5 },
+                                { key: "DocDate", size: 4, type:"date" ,label: "Posting Date" },
+                                { key: "DocDueDate", size: 4, type:"date",label: "Delivery Date" },
+                                { type: "empty", size: 2 },
+                                { key: "Filler", size: 4, type:"field" ,label: "From Warehouse" },
+                                { key: "ToWhsCode", size: 4, type:"field",label: "To Warehouse" },
+                                
+                            ]
+                        },
+                        {
+                            key: "vendor",
+                            label: "Business Partner",
+                            value: [
+                                { key: "CardCode",type: "field", label: "BP Code", size: 3 },
+                                { key: "CardName",type: "field", label: "BP Name", size:7 },
+                                { key: "SlpCode",type: "field", label: "Sales Employee" ,size:7},
+                                { key: "Address",type: "field", label: "Ship To",size:7 }
                             ]
                         },
                         {
@@ -108,6 +143,28 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                         setData(data);
                     }}
                 />
+
+                <View style={{ marginTop: 50 }}>
+                    <View
+                        style={{
+                            justifyContent: "space-between",
+                            flex: 1,
+                            flexDirection: "row",
+                            alignItems: "center"
+                        }}
+                    >
+                        <UIText
+                            style={{
+                                fontSize: 19,
+                                color: "#333",
+                                fontWeight: 400
+                            }}
+                        >
+                            Detail Items
+                        </UIText>
+                    </View>
+                    <FormInvTransferDetail items={item} setItems={setItem} />
+                </View>
             </UIBody>
         </UIContainer>
     );

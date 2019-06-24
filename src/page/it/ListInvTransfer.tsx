@@ -12,7 +12,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   useEffect(() => {
     let query: APISearchProps = {
       Table: "OWTQ",
-      Fields: ["DocNum", "CardName", "CardCode", "U_IDU_ITR_INTNUM", "DocDate"],
+      Fields: ["DocNum", "DocEntry","CardName", "CardCode", "U_IDU_ITR_INTNUM", "DocDate"],
       Condition: [
         {
           field: "DocStatus",
@@ -35,7 +35,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
           style={{ flex: 1 }}
           primaryKey="DocNum"
           selection="single"
-          onSelect={(item) => { history.push('/it/form/' + item.DocNum) }}
+          onSelect={(item) => { history.push('/it/form/' + item.DocEntry) }}
           fields={{
             CardName: {
               table: {
