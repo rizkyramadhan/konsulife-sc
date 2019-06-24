@@ -16,6 +16,23 @@ export default ({ items, setItems }: any) => {
         primaryKey="No"
         items={items}
         selection="detail"
+        fields={{
+          Name: {
+            table: {
+              header: 'Name'
+            }
+          },
+          Tel1: {
+            table: {
+              header: 'Telpon'
+            }
+          },
+          Cellolar: {
+            table: {
+              header: 'Cellolar'
+            }
+          }
+        }}
         detailComponent={(item) => (
           <View
             style={{
