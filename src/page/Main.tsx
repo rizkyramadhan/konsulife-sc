@@ -37,6 +37,8 @@ import IconTruck from "@app/libs/ui/Icons/IconTruck";
 import IconLuggageCart from "@app/libs/ui/Icons/IconLuggageCart";
 import ListDO from './do/ListDO';
 import FormDO from './do/FormDO';
+import ListInvTransfer from './it/ListInvTransfer';
+import FormInvTransfer from './it/FormInvTransfer';
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
@@ -72,6 +74,12 @@ export const menuList = [
     subtitle: "Lorem Ipsum is simply dummy text.",
     icon: <IconReceipt width={20} height={20} color="#1D6EF7" />,
     path: "/payment-receipt"
+  },
+  {
+    title: "Inventory Transfer",
+    subtitle: "Lorem Ipsum is simply dummy text.",
+    icon: <IconInvoice width={20} height={20} color="#1D6EF7" />,
+    path: "/it"
   },
   {
     title: "AR Invoice",
@@ -245,6 +253,8 @@ export default observer((_props: any) => {
                 "/so-canvas/form": <FormSOCanvas />,
                 "/do": <ListDO />,
                 "/do/form": <FormDO />,
+                "/it": <ListInvTransfer />,
+                "/it/form": <FormInvTransfer />,
                 "/ar-invoice": <ListARInvoice />,
                 "/ar-invoice/form": <FormARInvoice />,
                 "/customer": <ListCustomer />,

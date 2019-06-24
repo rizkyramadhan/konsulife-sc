@@ -71,8 +71,9 @@ export default ({ items, setItems }: any) => {
                 { key: 'Street', size: 12 },
                 { key: 'ZipCode', size: 12 },
                 { key: 'City', size: 12 },
-                { key: 'State', size: 12, component: (
-                <SAPDropdown label="State" field="State" value={item.item.GroupCode} setValue={()=> {setItems(...item.item)}} /> )
+                {
+                  key: 'State', size: 12, component: (
+                    <SAPDropdown label="State" field="State" value={item.item.GroupCode} setValue={() => { setItems(...item.item) }} />)
                 },
               ]}
             />
