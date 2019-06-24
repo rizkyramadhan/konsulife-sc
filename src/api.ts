@@ -64,21 +64,21 @@ export const APISearch = async (p: APISearchProps) => {
         if (typeof res.data == 'object' && !!res.data && !!res.data.ErrorCode) {
           console.error(res.data);
           reject();
-        }
-
-        if (!cache || (!!cache && cache.length == 0)) {
-          createRecord("cache", {
-            id: url + params.Table + params.Condition,
-            data: res.data
-          })
         } else {
-          updateRecord("cache", {
-            id: url + params.Table + params.Condition,
-            data: res.data
-          });
-        }
+          if (!cache || (!!cache && cache.length == 0)) {
+            createRecord("cache", {
+              id: url + params.Table + params.Condition,
+              data: res.data
+            })
+          } else {
+            updateRecord("cache", {
+              id: url + params.Table + params.Condition,
+              data: res.data
+            });
+          }
 
-        resolve(res.data);
+          resolve(res.data);
+        }
       })
       .catch((err: any) => {
         console.error(err);
@@ -260,7 +260,17 @@ export const SAPFieldMap = {
     {
       field: "Category",
       cond: "=",
-      value: "Outpaut Tax"
+      value: "Output Tax"
+    }]
+  } as APISearchProps,
+  ItemCodeCanvas: {
+    Table: "OITM",
+    Fields: ["ItemCode", "ItemName"],
+    CustomQuery: "ItemCodeCanvas",
+    Condition: [{
+      field: "U_BRANCH",
+      cond: "=",
+      value: ""
     }]
   } as APISearchProps,
   ItemCodeAll: {

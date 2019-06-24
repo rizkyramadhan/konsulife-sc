@@ -42,6 +42,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
       Table: "OCRD",
       Fields: [
         "CardName",
+        "CardFName",
         "CardCode",
         "CardType",
         "GroupCode",

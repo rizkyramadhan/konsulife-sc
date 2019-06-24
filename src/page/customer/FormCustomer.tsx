@@ -1,38 +1,39 @@
+import { APIPost, APISearch, APISearchProps } from '@app/api';
+import SAPDropdown from '@app/components/SAPDropdown';
+import IconAdd from '@app/libs/ui/Icons/IconAdd';
+import IconSave from "@app/libs/ui/Icons/IconSave";
 import { isSize } from '@app/libs/ui/MediaQuery';
 import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
-import UITabs from "@app/libs/ui/UITabs";
 import UIJsonField from "@app/libs/ui/UIJsonField";
+import UISelectField from '@app/libs/ui/UISelectField';
+import UITabs from "@app/libs/ui/UITabs";
 import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { withRouter } from 'react-router';
 import { View } from "reactxp";
-import FormCustomerCPItems from './FormCustomerCPItems';
 import FormCustomerBillToItems from './FormCustomerBillToItems';
+import FormCustomerCPItems from './FormCustomerCPItems';
 import FormCustomerShipToItems from './FormCustomerShipToItems';
-import IconSave from "@app/libs/ui/Icons/IconSave";
-import SAPDropdown from '@app/components/SAPDropdown';
-import UISelectField from '@app/libs/ui/UISelectField';
-import IconAdd from '@app/libs/ui/Icons/IconAdd';
-import { APIPost } from '@app/api';
 
-const customer = {
-  Series: "",
-  CardName: "",
-  CardType: "",
-  GroupCode: "",
-  LicTradNum: "",
-  AddID: "",
-  SlpCode: "",
-  Phone1: "",
-  Phone2: "",
-  Fax: "",
-  Cellular: "",
-  E_Mail: "",
-  GroupNum: ""
-};
+// const customer = {
+//   Series: "",
+//   CardName: "",
+//   CardType: "",
+//   GroupCode: "",
+//   LicTradNum: "",
+//   AddID: "",
+//   SlpCode: "",
+//   Phone1: "",
+//   Phone2: "",
+//   Fax: "",
+//   Cellular: "",
+//   E_Mail: "",
+//   GroupNum: ""
+// };
 
 const cpList = [{
   No: 1,
@@ -67,8 +68,8 @@ const shipToList = [{
   IsDefault: "Y"
 }];
 
-export default observer(({ showSidebar, sidebar }: any) => {
-  const [data, setData] = useState(customer);
+export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
+  const [data, setData] = useState({});
   const [itemCP, setItemCP] = useState(cpList);
   const [itemBillTo, setItemBillTo] = useState(billToList);
   const [itemShipTo, setItemShipTo] = useState(shipToList);
@@ -82,7 +83,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
       color="success"
       size="small"
       onPress={() => {
-        setItemCP([...itemCP, {
+        setItemCP([...(itemCP as any), {
           No: Math.floor(Math.random() * Math.floor(999)),
           Name: "",
           FirstName: "",
@@ -201,6 +202,31 @@ export default observer(({ showSidebar, sidebar }: any) => {
 
   }
 
+  useEffect(() => {
+    const get = () => {
+      let query: APISearchProps = {
+        Table: "OCRD",
+        Condition: [{
+          field: "CardCode",
+          cond: "=",
+          value: match.params.id
+        }]
+      }
+      APISearch(query).then((res: any) => setData(res[0]));
+
+      // let query2: APISearchProps = {
+      //   Table: "OCPR",
+      //   Condition: [{
+      //     field: "CardCode",
+      //     cond: "=",
+      //     value: match.params.id
+      //   }]
+      // }
+      // APISearch(query2).then((res: any) => setItemCP(res));
+    }
+    if (!!match.params.id) get();
+  }, [])
+
   return (
     <UIContainer>
       <UIHeader
@@ -230,19 +256,19 @@ export default observer(({ showSidebar, sidebar }: any) => {
               key: "general",
               label: "General",
               value: [
-                {
-                  key: "Series", size: 7, component: (
-                    <SAPDropdown label="Series" field="Series" value={data.Series} setValue={(v) => { setData({ ...data, Series: v }) }} />)
-                },
-                { key: "CardName", size: 7, label: "BP Name" },
-                { key: "CardType", size: 5, component: (<UISelectField label="BP Type" items={[{ label: 'Lead', value: 'L' }]} value={data.CardType} setValue={(v) => { setData({ ...data, CardType: v }) }} />) },
+                { key: "CardName", size: 12, label: "BP Name" },
                 {
                   key: "GroupCode", size: 6, component: (
-                    <SAPDropdown label="Group Code" field="BPGroup" value={data.GroupCode} setValue={(v) => { setData({ ...data, GroupCode: v }) }} />)
+                    <SAPDropdown label="Group Code" field="BPGroup" value={(data as any).GroupCode} setValue={(v) => { setData({ ...data, GroupCode: v }) }} />)
+                },
+                { key: "CardType", size: 6, component: (<UISelectField label="BP Type" items={[{ label: 'Lead', value: 'L' }, { label: 'Customer', value: 'C' }, { label: 'Vendor', value: 'S' }]} value={(data as any).CardType} setValue={(v) => { setData({ ...data, CardType: v }) }} />) },
+                {
+                  key: "Series", size: 7, component: (
+                    <SAPDropdown label="Series" field="Series" value={(data as any).Series} setValue={(v) => { setData({ ...data, Series: v }) }} />)
                 },
                 {
-                  key: "GroupNum", size: 7, component: (
-                    <SAPDropdown label="Payment Terms Code" field="PaymentTerms" value={data.GroupNum} setValue={(v) => { setData({ ...data, GroupNum: v }) }} />)
+                  key: "GroupNum", size: 5, component: (
+                    <SAPDropdown label="Payment Terms Code" field="PaymentTerms" value={(data as any).GroupNum} setValue={(v) => { setData({ ...data, GroupNum: v }) }} />)
                 },
                 { key: "SlpCode", size: 7, label: "Sales Employee Code" },
               ]
@@ -259,8 +285,16 @@ export default observer(({ showSidebar, sidebar }: any) => {
                 { key: "Fax", size: 6, label: "Fax Number" },
                 { key: "Cellular", size: 6, label: "Mobile Phone" },
                 { key: "E_Mail", size: 7, label: "E-Mail" },
-                { key: "U_IDU_AREA", size: 7, label: "Area" },
-                { key: "U_IDU_BRANCH", size: 7, label: "Branch" }
+                // { key: "U_IDU_AREA", size: 7, label: "Area" },
+                {
+                  key: "U_IDU_AREA", size: 12, component: (
+                    <SAPDropdown label="Area" field="Area" value={(data as any).U_IDU_AREA} setValue={(v) => { setData({ ...data, U_IDU_AREA: v }) }} />)
+                },
+                {
+                  key: "U_IDU_BRANCH", size: 8, component: (
+                    <SAPDropdown label="Branch" field="Branch" value={(data as any).U_IDU_BRANCH} setValue={(v) => { setData({ ...data, U_IDU_BRANCH: v }) }} />)
+                },
+                // { key: "U_IDU_BRANCH", size: 7, label: "Branch" }
               ]
             },
           ]}
@@ -298,4 +332,4 @@ export default observer(({ showSidebar, sidebar }: any) => {
       </UIBody>
     </UIContainer>
   );
-});
+}));

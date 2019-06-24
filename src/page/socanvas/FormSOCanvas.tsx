@@ -1,3 +1,7 @@
+import { APIPost } from '@app/api';
+import SAPDropdown from '@app/components/SAPDropdown';
+import IconAdd from "@app/libs/ui/Icons/IconAdd";
+import IconSave from "@app/libs/ui/Icons/IconSave";
 import { isSize } from "@app/libs/ui/MediaQuery";
 import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
@@ -8,22 +12,21 @@ import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
 import { View } from "reactxp";
-import IconSave from "@app/libs/ui/Icons/IconSave";
 import FormSOCanvasDetailItems from "./FormSOCanvasDetailItems";
-import IconAdd from "@app/libs/ui/Icons/IconAdd";
 
 const sample = {
-  CardCode: "TIM0002",
-  CardName: "PT FREEPOT INDONESIA",
+  CardCode: "",
+  // CardName: "",
+  IsCanvas: "Y",
   NumAtCard: "",
-  DocDate: "",
-  DocDueDate: "",
+  DocDate: "2019/06/23",
+  DocDueDate: "2019/06/23",
   DocCur: "",
-  DocRate: "",
-  U_IDU_SO_INTNUM: "SO/TIM-0002/19/VI/0001",
-  GroupNum: "",
-  SlpCode: "",
-  CntctCode: "",
+  DocRate: 1,
+  U_IDU_SO_INTNUM: -1,
+  GroupNum: -1,
+  SlpCode: -1,
+  CntctCode: 1,
   Address2: "",
   Address: "",
   Comments: ""
@@ -31,40 +34,86 @@ const sample = {
 
 const sampleList = [
   {
-    ItemCode: "BSLSR000001",
-    Dscription: "750R16-8PR-TL L310-T",
+    LineNum: 0,
+    ItemCode: "asda",
+    Dscription: "",
     U_IDU_PARTNUM: "",
     UseBaseUn: "",
     Quantity: 0,
-    UoMCode: "",
     WhsCode: "",
-    ShipDate: "",
+    ShipDate: "2019/06/23",
     OcrCode: "",
     OcrCode2: "",
-    UnitPrice: 1950000,
-    DiscPrcnt: "",
-    TaxCode: ""
-  },
-  {
-    ItemCode: "BSLSR000002",
-    Dscription: "750R16-8PR-TL L310-T",
-    U_IDU_PARTNUM: "",
-    UseBaseUn: "",
-    Quantity: 0,
-    UoMCode: "",
-    WhsCode: "",
-    ShipDate: "",
-    OcrCode: "",
-    OcrCode2: "",
-    UnitPrice: 1950000,
+    PriceBefDi: 0,
     DiscPrcnt: "",
     TaxCode: ""
   }
 ];
 
 export default observer(({ showSidebar, sidebar }: any) => {
-  const data = sample;
+  const [data, setData] = useState(sample);
   const [items, setItems] = useState(sampleList);
+  const [saving, setSaving] = useState(false);
+
+  const ActionIt = () => {
+    return (<UIButton
+      style={{
+        flexShrink: 'none'
+      }}
+      color="success"
+      size="small"
+      onPress={() => {
+        setItems([...(items as any), {
+          LineNum: Math.floor(Math.random() * Math.floor(999)),
+          ItemCode: "",
+          Dscription: "",
+          U_IDU_PARTNUM: "",
+          UseBaseUn: "",
+          Quantity: 0,
+          WhsCode: "",
+          ShipDate: "2019/06/23",
+          OcrCode: "",
+          OcrCode2: "",
+          PriceBefDi: 0,
+          DiscPrcnt: "",
+          TaxCode: ""
+        }])
+      }}
+    >
+      <IconAdd color="#fff" height={18} width={18} style={{
+        marginTop: -9
+      }} />
+      {isSize(["md", "lg"]) && (
+        <UIText style={{ color: "#fff" }} size="small">
+          {" Add"}
+        </UIText>
+      )}
+    </UIButton>);
+  }
+
+  const save = async () => {
+    setSaving(true);
+    const Lines_IT = items.map(d => {
+      delete d.LineNum;
+      return d;
+    });
+
+    try {
+      await APIPost('SalesOrder', {
+        ...data, Lines: [...Lines_IT],
+      });
+    }
+    catch (e) {
+      alert(e.Message)
+      console.error({
+        ...data, Lines: [...Lines_IT],
+      });
+    }
+    finally {
+      setSaving(false);
+    }
+
+  }
 
   return (
     <UIContainer>
@@ -77,12 +126,12 @@ export default observer(({ showSidebar, sidebar }: any) => {
           color="primary"
           size="small"
           onPress={() => {
-            alert("Saved!");
+            save();
           }}
         >
           <IconSave color="#fff" />
           {isSize(["md", "lg"]) && (
-            <UIText style={{ color: "#fff" }}>{" Save"}</UIText>
+            <UIText style={{ color: "#fff" }}>{saving ? " Saving..." : " Save"}</UIText>
           )}
         </UIButton>
       </UIHeader>
@@ -99,15 +148,17 @@ export default observer(({ showSidebar, sidebar }: any) => {
                   key: "U_IDU_SO_INTNUM",
                   type: "field",
                   label: "SO Number",
-                  size: 7
+                  size: 12
                 },
-                { type: "empty", size: 5, key: "a" },
-                { key: "DocDate", size: 4, label: "Posting Date" },
-                { key: "DocDueDate", size: 4, label: "Delivery Date" },
-                { type: "empty", size: 2, key: "b" },
-                { key: "DocCur", size: 4, label: "Document Currency" },
+                { key: "DocDate", size: 6, label: "Posting Date" },
+                { key: "DocDueDate", size: 6, label: "Delivery Date" },
+                {
+                  key: "DocCur", size: 8, label: "Document Currency",
+                  component: (
+                    <SAPDropdown label="Document Currency" field="Currency" value={(data as any).DocCur} setValue={(v) => { setData({ ...data, DocCur: v }) }} />)
+                },
                 { key: "DocRate", size: 4, label: "Document Rate" },
-                { key: "SlpCode", label: "Sales Employee" }
+                // { key: "SlpCode", label: "Sales Employee" }
               ]
             },
             {
@@ -115,9 +166,18 @@ export default observer(({ showSidebar, sidebar }: any) => {
               label: "Customer",
               sublabel: "Toko Penerima Barang",
               value: [
-                { key: "CardCode", label: "Customer", size: 3 },
-                { key: "CardName", label: "Name" },
-                { key: "CntctCode", label: "Contact Person" },
+                {
+                  key: "CardCode", label: "Customer/Vendor", size: 12, component: (
+                    <SAPDropdown label="Customer" field="CustomerCode" value={(data as any).CardCode} setValue={(v) => { setData({ ...data, CardCode: v }) }} />)
+                },
+                // { key: "CardName", label: "Name" },
+                {
+                  key: "CntctCode", label: "Contact Person", size: 7, component: (
+                    <SAPDropdown label="Contact Person" field="Custom" customQuery={{
+                      Table: "OCPR",
+                      Fields: ["CardCode", "Name"],
+                    }} value={(data as any).CntctCode} setValue={(v) => { setData({ ...data, CntctCode: v }) }} />)
+                },
                 { key: "NumAtCard", label: "PO Customer No", size: 8 }
               ]
             },
@@ -129,17 +189,34 @@ export default observer(({ showSidebar, sidebar }: any) => {
                 {
                   key: "Address2",
                   label: "Ship To",
-                  size: 8
+                  size: 12,
+                  component: (
+                    <SAPDropdown label="Ship To" field="Custom" customQuery={{
+                      Table: "CRD1",
+                      Fields: ["Street"],
+                      Condition: [{
+                        field: "AdresType",
+                        cond: "=",
+                        value: "S"
+                      }]
+                    }} value={(data as any).Address2} setValue={(v) => { setData({ ...data, Address2: v }) }} />)
                 },
                 {
                   key: "Address",
                   label: "Bill To",
-                  size: 8
+                  size: 12,
+                  component: (
+                    <SAPDropdown label="Bill To" field="Custom" customQuery={{
+                      Table: "CRD1",
+                      Fields: ["Street"]
+                    }} value={(data as any).Address} setValue={(v) => { setData({ ...data, Address: v }) }} />)
                 },
                 {
                   key: "GroupNum",
                   label: "Payment Method",
-                  size: 8
+                  size: 8,
+                  component: (
+                    <SAPDropdown label="Payment Method" field="PaymentTerms" value={(data as any).GroupNum} setValue={(v) => { setData({ ...data, GroupNum: v }) }} />)
                 }
               ]
             },
@@ -179,23 +256,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
             >
               Detail Items
             </UIText>
-            <UIButton
-              color="success"
-              size="small"
-              onPress={() => {
-                alert("Add!");
-              }}
-              style={{
-                height: 'auto'
-              }}
-            >
-              <IconAdd color="#fff" height={24} width={24} />
-              {isSize(["md", "lg"]) && (
-                <UIText style={{ color: "#fff" }} size="small">
-                  {" Add"}
-                </UIText>
-              )}
-            </UIButton>
+            <ActionIt />
           </View>
           <FormSOCanvasDetailItems items={items} setItems={setItems} />
         </View>
