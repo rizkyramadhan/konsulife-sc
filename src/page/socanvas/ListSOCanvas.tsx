@@ -10,6 +10,8 @@ import { observer } from "mobx-react-lite";
 import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
 import { APISearchProps, APISearch } from '@app/api';
+import UIRow from '@app/libs/ui/UIRow';
+import IconRemove from '@app/libs/ui/Icons/IconRemove';
 
 const BtnCreate = withRouter(({ history }: any) => {
   return (
@@ -43,7 +45,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
         field: "DocStatus",
         cond: "=",
         value: "O"
-      }]
+      }, { cond: "AND" }, { field: "ObjType", cond: "=", value: 17 }]
     };
     APISearch(query).then((res: any) => {
       setData(res);
@@ -89,9 +91,40 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
               table: {
                 header: 'Due Date'
               }
+            },
+            action: {
+              table: {
+                header: 'Action'
+              }
             }
           }}
-          items={data}
+          items={data.map((item: any) => ({
+            ...item,
+            action: (
+              <UIRow style={{ marginTop: -10 }}>
+                <UIButton
+                  size="small"
+                  fill="clear"
+                  style={{
+                    marginTop: 0,
+                    marginBottom: 0
+                  }}
+                  onPress={() => {
+                    alert("remove!");
+                  }}
+                >
+                  <IconRemove
+                    height={18}
+                    width={18}
+                    color="red"
+                    onPress={() => {
+                      alert("remove!");
+                    }}
+                  />
+                </UIButton>
+              </UIRow>
+            )
+          }))}
         />
       </UIBody>
     </UIContainer>

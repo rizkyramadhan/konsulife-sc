@@ -10,6 +10,8 @@ import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
 import IconAdd from "@app/libs/ui/Icons/IconAdd";
 import { APISearchProps, APISearch } from '@app/api';
+import UIRow from '@app/libs/ui/UIRow';
+import IconRemove from '@app/libs/ui/Icons/IconRemove';
 
 const BtnCreate = withRouter(({ history }: any) => {
   return (
@@ -34,17 +36,17 @@ const BtnCreate = withRouter(({ history }: any) => {
 });
 
 
-export default withRouter(observer(({ history, showSidebar, sidebar }: any) =>{
+export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
   useEffect(() => {
     let query: APISearchProps = {
       Table: "ODRF",
-      Fields: ["DocNum","U_IDU_SO_INTNUM", "CardName", "CardCode", "DocDate", "DocDueDate"],
-      Condition:[{
-          field:"DocStatus",
-          cond:"=",
-          value:"O"
-      },{cond:"AND"},{field:"ObjType",cond:"=",value:17}]
+      Fields: ["DocNum", "U_IDU_SO_INTNUM", "CardName", "CardCode", "DocDate", "DocDueDate"],
+      Condition: [{
+        field: "DocStatus",
+        cond: "=",
+        value: "O"
+      }, { cond: "AND" }, { field: "ObjType", cond: "=", value: 17 }]
     };
     APISearch(query).then((res: any) => {
       setData(res);
@@ -62,13 +64,13 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) =>{
       </UIHeader>
       <UIBody>
         <UIList
-           style={{ flex: 1 }}
-           primaryKey="DocNum"
-           selection="single"
-           onSelect={() => { history.push('/so/form') }}
-           fields={{
-            U_IDU_SO_INTNUM:{
-              table:{
+          style={{ flex: 1 }}
+          primaryKey="DocNum"
+          selection="single"
+          onSelect={() => { history.push('/so/form') }}
+          fields={{
+            U_IDU_SO_INTNUM: {
+              table: {
                 header: "No. SO"
               }
             },
@@ -91,9 +93,40 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) =>{
               table: {
                 header: 'Due Date'
               }
+            },
+            action: {
+              table: {
+                header: 'Action'
+              }
             }
           }}
-           items={data}
+          items={data.map((item: any) => ({
+            ...item,
+            action: (
+              <UIRow style={{ marginTop: -10 }}>
+                <UIButton
+                  size="small"
+                  fill="clear"
+                  style={{
+                    marginTop: 0,
+                    marginBottom: 0
+                  }}
+                  onPress={() => {
+                    alert("remove!");
+                  }}
+                >
+                  <IconRemove
+                    height={18}
+                    width={18}
+                    color="red"
+                    onPress={() => {
+                      alert("remove!");
+                    }}
+                  />
+                </UIButton>
+              </UIRow>
+            )
+          }))}
         />
       </UIBody>
     </UIContainer>
