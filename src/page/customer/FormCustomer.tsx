@@ -51,7 +51,7 @@ const billToList = [{
   Street: "",
   ZipCode: "",
   City: "",
-  State: 0,
+  State: "01",
   AdresType: "B",
   IsDefault: "Y"
 }];
@@ -62,7 +62,7 @@ const shipToList = [{
   Street: "",
   ZipCode: "",
   City: "",
-  State: 0,
+  State: "01",
   AdresType: "S",
   IsDefault: "Y"
 }];
@@ -119,7 +119,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
           Street: "",
           ZipCode: "",
           City: "",
-          State: 0,
+          State: "01",
           AdresType: "S",
           IsDefault: itemShipTo.length === 0 ? 'Y' : 'N'
         }])
@@ -150,7 +150,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
           Street: "",
           ZipCode: "",
           City: "",
-          State: 0,
+          State: "01",
           AdresType: "B",
           IsDefault: itemBillTo.length === 0 ? 'Y' : 'N'
         }])

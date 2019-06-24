@@ -69,10 +69,10 @@ export default ({ items, setItems }: any) => {
                   padding: 10
                 }}
                 field={[
-                  { key: 'Address', size: 12 },
-                  { key: 'Street', size: 12 },
-                  { key: 'ZipCode', size: 12 },
-                  { key: 'City', size: 12 },
+                  { key: 'Address', size: 12, label:"Address" },
+                  { key: 'Street', size: 12, label:"Street" },
+                  { key: 'ZipCode', size: 12, label:"ZIP Code" },
+                  { key: 'City', size: 12 , label:"City"},
                   {
                     key: 'State', size: 12, component: (
                       <SAPDropdown label="State"
