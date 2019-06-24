@@ -135,8 +135,8 @@ export const SAPFieldMap = {
     Fields: ["Code", "Name"],
     Condition: [{
       field: "Country",
-      cond:"=",
-      value:"ID"
+      cond: "=",
+      value: "ID"
     }]
   } as APISearchProps,
   CustomerCode: {
@@ -303,7 +303,11 @@ export const SAPFieldMap = {
   } as APISearchProps,
   SAPSalesCode: {
     Table: "OSLP",
-    Fields: ["SlpCode"],
+    Fields: ["SlpCode", "SlpName"]
+  } as APISearchProps,
+  SAPSalesCodeUser: {
+    Table: "OSLP",
+    Fields: ["SlpCode", "SlpName"],
     Condition: [{
       field: "SlpCode",
       cond: "=",

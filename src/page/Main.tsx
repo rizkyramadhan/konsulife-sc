@@ -41,6 +41,8 @@ import ListInvTransfer from './it/ListInvTransfer';
 import FormInvTransfer from './it/FormInvTransfer';
 import ListPR from './pr/ListPR';
 import FormPR from './pr/FormPR';
+import ListWO from './wo/ListWO';
+import FormWO from './wo/FormWO';
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
@@ -255,6 +257,8 @@ export default observer((_props: any) => {
             <SwitchRoute
               routes={{
                 "/": <MainMenu />,
+                "/wo": <ListWO />,
+                "/wo/form": <FormWO />,
                 "/so": <ListSO />,
                 "/so/form": <FormSO />,
                 "/so-canvas": <ListSOCanvas />,
