@@ -1,16 +1,15 @@
 import IconAdd from "@app/libs/ui/Icons/IconAdd";
-import IconRemove from "@app/libs/ui/Icons/IconRemove";
 import { isSize } from "@app/libs/ui/MediaQuery";
 import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
-import UIRow from "@app/libs/ui/UIRow";
 import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
+import { APISearch, APISearchProps } from '@app/api';
 
 const BtnCreate = withRouter(({ history }: any) => {
   return (
@@ -34,31 +33,22 @@ const BtnCreate = withRouter(({ history }: any) => {
   );
 });
 
-const sample = [
-  {
-    CardCode: "TIM0001",
-    CardName: "PT FREEPOT INDONESIA",
-    DocDate: "12.08.19",
-    DocDueDate: "12.08.19",
-    DocStatus: "Open",
-    U_IDU_SO_INTNUM: "SO/TIM-0002/19/VI/0001",
-    Sales: "Dwi",
-    GrandTotal: 1000000
-  },
-  {
-    CardCode: "TIM0002",
-    CardName: "PT FREEPOT INDONESIA",
-    DocDate: "12.08.19",
-    DocDueDate: "12.08.19",
-    DocStatus: "Open",
-    U_IDU_SO_INTNUM: "SO/TIM-0002/19/VI/0001",
-    Sales: "Dwi",
-    GrandTotal: 1000000
-  }
-];
-
-export default observer(({ showSidebar, sidebar }: any) => {
-  const data = sample;
+export default withRouter(observer(({ showSidebar, sidebar }: any) =>{
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    let query: APISearchProps = {
+      Table: "ORDR",
+      Fields: ["DocNum","U_IDU_SO_INTNUM", "CardName", "CardCode", "DocDate", "DocDueDate"],
+      Condition:[{
+          field:"DocStatus",
+          cond:"=",
+          value:"O"
+      }]
+    };
+    APISearch(query).then((res: any) => {
+      setData(res);
+    })
+  }, []);
 
   return (
     <UIContainer>
@@ -71,60 +61,39 @@ export default observer(({ showSidebar, sidebar }: any) => {
       </UIHeader>
       <UIBody>
         <UIList
-          fields={{
-            U_IDU_SO_INTNUM: {
-              table: { header: "No. SO " }
+           style={{ flex: 1 }}
+           primaryKey="DocNum"
+           selection="detail"
+           fields={{
+            U_IDU_SO_INTNUM:{
+              table:{
+                header: "No. SO"
+              }
             },
             CardName: {
-              table: { header: "Nama " }
+              table: {
+                header: 'Customer'
+              }
+            },
+            CardCode: {
+              table: {
+                header: 'Code'
+              }
             },
             DocDate: {
-              table: { header: "Tgl Dokumen " }
+              table: {
+                header: 'Posting Date'
+              }
             },
             DocDueDate: {
-              table: { header: "Tgl Due Date " }
-            },
-            DocStatus: {
-              table: { header: "Status " }
-            },
-            Sales: {
-              table: { header: "Sales " }
-            },
-            GrandTotal: {
-              table: { header: "Grand Total " }
+              table: {
+                header: 'Due Date'
+              }
             }
           }}
-          primaryKey="CardCode"
-          items={data.map(item => ({
-            ...item,
-            GrandTotal: item.GrandTotal.toLocaleString(),
-            action: (
-              <UIRow style={{ marginTop: -10 }}>
-                <UIButton
-                  size="small"
-                  fill="clear"
-                  style={{
-                    marginTop: 0,
-                    marginBottom: 0
-                  }}
-                  onPress={() => {
-                    alert("remove!");
-                  }}
-                >
-                  <IconRemove
-                    height={18}
-                    width={18}
-                    color="red"
-                    onPress={() => {
-                      alert("remove!");
-                    }}
-                  />
-                </UIButton>
-              </UIRow>
-            )
-          }))}
+           items={data}
         />
       </UIBody>
     </UIContainer>
   );
-});
+}));

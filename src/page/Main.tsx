@@ -39,6 +39,8 @@ import ListDO from './do/ListDO';
 import FormDO from './do/FormDO';
 import ListInvTransfer from './it/ListInvTransfer';
 import FormInvTransfer from './it/FormInvTransfer';
+import ListPR from './pr/ListPR';
+import FormPR from './pr/FormPR';
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
@@ -50,6 +52,12 @@ export const menuList = [
     subtitle: "Lorem Ipsum is simply dummy text.",
     icon: <IconLuggageCart width={20} height={20} color="#1D6EF7" />,
     path: "/wo"
+  },
+  {
+    title: "Purchase Receipt",
+    subtitle: "Lorem Ipsum is simply dummy text.",
+    icon: <IconInvoice width={20} height={20} color="#1D6EF7" />,
+    path: "/pr"
   },
   {
     title: "SO Taking Order",
@@ -255,6 +263,8 @@ export default observer((_props: any) => {
                 "/do/form": <FormDO />,
                 "/it": <ListInvTransfer />,
                 "/it/form": <FormInvTransfer />,
+                "/pr": <ListPR />,
+                "/pr/form/:id": <FormPR />,
                 "/ar-invoice": <ListARInvoice />,
                 "/ar-invoice/form": <FormARInvoice />,
                 "/customer": <ListCustomer />,

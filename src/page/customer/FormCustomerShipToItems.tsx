@@ -64,7 +64,6 @@ export default ({ items, setItems }: any) => {
               style={{
                 padding: 10
               }}
-              except={['No', 'AdresType', 'IsDefault']}
               field={[
                 { key: 'Address', size: 12 },
                 { key: 'Street', size: 12 },

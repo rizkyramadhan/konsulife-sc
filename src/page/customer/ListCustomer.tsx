@@ -6,9 +6,10 @@ import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
 import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
 import IconAdd from "@app/libs/ui/Icons/IconAdd";
+import { APISearch, APISearchProps } from '@app/api';
 
 const BtnCreate = withRouter(({ history }: any) => {
   return (
@@ -32,39 +33,43 @@ const BtnCreate = withRouter(({ history }: any) => {
   );
 });
 
-const sample = [
-  {
-    CardCode: "JYP00003",
-    CardName: "AMAN SALIM",
-    CardFName: "AMAN SALIM - JAYAPURA",
-    CardType: "CUSTOMER",
-    LicTradNum: "07.754.763.6-952.000"
-  },
-  {
-    CardCode: "TIM0001",
-    CardName: "BOLEH SAJA",
-    CardFName: "BOLEH SAJA - PT FREEPOT INDONESIA",
-    CardType: "CUSTOMER",
-    LicTradNum: "07.754.763.6-952.000"
-  },
-  {
-    CardCode: "TIM0002",
-    CardName: "BOLEH SAJA",
-    CardFName: "BOLEH SAJA - PT FREEPOT INDONESIA",
-    CardType: "CUSTOMER",
-    LicTradNum: "07.754.763.6-952.000"
-  },
-  {
-    CardCode: "TIM0003",
-    CardName: "BOLEH SAJA",
-    CardFName: "BOLEH SAJA - PT FREEPOT INDONESIA",
-    CardType: "CUSTOMER",
-    LicTradNum: "07.754.763.6-952.000"
-  }
-];
-
 export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
-  const data = sample;
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    let query: APISearchProps = {
+      Table: "OCRD",
+      Fields: [
+        "CardName", 
+        "CardCode", 
+        "CardType", 
+        "GroupCode",
+        "LicTradNum",
+        "AddID",
+        "SlpCode",
+        "Phone1",
+        "Phone2",
+        "U_IDU_AREA",
+        "U_IDU_BRANCH"
+      ],
+      Condition:[{
+          field:"CardType",
+          cond:"=",
+          value:"C"
+      },
+      {
+        cond:"OR"
+      },
+      {
+        field:"CardType",
+        cond:"=",
+        value:"L"
+      }
+    ]
+    };
+    APISearch(query).then((res: any) => {
+      setData(res);
+    })
+  }, []);
 
   return (
     <UIContainer>
