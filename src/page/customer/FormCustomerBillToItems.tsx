@@ -7,6 +7,7 @@ import React from "react";
 import { Button, View } from 'reactxp/dist/web/ReactXP';
 import UIButton from '@app/libs/ui/UIButton';
 import IconRemove from '@app/libs/ui/Icons/IconRemove';
+import SAPDropdown from '@app/components/SAPDropdown';
 
 export default ({ items, setItems }: any) => {
   return (
@@ -70,7 +71,9 @@ export default ({ items, setItems }: any) => {
                 { key: 'Street', size: 12 },
                 { key: 'ZipCode', size: 12 },
                 { key: 'City', size: 12 },
-                { key: 'State', size: 12 }
+                { key: 'State', size: 12, component: (
+                <SAPDropdown label="State" field="State" value={item.item.GroupCode} setValue={()=> {setItems(...item.item)}} /> )
+                },
               ]}
             />
 

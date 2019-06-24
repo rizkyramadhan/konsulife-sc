@@ -132,7 +132,12 @@ export const SAPFieldMap = {
   } as APISearchProps,
   State: {
     Table: "OCST",
-    Fields: ["Code", "Name"]
+    Fields: ["Code", "Name"],
+    Condition: [{
+      field: "Country",
+      cond:"=",
+      value:"ID"
+    }]
   } as APISearchProps,
   CustomerCode: {
     Table: "OCRD",

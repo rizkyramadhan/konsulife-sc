@@ -235,7 +235,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
                     <SAPDropdown label="Series" field="Series" value={data.Series} setValue={(v) => { setData({ ...data, Series: v }) }} />)
                 },
                 { key: "CardName", size: 7, label: "BP Name" },
-                { key: "CardType", size: 5, component: (<UISelectField label="BP Type" items={[{ label: 'Customer', value: 'C' }, { label: 'Vendor', value: 'S' }]} value={data.CardType} setValue={(v) => { setData({ ...data, CardType: v }) }} />) },
+                { key: "CardType", size: 5, component: (<UISelectField label="BP Type" items={[{ label: 'Lead', value: 'L' }]} value={data.CardType} setValue={(v) => { setData({ ...data, CardType: v }) }} />) },
                 {
                   key: "GroupCode", size: 6, component: (
                     <SAPDropdown label="Group Code" field="BPGroup" value={data.GroupCode} setValue={(v) => { setData({ ...data, GroupCode: v }) }} />)
@@ -259,6 +259,8 @@ export default observer(({ showSidebar, sidebar }: any) => {
                 { key: "Fax", size: 6, label: "Fax Number" },
                 { key: "Cellular", size: 6, label: "Mobile Phone" },
                 { key: "E_Mail", size: 7, label: "E-Mail" },
+                { key: "U_IDU_AREA", size: 7, label: "Area" },
+                { key: "U_IDU_BRANCH", size: 7, label: "Branch" }
               ]
             },
           ]}
