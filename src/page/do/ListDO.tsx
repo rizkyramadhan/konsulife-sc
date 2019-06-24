@@ -1,46 +1,20 @@
-import IconAdd from "@app/libs/ui/Icons/IconAdd";
-import { isSize } from "@app/libs/ui/MediaQuery";
 import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
-import UIText from "@app/libs/ui/UIText";
+import UIRow from "@app/libs/ui/UIRow";
 import { observer } from "mobx-react-lite";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
-import { APISearchProps, APISearch } from '@app/api';
-import UIRow from '@app/libs/ui/UIRow';
-import IconRemove from '@app/libs/ui/Icons/IconRemove';
-
-const BtnCreate = withRouter(({ history }: any) => {
-  return (
-    <UIButton
-      size="small"
-      color="primary"
-      onPress={() => {
-        history.push("/do/form");
-      }}
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "flex-end"
-      }}
-    >
-      <IconAdd color="#fff" />
-      {isSize(["md", "lg"]) && (
-        <UIText style={{ color: "#fff" }}>Create</UIText>
-      )}
-    </UIButton>
-  );
-});
+import IconRemove from "@app/libs/ui/Icons/IconRemove";
+import { APISearch, APISearchProps } from '@app/api';
 
 export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
   useEffect(() => {
     let query: APISearchProps = {
-      Table: "ODLN",
-      Fields: ["DocEntry", "DocDate", "DocDueDate", "CardCode", "CardName"]
+      Table: "ORDR"
     };
     APISearch(query).then((res: any) => {
       setData(res);
@@ -54,14 +28,13 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
         sidebar={sidebar}
         center={"Delivery Order"}
       >
-        <BtnCreate />
       </UIHeader>
       <UIBody>
         <UIList
-          style={{ flex: 1 }}
           primaryKey="DocEntry"
+          style={{ backgroundColor: "#fff" }}
           selection="single"
-          onSelect={(item) => { history.push('/it/form/' + item.DocNum) }}
+          onSelect={(item) => { history.push('/do/form/' + item.DocEntry) }}
           fields={{
             CardName: {
               table: {
@@ -73,19 +46,19 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
                 header: 'Code'
               }
             },
-            U_IDU_ITR_INTNUM: {
+            U_IDU_SO_INTNUM: {
               table: {
-                header: 'Request No.'
+                header: 'SO No.'
+              }
+            },
+            NumAtCard: {
+              table: {
+                header: 'PO Cust.'
               }
             },
             DocDate: {
               table: {
                 header: 'Posting Date'
-              }
-            },
-            action: {
-              table: {
-                header: 'Action'
               }
             }
           }}

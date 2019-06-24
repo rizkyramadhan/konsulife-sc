@@ -11,7 +11,7 @@ import React, { useState, useEffect } from "react";
 import { withRouter } from 'react-router';
 import { APISearch, APISearchProps, APIPost } from '@app/api';
 import { View } from 'reactxp';
-import FormDODetailItems from './FormDODetailItems';
+import FormARInvoiceDetailTO from './FormARInvoiceDetailTO';
 
 
 export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
@@ -19,7 +19,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
     useEffect(() => {
         let query: APISearchProps = {
-            Table: "ORDR",
+            Table: "ODLN",
             Fields: [
                 "CardCode",
                 "NumAtCard",
@@ -50,12 +50,10 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
     const [item, setItem] = useState([]);
     useEffect(() => {
         let query: APISearchProps = {
-            Table: "RDR1",
+            Table: "DLN1",
             Fields: [
-                "DocEntry",
                 "BaseEntry",
                 "BaseType",
-                "LineNum",
                 "BaseLine",
                 "ItemCode",
                 "Dscription",
@@ -79,12 +77,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
 
         APISearch(query).then((res: any) => {
           res.forEach((item:any) => {
-            item.BaseType = "17";
-            item.BaseLine = item.LineNum;
-            item.BaseEntry = item.DocEntry;
-
-            delete item.LineNum;
-            delete item.DocEntry;
+            item.BaseType = "15";
           });
           setItem(res);
         })
@@ -93,7 +86,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
     const save = async () => {
       setSaving(true);
       try {
-        await APIPost('DeliveryOrder', {
+        await APIPost('ARInvoice', {
           ...data, Lines: item,
         });
       }
@@ -110,7 +103,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
       <UIHeader
         showSidebar={showSidebar}
         sidebar={sidebar}
-        center="Form Delivery Order"
+        center="Form AR Invoice"
       >
         <UIButton
           color="primary"
@@ -132,7 +125,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
             {
               key: "general",
               label: "General",
-              sublabel: "Informasi SO",
+              sublabel: "Informasi SO/DO",
               value: [
                 {
                   key: "U_IDU_SO_INTNUM",
@@ -142,12 +135,13 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                 },
                 {
                   key: "U_IDU_DO_INTNUM",
+                  type: "field",
                   label: "DO Number",
                   size: 7
                 },
                 { type: "empty", size: 5 },
-                { key: "DocDate", size: 4,type:"date", label: "Posting Date" },
-                { key: "DocDueDate", size: 4,type:"date", label: "Delivery Date" },
+                { key: "DocDate", size: 4, label: "Posting Date" },
+                { key: "DocDueDate", size: 4, label: "Delivery Date" },
                 { type: "empty", size: 2 },
                 {
                   key: "U_BRANCH",
@@ -202,7 +196,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
               Detail Items
             </UIText>
           </View>
-          <FormDODetailItems items={item} setItems={setItem} />
+          <FormARInvoiceDetailTO items={item} setItems={setItem} />
         </View>
       </UIBody>
     </UIContainer>

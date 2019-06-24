@@ -44,6 +44,8 @@ import FormPR from './pr/FormPR';
 import ListWO from './wo/ListWO';
 import FormUser from './user/FormUser';
 import ListPayment from './payment/ListPayment';
+import ListARInvoiceTO from './arinvoice-to/ListARInvoiceTO';
+import FormARInvoiceTO from './arinvoice-to/FormARInvoiceTO';
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
@@ -93,7 +95,13 @@ export const menuList = [
     path: "/it"
   },
   {
-    title: "AR Invoice",
+    title: "AR Invoice (Taking Order)",
+    subtitle: "Lorem Ipsum is simply dummy text.",
+    icon: <IconInvoice width={20} height={20} color="#1D6EF7" />,
+    path: "/ar-invoice-to"
+  },
+  {
+    title: "AR Invoice (Canvasing)",
     subtitle: "Lorem Ipsum is simply dummy text.",
     icon: <IconInvoice width={20} height={20} color="#1D6EF7" />,
     path: "/ar-invoice"
@@ -264,7 +272,7 @@ export default observer((_props: any) => {
                 "/so-canvas/form": <FormSOCanvas />,
                 "/wo": <ListWO />,
                 "/do": <ListDO />,
-                "/do/form": <FormDO />,
+                "/do/form/:id?": <FormDO />,
                 "/it": <ListInvTransfer />,
                 "/it/form": <FormInvTransfer />,
                 "/pr": <ListPR />,
@@ -272,7 +280,9 @@ export default observer((_props: any) => {
                 "/pr/form/:id?": <FormPR />,
                 "/it/form/:id?": <FormInvTransfer />,
                 "/ar-invoice": <ListARInvoice />,
-                "/ar-invoice/form": <FormARInvoice />,
+                "/ar-invoice/form/:id?": <FormARInvoice />,
+                "/ar-invoice-to": <ListARInvoiceTO />,
+                "/ar-invoice-to/form/:id?": <FormARInvoiceTO />,
                 "/customer": <ListCustomer />,
                 "/customer/form/:id?": <FormCustomer />,
                 "/user": <ListUser />,

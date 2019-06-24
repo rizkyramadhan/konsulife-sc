@@ -1,42 +1,48 @@
-import UIButton from "@app/libs/ui/UIButton";
-import UIRow from "@app/libs/ui/UIRow";
-import React from "react";
 import UIList from "@app/libs/ui/UIList";
-import IconRemove from "@app/libs/ui/Icons/IconRemove";
+import React from "react";
 
-export default ({ items, setItems }: any) => {
+export default ({ items}: any) => {
   return (
     <UIList
-      primaryKey="ItemCode"
-      items={items.map((item: any, index: any) => ({
-        ...item,
-        UnitPrice: item.UnitPrice.toLocaleString(),
-        action: (
-          <UIRow style={{ marginTop: -10 }}>
-            <UIButton
-              size="small"
-              fill="clear"
-              style={{
-                marginTop: 0,
-                marginBottom: 0
-              }}
-              onPress={() => {
-                alert("remove!");
-              }}
-            >
-              <IconRemove
-                height={18}
-                width={18}
-                color="red"
-                onPress={() => {
-                  items.splice(index, 1);
-                  setItems([...items]);
-                }}
-              />
-            </UIButton>
-          </UIRow>
-        )
-      }))}
+      primaryKey="BaseLine"
+      fields={{
+          ItemCode: {
+              table: {
+                  header: "Code"
+              }
+          },
+          Dscription: {
+              table: {
+                  header: "Item Name"
+              }
+          },
+          U_IDU_PARTNUM: {
+              table: {
+                  header: "Part Number"
+              }
+          },
+          WhsCode: {
+              table: {
+                  header: "Warehouse"
+              }
+          },
+          UomCode: {
+              table: {
+                  header: "Inventory UoM"
+              }
+          },
+          Quantity: {
+              table: {
+                  header: "Quantity"
+              }
+          },
+          PriceBefDi: {
+              table: {
+                  header: "Unit Price"
+              }
+          },
+      }}
+      items={items}
     />
   );
 };

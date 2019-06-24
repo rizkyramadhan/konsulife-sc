@@ -6,7 +6,13 @@ const SessionUser = types.model({
   password: types.string,
   role: types.string,
   username: types.string,
-  warehouse_id: types.string
+  warehouse_id: types.string,
+  area:types.maybeNull(types.string),
+  branch:types.maybeNull(types.string),
+  sales_as_customer:types.maybeNull(types.string),
+  cash_account:types.maybeNull(types.string),
+  transfer_account:types.maybeNull(types.string),
+  slp_code:types.maybeNull(types.string),
 });
 
 const Session = types.model({
@@ -43,7 +49,13 @@ const Store = types
           password: "",
           role: "",
           username: "",
-          warehouse_id: ""
+          warehouse_id: "",
+          area:"",
+          branch:"",
+          sales_as_customer:"",
+          cash_account:"",
+          transfer_account:"",
+          slp_code:"",
         }
       };
     },
@@ -65,7 +77,13 @@ export default Store.create({
       password: "",
       role: "",
       username: "",
-      warehouse_id: ""
+      warehouse_id: "",
+      area:"",
+      branch:"",
+      sales_as_customer:"",
+      cash_account:"",
+      transfer_account:"",
+      slp_code:"",
     }
   },
   sidebar: false

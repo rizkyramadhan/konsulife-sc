@@ -14,7 +14,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
   useEffect(() => {
     let query: APISearchProps = {
-      Table: "ORDR"
+      Table: "ODLN"
     };
     APISearch(query).then((res: any) => {
       setData(res);
@@ -26,7 +26,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
       <UIHeader
         showSidebar={showSidebar}
         sidebar={sidebar}
-        center={"AR Invoice"}
+        center={"AR Invoice (Taking Order)"}
       >
       </UIHeader>
       <UIBody>
@@ -34,7 +34,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
           primaryKey="DocEntry"
           style={{ backgroundColor: "#fff" }}
           selection="single"
-          onSelect={(item) => { history.push('/ar-invoice/form/' + item.DocEntry) }}
+          onSelect={(item) => { history.push('/ar-invoice-to/form/' + item.DocEntry) }}
           fields={{
             CardName: {
               table: {

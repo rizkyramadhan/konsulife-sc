@@ -54,6 +54,8 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
         let query: APISearchProps = {
             Table: "WTQ1",
             Fields: [
+                "DocEntry",
+                "BaseEntry",
                 "LineNum",
                 "ItemCode",
                 "Dscription",
@@ -77,7 +79,6 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
         })
     }, []);
 
-    console.log(data,item);
     return (
         <UIContainer>
             <UIHeader

@@ -1,62 +1,109 @@
-import { isSize } from "@app/libs/ui/MediaQuery";
-import UIBody from "@app/libs/ui/UIBody";
-import UIButton from "@app/libs/ui/UIButton";
-import UIContainer from "@app/libs/ui/UIContainer";
-import UIHeader from "@app/libs/ui/UIHeader";
-import UIJsonField from "@app/libs/ui/UIJsonField";
-import UIText from "@app/libs/ui/UIText";
-import { observer } from "mobx-react-lite";
-import React, { useState } from "react";
-import { View } from "reactxp";
-import FormARInvoiceDetailItems from "./FormARInvoiceDetailItems";
-import IconSave from "@app/libs/ui/Icons/IconSave";
-import IconCopy from "@app/libs/ui/Icons/IconCopy";
+import IconSave from '@app/libs/ui/Icons/IconSave';
+import { isSize } from '@app/libs/ui/MediaQuery';
+import UIBody from '@app/libs/ui/UIBody';
+import UIButton from '@app/libs/ui/UIButton';
+import UIContainer from '@app/libs/ui/UIContainer';
+import UIHeader from '@app/libs/ui/UIHeader';
+import UIJsonField from '@app/libs/ui/UIJsonField';
+import UIText from '@app/libs/ui/UIText';
+import { observer } from 'mobx-react-lite';
+import React, { useState, useEffect } from "react";
+import { withRouter } from 'react-router';
+import { APISearch, APISearchProps, APIPost } from '@app/api';
+import FormARInvoiceDetailItems from './FormARInvoiceDetailItems';
+import { View } from 'reactxp';
 
-const sample = {
-  CardCode: "TIM0002",
-  CardName: "PT FREEPOT INDONESIA",
-  U_IDU_SO_INTNUM: "SO/TIM-0002/19/VI/0001",
-  U_IDU_DO_INTNUM: "",
-  U_BRANCH: "",
-  Comments: ""
-};
 
-const sampleList = [
-  {
-    ItemCode: "BSLSR000001",
-    Dscription: "750R16-8PR-TL L310-T",
-    U_IDU_PARTNUM: "",
-    UseBaseUn: "",
-    Quantity: 0,
-    UoMCode: "",
-    WhsCode: "",
-    ShipDate: "",
-    OcrCode: "",
-    OcrCode2: "",
-    UnitPrice: 1950000,
-    DiscPrcnt: "",
-    TaxCode: ""
-  },
-  {
-    ItemCode: "BSLSR000002",
-    Dscription: "750R16-8PR-TL L310-T",
-    U_IDU_PARTNUM: "",
-    UseBaseUn: "",
-    Quantity: 0,
-    UoMCode: "",
-    WhsCode: "",
-    ShipDate: "",
-    OcrCode: "",
-    OcrCode2: "",
-    UnitPrice: 1950000,
-    DiscPrcnt: "",
-    TaxCode: ""
-  }
-];
+export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
+  const [saving, setSaving] = useState(false);
+  const [data, setData] = useState([]);
+    useEffect(() => {
+        let query: APISearchProps = {
+            Table: "ORDR",
+            Fields: [
+                "CardCode",
+                "NumAtCard",
+                "DocDate",
+                "DocDueDate",
+                "DocCur",
+                "DocRate",
+                "U_IDU_SO_INTNUM",
+                "GroupNum",
+                "SlpCode",
+                "CntctCode",
+                "Address2",
+                "Address",
+                "Comments"
+            ],
+            Condition: [{
+                field: "DocEntry",
+                cond: "=",
+                value: match.params.id
+            }]
+        };
+        APISearch(query).then((res: any) => {
+            if (res.length > 0)
+                setData(res[0]);
+        })
+    }, []);
 
-export default observer(({ showSidebar, sidebar }: any) => {
-  const data = sample;
-  const [items, setItems] = useState(sampleList);
+    const [item, setItem] = useState([]);
+    useEffect(() => {
+        let query: APISearchProps = {
+            Table: "RDR1",
+            Fields: [
+                "DocEntry",
+                "BaseEntry",
+                "BaseType",
+                "LineNum",
+                "BaseLine",
+                "ItemCode",
+                "Dscription",
+                "U_IDU_PARTNUM",
+                "WhsCode",
+                "Quantity",
+                "UseBaseUn",
+                "ShipDate",
+                "OcrCode",
+                "OcrCode2",
+                "PriceBefDi",
+                "DiscPrcnt",
+                "TaxCode"
+            ],
+            Condition: [{
+                field: "DocEntry",
+                cond: "=",
+                value: match.params.id
+            }]
+        };
+
+        APISearch(query).then((res: any) => {
+          res.forEach((item:any) => {
+            item.BaseType = "15";
+            item.BaseLine = item.LineNum;
+            item.BaseEntry = item.DocEntry;
+
+            delete item.LineNum;
+            delete item.DocEntry;
+          });
+          setItem(res);
+        })
+    }, []);
+
+    const save = async () => {
+      setSaving(true);
+      try {
+        await APIPost('ARInvoice', {
+          ...data, Lines: item,
+        });
+      }
+      catch (e) {
+        alert(e.Message);
+      }
+      finally {
+        setSaving(false);
+      }
+    }
 
   return (
     <UIContainer>
@@ -69,12 +116,12 @@ export default observer(({ showSidebar, sidebar }: any) => {
           color="primary"
           size="small"
           onPress={() => {
-            alert("Saved!");
+            save();
           }}
         >
           <IconSave color="#fff" />
           {isSize(["md", "lg"]) && (
-            <UIText style={{ color: "#fff" }}>{" Save"}</UIText>
+            <UIText style={{ color: "#fff" }}>{saving ? " Saving..." : " Save"}</UIText>
           )}
         </UIButton>
       </UIHeader>
@@ -155,25 +202,10 @@ export default observer(({ showSidebar, sidebar }: any) => {
             >
               Detail Items
             </UIText>
-            <UIButton
-              color="success"
-              size="small"
-              onPress={() => {
-                alert("Copy!");
-              }}
-              style={{ height: 'auto' }}
-            >
-              <IconCopy color="#fff" height={24} width={24} />
-              {isSize(["md", "lg"]) && (
-                <UIText style={{ color: "#fff" }} size="small">
-                  {" Copy From SO"}
-                </UIText>
-              )}
-            </UIButton>
           </View>
-          <FormARInvoiceDetailItems items={items} setItems={setItems} />
+          <FormARInvoiceDetailItems items={item} setItems={setItem} />
         </View>
       </UIBody>
     </UIContainer>
   );
-});
+}));
