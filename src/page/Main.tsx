@@ -277,9 +277,9 @@ export default observer((_props: any) => {
               routes={{
                 "/": <MainMenu />,
                 "/rute": <ListRute />,
-                "/rute/form": <FormRute />,
+                "/rute/form/:id?": <FormRute />,
                 "/wo": <ListWO />,
-                "/wo/form": <FormWO />,
+                "/wo/form/:id?": <FormWO />,
                 "/so": <ListSO />,
                 "/so/form": <FormSO />,
                 "/so-canvas": <ListSOCanvas />,

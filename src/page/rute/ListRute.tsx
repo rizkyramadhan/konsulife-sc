@@ -6,10 +6,26 @@ import { observer } from "mobx-react-lite";
 import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
 import BtnCreate from "@app/components/BtnCreate";
+import rawQuery from '@app/libs/gql/data/rawQuery';
 
-export default withRouter(observer(({ showSidebar, sidebar }: any) => {
-    const [data, setData] = useState([]);
+interface IRute {
+    id: number,
+    name: string,
+    description: string
+}
+
+export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
+    const [data, setData]: any = useState<IRute[]>([]);
     useEffect(() => {
+        rawQuery(`{
+            rute {
+                name
+                id
+                description
+            }
+          }`).then((res) => {
+            setData([...res.rute]);
+        });
         setData([]);
     }, []);
 
@@ -26,7 +42,10 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
                 <UIList
                     style={{ flex: 1 }}
                     primaryKey="id"
-                    selection="detail"
+                    selection="single"
+                    onSelect={(d) => {
+                        history.push('/rute/form/' + d.id)
+                    }}
                     fields={{
                         name: {
                             table: {

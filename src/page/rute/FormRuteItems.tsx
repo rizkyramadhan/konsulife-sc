@@ -14,7 +14,7 @@ interface IRuteItem {
   customer_id?: string,
   customer_name?: string,
   customer_address?: string,
-  customer_details?: string
+  customer_details?: string,
 }
 
 interface IProps {
@@ -63,7 +63,7 @@ const DetailComponent = ({ item, items, setItems }: any) => {
     <UIJsonField
       items={item.item}
       setValue={(val: any, key: string) => {
-        const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
+        const idx = items.findIndex((x: any) => x.id === item.pkval);
         items[idx][key] = val;
         setItems(items);
       }}
@@ -72,15 +72,24 @@ const DetailComponent = ({ item, items, setItems }: any) => {
         {
           key: 'customer_id', size: 12, component: (
             <SAPDropdown label="Customer" field="CustomerCode" value={(item as any).item.customer_id} setValue={(value, label, row) => {
-              const idx = items.findIndex((x: any) => x.id === item.item.id);
+              const idx = items.findIndex((x: any) => x.id === item.pkval);
               items[idx]['customer_id'] = value;
               items[idx]["customer_name"] = label;
-              items[idx]["customer_details"] = row;
+              items[idx]["customer_details"] = JSON.stringify(row);
               setItems([...items]);
             }} />)
         }
       ]}
     />
+    {/* <View style={{ padding: 5, flexDirection: "row-reverse" }}>
+      <Button onPress={() => {
+        const idx = items.findIndex((x: any) => x.id === item.pkval);
+        items.splice(idx, 1);
+        setItems([...items]);
+      }}>
+        <IconTrash width={20} height={20} color="red" />
+      </Button>
+    </View> */}
   </View>
 }
 

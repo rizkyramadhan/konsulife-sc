@@ -4,16 +4,23 @@ import UIHeader from "@app/libs/ui/UIHeader";
 import UIJsonField from "@app/libs/ui/UIJsonField";
 import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View } from "reactxp";
 import BtnSave from '@app/components/BtnSave';
 import FormRuteItems from './FormRuteItems';
 import BtnAdd from '@app/components/BtnAdd';
+import createRecord from '@app/libs/gql/data/createRecord';
+import updateRecord from '@app/libs/gql/data/updateRecord';
+import { withRouter } from 'react-router-dom';
+import query from '@app/libs/gql/data/query';
+import rawQuery from '@app/libs/gql/data/rawQuery';
 
 interface IRute {
   id?: number,
   name?: string,
-  description?: string
+  description?: string,
+  area?: string,
+  branch?: string
 }
 
 interface IRuteItem {
@@ -22,15 +29,68 @@ interface IRuteItem {
   customer_id?: string,
   customer_name?: string,
   customer_address?: string,
-  customer_details?: string
+  customer_details?: string,
+  isNewRecord?: boolean
 }
 
-export default observer(({ showSidebar, sidebar }: any) => {
+export default withRouter(observer(({ history, match, showSidebar, sidebar }: any) => {
   const [data, setData] = useState<IRute>({});
   const [items, setItems] = useState<Array<IRuteItem>>([]);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (match.params.id) {
+      query("rute", ['id', 'name', 'description'], { where: { id: match.params.id } }).then((res) => {
+        setData(res);
+        rawQuery(`{
+          rute_items(where: {rute_id: {_eq: ${match.params.id}}}) {
+            id
+            rute_id
+            customer_name
+            customer_id
+            customer_details
+            customer_address
+          }
+        }
+        `).then((res) => {
+          setItems([...res.rute_items]);
+        })
+      });
+    }
+  }, [])
 
   const save = async () => {
-    alert("Saved!");
+    setSaving(true);
+    try {
+      if (!data.id) {
+        let id = await createRecord("rute", data);
+        items.forEach(async (item) => {
+          let data = { ...item };
+          data.rute_id = id;
+          delete data.isNewRecord;
+          delete data.id;
+          await createRecord("rute_items", data);
+        });
+      } else {
+        await updateRecord("rute", data);
+        items.forEach(async (item) => {
+          let data = { ...item };
+
+          if (data.isNewRecord) {
+            data.rute_id = match.params.id;
+            delete data.id;
+            delete data.isNewRecord;
+            await createRecord("rute_items", data);
+          } else {
+            await updateRecord("rute_items", data);
+          }
+        });
+      }
+      history.push('/rute')
+    } catch (e) {
+      alert(e);
+    }
+    setSaving(false);
   }
 
   return (
@@ -40,7 +100,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
         sidebar={sidebar}
         center="Form Master Rute"
       >
-        <BtnSave onPress={save} />
+        <BtnSave onPress={save} saving={saving} />
       </UIHeader>
       <UIBody scroll={true}>
         <UIJsonField
@@ -87,6 +147,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
               setItems([...items, {
                 id: new Date().valueOf(),
                 rute_id: data.id,
+                isNewRecord: true
               }])
             }} />
           </View>
@@ -95,4 +156,4 @@ export default observer(({ showSidebar, sidebar }: any) => {
       </UIBody>
     </UIContainer>
   );
-});
+}));
