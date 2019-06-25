@@ -26,7 +26,6 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
           }`).then((res) => {
             setData([...res.rute]);
         });
-        setData([]);
     }, []);
 
     return (

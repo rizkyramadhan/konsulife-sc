@@ -1,98 +1,89 @@
-import { APISearch, APISearchProps } from '@app/api';
 import UIBody from "@app/libs/ui/UIBody";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
 import { observer } from "mobx-react-lite";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
-import UIRow from '@app/libs/ui/UIRow';
-import UIButton from '@app/libs/ui/UIButton';
-import IconRemove from '@app/libs/ui/Icons/IconRemove';
+import BtnCreate from "@app/components/BtnCreate";
+import rawQuery from '@app/libs/gql/data/rawQuery';
+
+interface IRute {
+    id: number,
+    name: string,
+    description: string
+}
 
 export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
-    const [data, setData] = useState([]);
+    const [data, setData]: any = useState<IRute[]>([]);
     useEffect(() => {
-        let query: APISearchProps = {
-            Table: "OWTQ",
-            Fields: ["DocNum", "CardName", "CardCode", "U_IDU_ITR_INTNUM", "DocDate"],
-            Condition: [
-                {
-                    field: "DocStatus",
-                    cond: "=",
-                    value: "O"
-                }
-            ]
-        };
-        APISearch(query).then((res: any) => {
-            setData(res);
-        })
+        rawQuery(`{
+            work_order {
+              id
+              number
+              return_date
+              sales_details
+              sales_id
+              sales_name
+              visite_date
+              sopir
+              sopir_nopol
+            }
+        }`).then((res) => {
+            setData([...res.work_order]);
+        });
     }, []);
 
     return (
         <UIContainer>
-            <UIHeader showSidebar={showSidebar} sidebar={sidebar} center={"Working Order"}>
+            <UIHeader
+                showSidebar={showSidebar}
+                sidebar={sidebar}
+                center={"Working Order"}
+            >
+                <BtnCreate path="/wo/form" />
             </UIHeader>
-            <UIBody>
+            <UIBody scroll={true}>
                 <UIList
                     style={{ flex: 1 }}
-                    primaryKey="DocNum"
+                    primaryKey="id"
                     selection="single"
-                    onSelect={(item) => { history.push('/it/form/' + item.DocNum) }}
+                    onSelect={(d) => {
+                        history.push('/wo/form/' + d.id)
+                    }}
                     fields={{
-                        CardName: {
+                        number: {
                             table: {
-                                header: 'Customer/Vendor'
+                                header: "No. WO"
                             }
                         },
-                        CardCode: {
+                        sales_name: {
                             table: {
-                                header: 'Code'
+                                header: "Sales"
                             }
                         },
-                        U_IDU_ITR_INTNUM: {
+                        sopir: {
                             table: {
-                                header: 'Request No.'
+                                header: "Sopir"
                             }
                         },
-                        DocDate: {
+                        sopir_nopol: {
                             table: {
-                                header: 'Posting Date'
+                                header: "Nopol"
                             }
                         },
-                        action: {
+                        visite_date: {
                             table: {
-                                header: 'Action'
+                                header: "Visite"
+                            }
+                        },
+                        return_date: {
+                            table: {
+                                header: "Return"
                             }
                         }
                     }}
-                    items={data.map((item: any) => ({
-                        ...item,
-                        action: (
-                            <UIRow style={{ marginTop: -10 }}>
-                                <UIButton
-                                    size="small"
-                                    fill="clear"
-                                    style={{
-                                        marginTop: 0,
-                                        marginBottom: 0
-                                    }}
-                                    onPress={() => {
-                                        alert("remove!");
-                                    }}
-                                >
-                                    <IconRemove
-                                        height={18}
-                                        width={18}
-                                        color="red"
-                                        onPress={() => {
-                                            alert("remove!");
-                                        }}
-                                    />
-                                </UIButton>
-                            </UIRow>
-                        )
-                    }))}
+                    items={data}
                 />
             </UIBody>
         </UIContainer>
