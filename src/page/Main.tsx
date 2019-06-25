@@ -132,13 +132,20 @@ export const menuList = [
 
 const Menu = withRouter(({ history, setSide }: MenuProps) => {
   RouteState.setRootPaths(menuList.map(item => item.path));
+  const [path, setPath] = useState("");
+  const active = {
+    backgroundColor: "#cee0ff"
+  };
+  useEffect(() => {
+    setPath(history.location.pathname)
+  }, [])
   return (
     <UISimpleList
       style={{
         paddingTop: 0,
         paddingBottom: 0,
-        paddingLeft: 15,
-        paddingRight: 15,
+        // paddingLeft: 15,
+        // paddingRight: 15,
         flex: 1,
         overflow: "auto"
       }}
@@ -149,13 +156,14 @@ const Menu = withRouter(({ history, setSide }: MenuProps) => {
             <UIButton
               onPress={() => {
                 history.replace(item.path);
+                setPath(item.path);
                 if (Platform.getType() !== "web") {
                   setSide(false);
                 }
               }}
               animation={false}
               fill="clear"
-              style={{ width: "100%", justifyContent: "flex-start" }}
+              style={{ width: "100%", justifyContent: "flex-start", ...(path == item.path ? active : {}) }}
             >
               {item.icon}
               <UIText style={{ color: "#1D6EF7", paddingLeft: 15 }}>
