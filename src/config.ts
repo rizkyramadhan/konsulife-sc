@@ -15,3 +15,10 @@ export const MainStyle: any = {
   warningColor: "#ffc107",
   backgroundSidebar: '#fff'
 };
+
+export default {
+  url: "https://hasura.publicfigure.site/v1/graphql",
+  wsurl: "wss://hasura.publicfigure.site/v1/graphql",
+  hasura_admin_secret: "figure1234",
+  wsSAP: "http://172.16.145.3:8087/MBGPService/Api/"
+};

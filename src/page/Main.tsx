@@ -48,12 +48,20 @@ import ListPayment from './payment/ListPayment';
 import ListARInvoiceTO from './arinvoice-to/ListARInvoiceTO';
 import FormARInvoiceTO from './arinvoice-to/FormARInvoiceTO';
 import FormPayment from './payment/FormPayment';
+import ListRute from './rute/ListRute';
+import FormRute from './rute/FormRute';
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
 }
 
 export const menuList = [
+  {
+    title: "Rute",
+    subtitle: "Lorem Ipsum is simply dummy text.",
+    icon: <IconLuggageCart width={20} height={20} color="#1D6EF7" />,
+    path: "/rute"
+  },
   {
     title: "Working Order",
     subtitle: "Lorem Ipsum is simply dummy text.",
@@ -268,6 +276,8 @@ export default observer((_props: any) => {
             <SwitchRoute
               routes={{
                 "/": <MainMenu />,
+                "/rute": <ListRute />,
+                "/rute/form": <FormRute />,
                 "/wo": <ListWO />,
                 "/wo/form": <FormWO />,
                 "/so": <ListSO />,

@@ -1,12 +1,12 @@
-import { APISearch, APISearchProps, SAPFieldMap } from '@app/api';
+import { APISearch, APISearchProps, SAPFieldMap, APISearchCache } from '@app/api';
 import { UIProps } from "@app/libs/ui/Styles/Style";
 import UISelectField from "@app/libs/ui/UISelectField";
 import React, { useEffect, useState } from "react";
 
 interface SAPDropdownProps extends UIProps {
   value: string | number;
-  setValue: (value: any, label?:any) => any;
-  field: 'OcrCode'|'OcrCode2'|'Series' | 'State' | 'BPGroup' | 'Currency' | 'CustomerCode' | 'PaymentTerms' | 'ContactPerson' | 'ShipTo' | 'BillTo' | 'TaxCode' | 'ItemCodeCanvas' | 'ItemCodeAll' | 'UomCode' | 'WarehouseCodeCanvas' | 'WarehouseCodeAll' | 'VendorCode' | 'SAPSalesCode' | 'Area' | 'Branch' | 'ChartOfAccount' | 'ItemCodeCanvas' | 'Custom';
+  setValue: (value: any, label?: any, row?: any) => any;
+  field: 'OcrCode' | 'OcrCode2' | 'Series' | 'State' | 'BPGroup' | 'Currency' | 'CustomerCode' | 'PaymentTerms' | 'ContactPerson' | 'ShipTo' | 'BillTo' | 'TaxCode' | 'ItemCodeCanvas' | 'ItemCodeAll' | 'UomCode' | 'WarehouseCodeCanvas' | 'WarehouseCodeAll' | 'VendorCode' | 'SAPSalesCode' | 'Area' | 'Branch' | 'ChartOfAccount' | 'ItemCodeCanvas' | 'Custom';
   search?: string;
   where?: {
     field: string;
@@ -49,26 +49,38 @@ export default (p: SAPDropdownProps) => {
       }
     }
 
-    APISearch(query).then((res: any) => {
-      let items = res.map((item: any) => {
-        let field = Object.keys(item);
-        return {
-          value: (item[field[0]] as any),
-          label: (item[!!field[1] ? field[1] : field[0]] as any)
-        }
-      });
-      setItems(items);
-    }).catch((err) => {
-      console.error(err);
-      setItems([]);
+    APISearchCache(query.Table, query.Condition).then((cache: any) => {
+      if (!!cache) { 
+        let items = cache.map((item: any) => {
+          let field = Object.keys(item);
+          return {
+            value: (item[field[0]] as any),
+            label: (item[!!field[1] ? field[1] : field[0]] as any),
+            item: item
+          }
+        });
+        setItems(items);
+      }
+
+      query.Cache = cache;
+      APISearch(query).then((res: any) => {
+        let items = res.map((item: any) => {
+          let field = Object.keys(item);
+          return {
+            value: (item[field[0]] as any),
+            label: (item[!!field[1] ? field[1] : field[0]] as any),
+            item: item
+          }
+        });
+        setItems(items);
+      }).catch((err) => {
+        console.error(err);
+        setItems([]);
+      })
     })
-    // const fetch = async () => {
-    //   setItems([]);
-    // };
-    // fetch();
   }, []);
 
   return (
-    <UISelectField items={items} value={p.value} setValue={p.setValue} label={p.label} style={p.style} color={p.color} />
+    <UISelectField items={items} value={p.value} setValue={(v: any, l: any) => { const idx: any = items.findIndex((x: any) => x.value === v); p.setValue(v, l, items[idx]) }} label={p.label} style={p.style} color={p.color} />
   );
 };

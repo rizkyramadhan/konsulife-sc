@@ -5,13 +5,11 @@ import IconSave from '@app/libs/ui/Icons/IconSave';
 import { isSize } from '@app/libs/ui/MediaQuery';
 import UIText from '@app/libs/ui/UIText';
 
-export default () => {
+export default ({ onPress }: any) => {
     return <UIButton
         color="primary"
         size="small"
-        onPress={() => {
-            alert("Saved!");
-        }}
+        onPress={onPress}
     >
         <IconSave color="#fff" />
         {isSize(["md", "lg"]) && (
