@@ -27,8 +27,8 @@ export const APISearch = async (p: APISearchProps) => {
     Table: p.Table,
     Condition: "",
     Sort: p.Sort ? p.Sort : "",
-    Page: p.Page ? p.Page : 1,
-    Limit: p.Limit ? p.Limit : 10
+    Page: p.Page ? p.Page : 0,
+    Limit: p.Limit ? p.Limit : 0
   };
 
   if (!!p.Fields && p.Fields.length > 0) {
@@ -476,5 +476,10 @@ export const SAPFieldMap = {
   ChartOfAccount: {
     Table: "OACT",
     Fields: ["AcctCode", "AcctName"],
+    Condition:[{
+      field:"Finanse",
+      cond:"=",
+      value:"Y"
+    }]
   } as APISearchProps,
 }

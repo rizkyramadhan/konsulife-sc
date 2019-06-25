@@ -133,23 +133,6 @@ export default ({ items, setItems }: any) => {
               },
             ]}
           />
-
-          <UIButton
-            style={{
-              flexShrink: 'none'
-            }}
-            color="error"
-            size="small"
-            onPress={() => {
-              const idx = items.findIndex((x: any) => x.No === item.item.No);
-              items.splice(idx, 1);
-              setItems([...items]);
-            }}
-          >
-            <IconRemove color="#fff" height={18} width={18} style={{
-              marginTop: -9
-            }} />
-          </UIButton>
         </View>
       )}
     />

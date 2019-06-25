@@ -1,41 +1,13 @@
-import UIButton from "@app/libs/ui/UIButton";
 import UIList from "@app/libs/ui/UIList";
-import UIRow from "@app/libs/ui/UIRow";
 import React from "react";
-import IconRemove from "@app/libs/ui/Icons/IconRemove";
 
-export default ({ items, setItems }: any) => {
+export default ({ items }: any) => {
   return (
     <UIList
       primaryKey="ItemCode"
-      items={items.map((item: any, index: any) => ({
+      items={items.map((item: any) => ({
         ...item,
         UnitPrice: item.UnitPrice.toLocaleString(),
-        action: (
-          <UIRow style={{ marginTop: -10 }}>
-            <UIButton
-              size="small"
-              fill="clear"
-              style={{
-                marginTop: 0,
-                marginBottom: 0
-              }}
-              onPress={() => {
-                alert("remove!");
-              }}
-            >
-              <IconRemove
-                height={18}
-                width={18}
-                color="red"
-                onPress={() => {
-                  items.splice(index, 1);
-                  setItems([...items]);
-                }}
-              />
-            </UIButton>
-          </UIRow>
-        )
       }))}
     />
   );

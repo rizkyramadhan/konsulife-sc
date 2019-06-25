@@ -39,6 +39,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
           color="primary"
           size="small"
           onPress={() => {
+            console.log(data);
             console.log("save");
           }}
         >

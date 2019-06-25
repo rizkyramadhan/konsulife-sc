@@ -13,14 +13,14 @@ import IconAdd from "@app/libs/ui/Icons/IconAdd";
 import FormSODetailItems from "./FormSODetailItems";
 
 const sample = {
-  CardCode: "TIM0002",
-  CardName: "PT FREEPOT INDONESIA",
+  CardCode: "",
+  CardName: "",
   NumAtCard: "",
   DocDate: "",
   DocDueDate: "",
   DocCur: "",
   DocRate: "",
-  U_IDU_SO_INTNUM: "SO/TIM-0002/19/VI/0001",
+  U_IDU_SO_INTNUM: "",
   GroupNum: "",
   SlpCode: "",
   CntctCode: "",
@@ -31,23 +31,8 @@ const sample = {
 
 const sampleList = [
   {
-    ItemCode: "BSLSR000001",
-    Dscription: "750R16-8PR-TL L310-T",
-    U_IDU_PARTNUM: "",
-    UseBaseUn: "",
-    Quantity: 0,
-    UoMCode: "",
-    WhsCode: "",
-    ShipDate: "",
-    OcrCode: "",
-    OcrCode2: "",
-    UnitPrice: 1950000,
-    DiscPrcnt: "",
-    TaxCode: ""
-  },
-  {
-    ItemCode: "BSLSR000002",
-    Dscription: "750R16-8PR-TL L310-T",
+    ItemCode: "",
+    Dscription: "",
     U_IDU_PARTNUM: "",
     UseBaseUn: "",
     Quantity: 0,
