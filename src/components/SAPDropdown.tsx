@@ -50,7 +50,7 @@ export default (p: SAPDropdownProps) => {
     }
 
     APISearchCache(query.Table, query.Condition).then((cache: any) => {
-      if (!!cache) { 
+      if (!!cache) {
         let items = cache.map((item: any) => {
           let field = Object.keys(item);
           return {
@@ -75,7 +75,6 @@ export default (p: SAPDropdownProps) => {
         setItems(items);
       }).catch((err) => {
         console.error(err);
-        setItems([]);
       })
     })
   }, []);
