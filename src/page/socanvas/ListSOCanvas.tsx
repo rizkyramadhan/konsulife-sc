@@ -16,7 +16,7 @@ import IconRemove from '@app/libs/ui/Icons/IconRemove';
 const BtnCreate = withRouter(({ history }: any) => {
   return (
     <UIButton
-      size="small"
+      size="small" 
       color="primary"
       onPress={() => {
         history.push("/so-canvas/form");
@@ -101,7 +101,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
           items={data.map((item: any) => ({
             ...item,
             action: (
-              <UIRow style={{ marginTop: -10 }}>
+              <UIRow style={{ marginTop: 0 }}>
                 <UIButton
                   size="small"
                   fill="clear"

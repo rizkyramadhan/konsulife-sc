@@ -86,7 +86,8 @@ export default withRouter(
       return (
         <UIButton
           style={{
-            flexShrink: "none"
+            flexShrink: "none",
+            marginRight: 0
           }}
           color="success"
           size="small"
@@ -129,7 +130,8 @@ export default withRouter(
       return (
         <UIButton
           style={{
-            flexShrink: "none"
+            flexShrink: "none",
+            marginRight: 0
           }}
           color="success"
           size="small"
@@ -172,7 +174,8 @@ export default withRouter(
       return (
         <UIButton
           style={{
-            flexShrink: "none"
+            flexShrink: "none",
+            marginRight: 0
           }}
           color="success"
           size="small"

@@ -12,7 +12,7 @@ export default ({ items, setItems }: any) => {
         ...item,
         UnitPrice: item.UnitPrice.toLocaleString(),
         action: (
-          <UIRow style={{ marginTop: -10 }}>
+          <UIRow style={{ marginTop: 0 }}>
             <UIButton
               size="small"
               fill="clear"
