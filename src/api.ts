@@ -308,21 +308,21 @@ export const SAPFieldMap = {
     }]
   } as APISearchProps,
   OcrCode: {
-    Table: "OCRD",
-    Fields: ["U_IDU_AREA"],
-    Condition: [{
-      field: "CardCode",
-      cond: "=",
-      value: ""
+    Table: "OPRC",
+    Fields: ["PrcCode"],
+    Condition:[{
+      field:"DimCode",
+      cond:"=",
+      value:"1"
     }]
   } as APISearchProps,
   OcrCode2: {
-    Table: "OCRD",
-    Fields: ["U_IDU_BRANCH"],
-    Condition: [{
-      field: "CardCode",
-      cond: "=",
-      value: ""
+    Table: "OPRC",
+    Fields: ["PrcCode"],
+    Condition:[{
+      field:"DimCode",
+      cond:"=",
+      value:"2"
     }]
   } as APISearchProps,
   TaxCodeSO: {

@@ -82,7 +82,6 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
             item.BaseEntry = item.DocEntry;
 
             delete item.ObjType;
-            delete item.LineNum;
             delete item.DocEntry;
           });
           setItem(res);

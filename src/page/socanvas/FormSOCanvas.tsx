@@ -19,8 +19,6 @@ const sample = {
   // CardName: "",
   IsCanvas: "Y",
   NumAtCard: "",
-  DocDate: "",
-  DocDueDate: "",
   DocCur: "",
   DocRate: 1,
   U_IDU_SO_INTNUM: -1,
@@ -146,12 +144,11 @@ export default observer(({ showSidebar, sidebar }: any) => {
               value: [
                 {
                   key: "U_IDU_SO_INTNUM",
-                  type: "field",
                   label: "SO Number",
                   size: 12
                 },
-                { key: "DocDate", size: 6, label: "Posting Date" },
-                { key: "DocDueDate", size: 6, label: "Delivery Date" },
+                { key: "DocDate", size: 6, type:"date", label: "Posting Date" },
+                { key: "DocDueDate", size: 6, type:"date",label: "Delivery Date" },
                 {
                   key: "DocCur", size: 8, label: "Document Currency",
                   component: (
