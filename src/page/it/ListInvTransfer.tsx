@@ -9,8 +9,10 @@ import { withRouter } from "react-router";
 import UIRow from '@app/libs/ui/UIRow';
 import UIButton from '@app/libs/ui/UIButton';
 import IconRemove from '@app/libs/ui/Icons/IconRemove';
+import global from '@app/global';
 
 export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
+  console.log(global.session);
   const [data, setData] = useState([]);
   useEffect(() => {
     let query: APISearchProps = {

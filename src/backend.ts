@@ -1,8 +1,7 @@
 export default {
   url: "https://masabaru.rx.plansys.co/v1/graphql",
   wsurl: "wss://masabaru.rx.plansys.co/v1/graphql",
-  appurl: "https://masabaru.rx.plansys.co",
-  secret: "masabaru123",
+  appurl: "https://masabaru-app.rx.plansys.co",
   table: "user",
   identifierType: {
     client_id: "",
