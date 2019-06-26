@@ -50,6 +50,7 @@ import FormARInvoiceTO from './arinvoice-to/FormARInvoiceTO';
 import FormPayment from './payment/FormPayment';
 import ListRute from './rute/ListRute';
 import FormRute from './rute/FormRute';
+import ListPRVendor from './pr/ListPRVendor';
 import IconNavigation from '@app/libs/ui/Icons/IconNavigation';
 
 interface MenuProps extends RouteComponentProps<any> {
@@ -297,10 +298,11 @@ export default observer((_props: any) => {
                 "/do/form/:id?": <FormDO />,
                 "/it": <ListInvTransfer />,
                 "/it/form": <FormInvTransfer />,
-                "/pr": <ListPR />,
+                "/pr": <ListPRVendor />,
+                "/pr/list/:id?": <ListPR />,
+                "/pr/form/:id?": <FormPR />,
                 "/payment-receipt": <ListPayment />,
                 "/payment-receipt/form": <FormPayment />,
-                "/pr/form/:id?": <FormPR />,
                 "/it/form/:id?": <FormInvTransfer />,
                 "/ar-invoice": <ListARInvoice />,
                 "/ar-invoice/form/:id?": <FormARInvoice />,

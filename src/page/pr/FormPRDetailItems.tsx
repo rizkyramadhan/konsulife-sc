@@ -5,11 +5,24 @@ import { MainStyle } from '@app/config';
 import UIText from '@app/libs/ui/UIText';
 import UIJsonField from '@app/libs/ui/UIJsonField';
 import UISeparator from '@app/libs/ui/UISeparator';
+import SAPDropdown from '@app/components/SAPDropdown';
 
-export default ({ items, setItems }: any) => {
+export default ({ items, setItems, flag, setSelected }: any) => {
   return (
     <UIList
-      selection="detail"
+      selection={!flag?"multi":"detail"}
+      onSelect={(_,key)=>{
+        let selectArr:any[]=[];
+        key.forEach((val:any)=>{
+          items.forEach((el:any) => {
+            if(el.PK === val)
+            {
+              selectArr.push(el);
+            }
+          });
+        });
+        setSelected(selectArr);
+      }}
       detailComponent={(item) => {
         const setValue = (val: any, key: string) => {
           const idx = items.findIndex((x: any) => x.No === item.item.No);
@@ -62,13 +75,20 @@ export default ({ items, setItems }: any) => {
               }}
               field={[
                 { key: 'Quantity', size: 12, label: "Quantity" },
+                { key: 'UomEntry', size: 12, label: "UoM", component: (
+                  <SAPDropdown label="UoM" field="UomCode" value={(item as any).item.UomEntry} setValue={(v,l) => {
+                    const idx = items.findIndex((x: any) => x.PK === item.item.PK);
+                    items[idx]['UomEntry'] = v;
+                    items[idx]['UomCode'] = l;
+                    setItems([...items]);
+                  }} />) },
               ]}
             />
 
           </View>
         )
       }}
-      primaryKey="LineNum"
+      primaryKey="PK"
       items={items}
       fields={{
         ItemCode: {
@@ -86,11 +106,6 @@ export default ({ items, setItems }: any) => {
             header: "Part Number"
           }
         },
-        WhsCode: {
-          table: {
-            header: "Warehouse"
-          }
-        },
         Quantity: {
           table: {
             header: "Quantity"
@@ -98,12 +113,17 @@ export default ({ items, setItems }: any) => {
         },
         UomCode: {
           table: {
-            header: "UoM Code"
+            header: "UoM"
           }
         },
         OpenCreQty: {
           table: {
             header: "Open Qty"
+          }
+        },
+        WhsCode: {
+          table: {
+            header: "Warehouse"
           }
         },
       }}
