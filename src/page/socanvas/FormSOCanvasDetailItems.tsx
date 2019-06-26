@@ -11,8 +11,9 @@ import UISeparator from '@app/libs/ui/UISeparator';
 import UIJsonField from '@app/libs/ui/UIJsonField';
 import SAPDropdown from '@app/components/SAPDropdown';
 import UISelectField from '@app/libs/ui/UISelectField';
+import { APISearch } from '@app/api';
 
-export default ({ items, setItems }: any) => {
+export default ({ data, items, setItems }: any) => {
   return (
     <UIList
       primaryKey="LineNum"
@@ -28,9 +29,19 @@ export default ({ items, setItems }: any) => {
             header: "Item Name"
           }
         },
+        U_IDU_PARTNUM: {
+          table: {
+            header: "Part Number"
+          }
+        },
         UseBaseUn: {
           table: {
             header: "Inventory UoM"
+          }
+        },
+        UomEntry: {
+          table: {
+            header: "UoM"
           }
         },
         Quantity: {
@@ -41,16 +52,6 @@ export default ({ items, setItems }: any) => {
         WhsCode: {
           table: {
             header: "Warehouse"
-          }
-        },
-        OcrCode: {
-          table: {
-            header: "Area"
-          }
-        },
-        OcrCode2: {
-          table: {
-            header: "Branch"
           }
         },
         PriceBefDi: {
@@ -149,11 +150,28 @@ export default ({ items, setItems }: any) => {
             field={[
               {
                 key: 'ItemCode', size: 12, label: 'Item Code', component: (
-                  <SAPDropdown label="Item Code" field="ItemCodeAll" value={(item as any).item.ItemCode} setValue={(v, l) => {
+                  <SAPDropdown label="Item Code" field="ItemCodeAll" value={(item as any).item.ItemCode} setValue={async (v, l, r) => {
                     const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
+                    console.log(r);
                     items[idx]['ItemCode'] = v;
                     items[idx]["Dscription"] = l;
+                    items[idx]["U_IDU_PARTNUM"] = r.item.U_IDU_PARTNUM;
                     setItems([...items]);
+                    APISearch({
+                      CustomQuery: "UnitPriceSO",
+                      Condition: [{
+                        field: "CardCode",
+                        cond: "=",
+                        value: data.CardCode
+                      }, { cond: 'AND' }, {
+                        field: "ItemCode",
+                        cond: "=",
+                        value: v
+                      }]
+                    }).then((res: any) => {
+                      items[idx]["PriceBefDi"] = res[0]["Price"];
+                      setItems([...items]);
+                    })
                   }} />)
               },
               {
@@ -164,7 +182,7 @@ export default ({ items, setItems }: any) => {
                       { label: "Yes", value: "Y" },
                       { label: "No", value: "N" }
                     ]}
-                    value={(item as any).UseBaseUn}
+                    value={(item as any).item.UseBaseUn}
                     setValue={v => {
                       const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
                       items[idx]['UseBaseUn'] = v;
@@ -174,31 +192,23 @@ export default ({ items, setItems }: any) => {
                 )
               },
               { key: 'Quantity', size: 12, label: 'Quantity' },
+              // {
+              //   key: 'WhsCode', size: 12, label: 'Warehouse', component: (
+              //     <SAPDropdown label="Warehouse" field="Custom" customQuery={{
+              //       Table: 'OWHS',
+              //       Fields: ["WhsCode", "WhsName"]
+              //     }} value={(item as any).item.WhsCode} setValue={(v) => {
+              //       const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
+              //       items[idx]['WhsCode'] = v;
+              //       setItems([...items]);
+              //     }} />)
+              // },
               {
-                key: 'WhsCode', size: 12, label: 'Warehouse', component: (
-                  <SAPDropdown label="Warehouse" field="Custom" customQuery={{
-                    Table: 'OWHS',
-                    Fields: ["WhsCode", "WhsName"]
-                  }} value={(item as any).WhsCode} setValue={(v) => {
+                key: 'UomEntry', size: 12, label: 'Uom', component: (
+                  <SAPDropdown label="UoM" field="UomCode" value={(item as any).item.UomEntry} setValue={(v) => {
                     const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
-                    items[idx]['WhsCode'] = v;
-                    setItems(items);
-                  }} />)
-              },
-              {
-                key: 'OcrCode', size: 12, label: 'Area', component: (
-                  <SAPDropdown label="Dist Rule" field="OcrCode" value={(item as any).item.OcrCode} setValue={(v) => {
-                    const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
-                    items[idx]['OcrCode'] = v;
-                    setItems([...items]);
-                  }} />)
-              },
-
-              {
-                key: 'OcrCode2', size: 12, label: 'Branch', component: (
-                  <SAPDropdown label="Dist Rule" field="OcrCode2" value={(item as any).item.OcrCode2} setValue={(v) => {
-                    const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
-                    items[idx]['OcrCode2'] = v;
+                    items[idx]['UomEntry'] = v;
+                    console.log(v);
                     setItems([...items]);
                   }} />)
               },
@@ -209,10 +219,10 @@ export default ({ items, setItems }: any) => {
                   <SAPDropdown label="Tax Code" field="Custom" customQuery={{
                     Table: "OVTG",
                     Fields: ["Code", "Name"],
-                  }} value={(item as any).TaxCode} setValue={(v) => {
+                  }} value={(item as any).item.TaxCode} setValue={(v) => {
                     const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
                     items[idx]['TaxCode'] = v;
-                    setItems(items);
+                    setItems([...items]);
                   }} />)
               },
             ]}

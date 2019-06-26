@@ -7,7 +7,7 @@ import config from './config';
 // const urlDev: string = "http://mock.rx.plansys.co";
 
 export interface APISearchProps {
-  Table: string;
+  Table?: string;
   Condition?: {
     field?: string;
     value?: any | any[];
@@ -70,7 +70,7 @@ export const APISearch = async (p: APISearchProps) => {
   return new Promise(async (resolve, reject) => {
     let url = config.wsSAP + "Search";
     const cache = await query("cache", ['data'], { where: { id: config.wsSAP + "Search" + params.Table + params.Condition } });
-    resolve(cache ? cache.data : []);
+    if (cache) resolve(cache.data);
 
     Axios.post(url, JSON.stringify(params), {
       headers: {
@@ -80,7 +80,6 @@ export const APISearch = async (p: APISearchProps) => {
     })
       .then((res: any) => {
         if (typeof res.data == 'object' && !!res.data && !!res.data.ErrorCode) {
-          console.error(res.data);
           reject();
         } else {
           if (!cache || (Array.isArray(cache.data) && cache.data.length === 0)) {
@@ -94,6 +93,7 @@ export const APISearch = async (p: APISearchProps) => {
               data: res.data
             });
           }
+          resolve(res.data)
         }
       })
       .catch((err: any) => {
@@ -176,7 +176,7 @@ export const SAPFieldMap = {
   } as APISearchProps,
   CustomerCode: {
     Table: "OCRD",
-    Fields: ["CardCode", "CardName"],
+    Fields: ["CardCode", "CardName", "Currency", "GroupNum"],
     Condition: [{
       field: "CardType",
       cond: "=",
@@ -287,7 +287,7 @@ export const SAPFieldMap = {
   } as APISearchProps,
   ItemCodeAll: {
     Table: "OITM",
-    Fields: ["ItemCode", "ItemName"]
+    Fields: ["ItemCode", "ItemName", "U_IDU_PARTNUM"]
   } as APISearchProps,
   UomCode: {
     Table: "OUOM",
