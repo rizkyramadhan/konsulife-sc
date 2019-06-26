@@ -85,7 +85,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
           items={data.map((item: any) => ({
             ...item,
             action: (
-              <UIRow style={{ marginTop: -10 }}>
+              <UIRow style={{ marginTop: 0 }}>
                 <UIButton
                   size="small"
                   fill="clear"
