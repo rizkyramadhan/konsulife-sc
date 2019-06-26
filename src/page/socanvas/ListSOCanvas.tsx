@@ -14,7 +14,7 @@ import { APISearchProps, APISearch } from '@app/api';
 const BtnCreate = withRouter(({ history }: any) => {
   return (
     <UIButton
-      size="small"
+      size="small" 
       color="primary"
       onPress={() => {
         history.push("/so-canvas/form");

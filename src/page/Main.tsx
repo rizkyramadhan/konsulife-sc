@@ -48,12 +48,20 @@ import ListPayment from './payment/ListPayment';
 import ListARInvoiceTO from './arinvoice-to/ListARInvoiceTO';
 import FormARInvoiceTO from './arinvoice-to/FormARInvoiceTO';
 import FormPayment from './payment/FormPayment';
+import ListRute from './rute/ListRute';
+import FormRute from './rute/FormRute';
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
 }
 
 export const menuList = [
+  {
+    title: "Rute",
+    subtitle: "Lorem Ipsum is simply dummy text.",
+    icon: <IconLuggageCart width={20} height={20} color="#1D6EF7" />,
+    path: "/rute"
+  },
   {
     title: "Working Order",
     subtitle: "Lorem Ipsum is simply dummy text.",
@@ -124,13 +132,20 @@ export const menuList = [
 
 const Menu = withRouter(({ history, setSide }: MenuProps) => {
   RouteState.setRootPaths(menuList.map(item => item.path));
+  const [path, setPath] = useState("");
+  const active = {
+    backgroundColor: "#cee0ff"
+  };
+  useEffect(() => {
+    setPath(history.location.pathname)
+  }, [])
   return (
     <UISimpleList
       style={{
         paddingTop: 0,
         paddingBottom: 0,
-        paddingLeft: 15,
-        paddingRight: 15,
+        // paddingLeft: 15,
+        // paddingRight: 15,
         flex: 1,
         overflow: "auto"
       }}
@@ -141,13 +156,14 @@ const Menu = withRouter(({ history, setSide }: MenuProps) => {
             <UIButton
               onPress={() => {
                 history.replace(item.path);
+                setPath(item.path);
                 if (Platform.getType() !== "web") {
                   setSide(false);
                 }
               }}
               animation={false}
               fill="clear"
-              style={{ width: "100%", justifyContent: "flex-start" }}
+              style={{ width: "100%", justifyContent: "flex-start", ...(path == item.path ? active : {}) }}
             >
               {item.icon}
               <UIText style={{ color: "#1D6EF7", paddingLeft: 15 }}>
@@ -268,8 +284,10 @@ export default observer((_props: any) => {
             <SwitchRoute
               routes={{
                 "/": <MainMenu />,
+                "/rute": <ListRute />,
+                "/rute/form/:id?": <FormRute />,
                 "/wo": <ListWO />,
-                "/wo/form": <FormWO />,
+                "/wo/form/:id?": <FormWO />,
                 "/so": <ListSO />,
                 "/so/form": <FormSO />,
                 "/so-canvas": <ListSOCanvas />,

@@ -72,7 +72,7 @@ export default ({ items, setItems }: any) => {
       items={items.map((item: any, index: any) => ({
         ...item,
         action: (
-          <UIRow style={{ marginTop: -10 }}>
+          <UIRow style={{ marginTop: 0 }}>
             <UIButton
               size="small"
               fill="clear"
