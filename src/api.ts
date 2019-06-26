@@ -43,7 +43,22 @@ export const APISearch = async (p: APISearchProps) => {
     p.Condition.forEach((c: any) => {
       if (c.cond === "AND" || c.cond === "OR" || c.cond === "XOR") {
         cond += ` ${c.cond} `;
-      } else {
+      } 
+      else if(c.cond === "IN")
+      {
+        let value:any;
+        if(Array.isArray(c.value))
+        {
+          value = c.value.map(function(val:any){
+            return val!==null?"'"+val+"'" : "NULL";
+          }).join(",");
+        }
+        else{
+          value = c.value;
+        }
+        cond += `[${c.field}] ${c.cond} (${value})`;
+      }
+      else {
         let val = typeof c.value == "number" ? parseInt(c.value) : `'${c.value}'`;
         cond += `[${c.field}] ${c.cond} ${val}`;
       }
@@ -276,7 +291,7 @@ export const SAPFieldMap = {
   } as APISearchProps,
   UomCode: {
     Table: "OUOM",
-    Fields: ["UomCode", "UomName"]
+    Fields: ["UomEntry", "UomName"]
   } as APISearchProps,
   WarehouseCodeCanvas: {
     Table: "OWHS",
