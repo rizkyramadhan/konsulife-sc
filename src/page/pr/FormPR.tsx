@@ -212,10 +212,10 @@ export default withRouter(
                   {
                     key: "CardCode",
                     type: "field",
-                    label: "Customer",
-                    size: 3
+                    label: "Code",
+                    size: 4
                   },
-                  { key: "CardName", type: "field", label: "Name" },
+                  { key: "CardName", type: "field", label: "Name", size:8 },
                   { key: "CntctCode", type: "field", label: "Contact Person" },
                   { key: "NumAtCard", type: "field", label: "Ref No.", size: 8 }
                 ]

@@ -36,7 +36,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
       setData(res);
     });
   }, []);
-  console.log(data);
+  
   return (
     <UIContainer>
       <UIHeader showSidebar={showSidebar} sidebar={sidebar} center={"Purchase Receipt"}>
