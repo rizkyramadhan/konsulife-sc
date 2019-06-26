@@ -6,7 +6,7 @@ export const query = async (
   headers: { [key: string]: string } = {},
   opt: { [key: string]: string } = {}
 ): Promise<{ [key: string]: any }> => {
-  // console.log(query);
+  console.log(query);
   const response: Response = await fetch(config.url, {
     method: "POST",
     body: JSON.stringify({
