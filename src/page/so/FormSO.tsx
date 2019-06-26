@@ -87,12 +87,11 @@ export default observer(({ showSidebar, sidebar }: any) => {
     });
 
     try {
-      let number: any = await getLastNumbering("SO", "TIM-001");
+      let number: any = await getLastNumbering("SO", global.getSession().user.warehouse_id);
       await APIPost('SalesOrder', {
         ...data, U_IDU_SO_INTNUM: number.format, Lines: [...Lines_IT],
-      }).then(() => {
-        updateLastNumbering(number.id, number.last_count + 1);
-      });
+      })
+      updateLastNumbering(number.id, number.last_count + 1);
     }
     catch (e) {
       alert(e.Message)

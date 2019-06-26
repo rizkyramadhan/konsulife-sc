@@ -13,6 +13,7 @@ import { APISearch, APISearchProps, APIPost } from '@app/api';
 import FormDODetailItems from './FormDODetailItems';
 import IconCheck from '@app/libs/ui/Icons/IconCheck';
 import UITabs from '@app/libs/ui/UITabs';
+import { getLastNumbering, updateLastNumbering } from '@app/utils';
 import global from '@app/global';
 
 export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
@@ -164,9 +165,13 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
           "TaxCode": d.TaxCode
         }
       })
+
+      let number: any = await getLastNumbering("DO", global.getSession().user.warehouse_id);
+      (d as any)['U_IDU_DO_INTNUM'] = number.format;
       await APIPost('DeliveryOrder', {
         ...d, Lines: l,
       });
+      updateLastNumbering(number.id, number.last_count + 1);
     }
     catch (e) {
       alert(e.Message);
