@@ -9,57 +9,57 @@ import BtnCreate from "@app/components/BtnCreate";
 import rawQuery from '@app/libs/gql/data/rawQuery';
 
 interface IRute {
-    id: number,
-    name: string,
-    description: string
+  id: number,
+  name: string,
+  description: string
 }
 
 export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
-    const [data, setData]: any = useState<IRute[]>([]);
-    useEffect(() => {
-        rawQuery(`{
+  const [data, setData]: any = useState<IRute[]>([]);
+  useEffect(() => {
+    rawQuery(`{
             rute {
                 name
                 id
                 description
             }
           }`).then((res) => {
-            setData([...res.rute]);
-        });
-    }, []);
+      setData([...res.rute]);
+    });
+  }, []);
 
-    return (
-        <UIContainer>
-            <UIHeader
-                showSidebar={showSidebar}
-                sidebar={sidebar}
-                center={"Master Rute"}
-            >
-                <BtnCreate path="/rute/form" />
-            </UIHeader>
-            <UIBody scroll={true}>
-                <UIList
-                    style={{ flex: 1 }}
-                    primaryKey="id"
-                    selection="single"
-                    onSelect={(d) => {
-                        history.push('/rute/form/' + d.id)
-                    }}
-                    fields={{
-                        name: {
-                            table: {
-                                header: "Nama"
-                            }
-                        },
-                        description: {
-                            table: {
-                                header: "Deskripsi"
-                            }
-                        }
-                    }}
-                    items={data}
-                />
-            </UIBody>
-        </UIContainer>
-    );
+  return (
+    <UIContainer>
+      <UIHeader
+        showSidebar={showSidebar}
+        sidebar={sidebar}
+        center={"Master Rute"}
+      >
+        <BtnCreate path="/rute/form" />
+      </UIHeader>
+      <UIBody scroll={true}>
+        <UIList
+          style={{ flex: 1 }}
+          primaryKey="id"
+          selection="single"
+          onSelect={(d) => {
+            history.push('/rute/form/' + d.id)
+          }}
+          fields={{
+            name: {
+              table: {
+                header: "Nama"
+              }
+            },
+            description: {
+              table: {
+                header: "Deskripsi"
+              }
+            }
+          }}
+          items={data}
+        />
+      </UIBody>
+    </UIContainer>
+  );
 }));

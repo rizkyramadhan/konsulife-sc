@@ -9,7 +9,7 @@ import { observer } from "mobx-react-lite";
 import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
 import IconAdd from "@app/libs/ui/Icons/IconAdd";
-import { APISearchProps, APISearch, APISearchCache } from '@app/api';
+import { APISearchProps, APISearch } from '@app/api';
 
 const BtnCreate = withRouter(({ history }: any) => {
   return (
@@ -47,12 +47,8 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
       }, { cond: "AND" }, { field: "ObjType", cond: "=", value: 17 }]
     };
 
-    APISearchCache(query.Table, query.Condition).then((cache: any) => {
-      setData(cache);
-      query.Cache = cache;
-      APISearch(query).then((res: any) => {
-        setData(res);
-      })
+    APISearch(query).then((res: any) => {
+      setData(res);
     });
   }, []);
 

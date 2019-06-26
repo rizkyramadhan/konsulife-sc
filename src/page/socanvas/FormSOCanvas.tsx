@@ -147,8 +147,8 @@ export default observer(({ showSidebar, sidebar }: any) => {
                   label: "SO Number",
                   size: 12
                 },
-                { key: "DocDate", size: 6, type:"date", label: "Posting Date" },
-                { key: "DocDueDate", size: 6, type:"date",label: "Delivery Date" },
+                { key: "DocDate", size: 6, type: "date", label: "Posting Date" },
+                { key: "DocDueDate", size: 6, type: "date", label: "Delivery Date" },
                 {
                   key: "DocCur", size: 8, label: "Document Currency",
                   component: (

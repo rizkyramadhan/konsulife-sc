@@ -9,12 +9,12 @@ import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
 import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
-import { APISearchProps, APISearch, APISearchCache } from '@app/api';
+import { APISearchProps, APISearch } from '@app/api';
 
 const BtnCreate = withRouter(({ history }: any) => {
   return (
     <UIButton
-      size="small" 
+      size="small"
       color="primary"
       onPress={() => {
         history.push("/so-canvas/form");
@@ -45,13 +45,9 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
         value: "O"
       }, { cond: "AND" }, { field: "ObjType", cond: "=", value: 17 }]
     };
-    
-    APISearchCache(query.Table, query.Condition).then((cache: any) => {
-      setData(cache);
-      query.Cache = cache;
-      APISearch(query).then((res: any) => {
-        setData(res);
-      })
+
+    APISearch(query).then((res: any) => {
+      setData(res);
     });
   }, []);
 

@@ -12,21 +12,20 @@ import { withRouter } from 'react-router';
 import SAPDropdown from '@app/components/SAPDropdown';
 
 const defData = {
-    DocDate:"",
-    DocDueDate:"",
-    CardCode:"",
-    CardName:"",
-    CashAcct:"",
-    CashSum:"",
-    TrsfrAcct:"",
-    TrsfrSum:"",
-    TrsfrDate:"",
-    TrsfrRef:""
+  DocDate: "",
+  DocDueDate: "",
+  CardCode: "",
+  CardName: "",
+  CashAcct: "",
+  CashSum: "",
+  TrsfrAcct: "",
+  TrsfrSum: "",
+  TrsfrDate: "",
+  TrsfrRef: ""
 }
 
 export default withRouter(observer(({ showSidebar, sidebar }: any) => {
-    const [data, setData] = useState(defData);
-
+  const [data, setData] = useState(defData);
 
   return (
     <UIContainer>
@@ -59,8 +58,10 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
               value: [
                 { key: "DocDate", size: 4, label: "Posting Date" },
                 { key: "DocDueDate", size: 4, label: "Delivery Date" },
-                { key: "CardCode", label: "BP Partner", size: 12,component: (
-                    <SAPDropdown label="BP Partner" field="CustomerCode" value={(data as any).CardCode} setValue={(v) => { setData({ ...data, CardCode: v }) }} />) },
+                {
+                  key: "CardCode", label: "BP Partner", size: 12, component: (
+                    <SAPDropdown label="BP Partner" field="CustomerCode" value={(data as any).CardCode} setValue={(v) => { setData({ ...data, CardCode: v }) }} />)
+                },
               ]
             },
             {
@@ -68,8 +69,8 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
               label: "Cash",
               value: [
                 {
-                    key: "CashAcct", size: 12, label: "Cash Account", component: (
-                        <SAPDropdown label="Cash Account" field="ChartOfAccount" value={(data as any).CashAcct} setValue={(v) => { setData({ ...data, CashAcct: v }) }} />)
+                  key: "CashAcct", size: 12, label: "Cash Account", component: (
+                    <SAPDropdown label="Cash Account" field="ChartOfAccount" value={(data as any).CashAcct} setValue={(v) => { setData({ ...data, CashAcct: v }) }} />)
                 },
                 { key: "CashSum", size: 12, label: "Cash Amount" },
               ]
@@ -79,10 +80,10 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
               label: "Bank Transfer",
               value: [
                 {
-                    key: "TrsfrAcct", size: 12, label: "Transfer Account", component: (
-                        <SAPDropdown label="Transfer Account" field="ChartOfAccount" value={(data as any).TrsfrAcct} setValue={(v) => { setData({ ...data, TrsfrAcct: v }) }} />)
+                  key: "TrsfrAcct", size: 12, label: "Transfer Account", component: (
+                    <SAPDropdown label="Transfer Account" field="ChartOfAccount" value={(data as any).TrsfrAcct} setValue={(v) => { setData({ ...data, TrsfrAcct: v }) }} />)
                 },
-                { key: "TrsfrSum", size: 12, label: "Transfer Amount"},
+                { key: "TrsfrSum", size: 12, label: "Transfer Amount" },
                 { key: "TrsfrDate", size: 12, label: "Transfer Date" },
                 { key: "TrsfrRef", size: 12, label: "Intended Purpose" },
               ]

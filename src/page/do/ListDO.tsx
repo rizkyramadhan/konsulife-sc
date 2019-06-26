@@ -8,7 +8,7 @@ import { observer } from "mobx-react-lite";
 import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
 import IconRemove from "@app/libs/ui/Icons/IconRemove";
-import { APISearch, APISearchProps, APISearchCache } from '@app/api';
+import { APISearch, APISearchProps } from '@app/api';
 
 export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
@@ -22,22 +22,18 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
           value: "O"
         },
         {
-          cond:"AND"
+          cond: "AND"
         },
         {
           field: "ObjType",
-          cond:"=",
-          value:"17"
+          cond: "=",
+          value: "17"
         }
-    ]
+      ]
     };
 
-    APISearchCache(query.Table, query.Condition).then((cache: any) => {
-      setData(cache);
-      query.Cache = cache;
-      APISearch(query).then((res: any) => {
-        setData(res);
-      })
+    APISearch(query).then((res: any) => {
+      setData(res);
     })
   }, []);
 

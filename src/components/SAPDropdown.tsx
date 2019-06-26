@@ -1,4 +1,4 @@
-import { APISearch, APISearchProps, SAPFieldMap, APISearchCache } from '@app/api';
+import { APISearch, APISearchProps, SAPFieldMap } from '@app/api';
 import { UIProps } from "@app/libs/ui/Styles/Style";
 import UISelectField from "@app/libs/ui/UISelectField";
 import React, { useEffect, useState } from "react";
@@ -49,34 +49,19 @@ export default (p: SAPDropdownProps) => {
       }
     }
 
-    APISearchCache(query.Table, query.Condition).then((cache: any) => {
-      if (!!cache) {
-        let items = cache.map((item: any) => {
-          let field = Object.keys(item);
-          return {
-            value: (item[field[0]] as any),
-            label: (item[!!field[1] ? field[1] : field[0]] as any),
-            item: item
-          }
-        });
-        setItems(items);
-      }
-
-      query.Cache = cache;
-      APISearch(query).then((res: any) => {
-        let items = res.map((item: any) => {
-          let field = Object.keys(item);
-          return {
-            value: (item[field[0]] as any),
-            label: (item[!!field[1] ? field[1] : field[0]] as any),
-            item: item
-          }
-        });
-        setItems(items);
-      }).catch((err) => {
-        console.error(err);
-      })
-    })
+    APISearch(query).then((res: any) => {
+      let items = res.map((item: any) => {
+        let field = Object.keys(item);
+        return {
+          value: (item[field[0]] as any),
+          label: (item[!!field[1] ? field[1] : field[0]] as any),
+          item: item
+        }
+      });
+      setItems(items);
+    }).catch((err) => {
+      console.error(err);
+    });
   }, []);
 
   return (

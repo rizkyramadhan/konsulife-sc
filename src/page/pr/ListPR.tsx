@@ -1,4 +1,4 @@
-import { APISearch, APISearchProps, APISearchCache } from '@app/api';
+import { APISearch, APISearchProps } from "@app/api";
 import UIBody from "@app/libs/ui/UIBody";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
@@ -6,9 +6,9 @@ import UIList from "@app/libs/ui/UIList";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
-import UIRow from '@app/libs/ui/UIRow';
-import IconRemove from '@app/libs/ui/Icons/IconRemove';
-import UIButton from '@app/libs/ui/UIButton';
+import UIRow from "@app/libs/ui/UIRow";
+import IconRemove from "@app/libs/ui/Icons/IconRemove";
+import UIButton from "@app/libs/ui/UIButton";
 
 export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
@@ -23,12 +23,8 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
       }]
     };
 
-    APISearchCache(query.Table, query.Condition).then((cache: any) => {
-      setData(cache);
-      query.Cache = cache;
-      APISearch(query).then((res: any) => {
-        setData(res);
-      })
+    APISearch(query).then((res: any) => {
+      setData(res);
     });
   }, []);
 
@@ -42,32 +38,32 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
           primaryKey="DocNum"
           selection="single"
           onSelect={(item) => {
-            history.push('/pr/form/' + item.DocEntry);
+            history.push("/pr/form/" + item.DocEntry);
           }}
           fields={{
             CardName: {
               table: {
-                header: 'Customer/Vendor'
+                header: "Customer/Vendor"
               }
             },
             CardCode: {
               table: {
-                header: 'Code'
+                header: "Code"
               }
             },
             U_IDU_PO_INTNUM: {
               table: {
-                header: 'No. PO'
+                header: "No. PO"
               }
             },
             U_IDU_SUP_SONUM: {
               table: {
-                header: 'No. SO Supplier'
+                header: "No. SO Supplier"
               }
             },
             action: {
               table: {
-                header: 'Action'
+                header: "Action"
               }
             }
           }}

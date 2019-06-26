@@ -1,4 +1,4 @@
-import { APIPost, APISearch, APISearchProps, APISearchCache } from "@app/api";
+import { APIPost, APISearch, APISearchProps } from "@app/api";
 import IconSave from "@app/libs/ui/Icons/IconSave";
 import { isSize } from "@app/libs/ui/MediaQuery";
 import UIBody from "@app/libs/ui/UIBody";
@@ -11,7 +11,6 @@ import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
-// import IconAdd from '@app/libs/ui/Icons/IconAdd';
 import FormPRDetailItems from "./FormPRDetailItems";
 
 export default withRouter(
@@ -49,17 +48,9 @@ export default withRouter(
           }
         ]
       };
-
-      APISearchCache(query.Table, query.Condition).then((cache: any) => {
-        setData(cache);
-        if (cache.length > 0)
-          setData(cache[0]);
-
-        query.Cache = cache;
-        APISearch(query).then((res: any) => {
-          if (res.length > 0)
-            setData(res[0]);
-        })
+      APISearch(query).then((res: any) => {
+        if (res.length > 0)
+          setData(res[0]);
       });
 
       query = {
@@ -93,23 +84,13 @@ export default withRouter(
         ]
       };
 
-      APISearchCache(query.Table, query.Condition).then((cache: any) => {
-        cache.forEach((item: any) => {
+      APISearch(query).then((res: any) => {
+        res.forEach((item: any) => {
           item.BaseType = "22";
           item.BaseLine = item.LineNum;
           item.BaseEntry = item.DocEntry;
         });
-        setItem(cache);
-
-        query.Cache = cache;
-        APISearch(query).then((res: any) => {
-          res.forEach((item: any) => {
-            item.BaseType = "22";
-            item.BaseLine = item.LineNum;
-            item.BaseEntry = item.DocEntry;
-          });
-          setItem(res);
-        })
+        setItem(res);
       })
     }, []);
 

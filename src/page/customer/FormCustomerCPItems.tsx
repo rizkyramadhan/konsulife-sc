@@ -82,13 +82,13 @@ export default ({ items, setItems }: any) => {
                 padding: 10
               }}
               field={[
-                { key: 'Name', size: 12,label:"Name" },
-                { key: 'FirstName', size: 12,label:"First Name" },
-                { key: 'MiddleName', size: 12 ,label:"Middle Name"},
-                { key: 'LastName', size: 12 ,label:"Last Name"},
-                { key: 'Tel1', size: 12,label:"Phone 1" },
-                { key: 'Tel2', size: 12 ,label:"Phone 2"},
-                { key: 'Cellolar', size: 12 ,label:"Mobile"},
+                { key: 'Name', size: 12, label: "Name" },
+                { key: 'FirstName', size: 12, label: "First Name" },
+                { key: 'MiddleName', size: 12, label: "Middle Name" },
+                { key: 'LastName', size: 12, label: "Last Name" },
+                { key: 'Tel1', size: 12, label: "Phone 1" },
+                { key: 'Tel2', size: 12, label: "Phone 2" },
+                { key: 'Cellolar', size: 12, label: "Mobile" },
               ]}
             />
 

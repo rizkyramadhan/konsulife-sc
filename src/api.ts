@@ -54,6 +54,9 @@ export const APISearch = async (p: APISearchProps) => {
 
   return new Promise(async (resolve, reject) => {
     let url = config.wsSAP + "Search";
+    const cache = await query("cache", ['data'], { where: { id: config.wsSAP + "Search" + params.Table + params.Condition } });
+    resolve(cache ? cache.data : []);
+
     Axios.post(url, JSON.stringify(params), {
       headers: {
         'Content-Type': 'application/json',
@@ -65,18 +68,17 @@ export const APISearch = async (p: APISearchProps) => {
           console.error(res.data);
           reject();
         } else {
-          try {
+          if (!cache || (Array.isArray(cache.data) && cache.data.length === 0)) {
             createRecord("cache", {
               id: url + params.Table + params.Condition,
               data: res.data
             })
-          } catch (e) {
+          } else {
             updateRecord("cache", {
               id: url + params.Table + params.Condition,
               data: res.data
             });
           }
-          resolve(res.data);
         }
       })
       .catch((err: any) => {
@@ -84,28 +86,6 @@ export const APISearch = async (p: APISearchProps) => {
         reject();
       });
   });
-};
-
-export const APISearchCache = (Table: string, Condition: any) => {
-  let cond: string = "";
-  if (!!Condition && Condition.length > 0) {
-    Condition.forEach((c: any) => {
-      if (c.cond === "AND" || c.cond === "OR" || c.cond === "XOR") {
-        cond += ` ${c.cond} `;
-      } else {
-        let val = typeof c.value == "number" ? parseInt(c.value) : `'${c.value}'`;
-        cond += `[${c.field}] ${c.cond} ${val}`;
-      }
-    });
-  }
-
-  Condition = cond;
-  return new Promise(resolve => {
-    query("cache", ['data'], { where: { id: config.wsSAP + "Search" + Table + Condition } }).then((res) => {
-      if (res) resolve(res.data);
-      resolve([]);
-    });
-  })
 };
 
 export const APIPost = (api: string, data: any) => {

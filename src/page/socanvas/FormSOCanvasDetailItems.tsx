@@ -18,53 +18,53 @@ export default ({ items, setItems }: any) => {
       primaryKey="LineNum"
       selection="detail"
       fields={{
-        ItemCode:{
-          table:{
-            header:"Item Code"
+        ItemCode: {
+          table: {
+            header: "Item Code"
           }
         },
-        Dscription:{
-          table:{
+        Dscription: {
+          table: {
             header: "Item Name"
           }
         },
-        UseBaseUn:{
-          table:{
+        UseBaseUn: {
+          table: {
             header: "Inventory UoM"
           }
         },
-        Quantity:{
-          table:{
+        Quantity: {
+          table: {
             header: "Quantity"
           }
         },
-        WhsCode:{
-          table:{
+        WhsCode: {
+          table: {
             header: "Warehouse"
           }
         },
-        OcrCode:{
-          table:{
+        OcrCode: {
+          table: {
             header: "Area"
           }
         },
-        OcrCode2:{
-          table:{
+        OcrCode2: {
+          table: {
             header: "Branch"
           }
         },
-        PriceBefDi:{
-          table:{
+        PriceBefDi: {
+          table: {
             header: "Unit Price"
           }
         },
-        DiscPrcnt:{
-          table:{
+        DiscPrcnt: {
+          table: {
             header: "Discount(%)"
           }
         },
-        TaxCode:{
-          table:{
+        TaxCode: {
+          table: {
             header: "Tax Code"
           }
         },
@@ -130,7 +130,7 @@ export default ({ items, setItems }: any) => {
               <UIText>{item.pkval}</UIText>
             </View>
             <View style={{ justifyContent: "center", alignItems: "center" }}>
-              <Button onPress={() => { setItems([...items]);item.close(); }}>
+              <Button onPress={() => { setItems([...items]); item.close(); }}>
                 <UIText size="large">&times;</UIText>
               </Button>
             </View>
@@ -149,28 +149,30 @@ export default ({ items, setItems }: any) => {
             field={[
               {
                 key: 'ItemCode', size: 12, label: 'Item Code', component: (
-                  <SAPDropdown label="Item Code" field="ItemCodeAll" value={(item as any).item.ItemCode} setValue={(v,l) => {
+                  <SAPDropdown label="Item Code" field="ItemCodeAll" value={(item as any).item.ItemCode} setValue={(v, l) => {
                     const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
                     items[idx]['ItemCode'] = v;
                     items[idx]["Dscription"] = l;
                     setItems([...items]);
                   }} />)
               },
-              { key: 'UseBaseUn', size: 12, label: 'Inventory UoM', component: (
-                <UISelectField
-                  label="Inventory UoM"
-                  items={[
-                    { label: "Yes", value: "Y" },
-                    { label: "No", value: "N" }
-                  ]}
-                  value={(item as any).UseBaseUn}
-                  setValue={v => {
-                    const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
-                    items[idx]['UseBaseUn'] = v;
-                    setItems([...items]);
-                  }}
-                />
-              )},
+              {
+                key: 'UseBaseUn', size: 12, label: 'Inventory UoM', component: (
+                  <UISelectField
+                    label="Inventory UoM"
+                    items={[
+                      { label: "Yes", value: "Y" },
+                      { label: "No", value: "N" }
+                    ]}
+                    value={(item as any).UseBaseUn}
+                    setValue={v => {
+                      const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
+                      items[idx]['UseBaseUn'] = v;
+                      setItems([...items]);
+                    }}
+                  />
+                )
+              },
               { key: 'Quantity', size: 12, label: 'Quantity' },
               {
                 key: 'WhsCode', size: 12, label: 'Warehouse', component: (
@@ -183,19 +185,23 @@ export default ({ items, setItems }: any) => {
                     setItems(items);
                   }} />)
               },
-              { key: 'OcrCode', size: 12, label: 'Area', component: (
-                <SAPDropdown label="Dist Rule" field="OcrCode" value={(item as any).item.OcrCode} setValue={(v) => {
-                  const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
-                  items[idx]['OcrCode'] = v;
-                  setItems([...items]);
-                }} />) },
+              {
+                key: 'OcrCode', size: 12, label: 'Area', component: (
+                  <SAPDropdown label="Dist Rule" field="OcrCode" value={(item as any).item.OcrCode} setValue={(v) => {
+                    const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
+                    items[idx]['OcrCode'] = v;
+                    setItems([...items]);
+                  }} />)
+              },
 
-              { key: 'OcrCode2', size: 12, label: 'Branch', component: (
-                <SAPDropdown label="Dist Rule" field="OcrCode2" value={(item as any).item.OcrCode2} setValue={(v) => {
-                  const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
-                  items[idx]['OcrCode2'] = v;
-                  setItems([...items]);
-                }} />) },
+              {
+                key: 'OcrCode2', size: 12, label: 'Branch', component: (
+                  <SAPDropdown label="Dist Rule" field="OcrCode2" value={(item as any).item.OcrCode2} setValue={(v) => {
+                    const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
+                    items[idx]['OcrCode2'] = v;
+                    setItems([...items]);
+                  }} />)
+              },
               { key: 'PriceBefDi', size: 12, label: 'Unit Price' },
               { key: 'DiscPrcnt', size: 12, label: 'Disc Prcnt' },
               {
