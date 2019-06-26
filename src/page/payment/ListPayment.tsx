@@ -12,6 +12,7 @@ import IconRemove from '@app/libs/ui/Icons/IconRemove';
 import { isSize } from '@app/libs/ui/MediaQuery';
 import IconAdd from '@app/libs/ui/Icons/IconAdd';
 import UIText from '@app/libs/ui/UIText';
+import UISearch from '@app/libs/ui/UISearch';
 
 const BtnCreate = withRouter(({ history }: any) => {
   return (
@@ -37,14 +38,30 @@ const BtnCreate = withRouter(({ history }: any) => {
 
 export default withRouter(observer(({ showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
+  const [_data, _setData] = useState([]);
+  const field = ["DocEntry", "DocDate", "DocDueDate", "CardCode", "CardName"];
+  const funcSearch = (value: string) => {
+    _setData([...(value ? data.filter((x: any) => {
+      let res = false;
+      for (var i = 0; i < field.length; i++) {
+        if (x[field[i]] && x[field[i]].toLowerCase().includes(value.toLowerCase())) {
+          res = true;
+          break;
+        }
+      }
+      return res
+    }) : data)])
+  }
+
   useEffect(() => {
     let query: APISearchProps = {
       Table: "ORCT",
-      Fields: ["DocEntry", "DocDate", "DocDueDate", "CardCode", "CardName"]
+      Fields: field
     };
 
     APISearch(query).then((res: any) => {
       setData(res);
+      _setData(res);
     });
   }, []);
 
@@ -54,6 +71,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
         <BtnCreate />
       </UIHeader>
       <UIBody>
+        <UISearch onSearch={funcSearch}></UISearch>
         <UIList
           style={{ flex: 1 }}
           primaryKey="DocEntry"
@@ -84,7 +102,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
               }
             }
           }}
-          items={data.map((item: any) => ({
+          items={_data.map((item: any) => ({
             ...item,
             action: (
               <UIRow style={{ marginTop: 0 }}>

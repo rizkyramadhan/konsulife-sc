@@ -7,6 +7,10 @@ interface SAPDropdownProps extends UIProps {
   value: string | number;
   setValue: (value: any, label?: any, row?: any) => any;
   field: 'OcrCode' | 'OcrCode2' | 'Series' | 'State' | 'BPGroup' | 'Currency' | 'CustomerCode' | 'PaymentTerms' | 'ContactPerson' | 'ShipTo' | 'BillTo' | 'TaxCode' | 'ItemCodeCanvas' | 'ItemCodeAll' | 'UomCode' | 'WarehouseCodeCanvas' | 'WarehouseCodeAll' | 'VendorCode' | 'SAPSalesCode' | 'Area' | 'Branch' | 'ChartOfAccount' | 'ItemCodeCanvas' | 'Custom';
+  itemField?: {
+    value: string,
+    label: string
+  }
   search?: string;
   where?: {
     field: string;
@@ -32,9 +36,11 @@ export default ({
   refresh = false,
   style,
   mustInit = true,
-  setRefresh
+  setRefresh,
+  itemField
 }: SAPDropdownProps) => {
   const [items, setItems] = useState<any[]>([]);
+  const [_items, _setItems] = useState<any[]>([]);
 
   useEffect(() => {
     let query: APISearchProps;
@@ -65,16 +71,19 @@ export default ({
       }
     }
 
+    query.Limit = 50;
+
     if (refresh || mustInit) {
       APISearch(query).then((res: any) => {
         let items = res.map((item: any) => {
-          let field = Object.keys(item);
+          let fields = (SAPFieldMap as any)[field].Fields;
           return {
-            value: (item[field[0]] as any),
-            label: (item[!!field[1] ? field[1] : field[0]] as any),
+            value: itemField ? item[itemField.value] : (item[fields[0]] as any),
+            label: itemField ? item[itemField.label] : (item[!!fields[1] ? fields[1] : fields[0]] as any),
             item: item
           }
         });
+        _setItems([...items]);
         setItems([...items]);
       }).catch((err) => {
         console.error(err);
@@ -84,6 +93,8 @@ export default ({
   }, [refresh]);
 
   return (
-    <UISelectField items={items} value={value} setValue={(v: any, l: any) => { const idx: any = items.findIndex((x: any) => x.value === v); setValue(v, l, items[idx]) }} label={label} style={style} color={color} />
+    <UISelectField items={_items} value={value} setValue={(v: any, l: any) => { const idx: any = _items.findIndex((x: any) => x.value === v); setValue(v, l, _items[idx]) }} label={label} style={style} color={color} search={true} onSearch={(value) => {
+      setItems([...(value ? items.filter((x: any) => x.value.toLowerCase().includes(value.toLowerCase()) || x.label.toLowerCase().includes(value.toLowerCase())) : items)]);
+    }} onDismiss={(value) => value && setItems([...items])} />
   );
 };
