@@ -1,4 +1,4 @@
-import { APISearch, APISearchProps } from '@app/api';
+import { APISearch, APISearchProps, APISearchCache } from '@app/api';
 import UIBody from "@app/libs/ui/UIBody";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
@@ -22,9 +22,14 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
         value: "O"
       }]
     };
-    APISearch(query).then((res: any) => {
-      setData(res);
-    })
+
+    APISearchCache(query.Table, query.Condition).then((cache: any) => {
+      setData(cache);
+      query.Cache = cache;
+      APISearch(query).then((res: any) => {
+        setData(res);
+      })
+    });
   }, []);
 
   return (

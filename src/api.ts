@@ -66,6 +66,7 @@ export const APISearch = async (p: APISearchProps) => {
           reject();
         } else {
           if (!p.Cache || (!!p.Cache && p.Cache.length == 0)) {
+            if (p.Cache.length === undefined) {p.Cache = []};
             createRecord("cache", {
               id: url + params.Table + params.Condition,
               data: res.data

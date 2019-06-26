@@ -1,4 +1,4 @@
-import { APISearch, APISearchProps } from '@app/api';
+import { APISearch, APISearchProps, APISearchCache } from '@app/api';
 import UIBody from "@app/libs/ui/UIBody";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
@@ -15,25 +15,25 @@ import UIText from '@app/libs/ui/UIText';
 
 const BtnCreate = withRouter(({ history }: any) => {
     return (
-      <UIButton
-        size="small"
-        color="primary"
-        onPress={() => {
-          history.push("/payment-receipt/form");
-        }}
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "flex-end"
-        }}
-      >
-        <IconAdd color="#fff" />
-        {isSize(["md", "lg"]) && (
-          <UIText style={{ color: "#fff" }}>Create</UIText>
-        )}
-      </UIButton>
+        <UIButton
+            size="small"
+            color="primary"
+            onPress={() => {
+                history.push("/payment-receipt/form");
+            }}
+            style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "flex-end"
+            }}
+        >
+            <IconAdd color="#fff" />
+            {isSize(["md", "lg"]) && (
+                <UIText style={{ color: "#fff" }}>Create</UIText>
+            )}
+        </UIButton>
     );
-  });
+});
 
 export default withRouter(observer(({ showSidebar, sidebar }: any) => {
     const [data, setData] = useState([]);
@@ -42,15 +42,20 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
             Table: "ORCT",
             Fields: ["DocEntry", "DocDate", "DocDueDate", "CardCode", "CardName"]
         };
-        APISearch(query).then((res: any) => {
-            setData(res);
-        })
+
+        APISearchCache(query.Table, query.Condition).then((cache: any) => {
+            setData(cache);
+            query.Cache = cache;
+            APISearch(query).then((res: any) => {
+                setData(res);
+            })
+        });
     }, []);
 
     return (
         <UIContainer>
             <UIHeader showSidebar={showSidebar} sidebar={sidebar} center={"Payment Receipt"}>
-            <BtnCreate />
+                <BtnCreate />
             </UIHeader>
             <UIBody>
                 <UIList

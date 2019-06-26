@@ -50,6 +50,7 @@ import FormARInvoiceTO from './arinvoice-to/FormARInvoiceTO';
 import FormPayment from './payment/FormPayment';
 import ListRute from './rute/ListRute';
 import FormRute from './rute/FormRute';
+import IconNavigation from '@app/libs/ui/Icons/IconNavigation';
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
@@ -59,7 +60,7 @@ export const menuList = [
   {
     title: "Rute",
     subtitle: "Lorem Ipsum is simply dummy text.",
-    icon: <IconLuggageCart width={20} height={20} color="#1D6EF7" />,
+    icon: <IconNavigation width={20} height={20} color="#1D6EF7" />,
     path: "/rute"
   },
   {

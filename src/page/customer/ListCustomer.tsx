@@ -9,7 +9,7 @@ import { observer } from "mobx-react-lite";
 import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
 import IconAdd from "@app/libs/ui/Icons/IconAdd";
-import { APISearch, APISearchProps } from '@app/api';
+import { APISearch, APISearchProps, APISearchCache } from '@app/api';
 import UIRow from '@app/libs/ui/UIRow';
 import IconRemove from '@app/libs/ui/Icons/IconRemove';
 
@@ -69,8 +69,13 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
       }
       ]
     };
-    APISearch(query).then((res: any) => {
-      setData(res);
+
+    APISearchCache(query.Table, query.Condition).then((cache: any) => {
+      setData(cache);
+      query.Cache = cache;
+      APISearch(query).then((res: any) => {
+        setData(res);
+      })
     })
   }, []);
 
