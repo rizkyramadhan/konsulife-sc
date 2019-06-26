@@ -12,6 +12,8 @@ import { withRouter } from 'react-router';
 import { APISearch, APISearchProps, APIPost } from '@app/api';
 import FormARInvoiceDetailItems from './FormARInvoiceDetailItems';
 import { View } from 'reactxp';
+import { getLastNumbering, updateLastNumbering } from '@app/utils';
+import global from '@app/global';
 
 
 export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
@@ -95,9 +97,12 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
   const save = async () => {
     setSaving(true);
     try {
+      let number: any = await getLastNumbering("INV", global.getSession().user.warehouse_id);
+      (data as any)['U_IDU_SI_INTNUM'] = number.format;
       await APIPost('ARInvoice', {
         ...data, Lines: item,
       });
+      updateLastNumbering(number.id, number.last_count + 1);
     }
     catch (e) {
       alert(e.Message);

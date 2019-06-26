@@ -13,6 +13,7 @@ import React, { useEffect, useState } from "react";
 import { withRouter } from 'react-router';
 import { View } from 'reactxp';
 import FormARInvoiceDetailTO from './FormARInvoiceDetailTO';
+import { getLastNumbering, updateLastNumbering } from '@app/utils';
 
 export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
   const [saving, setSaving] = useState(false);
@@ -132,9 +133,12 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
         delete val.DocEntry;
       });
 
+      let number: any = await getLastNumbering("INV", global.getSession().user.warehouse_id);
+      (data as any)['U_IDU_SI_INTNUM'] = number.format;
       await APIPost('ARInvoice', {
         ...data, Lines: item,
       });
+      updateLastNumbering(number.id, number.last_count + 1);
     }
     catch (e) {
       alert(e.Message);

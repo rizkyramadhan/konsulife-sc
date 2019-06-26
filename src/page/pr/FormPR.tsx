@@ -13,6 +13,8 @@ import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 import FormPRDetailItems from "./FormPRDetailItems";
 import IconCheck from '@app/libs/ui/Icons/IconCheck';
+import { getLastNumbering, updateLastNumbering } from '@app/utils';
+import global from '@app/global';
 
 export default withRouter(
   observer(({ match, showSidebar, sidebar }: any) => {
@@ -48,22 +50,19 @@ export default withRouter(
         ]
       };
       APISearch(query).then((res: any) => {
-        let poNum:any[] = [];
-        let soNum:any[] = [];
-        res.forEach((val:any) => {
-          if(val.U_IDU_PO_INTNUM!== null && val.U_IDU_PO_INTNUM !== "")
-          {
+        let poNum: any[] = [];
+        let soNum: any[] = [];
+        res.forEach((val: any) => {
+          if (val.U_IDU_PO_INTNUM !== null && val.U_IDU_PO_INTNUM !== "") {
             poNum.push(val.U_IDU_PO_INTNUM);
           }
-          if(val.U_IDU_SUP_SONUM !== null && val.U_IDU_SUP_SONUM !== "")
-          {
+          if (val.U_IDU_SUP_SONUM !== null && val.U_IDU_SUP_SONUM !== "") {
             soNum.push(val.U_IDU_SUP_SONUM);
           }
-          
+
         });
 
-        if (res.length > 0)
-        {
+        if (res.length > 0) {
           // let today = new Date();
           // let dd:any = today.getDate();
           // let mm:any = today.getMonth() + 1; //January is 0!
@@ -81,7 +80,7 @@ export default withRouter(
           res[0].U_IDU_SUP_SONUM = soNum.join(";");
           setData(res[0]);
         }
-          
+
       });
 
       query = {
@@ -131,10 +130,15 @@ export default withRouter(
     const save = async () => {
       setSaving(true);
       try {
+
+        let number: any = await getLastNumbering("LPB", global.getSession().user.warehouse_id);
         await APIPost("PurchaseReceipt", {
-          ...data,
+          ...data, 
           Lines: selected
         });
+        updateLastNumbering(number.id, number.last_count + 1);
+
+        
       } catch (e) {
         alert(e.Message);
       } finally {
@@ -201,7 +205,7 @@ export default withRouter(
                     label: "Document Currency"
                   },
                   { type: "empty", size: 2 },
-                  
+
                   { key: "SlpCode", type: "field", label: "Sales Employee" }
                 ]
               },
@@ -215,7 +219,7 @@ export default withRouter(
                     label: "Code",
                     size: 4
                   },
-                  { key: "CardName", type: "field", label: "Name", size:8 },
+                  { key: "CardName", type: "field", label: "Name", size: 8 },
                   { key: "CntctCode", type: "field", label: "Contact Person" },
                   { key: "NumAtCard", type: "field", label: "Ref No.", size: 8 }
                 ]
@@ -238,18 +242,17 @@ export default withRouter(
               {
                 label: "Detail Items",
                 content: <FormPRDetailItems items={item} setItems={setItem} flag={editable} setSelected={setSelected} />,
-                action:(
+                action: (
                   <UIButton
                     style={{
                       flexShrink: "none",
                       marginRight: 0
                     }}
-                    color={!editable?"success":"warning"}
+                    color={!editable ? "success" : "warning"}
                     size="small"
-                    onPress={()=>{
+                    onPress={() => {
                       setEdit(!editable);
-                      if(editable == true)
-                      {
+                      if (editable == true) {
                         setSelected([]);
                       }
                     }}
@@ -266,7 +269,7 @@ export default withRouter(
                     />
                     {isSize(["md", "lg"]) && (
                       <UIText style={{ color: "#fff" }} size="small">
-                        {!editable?" Edit":" Select"}
+                        {!editable ? " Edit" : " Select"}
                       </UIText>
                     )}
                   </UIButton>

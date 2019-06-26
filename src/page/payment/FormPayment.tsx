@@ -13,6 +13,7 @@ import SAPDropdown from '@app/components/SAPDropdown';
 import global from '@app/global';
 import { encodeSAPDate } from '@app/utils/Helper';
 import { APIPost } from '@app/api';
+import { getLastNumbering, updateLastNumbering } from '@app/utils';
 
 const defData = {
   DocDate: "",
@@ -24,32 +25,32 @@ const defData = {
   TrsfrAcct: "",
   TrsfrSum: "",
   TrsfrDate: "",
-  TrsfrRef: "", 
+  TrsfrRef: "",
   U_Remark: "",
   U_SONUM: "",
   U_IDU_PAYNUM: "",
-  U_USERID : global.session.user.id,
-  U_GENERATED : "W",
-  U_BRANCH : ""
+  U_USERID: global.session.user.id,
+  U_GENERATED: "W",
+  U_BRANCH: ""
 
 }
 
 export default withRouter(observer(({ showSidebar, sidebar }: any) => {
   const [data, setData] = useState(defData);
   const [saving, setSaving] = useState(false);
-  
+
   const save = async () => {
     setSaving(true);
     try {
-      for(let i in data)
-      {
-        if(i === "DocDate" || i === "DocDueDate" || i ==="TrsfrDate")
-        {
+      for (let i in data) {
+        if (i === "DocDate" || i === "DocDueDate" || i === "TrsfrDate") {
           data[i] = encodeSAPDate(data[i]);
         }
       }
 
-      await APIPost('ARInvoice', {data});
+      let number: any = await getLastNumbering("TP", global.getSession().user.branch || '');
+      await APIPost('ARInvoice', { ...data, U_IDU_PAYNUM: number.format });
+      updateLastNumbering(number.id, number.last_count + 1);
     }
     catch (e) {
       alert(e.Message);
