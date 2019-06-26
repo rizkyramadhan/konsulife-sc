@@ -18,7 +18,7 @@ export default withRouter(observer(({ match, history, showSidebar, sidebar }: an
   useEffect(() => {
     let query: APISearchProps = {
       Table: "ORDR",
-      Fields: ["DocEntry", "CardCode", "CardName", "U_IDU_SO_INTNUM", "DocDate"],
+      // Fields: ["DocEntry", "CardCode", "CardName", "U_IDU_SO_INTNUM", "DocDate"],
       Condition: [
         {
           field: "DocStatus",
@@ -33,17 +33,15 @@ export default withRouter(observer(({ match, history, showSidebar, sidebar }: an
           cond: "=",
           value: "17"
         },
-        // {
-        //   cond: "AND"
-        // },
-        // {
-        //   field: "CardCode",
-        //   cond: "=",
-        //   value: atob(match.params.CardCode)
-        // }
-      ],
-      Limit: 100,
-      Page: 1
+        {
+          cond: "AND"
+        },
+        {
+          field: "CardCode",
+          cond: "=",
+          value: atob(match.params.CardCode)
+        }
+      ]
     };
 
     APISearch(query).then((res: any) => {
@@ -87,7 +85,7 @@ export default withRouter(observer(({ match, history, showSidebar, sidebar }: an
             if (idx >= 0) {
               itemSelect.splice(idx, 1);
             } else {
-              itemSelect.push({DocEntry: item.DocEntry, SONumber: item.U_IDU_SO_INTNUM});
+              itemSelect.push({ DocEntry: item.DocEntry, SONumber: item.U_IDU_SO_INTNUM });
             }
             setItemSelect([...itemSelect]);
           }}

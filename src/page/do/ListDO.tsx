@@ -12,13 +12,13 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   useEffect(() => {
     let query: APISearchProps = {
       Table: "OCRD",
-      Fields: ['CardCode', 'CardName'],
+      // Fields: ['CardCode', 'CardName'],
       Condition: [
         {
           field: "CardType",
           cond: "=",
-          value: "S"
-        },
+          value: "C"
+        }
         // {
         //   cond: "AND"
         // },
@@ -27,9 +27,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
         //   cond: "=",
         //   value: ""
         // }
-      ],
-      Limit: 100,
-      Page: 1
+      ]
     };
 
     APISearch(query).then((res: any) => {

@@ -10,13 +10,16 @@ import { observer } from 'mobx-react-lite';
 import React, { useState, useEffect } from "react";
 import { withRouter } from 'react-router';
 import { APISearch, APISearchProps, APIPost } from '@app/api';
-import { View } from 'reactxp';
 import FormDODetailItems from './FormDODetailItems';
+import IconCheck from '@app/libs/ui/Icons/IconCheck';
+import UITabs from '@app/libs/ui/UITabs';
 
 export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
   const [saving, setSaving] = useState(false);
   const [data, setData] = useState<any>({});
   const [items, setItems] = useState<any[]>([]);
+  const [editable, setEdit] = useState(false);
+  const [selected, setSelected] = useState([]);
 
   useEffect(() => {
     const itemSelect = JSON.parse(atob(match.params.ItemSelect));
@@ -30,31 +33,30 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
     // SELECT FIRST SO
     let query: APISearchProps = {
       Table: "ORDR",
-      Fields: [
-        "CardCode",
-        "NumAtCard",
-        "DocDate",
-        "DocDueDate",
-        "DocCur",
-        "DocRate",
-        "U_IDU_SO_INTNUM",
-        "GroupNum",
-        "SlpCode",
-        "CntctCode",
-        "Address2",
-        "Address",
-        "Comments",
-        "U_BRANCH",
-        "U_USERID",
-        "U_GENERATED"
-      ],
+      // Fields: [
+      //   "CardCode",
+      //   "CardName",
+      //   "NumAtCard",
+      //   "DocDate",
+      //   "DocDueDate",
+      //   "DocCur",
+      //   "DocRate",
+      //   "U_IDU_SO_INTNUM",
+      //   "GroupNum",
+      //   "SlpCode",
+      //   "CntctCode",
+      //   "Address2",
+      //   "Address",
+      //   "Comments",
+      //   "U_BRANCH",
+      //   "U_USERID",
+      //   "U_GENERATED"
+      // ],
       Condition: [{
         field: "DocEntry",
         cond: "=",
         value: itemSelectDocEntry[0]
-      }],
-      Limit: 1,
-      Page: 1
+      }]
     };
 
     APISearch(query).then((res: any) => {
@@ -70,13 +72,31 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
     // SELECT LIST SO OPEN
     query = {
       Table: "RDR1",
+      // Fields: [
+      //   "DocEntry",
+      //   "LineNum",
+      //   "ObjType",
+      //   "ItemCode",
+      //   "Dscription",
+      //   "U_IDU_PARTNUM",
+      //   "UseBaseUn",
+      //   "Quantity",
+      //   "UomEntry",
+      //   "UomCode",
+      //   "WhsCode",
+      //   "ShipDate",
+      //   "OcrCode",
+      //   "OcrCode2",
+      //   "PriceBefDi",
+      //   "DiscPrcnt",
+      //   "TaxCode",
+      //   "OpenQty"
+      // ],
       Condition: [{
         field: "DocEntry",
         cond: "IN",
         value: itemSelectDocEntry
-      }],
-      Limit: 100,
-      Page: 1
+      }]
     };
 
     APISearch(query).then((res: any) => {
@@ -86,7 +106,6 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
         item.BaseLine = item.LineNum;
         item.BaseEntry = item.DocEntry;
         item.Quantity = parseInt(item.OpenQty);
-
         delete item.ObjType;
         delete item.LineNum;
         delete item.DocEntry;
@@ -100,8 +119,47 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
   const save = async () => {
     setSaving(true);
     try {
+      const d = {
+        "CardCode": data.CardCode,
+        "NumAtCard": data.NumAtCard,
+        "DocDate": data.DocDate,
+        "DocDueDate": data.DocDueDate,
+        "DocCur": data.DocCur,
+        "DocRate": data.DocRate,
+        "U_IDU_SO_INTNUM": data.U_IDU_SO_INTNUM,
+        "GroupNum": data.GroupNum,
+        "SlpCode": data.SlpCode,
+        "CntctCode": data.CntctCode,
+        "Address2": data.Address2,
+        "Address": data.Address,
+        "Comments": data.Comments,
+        "U_BRANCH": data.U_BRANCH,
+        "U_USERID": data.U_USERID,
+        "U_GENERATED": data.U_GENERATED,
+      };
+
+      const l = selected.map((d: any) => {
+        return {
+          "BaseType": d.BaseType,
+          "BaseEntry": d.BaseEntry,
+          "BaseLine": d.BaseLine,
+          "ItemCode": d.ItemCode,
+          "Dscription": d.Dscription,
+          "U_IDU_PARTNUM": d.U_IDU_PARTNUM,
+          "UseBaseUn": d.UseBaseUn,
+          "Quantity": d.Quantity,
+          "UoMEntry": d.UoMEntry,
+          "WhsCode": d.WhsCode,
+          "ShipDate": d.ShipDate,
+          "OcrCode": d.OcrCode,
+          "OcrCode2": d.OcrCode2,
+          "PriceBefDi": d.PriceBefDi,
+          "DiscPrcnt": d.DiscPrcnt,
+          "TaxCode": d.TaxCode
+        }
+      })
       await APIPost('DeliveryOrder', {
-        ...data, Lines: items,
+        ...d, Lines: l,
       });
     }
     catch (e) {
@@ -150,7 +208,25 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                 { key: "DocDate", size: 6, label: "Posting Date", type: "date" }
               ]
             },
-            { type: "empty" },
+            {
+              key: "customer",
+              label: "Customer",
+              sublabel: "Informasi Customer",
+              value: [
+                {
+                  key: "CardCode",
+                  type: "field",
+                  label: "Card Code",
+                  size: 4
+                },
+                {
+                  key: "CardName",
+                  type: "field",
+                  label: "Card Name",
+                  size: 8
+                },
+              ]
+            },
             {
               key: "optional",
               label: "Optional",
@@ -169,27 +245,46 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
           }}
         />
 
-        <View style={{ marginTop: 50 }}>
-          <View
-            style={{
-              justifyContent: "space-between",
-              flex: 1,
-              flexDirection: "row",
-              alignItems: "center"
-            }}
-          >
-            <UIText
-              style={{
-                fontSize: 19,
-                color: "#333",
-                fontWeight: 400
-              }}
-            >
-              Detail Items
-            </UIText>
-          </View>
-          <FormDODetailItems items={items} setItems={setItems} />
-        </View>
+        <UITabs
+          tabs={[
+            {
+              label: "Detail Items",
+              content: <FormDODetailItems items={items} setItems={setItems} flag={editable} setSelected={setSelected} />,
+              action: (
+                <UIButton
+                  style={{
+                    flexShrink: "none",
+                    marginRight: 0
+                  }}
+                  color={!editable ? "success" : "warning"}
+                  size="small"
+                  onPress={() => {
+                    setEdit(!editable);
+                    if (editable == true) {
+                      setSelected([]);
+                    }
+                  }}
+                >
+                  <IconCheck
+                    color="#fff"
+                    height={18}
+                    width={18}
+                    style={{
+                      marginTop: -5,
+                      marginRight: 5,
+                      marginLeft: -5
+                    }}
+                  />
+                  {isSize(["md", "lg"]) && (
+                    <UIText style={{ color: "#fff" }} size="small">
+                      {!editable ? " Edit" : " Select"}
+                    </UIText>
+                  )}
+                </UIButton>
+              )
+            }
+          ]}
+        />
       </UIBody>
     </UIContainer>
   );

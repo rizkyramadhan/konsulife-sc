@@ -4,14 +4,24 @@ import { MainStyle } from '@app/config';
 import UIText from '@app/libs/ui/UIText';
 import UISeparator from '@app/libs/ui/UISeparator';
 import UIJsonField from '@app/libs/ui/UIJsonField';
-import IconTrash from '@app/libs/ui/Icons/IconTrash';
 import { View, Button } from 'reactxp';
+import SAPDropdown from '@app/components/SAPDropdown';
 
-export default ({ items, setItems }: any) => {
+export default ({ items, setItems, flag, setSelected }: any) => {
   return (
     <UIList
-      selection="detail"
       primaryKey="Key"
+      selection={!flag ? "multi" : "detail"}
+      onSelect={(_, key) => {
+        let selectArr: any[] = [];
+        key.forEach((val: any) => {
+          let idx = items.findIndex((x: any) => x.Key === val);
+          if (idx >= 0) {
+            selectArr.push(items[idx]);
+          }
+        });
+        setSelected([...selectArr]);
+      }}
       fields={{
         ItemCode: {
           table: {
@@ -31,6 +41,11 @@ export default ({ items, setItems }: any) => {
         WhsCode: {
           table: {
             header: "Warehouse"
+          }
+        },
+        UomCode: {
+          table: {
+            header: "UoMCode"
           }
         },
         Quantity: {
@@ -90,20 +105,28 @@ export default ({ items, setItems }: any) => {
             }}
             field={[
               {
+                key: 'WhsCode', size: 12, label: "Warehouse", component: (
+                  <SAPDropdown label="Warehouse" field="WarehouseCodeAll" where={[]} value={(item as any).item.WhsCode} setValue={(v) => {
+                    const idx = items.findIndex((x: any) => x.Key === item.pkval);
+                    items[idx]['WhsCode'] = v;
+                    setItems([...items]);
+                  }} />)
+              },
+              {
                 key: 'Quantity', size: 12, label: 'Quantity', type: "number"
               },
+              {
+                key: 'UomEntry', size: 12, label: "UoM", component: (
+                  <SAPDropdown label="UoMCode" field="UomCode" value={(item as any).item.UomEntry} setValue={(v, l) => {
+                    const idx = items.findIndex((x: any) => x.Key === item.pkval);
+                    items[idx]['UomEntry'] = v;
+                    items[idx]['UomCode'] = l;
+                    setItems([...items]);
+                  }} />)
+              }
+
             ]}
           />
-          <Button onPress={() => {
-            const idx = items.findIndex((x: any) => x.Key === item.pkval);
-            items.splice(idx, 1);
-            setItems([...items]);
-            item.close();
-          }} style={{
-            padding: 10
-          }}>
-            <IconTrash color="red" height={22} width={22} />
-          </Button>
         </View>
       )}
     />
