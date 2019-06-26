@@ -1,3 +1,5 @@
+import { APIPost, APISearch, APISearchProps } from '@app/api';
+import global from '@app/global';
 import IconSave from '@app/libs/ui/Icons/IconSave';
 import { isSize } from '@app/libs/ui/MediaQuery';
 import UIBody from '@app/libs/ui/UIBody';
@@ -7,13 +9,10 @@ import UIHeader from '@app/libs/ui/UIHeader';
 import UIJsonField from '@app/libs/ui/UIJsonField';
 import UIText from '@app/libs/ui/UIText';
 import { observer } from 'mobx-react-lite';
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { withRouter } from 'react-router';
-import { APISearch, APISearchProps, APIPost } from '@app/api';
 import { View } from 'reactxp';
 import FormARInvoiceDetailTO from './FormARInvoiceDetailTO';
-import { encodeSAPDate } from '@app/utils/Helper';
-import global from '@app/global';
 
 export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
   const [saving, setSaving] = useState(false);
