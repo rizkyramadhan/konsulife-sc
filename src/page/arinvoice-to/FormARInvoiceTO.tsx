@@ -12,7 +12,6 @@ import { withRouter } from 'react-router';
 import { APISearch, APISearchProps, APIPost } from '@app/api';
 import { View } from 'reactxp';
 import FormARInvoiceDetailTO from './FormARInvoiceDetailTO';
-import { encodeSAPDate } from '@app/utils/Helper';
 import global from '@app/global';
 
 export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
