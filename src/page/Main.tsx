@@ -51,6 +51,7 @@ import FormPayment from './payment/FormPayment';
 import ListRute from './rute/ListRute';
 import FormRute from './rute/FormRute';
 import IconNavigation from '@app/libs/ui/Icons/IconNavigation';
+import ListDOCopySO from './do/ListDOCopySO';
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
@@ -294,7 +295,8 @@ export default observer((_props: any) => {
                 "/so-canvas": <ListSOCanvas />,
                 "/so-canvas/form": <FormSOCanvas />,
                 "/do": <ListDO />,
-                "/do/form/:id?": <FormDO />,
+                "/do/copySO/:CardCode/:CardName": <ListDOCopySO />,
+                "/do/form/:CardCode/:CardName/:ItemSelect": <FormDO />,
                 "/it": <ListInvTransfer />,
                 "/it/form": <FormInvTransfer />,
                 "/pr": <ListPR />,

@@ -1,35 +1,35 @@
 import UIBody from "@app/libs/ui/UIBody";
-import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
-import UIRow from "@app/libs/ui/UIRow";
 import { observer } from "mobx-react-lite";
 import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
-import IconRemove from "@app/libs/ui/Icons/IconRemove";
 import { APISearch, APISearchProps } from '@app/api';
 
 export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
   useEffect(() => {
     let query: APISearchProps = {
-      Table: "ODRF",
+      Table: "OCRD",
+      Fields: ['CardCode', 'CardName'],
       Condition: [
         {
-          field: "DocStatus",
+          field: "CardType",
           cond: "=",
-          value: "O"
+          value: "S"
         },
-        {
-          cond: "AND"
-        },
-        {
-          field: "ObjType",
-          cond: "=",
-          value: "17"
-        }
-      ]
+        // {
+        //   cond: "AND"
+        // },
+        // {
+        //   field: "U_IDU_BRANCH",
+        //   cond: "=",
+        //   value: ""
+        // }
+      ],
+      Limit: 100,
+      Page: 1
     };
 
     APISearch(query).then((res: any) => {
@@ -45,66 +45,25 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
         center={"Delivery Order"}
       >
       </UIHeader>
-      <UIBody>
+      <UIBody scroll={true}>
         <UIList
-          primaryKey="DocEntry"
+          primaryKey="CardCode"
           style={{ backgroundColor: "#fff" }}
           selection="single"
-          onSelect={(item) => { history.push('/do/form/' + item.DocEntry) }}
+          onSelect={(item) => { history.push(`/do/copySO/${btoa(item.CardCode)}/${btoa(item.CardName)}`) }}
           fields={{
-            CardName: {
-              table: {
-                header: 'Customer/Vendor'
-              }
-            },
             CardCode: {
               table: {
-                header: 'Code'
+                header: 'Customer Code'
               }
             },
-            U_IDU_SO_INTNUM: {
+            CardName: {
               table: {
-                header: 'SO No.'
-              }
-            },
-            NumAtCard: {
-              table: {
-                header: 'PO Cust.'
-              }
-            },
-            DocDate: {
-              table: {
-                header: 'Posting Date'
+                header: 'Customer Name'
               }
             }
           }}
-          items={data.map((item: any) => ({
-            ...item,
-            action: (
-              <UIRow style={{ marginTop: 0 }}>
-                <UIButton
-                  size="small"
-                  fill="clear"
-                  style={{
-                    marginTop: 0,
-                    marginBottom: 0
-                  }}
-                  onPress={() => {
-                    alert("remove!");
-                  }}
-                >
-                  <IconRemove
-                    height={18}
-                    width={18}
-                    color="red"
-                    onPress={() => {
-                      alert("remove!");
-                    }}
-                  />
-                </UIButton>
-              </UIRow>
-            )
-          }))}
+          items={data}
         />
       </UIBody>
     </UIContainer>

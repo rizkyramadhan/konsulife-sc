@@ -15,12 +15,22 @@ import FormDODetailItems from './FormDODetailItems';
 
 export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
   const [saving, setSaving] = useState(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<any>({});
+  const [items, setItems] = useState<any[]>([]);
+
   useEffect(() => {
+    const itemSelect = JSON.parse(atob(match.params.ItemSelect));
+    const itemSelectDocEntry = itemSelect.map((d: any) => {
+      return d.DocEntry;
+    })
+    const itemSelectSONUmber = itemSelect.map((d: any) => {
+      return d.SONumber;
+    })
+
+    // SELECT FIRST SO
     let query: APISearchProps = {
-      Table: "ODRF",
+      Table: "ORDR",
       Fields: [
-        "ObjType",
         "CardCode",
         "NumAtCard",
         "DocDate",
@@ -33,60 +43,57 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
         "CntctCode",
         "Address2",
         "Address",
-        "Comments"
+        "Comments",
+        "U_BRANCH",
+        "U_USERID",
+        "U_GENERATED"
       ],
       Condition: [{
         field: "DocEntry",
         cond: "=",
-        value: match.params.id
-      }]
+        value: itemSelectDocEntry[0]
+      }],
+      Limit: 1,
+      Page: 1
     };
 
     APISearch(query).then((res: any) => {
-      if (res.length > 0)
-        setData(res[0]);
+      const data = res[0];
+      setData({
+        ...data,
+        U_IDU_SO_INTNUM: itemSelectSONUmber.join(";"),
+        Comments: "",
+        DocDate: "2019-01-25"
+      })
     });
 
-  }, []);
-
-  const [item, setItem] = useState([]);
-  useEffect(() => {
-    let query: APISearchProps = {
-      Table: "DRF1",
-      Fields: [
-        "ObjType",
-        "DocEntry",
-        "LineNum",
-        "ItemCode",
-        "Dscription",
-        "U_IDU_PARTNUM",
-        "WhsCode",
-        "Quantity",
-        "UseBaseUn",
-        "ShipDate",
-        "OcrCode",
-        "OcrCode2",
-        "PriceBefDi",
-        "DiscPrcnt",
-        "TaxCode"
-      ],
+    // SELECT LIST SO OPEN
+    query = {
+      Table: "RDR1",
       Condition: [{
         field: "DocEntry",
-        cond: "=",
-        value: match.params.id
-      }]
+        cond: "IN",
+        value: itemSelectDocEntry
+      }],
+      Limit: 100,
+      Page: 1
     };
 
     APISearch(query).then((res: any) => {
-      res.forEach((item: any) => {
+      const items = res.map((item: any) => {
+        item.Key = btoa(item.DocEntry + item.LineNum);
         item.BaseType = item.ObjType;
         item.BaseLine = item.LineNum;
         item.BaseEntry = item.DocEntry;
+        item.Quantity = parseInt(item.OpenQty);
 
         delete item.ObjType;
+        delete item.LineNum;
         delete item.DocEntry;
+        delete item.OpenQty;
+        return item;
       });
-      setItem(res);
+      setItems([...items]);
     })
   }, []);
 
@@ -94,7 +101,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
     setSaving(true);
     try {
       await APIPost('DeliveryOrder', {
-        ...data, Lines: item,
+        ...data, Lines: items,
       });
     }
     catch (e) {
@@ -110,7 +117,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
       <UIHeader
         showSidebar={showSidebar}
         sidebar={sidebar}
-        center="Form Delivery Order"
+        center={`Form Delivery Order #${atob(match.params.CardCode)} - ${atob(match.params.CardName)}`}
       >
         <UIButton
           color="primary"
@@ -138,34 +145,12 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                   key: "U_IDU_SO_INTNUM",
                   type: "field",
                   label: "SO Number",
-                  size: 7
+                  size: 12
                 },
-                {
-                  key: "U_IDU_DO_INTNUM",
-                  label: "DO Number",
-                  size: 7
-                },
-                { type: "empty", size: 5 },
-                { key: "DocDate", size: 4, label: "Posting Date" },
-                { key: "DocDueDate", size: 4, label: "Delivery Date" },
-                { type: "empty", size: 2 },
-                {
-                  key: "U_BRANCH",
-                  type: "field",
-                  label: "Cabang",
-                  size: 7
-                }
+                { key: "DocDate", size: 6, label: "Posting Date", type: "date" }
               ]
             },
-            {
-              key: "customer",
-              label: "Customer",
-              sublabel: "Toko Penerima Barang",
-              value: [
-                { key: "CardCode", label: "Customer", size: 3 },
-                { key: "CardName", label: "Name" }
-              ]
-            },
+            { type: "empty" },
             {
               key: "optional",
               label: "Optional",
@@ -180,6 +165,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
           ]}
           setValue={(value: any, key: any) => {
             (data as any)[key] = value;
+            setData({ ...data });
           }}
         />
 
@@ -202,7 +188,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
               Detail Items
             </UIText>
           </View>
-          <FormDODetailItems items={item} setItems={setItem} />
+          <FormDODetailItems items={items} setItems={setItems} />
         </View>
       </UIBody>
     </UIContainer>
