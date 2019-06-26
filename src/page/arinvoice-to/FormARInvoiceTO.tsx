@@ -1,3 +1,5 @@
+import { APIPost, APISearch, APISearchProps } from '@app/api';
+import global from '@app/global';
 import IconSave from '@app/libs/ui/Icons/IconSave';
 import { isSize } from '@app/libs/ui/MediaQuery';
 import UIBody from '@app/libs/ui/UIBody';
@@ -7,13 +9,10 @@ import UIHeader from '@app/libs/ui/UIHeader';
 import UIJsonField from '@app/libs/ui/UIJsonField';
 import UIText from '@app/libs/ui/UIText';
 import { observer } from 'mobx-react-lite';
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { withRouter } from 'react-router';
-import { APISearch, APISearchProps, APIPost } from '@app/api';
 import { View } from 'reactxp';
 import FormARInvoiceDetailTO from './FormARInvoiceDetailTO';
-import { encodeSAPDate } from '@app/utils/Helper';
-import global from '@app/global';
 
 export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
   const [saving, setSaving] = useState(false);
@@ -48,25 +47,22 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
     };
 
     APISearch(query).then((res: any) => {
-      let poNum:any[] = [];
-      let soNum:any[] = [];
-      let doNum:any[] = [];
-      res.forEach((val:any) => {
-        if(val.NumAtCard!== null && val.NumAtCard !== "")
-        {
+      let poNum: any[] = [];
+      let soNum: any[] = [];
+      let doNum: any[] = [];
+      res.forEach((val: any) => {
+        if (val.NumAtCard !== null && val.NumAtCard !== "") {
           poNum.push(val.NumAtCard);
         }
-        if(val.U_IDU_SO_INTNUM !== null && val.U_IDU_SO_INTNUM !== "")
-        {
+        if (val.U_IDU_SO_INTNUM !== null && val.U_IDU_SO_INTNUM !== "") {
           soNum.push(val.U_IDU_SO_INTNUM);
         }
-        if(val.U_IDU_DO_INTNUM !== null && val.U_IDU_DO_INTNUM !== "")
-        {
+        if (val.U_IDU_DO_INTNUM !== null && val.U_IDU_DO_INTNUM !== "") {
           doNum.push(val.U_IDU_DO_INTNUM);
         }
-        
+
       });
-      
+
       res[0].NumAtCard = poNum.join(";");
       res[0].U_IDU_SO_INTNUM = soNum.join(";");
       res[0].U_IDU_DO_INTNUM = doNum.join(";");
@@ -110,10 +106,10 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
 
     APISearch(query).then((res: any) => {
       res.forEach((item: any) => {
-          item.PK = btoa(item.LineNum + "|" + item.DocEntry);
-          item.BaseType = "15";
-          item.BaseLine = item.LineNum;
-          item.BaseEntry = item.DocEntry;
+        item.PK = btoa(item.LineNum + "|" + item.DocEntry);
+        item.BaseType = "15";
+        item.BaseLine = item.LineNum;
+        item.BaseEntry = item.DocEntry;
       });
       setItem(res);
     })
@@ -130,7 +126,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
       //   }
       // }
 
-      item.forEach((val:any)=>{
+      item.forEach((val: any) => {
         delete val.PK;
         delete val.LineNum;
         delete val.DocEntry;
@@ -190,8 +186,8 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                   size: 8
                 },
                 { type: "empty", size: 4 },
-                { key: "DocDate", size: 4, type:"date",label: "Posting Date" },
-                { key: "DocDueDate", size: 4, type:"date", label: "Delivery Date" },
+                { key: "DocDate", size: 4, type: "date", label: "Posting Date" },
+                { key: "DocDueDate", size: 4, type: "date", label: "Delivery Date" },
                 { key: "U_IDU_FP", size: 8, label: "Faktur Pajak" },
               ]
             },
@@ -200,9 +196,9 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
               label: "Customer",
               sublabel: "Cust Penerima Barang",
               value: [
-                { key: "CardCode",type:"field", label: "Code", size: 4 },
-                { key: "CardName",type:"field", label: "Customer", size:8 },
-                { key:"NumAtCard",type:"field",label:"No PO. Cust",size:12}
+                { key: "CardCode", type: "field", label: "Code", size: 4 },
+                { key: "CardName", type: "field", label: "Customer", size: 8 },
+                { key: "NumAtCard", type: "field", label: "No PO. Cust", size: 12 }
               ]
             },
             {

@@ -9,9 +9,25 @@ import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
 import IconRemove from "@app/libs/ui/Icons/IconRemove";
 import { APISearch, APISearchProps } from '@app/api';
+import UISearch from '@app/libs/ui/UISearch';
 
 export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
+  const [_data, _setData] = useState([]);
+  const [field, setField] = useState<any[]>([]);
+  const funcSearch = (value: string) => {
+    _setData([...(value ? data.filter((x: any) => {
+      let res = false;
+      for (var i = 0; i < field.length; i++) {
+        if (x[field[i]] && x[field[i]].toLowerCase().includes(value.toLowerCase())) {
+          res = true;
+          break;
+        }
+      }
+      return res
+    }) : data)])
+  }
+
   useEffect(() => {
     let query: APISearchProps = {
       Table: "ODRF",
@@ -33,7 +49,9 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
     };
 
     APISearch(query).then((res: any) => {
+      setField(Object.keys(res[0]));
       setData(res);
+      _setData(res);
     })
   }, []);
 
@@ -46,6 +64,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
       >
       </UIHeader>
       <UIBody>
+        <UISearch onSearch={funcSearch}></UISearch>
         <UIList
           primaryKey="DocEntry"
           style={{ backgroundColor: "#fff" }}
@@ -78,7 +97,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
               }
             }
           }}
-          items={data.map((item: any) => ({
+          items={_data.map((item: any) => ({
             ...item,
             action: (
               <UIRow style={{ marginTop: 0 }}>
