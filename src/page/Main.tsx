@@ -35,24 +35,24 @@ import IconCartPlus from "@app/libs/ui/Icons/IconCartPlus";
 import IconShoppingCart from "@app/libs/ui/Icons/IconShoppingCart";
 import IconTruck from "@app/libs/ui/Icons/IconTruck";
 import IconLuggageCart from "@app/libs/ui/Icons/IconLuggageCart";
-import ListDO from "./do/ListDO";
-import FormDO from "./do/FormDO";
-import ListInvTransfer from "./it/ListInvTransfer";
-import FormInvTransfer from "./it/FormInvTransfer";
-import ListPR from "./pr/ListPR";
-import FormPR from "./pr/FormPR";
-import ListWO from "./wo/ListWO";
-import FormWO from "./wo/FormWO";
-import FormUser from "./user/FormUser";
-import ListPayment from "./payment/ListPayment";
-import ListARInvoiceTO from "./arinvoice-to/ListARInvoiceTO";
-import FormARInvoiceTO from "./arinvoice-to/FormARInvoiceTO";
-import FormPayment from "./payment/FormPayment";
-import ListRute from "./rute/ListRute";
-import FormRute from "./rute/FormRute";
-import ListPRVendor from "./pr/ListPRVendor";
-import IconNavigation from "@app/libs/ui/Icons/IconNavigation";
-import ListInvoiceTOCust from "./arinvoice-to/ListInvoiceTOCust";
+import ListDO from './do/ListDO';
+import FormDO from './do/FormDO';
+import ListInvTransfer from './it/ListInvTransfer';
+import FormInvTransfer from './it/FormInvTransfer';
+import ListPR from './pr/ListPR';
+import FormPR from './pr/FormPR';
+import ListWO from './wo/ListWO';
+import FormWO from './wo/FormWO';
+import FormUser from './user/FormUser';
+import ListPayment from './payment/ListPayment';
+import ListARInvoiceTO from './arinvoice-to/ListARInvoiceTO';
+import FormARInvoiceTO from './arinvoice-to/FormARInvoiceTO';
+import FormPayment from './payment/FormPayment';
+import ListRute from './rute/ListRute';
+import FormRute from './rute/FormRute';
+import ListPRVendor from './pr/ListPRVendor';
+import IconNavigation from '@app/libs/ui/Icons/IconNavigation';
+import ListDOCopySO from './do/ListDOCopySO';
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
@@ -277,52 +277,52 @@ export default observer((_props: any) => {
                   alignSelf: "center"
                 }}
               /> */}
-              <UISeparator
-                style={{
-                  opacity: 0.2,
-                  marginTop: 0,
-                  marginBottom: 0
-                }}
-              />
-              <Menu setSide={global.setSidebar} />
-            </View>
-            // </UIGradient>
-          }
-        >
-          <SwitchRoute
-            routes={{
-              "/": <MainMenu />,
-              "/rute": <ListRute />,
-              "/rute/form/:id?": <FormRute />,
-              "/wo": <ListWO />,
-              "/wo/form/:id?": <FormWO />,
-              "/so": <ListSO />,
-              "/so/form": <FormSO />,
-              "/so-canvas": <ListSOCanvas />,
-              "/so-canvas/form": <FormSOCanvas />,
-              "/do": <ListDO />,
-              "/do/form/:id?": <FormDO />,
-              "/it": <ListInvTransfer />,
-              "/it/form": <FormInvTransfer />,
-              "/pr": <ListPRVendor />,
-              "/pr/list/:id?": <ListPR />,
-              "/pr/form/:id?": <FormPR />,
-              "/payment-receipt": <ListPayment />,
-              "/payment-receipt/form": <FormPayment />,
-              "/it/form/:id?": <FormInvTransfer />,
-              "/ar-invoice": <ListARInvoice />,
-              "/ar-invoice/form/:id?": <FormARInvoice />,
-              "/ar-invoice-to": <ListInvoiceTOCust />,
-              "/ar-invoice-to/list/:id?": <ListARInvoiceTO />,
-              "/ar-invoice-to/form/:id?": <FormARInvoiceTO />,
-              "/customer": <ListCustomer />,
-              "/customer/form/:id?": <FormCustomer />,
-              "/user": <ListUser />,
-              "/user/form/:id?": <FormUser />
-            }}
-          />
-        </UISidebar>
-      )}
+                <UISeparator
+                  style={{
+                    opacity: 0.2,
+                    marginTop: 0,
+                    marginBottom: 0
+                  }}
+                />
+                <Menu setSide={global.setSidebar} />
+              </View>
+              // </UIGradient>
+            }
+          >
+            <SwitchRoute
+              routes={{
+                "/": <MainMenu />,
+                "/rute": <ListRute />,
+                "/rute/form/:id?": <FormRute />,
+                "/wo": <ListWO />,
+                "/wo/form/:id?": <FormWO />,
+                "/so": <ListSO />,
+                "/so/form": <FormSO />,
+                "/so-canvas": <ListSOCanvas />,
+                "/so-canvas/form": <FormSOCanvas />,
+                "/do": <ListDO />,
+                "/do/copySO/:CardCode/:CardName": <ListDOCopySO />,
+                "/do/form/:CardCode/:CardName/:ItemSelect": <FormDO />,
+                "/it": <ListInvTransfer />,
+                "/it/form": <FormInvTransfer />,
+                "/pr": <ListPRVendor />,
+                "/pr/list/:id?": <ListPR />,
+                "/pr/form/:id?": <FormPR />,
+                "/payment-receipt": <ListPayment />,
+                "/payment-receipt/form": <FormPayment />,
+                "/it/form/:id?": <FormInvTransfer />,
+                "/ar-invoice": <ListARInvoice />,
+                "/ar-invoice/form/:id?": <FormARInvoice />,
+                "/ar-invoice-to": <ListARInvoiceTO />,
+                "/ar-invoice-to/form/:id?": <FormARInvoiceTO />,
+                "/customer": <ListCustomer />,
+                "/customer/form/:id?": <FormCustomer />,
+                "/user": <ListUser />,
+                "/user/form/:id?": <FormUser />
+              }}
+            />
+          </UISidebar>
+        )}
     </Router>
   );
 });

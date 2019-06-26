@@ -10,91 +10,156 @@ import { observer } from 'mobx-react-lite';
 import React, { useState, useEffect } from "react";
 import { withRouter } from 'react-router';
 import { APISearch, APISearchProps, APIPost } from '@app/api';
-import { View } from 'reactxp';
 import FormDODetailItems from './FormDODetailItems';
+import IconCheck from '@app/libs/ui/Icons/IconCheck';
+import UITabs from '@app/libs/ui/UITabs';
 
 export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
   const [saving, setSaving] = useState(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<any>({});
+  const [items, setItems] = useState<any[]>([]);
+  const [editable, setEdit] = useState(false);
+  const [selected, setSelected] = useState([]);
+
   useEffect(() => {
+    const itemSelect = JSON.parse(atob(match.params.ItemSelect));
+    const itemSelectDocEntry = itemSelect.map((d: any) => {
+      return d.DocEntry;
+    })
+    const itemSelectSONUmber = itemSelect.map((d: any) => {
+      return d.SONumber;
+    })
+
+    // SELECT FIRST SO
     let query: APISearchProps = {
-      Table: "ODRF",
-      Fields: [
-        "ObjType",
-        "CardCode",
-        "NumAtCard",
-        "DocDate",
-        "DocDueDate",
-        "DocCur",
-        "DocRate",
-        "U_IDU_SO_INTNUM",
-        "GroupNum",
-        "SlpCode",
-        "CntctCode",
-        "Address2",
-        "Address",
-        "Comments"
-      ],
+      Table: "ORDR",
+      // Fields: [
+      //   "CardCode",
+      //   "CardName",
+      //   "NumAtCard",
+      //   "DocDate",
+      //   "DocDueDate",
+      //   "DocCur",
+      //   "DocRate",
+      //   "U_IDU_SO_INTNUM",
+      //   "GroupNum",
+      //   "SlpCode",
+      //   "CntctCode",
+      //   "Address2",
+      //   "Address",
+      //   "Comments",
+      //   "U_BRANCH",
+      //   "U_USERID",
+      //   "U_GENERATED"
+      // ],
       Condition: [{
         field: "DocEntry",
         cond: "=",
-        value: match.params.id
+        value: itemSelectDocEntry[0]
       }]
     };
 
     APISearch(query).then((res: any) => {
-      if (res.length > 0)
-        setData(res[0]);
+      const data = res[0];
+      setData({
+        ...data,
+        U_IDU_SO_INTNUM: itemSelectSONUmber.join(";"),
+        Comments: "",
+        DocDate: "2019-01-25"
+      })
     });
 
-  }, []);
-
-  const [item, setItem] = useState([]);
-  useEffect(() => {
-    let query: APISearchProps = {
-      Table: "DRF1",
-      Fields: [
-        "ObjType",
-        "DocEntry",
-        "LineNum",
-        "ItemCode",
-        "Dscription",
-        "U_IDU_PARTNUM",
-        "WhsCode",
-        "Quantity",
-        "UseBaseUn",
-        "ShipDate",
-        "OcrCode",
-        "OcrCode2",
-        "PriceBefDi",
-        "DiscPrcnt",
-        "TaxCode"
-      ],
+    // SELECT LIST SO OPEN
+    query = {
+      Table: "RDR1",
+      // Fields: [
+      //   "DocEntry",
+      //   "LineNum",
+      //   "ObjType",
+      //   "ItemCode",
+      //   "Dscription",
+      //   "U_IDU_PARTNUM",
+      //   "UseBaseUn",
+      //   "Quantity",
+      //   "UomEntry",
+      //   "UomCode",
+      //   "WhsCode",
+      //   "ShipDate",
+      //   "OcrCode",
+      //   "OcrCode2",
+      //   "PriceBefDi",
+      //   "DiscPrcnt",
+      //   "TaxCode",
+      //   "OpenQty"
+      // ],
       Condition: [{
         field: "DocEntry",
-        cond: "=",
-        value: match.params.id
+        cond: "IN",
+        value: itemSelectDocEntry
       }]
     };
 
     APISearch(query).then((res: any) => {
-      res.forEach((item: any) => {
+      const items = res.map((item: any) => {
+        item.Key = btoa(item.DocEntry + item.LineNum);
         item.BaseType = item.ObjType;
         item.BaseLine = item.LineNum;
         item.BaseEntry = item.DocEntry;
-
+        item.Quantity = parseInt(item.OpenQty);
         delete item.ObjType;
+        delete item.LineNum;
         delete item.DocEntry;
+        delete item.OpenQty;
+        return item;
       });
-      setItem(res);
+      setItems([...items]);
     })
   }, []);
 
   const save = async () => {
     setSaving(true);
     try {
+      const d = {
+        "CardCode": data.CardCode,
+        "NumAtCard": data.NumAtCard,
+        "DocDate": data.DocDate,
+        "DocDueDate": data.DocDueDate,
+        "DocCur": data.DocCur,
+        "DocRate": data.DocRate,
+        "U_IDU_SO_INTNUM": data.U_IDU_SO_INTNUM,
+        "GroupNum": data.GroupNum,
+        "SlpCode": data.SlpCode,
+        "CntctCode": data.CntctCode,
+        "Address2": data.Address2,
+        "Address": data.Address,
+        "Comments": data.Comments,
+        "U_BRANCH": data.U_BRANCH,
+        "U_USERID": data.U_USERID,
+        "U_GENERATED": data.U_GENERATED,
+      };
+
+      const l = selected.map((d: any) => {
+        return {
+          "BaseType": d.BaseType,
+          "BaseEntry": d.BaseEntry,
+          "BaseLine": d.BaseLine,
+          "ItemCode": d.ItemCode,
+          "Dscription": d.Dscription,
+          "U_IDU_PARTNUM": d.U_IDU_PARTNUM,
+          "UseBaseUn": d.UseBaseUn,
+          "Quantity": d.Quantity,
+          "UoMEntry": d.UoMEntry,
+          "WhsCode": d.WhsCode,
+          "ShipDate": d.ShipDate,
+          "OcrCode": d.OcrCode,
+          "OcrCode2": d.OcrCode2,
+          "PriceBefDi": d.PriceBefDi,
+          "DiscPrcnt": d.DiscPrcnt,
+          "TaxCode": d.TaxCode
+        }
+      })
       await APIPost('DeliveryOrder', {
-        ...data, Lines: item,
+        ...d, Lines: l,
       });
     }
     catch (e) {
@@ -110,7 +175,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
       <UIHeader
         showSidebar={showSidebar}
         sidebar={sidebar}
-        center="Form Delivery Order"
+        center={`Form Delivery Order #${atob(match.params.CardCode)} - ${atob(match.params.CardName)}`}
       >
         <UIButton
           color="primary"
@@ -138,32 +203,28 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                   key: "U_IDU_SO_INTNUM",
                   type: "field",
                   label: "SO Number",
-                  size: 7
+                  size: 12
                 },
-                {
-                  key: "U_IDU_DO_INTNUM",
-                  label: "DO Number",
-                  size: 7
-                },
-                { type: "empty", size: 5 },
-                { key: "DocDate", size: 4, label: "Posting Date" },
-                { key: "DocDueDate", size: 4, label: "Delivery Date" },
-                { type: "empty", size: 2 },
-                {
-                  key: "U_BRANCH",
-                  type: "field",
-                  label: "Cabang",
-                  size: 7
-                }
+                { key: "DocDate", size: 6, label: "Posting Date", type: "date" }
               ]
             },
             {
               key: "customer",
               label: "Customer",
-              sublabel: "Toko Penerima Barang",
+              sublabel: "Informasi Customer",
               value: [
-                { key: "CardCode", label: "Customer", size: 3 },
-                { key: "CardName", label: "Name" }
+                {
+                  key: "CardCode",
+                  type: "field",
+                  label: "Card Code",
+                  size: 4
+                },
+                {
+                  key: "CardName",
+                  type: "field",
+                  label: "Card Name",
+                  size: 8
+                },
               ]
             },
             {
@@ -180,30 +241,50 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
           ]}
           setValue={(value: any, key: any) => {
             (data as any)[key] = value;
+            setData({ ...data });
           }}
         />
 
-        <View style={{ marginTop: 50 }}>
-          <View
-            style={{
-              justifyContent: "space-between",
-              flex: 1,
-              flexDirection: "row",
-              alignItems: "center"
-            }}
-          >
-            <UIText
-              style={{
-                fontSize: 19,
-                color: "#333",
-                fontWeight: 400
-              }}
-            >
-              Detail Items
-            </UIText>
-          </View>
-          <FormDODetailItems items={item} setItems={setItem} />
-        </View>
+        <UITabs
+          tabs={[
+            {
+              label: "Detail Items",
+              content: <FormDODetailItems items={items} setItems={setItems} flag={editable} setSelected={setSelected} />,
+              action: (
+                <UIButton
+                  style={{
+                    flexShrink: "none",
+                    marginRight: 0
+                  }}
+                  color={!editable ? "success" : "warning"}
+                  size="small"
+                  onPress={() => {
+                    setEdit(!editable);
+                    if (editable == true) {
+                      setSelected([]);
+                    }
+                  }}
+                >
+                  <IconCheck
+                    color="#fff"
+                    height={18}
+                    width={18}
+                    style={{
+                      marginTop: -5,
+                      marginRight: 5,
+                      marginLeft: -5
+                    }}
+                  />
+                  {isSize(["md", "lg"]) && (
+                    <UIText style={{ color: "#fff" }} size="small">
+                      {!editable ? " Edit" : " Select"}
+                    </UIText>
+                  )}
+                </UIButton>
+              )
+            }
+          ]}
+        />
       </UIBody>
     </UIContainer>
   );
