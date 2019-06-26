@@ -2,9 +2,9 @@ import Axios from "axios";
 import createRecord from './libs/gql/data/createRecord';
 import query from './libs/gql/data/query';
 import updateRecord from './libs/gql/data/updateRecord';
+import config from './config';
 
 // const urlDev: string = "http://mock.rx.plansys.co";
-const url: string = "http://172.16.145.3:8087/MBGPService/Api/Search";
 
 export interface APISearchProps {
   Table: string;
@@ -18,6 +18,7 @@ export interface APISearchProps {
   Sort?: string;
   Page?: number;
   Limit?: number;
+  Cache?: any;
 }
 
 export const APISearch = async (p: APISearchProps) => {
@@ -27,8 +28,8 @@ export const APISearch = async (p: APISearchProps) => {
     Table: p.Table,
     Condition: "",
     Sort: p.Sort ? p.Sort : "",
-    Page: p.Page ? p.Page : 1,
-    Limit: p.Limit ? p.Limit : 10
+    Page: p.Page ? p.Page : 0,
+    Limit: p.Limit ? p.Limit : 0
   };
 
   if (!!p.Fields && p.Fields.length > 0) {
@@ -52,8 +53,7 @@ export const APISearch = async (p: APISearchProps) => {
   params.Condition = cond;
 
   return new Promise(async (resolve, reject) => {
-    const cache = await query("cache", ['data'], { where: { id: url + params.Table + params.Condition } });
-
+    let url = config.wsSAP + "Search";
     Axios.post(url, JSON.stringify(params), {
       headers: {
         'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ export const APISearch = async (p: APISearchProps) => {
           console.error(res.data);
           reject();
         } else {
-          if (!cache || (!!cache && cache.length == 0)) {
+          if (!p.Cache || (!!p.Cache && p.Cache.length == 0)) {
             createRecord("cache", {
               id: url + params.Table + params.Condition,
               data: res.data
@@ -84,16 +84,33 @@ export const APISearch = async (p: APISearchProps) => {
         console.error(err);
         reject();
       });
-
-    if (!!cache) {
-      resolve(cache.data);
-    }
   });
+};
+
+export const APISearchCache = (Table: string, Condition: any) => {
+  let cond: string = "";
+  if (!!Condition && Condition.length > 0) {
+    Condition.forEach((c: any) => {
+      if (c.cond === "AND" || c.cond === "OR" || c.cond === "XOR") {
+        cond += ` ${c.cond} `;
+      } else {
+        let val = typeof c.value == "number" ? parseInt(c.value) : `'${c.value}'`;
+        cond += `[${c.field}] ${c.cond} ${val}`;
+      }
+    });
+  }
+
+  Condition = cond;
+  return new Promise(resolve => {
+    query("cache", ['data'], { where: { id: config.wsSAP + "Search" + Table + Condition } }).then((res) => {
+      resolve(res.data);
+    });
+  })
 };
 
 export const APIPost = (api: string, data: any) => {
   return new Promise((resolve, reject) => {
-    Axios.post('http://172.16.145.3:8087/MBGPService/Api/' + api, JSON.stringify(data), {
+    Axios.post(config.wsSAP + api, JSON.stringify(data), {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
@@ -308,21 +325,21 @@ export const SAPFieldMap = {
     }]
   } as APISearchProps,
   OcrCode: {
-    Table: "OCRD",
-    Fields: ["U_IDU_AREA"],
+    Table: "OPRC",
+    Fields: ["PrcCode"],
     Condition: [{
-      field: "CardCode",
+      field: "DimCode",
       cond: "=",
-      value: ""
+      value: "1"
     }]
   } as APISearchProps,
   OcrCode2: {
-    Table: "OCRD",
-    Fields: ["U_IDU_BRANCH"],
+    Table: "OPRC",
+    Fields: ["PrcCode"],
     Condition: [{
-      field: "CardCode",
+      field: "DimCode",
       cond: "=",
-      value: ""
+      value: "2"
     }]
   } as APISearchProps,
   TaxCodeSO: {
@@ -476,5 +493,10 @@ export const SAPFieldMap = {
   ChartOfAccount: {
     Table: "OACT",
     Fields: ["AcctCode", "AcctName"],
+    Condition: [{
+      field: "Finanse",
+      cond: "=",
+      value: "Y"
+    }]
   } as APISearchProps,
 }

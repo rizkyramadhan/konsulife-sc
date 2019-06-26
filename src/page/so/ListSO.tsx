@@ -10,8 +10,6 @@ import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
 import IconAdd from "@app/libs/ui/Icons/IconAdd";
 import { APISearchProps, APISearch } from '@app/api';
-import UIRow from '@app/libs/ui/UIRow';
-import IconRemove from '@app/libs/ui/Icons/IconRemove';
 
 const BtnCreate = withRouter(({ history }: any) => {
   return (
@@ -19,7 +17,7 @@ const BtnCreate = withRouter(({ history }: any) => {
       size="small"
       color="primary"
       onPress={() => {
-        history.push("/so-canvas/form");
+        history.push("/so/form");
       }}
       style={{
         display: "flex",
@@ -36,7 +34,7 @@ const BtnCreate = withRouter(({ history }: any) => {
 });
 
 
-export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
+export default withRouter(observer(({  showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
   useEffect(() => {
     let query: APISearchProps = {
@@ -66,8 +64,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
         <UIList
           style={{ flex: 1 }}
           primaryKey="DocNum"
-          selection="single"
-          onSelect={() => { history.push('/so/form') }}
+          selection="detail"
           fields={{
             U_IDU_SO_INTNUM: {
               table: {
@@ -102,30 +99,6 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
           }}
           items={data.map((item: any) => ({
             ...item,
-            action: (
-              <UIRow style={{ marginTop: 0 }}>
-                <UIButton
-                  size="small"
-                  fill="clear"
-                  style={{
-                    marginTop: 0,
-                    marginBottom: 0
-                  }}
-                  onPress={() => {
-                    alert("remove!");
-                  }}
-                >
-                  <IconRemove
-                    height={18}
-                    width={18}
-                    color="red"
-                    onPress={() => {
-                      alert("remove!");
-                    }}
-                  />
-                </UIButton>
-              </UIRow>
-            )
           }))}
         />
       </UIBody>

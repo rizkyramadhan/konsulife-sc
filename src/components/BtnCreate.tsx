@@ -5,7 +5,7 @@ import IconAdd from '@app/libs/ui/Icons/IconAdd';
 import { isSize } from '@app/libs/ui/MediaQuery';
 import UIText from '@app/libs/ui/UIText';
 
-export default withRouter(({ history, path }: any) => {
+export default withRouter(({ history, path, style }: any) => {
     return (
         <UIButton
             size="small"
@@ -16,7 +16,8 @@ export default withRouter(({ history, path }: any) => {
             style={{
                 display: "flex",
                 flexDirection: "row",
-                justifyContent: "flex-end"
+                justifyContent: "flex-end",
+                ...style
             }}
         >
             <IconAdd color="#fff" />

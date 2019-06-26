@@ -13,7 +13,6 @@ import { APISearch, APISearchProps, APIPost } from '@app/api';
 import { View } from 'reactxp';
 import FormDODetailItems from './FormDODetailItems';
 
-
 export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
   const [saving, setSaving] = useState(false);
   const [data, setData] = useState([]);
@@ -21,6 +20,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
         let query: APISearchProps = {
             Table: "ODRF",
             Fields: [
+                "ObjType",
                 "CardCode",
                 "NumAtCard",
                 "DocDate",
@@ -52,11 +52,9 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
         let query: APISearchProps = {
             Table: "DRF1",
             Fields: [
+                "ObjType",
                 "DocEntry",
-                "BaseEntry",
-                "BaseType",
                 "LineNum",
-                "BaseLine",
                 "ItemCode",
                 "Dscription",
                 "U_IDU_PARTNUM",
@@ -79,11 +77,11 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
 
         APISearch(query).then((res: any) => {
           res.forEach((item:any) => {
-            item.BaseType = "112";
+            item.BaseType = item.ObjType;
             item.BaseLine = item.LineNum;
             item.BaseEntry = item.DocEntry;
 
-            delete item.LineNum;
+            delete item.ObjType;
             delete item.DocEntry;
           });
           setItem(res);
@@ -146,8 +144,8 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                   size: 7
                 },
                 { type: "empty", size: 5 },
-                { key: "DocDate", size: 4,type:"date", label: "Posting Date" },
-                { key: "DocDueDate", size: 4,type:"date", label: "Delivery Date" },
+                { key: "DocDate", size: 4 ,label: "Posting Date" },
+                { key: "DocDueDate", size: 4,label: "Delivery Date" },
                 { type: "empty", size: 2 },
                 {
                   key: "U_BRANCH",

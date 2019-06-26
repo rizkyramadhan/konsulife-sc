@@ -19,8 +19,6 @@ const sample = {
   // CardName: "",
   IsCanvas: "Y",
   NumAtCard: "",
-  DocDate: "2019/06/23",
-  DocDueDate: "2019/06/23",
   DocCur: "",
   DocRate: 1,
   U_IDU_SO_INTNUM: -1,
@@ -35,13 +33,13 @@ const sample = {
 const sampleList = [
   {
     LineNum: 0,
-    ItemCode: "asda",
+    ItemCode: "",
     Dscription: "",
     U_IDU_PARTNUM: "",
     UseBaseUn: "",
     Quantity: 0,
     WhsCode: "",
-    ShipDate: "2019/06/23",
+    ShipDate: "",
     OcrCode: "",
     OcrCode2: "",
     PriceBefDi: 0,
@@ -71,7 +69,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
           UseBaseUn: "",
           Quantity: 0,
           WhsCode: "",
-          ShipDate: "2019/06/23",
+          ShipDate: "",
           OcrCode: "",
           OcrCode2: "",
           PriceBefDi: 0,
@@ -146,12 +144,11 @@ export default observer(({ showSidebar, sidebar }: any) => {
               value: [
                 {
                   key: "U_IDU_SO_INTNUM",
-                  type: "field",
                   label: "SO Number",
                   size: 12
                 },
-                { key: "DocDate", size: 6, label: "Posting Date" },
-                { key: "DocDueDate", size: 6, label: "Delivery Date" },
+                { key: "DocDate", size: 6, type:"date", label: "Posting Date" },
+                { key: "DocDueDate", size: 6, type:"date",label: "Delivery Date" },
                 {
                   key: "DocCur", size: 8, label: "Document Currency",
                   component: (

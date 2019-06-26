@@ -18,19 +18,13 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
     const [data, setData]: any = useState<IRute[]>([]);
     useEffect(() => {
         rawQuery(`{
-            work_order {
-              id
-              number
-              return_date
-              sales_details
-              sales_id
-              sales_name
-              visite_date
-              sopir
-              sopir_nopol
+            rute {
+                name
+                id
+                description
             }
-        }`).then((res) => {
-            setData([...res.work_order]);
+          }`).then((res) => {
+            setData([...res.rute]);
         });
     }, []);
 
@@ -39,9 +33,9 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
             <UIHeader
                 showSidebar={showSidebar}
                 sidebar={sidebar}
-                center={"Working Order"}
+                center={"Master Rute"}
             >
-                <BtnCreate path="/wo/form" />
+                <BtnCreate path="/rute/form" />
             </UIHeader>
             <UIBody scroll={true}>
                 <UIList
@@ -49,37 +43,17 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
                     primaryKey="id"
                     selection="single"
                     onSelect={(d) => {
-                        history.push('/wo/form/' + d.id)
+                        history.push('/rute/form/' + d.id)
                     }}
                     fields={{
-                        number: {
+                        name: {
                             table: {
-                                header: "No. WO"
+                                header: "Nama"
                             }
                         },
-                        sales_name: {
+                        description: {
                             table: {
-                                header: "Sales"
-                            }
-                        },
-                        sopir: {
-                            table: {
-                                header: "Sopir"
-                            }
-                        },
-                        sopir_nopol: {
-                            table: {
-                                header: "Nopol"
-                            }
-                        },
-                        visite_date: {
-                            table: {
-                                header: "Visite"
-                            }
-                        },
-                        return_date: {
-                            table: {
-                                header: "Return"
+                                header: "Deskripsi"
                             }
                         }
                     }}

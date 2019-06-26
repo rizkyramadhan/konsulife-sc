@@ -4,13 +4,11 @@ import { isSize } from '@app/libs/ui/MediaQuery';
 import UIText from '@app/libs/ui/UIText';
 import IconAdd from '@app/libs/ui/Icons/IconAdd';
 
-export default () => {
+export default ({ onPress }: any) => {
     return <UIButton
         color="success"
         size="small"
-        onPress={() => {
-            alert("Add!");
-        }}
+        onPress={onPress}
         style={{
             height: 'auto'
         }}

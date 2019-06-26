@@ -15,11 +15,21 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   useEffect(() => {
     let query: APISearchProps = {
       Table: "ODRF",
-      Condition: [{
-        field: "DocStatus",
-        cond: "=",
-        value: "O"
-      }]
+      Condition: [
+        {
+          field: "DocStatus",
+          cond: "=",
+          value: "O"
+        },
+        {
+          cond:"AND"
+        },
+        {
+          field: "ObjType",
+          cond:"=",
+          value:"17"
+        }
+    ]
     };
     APISearch(query).then((res: any) => {
       setData(res);
