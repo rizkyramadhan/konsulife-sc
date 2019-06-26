@@ -22,6 +22,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
       Table: "ORDR",
       Fields: [
         "CardCode",
+        "CardName",
         "NumAtCard",
         "DocDate",
         "DocDueDate",

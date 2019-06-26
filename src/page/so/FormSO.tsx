@@ -153,6 +153,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
               label: "Customer",
               sublabel: "Toko Penerima Barang",
               value: [
+                { key: "CardCode", size: 8, type: "field", label: "Customer/Vendor Code" },
                 {
                   key: "CardCode", label: "Customer/Vendor", size: 12, component: (
                     <SAPDropdown label="Customer" field="CustomerCode" value={(data as any).CardCode} setValue={(v, _, r) => {

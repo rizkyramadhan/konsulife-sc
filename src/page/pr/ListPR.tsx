@@ -10,25 +10,23 @@ import UIButton from '@app/libs/ui/UIButton';
 import IconCopy from '@app/libs/ui/Icons/IconCopy';
 import { isSize } from '@app/libs/ui/MediaQuery';
 import UIText from '@app/libs/ui/UIText';
+import UISearch from '@app/libs/ui/UISearch';
 
-let selectedItems:any[];  
+let selectedItems: any[];
 const BtnCopy = withRouter(({ history }: any) => {
-  
   return (
     <UIButton
       size="small"
       color="success"
       onPress={() => {
-        if(selectedItems !== undefined && selectedItems.length>0)
-        {
-          let key=selectedItems.join("|");
+        if (selectedItems !== undefined && selectedItems.length > 0) {
+          let key = selectedItems.join("|");
           history.push("/pr/form/" + btoa(key));
         }
-        else
-        {
+        else {
           alert("Please Select PO!");
         }
-        
+
       }}
       style={{
         display: "flex",
@@ -44,9 +42,23 @@ const BtnCopy = withRouter(({ history }: any) => {
   );
 });
 
-export default withRouter(observer(({ match,showSidebar, sidebar }: any) => {
+export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
-  const param = atob(match.params.id).split("|",2);
+  const param = atob(match.params.id).split("|", 2);
+  const [_data, _setData] = useState([]);
+  const field = ["DocNum", "DocEntry", "CardName", "CardCode", "U_IDU_PO_INTNUM", "U_IDU_SUP_SONUM"];
+  const funcSearch = (value: string) => {
+    _setData([...(value ? data.filter((x: any) => {
+      let res = false;
+      for (var i = 0; i < field.length; i++) {
+        if (x[field[i]] && x[field[i]].toLowerCase().includes(value.toLowerCase())) {
+          res = true;
+          break;
+        }
+      }
+      return res
+    }) : data)])
+  }
 
   useEffect(() => {
     let query: APISearchProps = {
@@ -59,17 +71,18 @@ export default withRouter(observer(({ match,showSidebar, sidebar }: any) => {
           value: "O"
         },
         {
-          cond:"AND"
+          cond: "AND"
         },
         {
-          field:"CardCode",
-          cond:"=",
-          value:param[0]
+          field: "CardCode",
+          cond: "=",
+          value: param[0]
         }
       ]
     };
 
     APISearch(query).then((res: any) => {
+      _setData(res);
       setData(res);
     });
   }, []);
@@ -77,14 +90,15 @@ export default withRouter(observer(({ match,showSidebar, sidebar }: any) => {
   return (
     <UIContainer>
       <UIHeader showSidebar={showSidebar} sidebar={sidebar} center={"Purchase Receipt " + param[1]}>
-          <BtnCopy></BtnCopy>
+        <BtnCopy></BtnCopy>
       </UIHeader>
       <UIBody>
+        <UISearch onSearch={funcSearch}></UISearch>
         <UIList
           style={{ flex: 1 }}
           primaryKey="DocEntry"
           selection="multi"
-          onSelect={(_,selected)=>{selectedItems = selected}}
+          onSelect={(_, selected) => { selectedItems = selected }}
           fields={{
             CardCode: {
               table: {
@@ -107,7 +121,7 @@ export default withRouter(observer(({ match,showSidebar, sidebar }: any) => {
               }
             },
           }}
-          items={data.map((item: any) => ({
+          items={_data.map((item: any) => ({
             ...item,
           }))}
         />

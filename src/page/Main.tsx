@@ -140,8 +140,8 @@ const Menu = withRouter(({ history, setSide }: MenuProps) => {
     backgroundColor: "#cee0ff"
   };
   useEffect(() => {
-    setPath(history.location.pathname)
-  }, [])
+    setPath(history.location.pathname);
+  }, []);
   return (
     <UISimpleList
       style={{
@@ -166,7 +166,11 @@ const Menu = withRouter(({ history, setSide }: MenuProps) => {
               }}
               animation={false}
               fill="clear"
-              style={{ width: "100%", justifyContent: "flex-start", ...(path == item.path ? active : {}) }}
+              style={{
+                width: "100%",
+                justifyContent: "flex-start",
+                ...(path == item.path ? active : {})
+              }}
             >
               {item.icon}
               <UIText style={{ color: "#1D6EF7", paddingLeft: 15 }}>
@@ -223,6 +227,7 @@ export default observer((_props: any) => {
   useEffect(() => {
     const check = async () => {
       global.setSession(await getSession());
+      console.log(global.session);
       setLoading(false);
     };
     check();
@@ -249,18 +254,18 @@ export default observer((_props: any) => {
       {!global.session.uid ? (
         <Login />
       ) : (
-          <UISidebar
-            style={{ width: 300, background: "#fff" }}
-            visible={global.sidebar}
-            setVisible={global.setSidebar}
-            sidebar={
-              // <UIGradient
-              //   style={{ flex: 1 }}
-              //   angle={30}
-              //   colors={["#7F53AC", "#647DEE"]}
-              // >
-              <View style={{ flex: 1 }}>
-                {/* <Image
+        <UISidebar
+          style={{ width: 300, background: "#fff" }}
+          visible={global.sidebar}
+          setVisible={global.setSidebar}
+          sidebar={
+            // <UIGradient
+            //   style={{ flex: 1 }}
+            //   angle={30}
+            //   colors={["#7F53AC", "#647DEE"]}
+            // >
+            <View style={{ flex: 1 }}>
+              {/* <Image
                 source={require("@app/libs/sample/imgs/logo.png")}
                 resizeMode="contain"
                 style={{

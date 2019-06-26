@@ -61,10 +61,10 @@ app.use(async (ctx: Context) => {
           "X-Hasura-Session-Id": sessionId,
           "X-Hasura-Branch": user.branch,
           "X-Hasura-Area": user.area,
-          "X-Hasura-SalesAsCust":user.sales_as_customer,
+          "X-Hasura-SalesAsCust": user.sales_as_customer,
           "X-Hasura-Cash-Account": user.cash_account,
           "X-Hasura-Transfer-Account": user.transfer_account,
-          "X-Hasaru-SlpCode" : user.slp_id
+          "X-Hasaru-SlpCode": user.slp_id
         });
       } else {
         send(ctx, 300, {
@@ -168,6 +168,7 @@ async function getUserByUsername(clientId: any, username: any) {
       ${config.columns.join("\n")}
     }
   }`);
+  
   return get(result, `${config.table}[0]`);
 }
 

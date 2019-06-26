@@ -7,12 +7,12 @@ import UIButton from "@app/libs/ui/UIButton";
 import UICard from "@app/libs/ui/UICard";
 import UICol from "@app/libs/ui/UICol";
 import UIContainer from "@app/libs/ui/UIContainer";
-import UILoading from '@app/libs/ui/UILoading';
+import UILoading from "@app/libs/ui/UILoading";
 import UIRow from "@app/libs/ui/UIRow";
 import UIText from "@app/libs/ui/UIText";
 import UITextField from "@app/libs/ui/UITextField";
 import React, { useEffect, useState } from "react";
-import { RouteComponentProps, withRouter } from 'react-router';
+import { RouteComponentProps, withRouter } from "react-router";
 import { Alert } from "reactxp";
 
 const LoginForm = withRouter(({ history }: RouteComponentProps) => {
@@ -26,7 +26,7 @@ const LoginForm = withRouter(({ history }: RouteComponentProps) => {
       if (!global.session.uid) {
         global.setSession(false);
       } else {
-        history.replace('/');
+        history.replace("/");
       }
     })();
   }, []);
@@ -63,24 +63,27 @@ const LoginForm = withRouter(({ history }: RouteComponentProps) => {
           }}
         />
         <UIRow>
-          {loading ? <UILoading /> :
+          {loading ? (
+            <UILoading />
+          ) : (
             <UIButton
               onPress={async () => {
                 setLoading(true);
                 const res = await login(username, password);
                 if (!res) {
                   Alert.show("Gagal Login");
+                  setLoading(false);
                 } else {
+                  setLoading(false);
                   global.setSession(res);
-                  history.replace('/');
+                  history.replace("/");
                   // global.setSidebar(isSize(['md', 'lg']));
                 }
-                setLoading(false);
               }}
             >
               Login
-          </UIButton>
-          }
+            </UIButton>
+          )}
         </UIRow>
       </UICard>
     </UICol>

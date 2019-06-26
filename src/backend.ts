@@ -1,7 +1,7 @@
 export default {
   url: "https://masabaru.rx.plansys.co/v1/graphql",
   wsurl: "wss://masabaru.rx.plansys.co/v1/graphql",
-  appurl: "https://masabaru-app.rx.plansys.co",
+  appurl: "https://masabaru-app.rx.plansys.co/",
   table: "user",
   identifierType: {
     client_id: "",
@@ -16,5 +16,19 @@ export default {
     password: "password",
     role: "role"
   },
-  columns: ["id", "username", "password", "role", "warehouse_id", "bpgroup"]
+  columns: [
+    "id",
+    "username",
+    "password",
+    "role",
+    "warehouse_id",
+    "bpgroup",
+    "sap_id",
+    "area",
+    "branch",
+    "sales_as_customer",
+    "cash_account",
+    "transfer_account",
+    "slp_id"
+  ]
 };

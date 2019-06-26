@@ -7,12 +7,13 @@ const SessionUser = types.model({
   role: types.string,
   username: types.string,
   warehouse_id: types.string,
-  area:types.maybeNull(types.string),
-  branch:types.maybeNull(types.string),
-  sales_as_customer:types.maybeNull(types.string),
-  cash_account:types.maybeNull(types.string),
-  transfer_account:types.maybeNull(types.string),
-  slp_code:types.maybeNull(types.string),
+  sap_id: types.maybeNull(types.string),
+  area: types.maybeNull(types.string),
+  branch: types.maybeNull(types.string),
+  sales_as_customer: types.maybeNull(types.string),
+  cash_account: types.maybeNull(types.string),
+  transfer_account: types.maybeNull(types.string),
+  slp_code: types.maybeNull(types.string)
 });
 
 const Session = types.model({
@@ -35,56 +36,53 @@ const Store = types
   }))
   .actions(self => ({
     setSession(s: any) {
-      if (s) self.session = s;
+      const n = {
+        ...DefaultSession,
+        ...s,
+        loaded: true
+      };
+
+      if (s && s.user) {
+        n.user = {
+          ...DefaultSession.user,
+          ...s.user
+        };
+      }
+
+      self.session = n;
     },
     removeSession() {
-      self.session = {
-        cid: "",
-        role: "",
-        sid: "",
-        uid: "",
-        user: {
-          bpgroup: "",
-          id: 0,
-          password: "",
-          role: "",
-          username: "",
-          warehouse_id: "",
-          area:"",
-          branch:"",
-          sales_as_customer:"",
-          cash_account:"",
-          transfer_account:"",
-          slp_code:"",
-        }
-      };
+      self.session = DefaultSession;
     },
     setSidebar(s: boolean) {
-      self.sidebar = s
+      self.sidebar = s;
     }
   }));
 
+const DefaultSession = {
+  cid: "",
+  role: "",
+  sid: "",
+  uid: "",
+  user: {
+    bpgroup: "",
+    id: 0,
+    password: "",
+    sap_id: "",
+    role: "",
+    username: "",
+    warehouse_id: "",
+    area: "",
+    branch: "",
+    sales_as_customer: "",
+    cash_account: "",
+    transfer_account: "",
+    slp_code: ""
+  }
+};
+
 // create an instance from a snapshot
 export default Store.create({
-  session: {
-    cid: "",
-    role: "",
-    sid: "",
-    uid: "",
-    user: {
-      bpgroup: "",
-      id: 0,
-      password: "",
-      role: "",
-      username: "",
-      warehouse_id: "",
-      area:"",
-      branch:"",
-      sales_as_customer:"",
-      cash_account:"",
-      transfer_account:"",
-      slp_code:"",
-    }
-  },
+  session: DefaultSession,
   sidebar: false
 });

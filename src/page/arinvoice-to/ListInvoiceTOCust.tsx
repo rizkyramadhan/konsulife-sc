@@ -3,10 +3,10 @@ import UIBody from "@app/libs/ui/UIBody";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
+import UISearch from '@app/libs/ui/UISearch';
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
-import UISearch from '@app/libs/ui/UISearch';
 
 export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
@@ -28,19 +28,12 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   useEffect(() => {
     let query: APISearchProps = {
       Table: "OCRD",
+      Fields: [],
       Condition: [
         {
           field: "CardType",
           cond: "=",
-          value: "S"
-        },
-        {
-          cond: "AND"
-        },
-        {
-          field: "CardCode",
-          cond: "=",
-          value: "S00050"
+          value: "C"
         }
       ],
       Limit: 20,
@@ -56,7 +49,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
 
   return (
     <UIContainer>
-      <UIHeader showSidebar={showSidebar} sidebar={sidebar} center={"Purchase Receipt"}>
+      <UIHeader showSidebar={showSidebar} sidebar={sidebar} center={"AR Invoice (Taking Order)"}>
       </UIHeader>
       <UIBody>
         <UISearch onSearch={funcSearch}></UISearch>
@@ -65,7 +58,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
           primaryKey="CardCode"
           selection="single"
           onSelect={(item) => {
-            history.push("/pr/list/" + btoa(item.CardCode + "|" + item.CardName));
+            history.push("/ar-invoice-to/list/" + btoa(item.CardCode + "|" + item.CardName));
           }}
           fields={{
             CardCode: {
@@ -75,7 +68,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
             },
             CardName: {
               table: {
-                header: "Vendor"
+                header: "Customer"
               }
             }
           }}

@@ -10,6 +10,7 @@ import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
 import IconAdd from "@app/libs/ui/Icons/IconAdd";
 import { APISearchProps, APISearch } from '@app/api';
+import UISearch from '@app/libs/ui/UISearch';
 
 const BtnCreate = withRouter(({ history }: any) => {
   return (
@@ -36,10 +37,25 @@ const BtnCreate = withRouter(({ history }: any) => {
 
 export default withRouter(observer(({ showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
+  const [_data, _setData] = useState([]);
+  const field = ["DocNum", "U_IDU_SO_INTNUM", "CardName", "CardCode", "DocDate", "DocDueDate"];
+  const funcSearch = (value: string) => {
+    _setData([...(value ? data.filter((x: any) => {
+      let res = false;
+      for (var i = 0; i < field.length; i++) {
+        if (x[field[i]] && x[field[i]].toLowerCase().includes(value.toLowerCase())) {
+          res = true;
+          break;
+        }
+      }
+      return res
+    }) : data)])
+  }
+
   useEffect(() => {
     let query: APISearchProps = {
       Table: "ODRF",
-      Fields: ["DocNum", "U_IDU_SO_INTNUM", "CardName", "CardCode", "DocDate", "DocDueDate"],
+      Fields: field,
       Condition: [{
         field: "DocStatus",
         cond: "=",
@@ -49,6 +65,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
 
     APISearch(query).then((res: any) => {
       setData(res);
+      _setData(res);
     });
   }, []);
 
@@ -62,6 +79,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
         <BtnCreate />
       </UIHeader>
       <UIBody>
+        <UISearch onSearch={funcSearch}></UISearch>
         <UIList
           style={{ flex: 1 }}
           primaryKey="DocNum"
@@ -98,7 +116,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
               }
             }
           }}
-          items={data.map((item: any) => ({
+          items={_data.map((item: any) => ({
             ...item,
           }))}
         />

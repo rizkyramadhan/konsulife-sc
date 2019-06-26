@@ -1,3 +1,5 @@
+import { APIPost, APISearch, APISearchProps } from '@app/api';
+import global from '@app/global';
 import IconSave from '@app/libs/ui/Icons/IconSave';
 import { isSize } from '@app/libs/ui/MediaQuery';
 import UIBody from '@app/libs/ui/UIBody';
@@ -7,44 +9,68 @@ import UIHeader from '@app/libs/ui/UIHeader';
 import UIJsonField from '@app/libs/ui/UIJsonField';
 import UIText from '@app/libs/ui/UIText';
 import { observer } from 'mobx-react-lite';
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { withRouter } from 'react-router';
-import { APISearch, APISearchProps, APIPost } from '@app/api';
 import { View } from 'reactxp';
 import FormARInvoiceDetailTO from './FormARInvoiceDetailTO';
 
-
 export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
   const [saving, setSaving] = useState(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<any[]>([]);
   const [item, setItem] = useState([]);
 
+  const param = atob(match.params.id).split("|");
   useEffect(() => {
     let query: APISearchProps = {
       Table: "ODLN",
       Fields: [
         "CardCode",
+        "CardName",
         "NumAtCard",
-        "DocDate",
-        "DocDueDate",
         "DocCur",
         "DocRate",
         "U_IDU_SO_INTNUM",
+        "U_IDU_DO_INTNUM",
         "GroupNum",
         "SlpCode",
         "CntctCode",
         "Address2",
         "Address",
-        "Comments"
+        "Comments",
+
       ],
       Condition: [{
         field: "DocEntry",
-        cond: "=",
-        value: match.params.id
+        cond: "IN",
+        value: param
       }]
     };
 
     APISearch(query).then((res: any) => {
+      let poNum: any[] = [];
+      let soNum: any[] = [];
+      let doNum: any[] = [];
+      res.forEach((val: any) => {
+        if (val.NumAtCard !== null && val.NumAtCard !== "") {
+          poNum.push(val.NumAtCard);
+        }
+        if (val.U_IDU_SO_INTNUM !== null && val.U_IDU_SO_INTNUM !== "") {
+          soNum.push(val.U_IDU_SO_INTNUM);
+        }
+        if (val.U_IDU_DO_INTNUM !== null && val.U_IDU_DO_INTNUM !== "") {
+          doNum.push(val.U_IDU_DO_INTNUM);
+        }
+
+      });
+
+      res[0].NumAtCard = poNum.join(";");
+      res[0].U_IDU_SO_INTNUM = soNum.join(";");
+      res[0].U_IDU_DO_INTNUM = doNum.join(";");
+
+      res[0].U_BRANCH = "TIM";
+      res[0].U_USERID = global.session.user.id;
+      res[0].U_GENERATED = "W";
+
       if (res.length > 0)
         setData(res[0]);
     });
@@ -56,6 +82,8 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
         "BaseEntry",
         "BaseType",
         "BaseLine",
+        "DocEntry",
+        "LineNum",
         "ItemCode",
         "Dscription",
         "U_IDU_PARTNUM",
@@ -71,14 +99,17 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
       ],
       Condition: [{
         field: "DocEntry",
-        cond: "=",
-        value: match.params.id
+        cond: "IN",
+        value: param
       }]
     };
 
     APISearch(query).then((res: any) => {
       res.forEach((item: any) => {
+        item.PK = btoa(item.LineNum + "|" + item.DocEntry);
         item.BaseType = "15";
+        item.BaseLine = item.LineNum;
+        item.BaseEntry = item.DocEntry;
       });
       setItem(res);
     })
@@ -87,6 +118,20 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
   const save = async () => {
     setSaving(true);
     try {
+      // for(let i in data)
+      // {
+      //   if(i === "DocDate" || i === "DocDueDate")
+      //   {
+      //     data[i] = encodeSAPDate(data[i]);
+      //   }
+      // }
+
+      item.forEach((val: any) => {
+        delete val.PK;
+        delete val.LineNum;
+        delete val.DocEntry;
+      });
+
       await APIPost('ARInvoice', {
         ...data, Lines: item,
       });
@@ -132,33 +177,28 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                   key: "U_IDU_SO_INTNUM",
                   type: "field",
                   label: "SO Number",
-                  size: 7
+                  size: 8
                 },
                 {
                   key: "U_IDU_DO_INTNUM",
                   type: "field",
                   label: "DO Number",
-                  size: 7
+                  size: 8
                 },
-                { type: "empty", size: 5 },
-                { key: "DocDate", size: 4, label: "Posting Date" },
-                { key: "DocDueDate", size: 4, label: "Delivery Date" },
-                { type: "empty", size: 2 },
-                {
-                  key: "U_BRANCH",
-                  type: "field",
-                  label: "Cabang",
-                  size: 7
-                }
+                { type: "empty", size: 4 },
+                { key: "DocDate", size: 4, type: "date", label: "Posting Date" },
+                { key: "DocDueDate", size: 4, type: "date", label: "Delivery Date" },
+                { key: "U_IDU_FP", size: 8, label: "Faktur Pajak" },
               ]
             },
             {
               key: "customer",
               label: "Customer",
-              sublabel: "Toko Penerima Barang",
+              sublabel: "Cust Penerima Barang",
               value: [
-                { key: "CardCode", label: "Customer", size: 3 },
-                { key: "CardName", label: "Name" }
+                { key: "CardCode", type: "field", label: "Code", size: 4 },
+                { key: "CardName", type: "field", label: "Customer", size: 8 },
+                { key: "NumAtCard", type: "field", label: "No PO. Cust", size: 12 }
               ]
             },
             {

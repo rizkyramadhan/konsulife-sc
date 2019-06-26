@@ -6,9 +6,25 @@ import { observer } from "mobx-react-lite";
 import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
 import { APISearch, APISearchProps } from '@app/api';
+import UISearch from '@app/libs/ui/UISearch';
 
 export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
+  const [_data, _setData] = useState([]);
+  const [field, setField] = useState<any[]>([]);
+  const funcSearch = (value: string) => {
+    _setData([...(value ? data.filter((x: any) => {
+      let res = false;
+      for (var i = 0; i < field.length; i++) {
+        if (x[field[i]] && x[field[i]].toLowerCase().includes(value.toLowerCase())) {
+          res = true;
+          break;
+        }
+      }
+      return res
+    }) : data)])
+  }
+
   useEffect(() => {
     let query: APISearchProps = {
       Table: "OCRD",
@@ -31,7 +47,9 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
     };
 
     APISearch(query).then((res: any) => {
+      setField(Object.keys(res[0]));
       setData(res);
+      _setData(res);
     })
   }, []);
 
@@ -43,7 +61,8 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
         center={"Delivery Order"}
       >
       </UIHeader>
-      <UIBody scroll={true}>
+      <UIBody>
+        <UISearch onSearch={funcSearch}></UISearch>
         <UIList
           primaryKey="CardCode"
           style={{ backgroundColor: "#fff" }}
