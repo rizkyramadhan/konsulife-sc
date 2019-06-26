@@ -76,7 +76,7 @@ export default ({
     if (refresh || mustInit) {
       APISearch(query).then((res: any) => {
         let items = res.map((item: any) => {
-          let fields = (SAPFieldMap as any)[field].Fields;
+          let fields = (SAPFieldMap as any)[field] ? (SAPFieldMap as any)[field].Fields : Object.keys(item);
           return {
             value: itemField ? item[itemField.value] : (item[fields[0]] as any),
             label: itemField ? item[itemField.label] : (item[!!fields[1] ? fields[1] : fields[0]] as any),
@@ -95,6 +95,6 @@ export default ({
   return (
     <UISelectField items={_items} value={value} setValue={(v: any, l: any) => { const idx: any = _items.findIndex((x: any) => x.value === v); setValue(v, l, _items[idx]) }} label={label} style={style} color={color} search={true} onSearch={(value) => {
       setItems([...(value ? items.filter((x: any) => x.value.toLowerCase().includes(value.toLowerCase()) || x.label.toLowerCase().includes(value.toLowerCase())) : items)]);
-    }} onDismiss={(value) => value && setItems([...items])} />
+    }} onDismiss={(value:any) => value && setItems([...items])} />
   );
 };

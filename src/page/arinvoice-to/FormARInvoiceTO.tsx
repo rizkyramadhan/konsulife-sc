@@ -67,7 +67,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
       res[0].U_IDU_SO_INTNUM = soNum.join(";");
       res[0].U_IDU_DO_INTNUM = doNum.join(";");
 
-      res[0].U_BRANCH = "TIM";
+      res[0].U_BRANCH = global.session.user.branch;
       res[0].U_USERID = global.session.user.id;
       res[0].U_GENERATED = "W";
 

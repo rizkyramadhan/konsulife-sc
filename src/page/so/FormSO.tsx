@@ -1,4 +1,5 @@
 import { APIPost } from '@app/api';
+import global from '@app/global';
 import SAPDropdown from '@app/components/SAPDropdown';
 import IconAdd from "@app/libs/ui/Icons/IconAdd";
 import IconSave from "@app/libs/ui/Icons/IconSave";
@@ -28,7 +29,10 @@ const sample = {
   CntctCode: 1,
   Address2: "",
   Address: "",
-  Comments: ""
+  Comments: "",
+  U_BRANCH : global.session.user.branch,
+  U_USERID : global.session.user.id,
+  U_GENERATED : "W"
 };
 
 export default observer(({ showSidebar, sidebar }: any) => {

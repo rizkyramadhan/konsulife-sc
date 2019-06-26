@@ -74,7 +74,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
       {
         field: "CardCode",
         cond: "=",
-        value: "TIM00002"//param[0]
+        value: param[0]
       }]
     };
 

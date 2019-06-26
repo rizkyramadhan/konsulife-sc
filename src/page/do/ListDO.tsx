@@ -7,6 +7,7 @@ import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
 import { APISearch, APISearchProps } from '@app/api';
 import UISearch from '@app/libs/ui/UISearch';
+import global from '@app/global';
 
 export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
@@ -28,21 +29,20 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   useEffect(() => {
     let query: APISearchProps = {
       Table: "OCRD",
-      // Fields: ['CardCode', 'CardName'],
       Condition: [
         {
           field: "CardType",
           cond: "=",
           value: "C"
+        },
+        {
+          cond: "AND"
+        },
+        {
+          field: "U_IDU_BRANCH",
+          cond: "=",
+          value: global.session.user.branch
         }
-        // {
-        //   cond: "AND"
-        // },
-        // {
-        //   field: "U_IDU_BRANCH",
-        //   cond: "=",
-        //   value: ""
-        // }
       ]
     };
 
@@ -80,7 +80,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
               }
             }
           }}
-          items={data}
+          items={_data}
         />
       </UIBody>
     </UIContainer>

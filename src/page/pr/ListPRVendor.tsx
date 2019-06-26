@@ -34,16 +34,16 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
           cond: "=",
           value: "S"
         },
-        {
-          cond: "AND"
-        },
-        {
-          field: "CardCode",
-          cond: "=",
-          value: "S00050"
-        }
+        // {
+        //   cond: "AND"
+        // },
+        // {
+        //   field: "CardCode",
+        //   cond: "=",
+        //   value: "S00050"
+        // }
       ],
-      Limit: 20,
+      Limit: 100,
       Page: 1
     };
 
@@ -53,7 +53,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
       _setData(res);
     });
   }, []);
-
+  console.log(data);
   return (
     <UIContainer>
       <UIHeader showSidebar={showSidebar} sidebar={sidebar} center={"Purchase Receipt"}>

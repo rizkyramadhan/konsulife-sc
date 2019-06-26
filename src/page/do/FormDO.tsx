@@ -13,6 +13,7 @@ import { APISearch, APISearchProps, APIPost } from '@app/api';
 import FormDODetailItems from './FormDODetailItems';
 import IconCheck from '@app/libs/ui/Icons/IconCheck';
 import UITabs from '@app/libs/ui/UITabs';
+import global from '@app/global';
 
 export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
   const [saving, setSaving] = useState(false);
@@ -133,9 +134,14 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
         "Address2": data.Address2,
         "Address": data.Address,
         "Comments": data.Comments,
-        "U_BRANCH": data.U_BRANCH,
-        "U_USERID": data.U_USERID,
-        "U_GENERATED": data.U_GENERATED,
+        "U_IDU_CONTNUM":data.U_IDU_CONTNUM,
+        "U_IDU_NOSEAL":data.U_IDU_NOSEAL,
+        "U_IDU_NOPL":data.U_IDU_NOPL,
+        "U_IDU_NOPOL":data.U_IDU_NOPOL,
+        "U_IDU_DRIVER":data.U_IDU_DRIVER,
+        "U_BRANCH": global.session.user.branch,
+        "U_USERID": global.session.user.id,
+        "U_GENERATED": "W",
       };
 
       const l = selected.map((d: any) => {
@@ -205,7 +211,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                   label: "SO Number",
                   size: 12
                 },
-                { key: "DocDate", size: 6, label: "Posting Date", type: "date" }
+                { key: "DocDate", size: 6, label: "Posting Date", type: "date" },
               ]
             },
             {
@@ -225,6 +231,11 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                   label: "Card Name",
                   size: 8
                 },
+                { key:"U_IDU_CONTNUM", label:"No. Container", size:4},
+                { key:"U_IDU_NOSEAL", label:"No. Seal", size:4},
+                { key:"U_IDU_NOPL", label:"No. PL", size:4},
+                { key:"U_IDU_NOPOL", label:"Nopol", size:4},
+                { key:"U_IDU_DRIVER", label:"Driver", size:8},
               ]
             },
             {

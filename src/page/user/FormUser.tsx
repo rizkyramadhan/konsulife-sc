@@ -15,9 +15,11 @@ import UIText from '@app/libs/ui/UIText';
 import updateRecord from '@app/libs/gql/data/updateRecord';
 import createRecord from '@app/libs/gql/data/createRecord';
 import { hashPassword } from '@app/libs/gql/session/hashPassword';
+import global from '@app/global';
 
 export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
     const [data, setData] = useState({});
+    console.log(global.session);
     useEffect(() => {
         const get = async () => {
             await query("user", [
@@ -90,7 +92,11 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                                 },
                                 {
                                     key: "warehouse_id", size: 12, label: "Warehouse Code", component: (
-                                        <SAPDropdown label="Warehouse Code" field="Custom" customQuery={{ Table: "OWHS", Fields: ["WhsCode", "WhsName"] }} value={(data as any).warehouse_id} setValue={(v) => { setData({ ...data, warehouse_id: v }) }} />)
+                                        <SAPDropdown label="Warehouse Code" field="Custom" customQuery={{ 
+                                            Table: "OWHS", 
+                                            Fields: ["WhsCode"],
+                                            Page:1 
+                                        }} value={(data as any).warehouse_id} setValue={(v) => { setData({ ...data, warehouse_id: v }) }} />)
                                 },
                                 // { key: "sap_id", size: 4, label: "SAP Code" },
                                 {

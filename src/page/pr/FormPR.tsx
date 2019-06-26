@@ -1,4 +1,5 @@
 import { APIPost, APISearch, APISearchProps } from "@app/api";
+import global from '@app/global';
 import IconSave from "@app/libs/ui/Icons/IconSave";
 import { isSize } from "@app/libs/ui/MediaQuery";
 import UIBody from "@app/libs/ui/UIBody";
@@ -79,6 +80,9 @@ export default withRouter(
           // res[0].DocDate = yyyy+"-"+mm+"-"+dd;
           res[0].U_IDU_PO_INTNUM = poNum.join(";");
           res[0].U_IDU_SUP_SONUM = soNum.join(";");
+          res[0].U_BRANCH = global.session.user.branch;
+          res[0].U_USERID = global.session.user.id;
+          res[0].U_GENERATED = "W";
           setData(res[0]);
         }
           

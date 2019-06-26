@@ -295,7 +295,7 @@ export const SAPFieldMap = {
   } as APISearchProps,
   WarehouseCodeCanvas: {
     Table: "OWHS",
-    Fields: ["WhsCode", "WhsName"],
+    Fields: ["WhsCode"],
     Condition: [{
       field: "U_BRANCH",
       cond: "=",
@@ -312,7 +312,7 @@ export const SAPFieldMap = {
   } as APISearchProps,
   WarehouseCodeAll: {
     Table: "OWHS",
-    Fields: ["WhsCode", "WhsName"],
+    Fields: ["WhsCode"],
     Condition: [{
       field: "U_BRANCH",
       cond: "=",
