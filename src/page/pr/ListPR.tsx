@@ -6,21 +6,67 @@ import UIList from "@app/libs/ui/UIList";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
-import UIRow from "@app/libs/ui/UIRow";
-import IconRemove from "@app/libs/ui/Icons/IconRemove";
-import UIButton from "@app/libs/ui/UIButton";
+import UIButton from '@app/libs/ui/UIButton';
+import IconCopy from '@app/libs/ui/Icons/IconCopy';
+import { isSize } from '@app/libs/ui/MediaQuery';
+import UIText from '@app/libs/ui/UIText';
 
-export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
+let selectedItems:any[];  
+const BtnCopy = withRouter(({ history }: any) => {
+  
+  return (
+    <UIButton
+      size="small"
+      color="success"
+      onPress={() => {
+        if(selectedItems !== undefined && selectedItems.length>0)
+        {
+          let key=selectedItems.join("|");
+          history.push("/pr/form/" + btoa(key));
+        }
+        else
+        {
+          alert("Please Select PO!");
+        }
+        
+      }}
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "flex-end"
+      }}
+    >
+      <IconCopy color="#fff" />
+      {isSize(["md", "lg"]) && (
+        <UIText style={{ color: "#fff" }}>Copy PO</UIText>
+      )}
+    </UIButton>
+  );
+});
+
+export default withRouter(observer(({ match,showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
+  const param = atob(match.params.id).split("|",2);
+
   useEffect(() => {
     let query: APISearchProps = {
       Table: "OPOR",
-      Fields: ["DocNum", "DocEntry", "CardName", "CardCode", "U_IDU_PO_INTNUM", "U_IDU_SUP_SONUM"],
-      Condition: [{
-        field: "DocStatus",
-        cond: "=",
-        value: "O"
-      }]
+      Fields: [],
+      Condition: [
+        {
+          field: "DocStatus",
+          cond: "=",
+          value: "O"
+        },
+        {
+          cond:"AND"
+        },
+        {
+          field:"CardCode",
+          cond:"=",
+          value:param[0]
+        }
+      ]
     };
 
     APISearch(query).then((res: any) => {
@@ -30,25 +76,24 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
 
   return (
     <UIContainer>
-      <UIHeader showSidebar={showSidebar} sidebar={sidebar} center={"Purchase Receipt"}>
+      <UIHeader showSidebar={showSidebar} sidebar={sidebar} center={"Purchase Receipt " + param[1]}>
+          <BtnCopy></BtnCopy>
       </UIHeader>
       <UIBody>
         <UIList
           style={{ flex: 1 }}
-          primaryKey="DocNum"
-          selection="single"
-          onSelect={(item) => {
-            history.push("/pr/form/" + item.DocEntry);
-          }}
+          primaryKey="DocEntry"
+          selection="multi"
+          onSelect={(_,selected)=>{selectedItems = selected}}
           fields={{
-            CardName: {
-              table: {
-                header: "Customer/Vendor"
-              }
-            },
             CardCode: {
               table: {
                 header: "Code"
+              }
+            },
+            CardName: {
+              table: {
+                header: "Customer/Vendor"
               }
             },
             U_IDU_PO_INTNUM: {
@@ -61,38 +106,9 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
                 header: "No. SO Supplier"
               }
             },
-            action: {
-              table: {
-                header: "Action"
-              }
-            }
           }}
           items={data.map((item: any) => ({
             ...item,
-            action: (
-              <UIRow style={{ marginTop: 0 }}>
-                <UIButton
-                  size="small"
-                  fill="clear"
-                  style={{
-                    marginTop: 0,
-                    marginBottom: 0
-                  }}
-                  onPress={() => {
-                    alert("remove!");
-                  }}
-                >
-                  <IconRemove
-                    height={18}
-                    width={18}
-                    color="red"
-                    onPress={() => {
-                      alert("remove!");
-                    }}
-                  />
-                </UIButton>
-              </UIRow>
-            )
           }))}
         />
       </UIBody>

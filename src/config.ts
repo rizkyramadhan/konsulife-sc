@@ -5,7 +5,7 @@ export const DEV = __DEV__;
 
 export const MainStyle: any = {
   backgroundColor: "#f4f6fa",
-  color: "#7E66B0",
+  color: "#1d6ef7",
   fieldTextColor: "#404040",
   fieldColor: "#a7a7a7",
   primaryColor: "#1d6ef7",

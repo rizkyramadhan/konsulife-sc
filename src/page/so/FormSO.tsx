@@ -13,6 +13,7 @@ import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
 import { View } from "reactxp";
 import FormSODetailItems from './FormSODetailItems';
+import { getLastNumbering, updateLastNumbering } from '@app/utils';
 
 const sample = {
   CardCode: "",
@@ -30,28 +31,12 @@ const sample = {
   Comments: ""
 };
 
-const sampleList = [
-  {
-    LineNum: 0,
-    ItemCode: "",
-    Dscription: "",
-    U_IDU_PARTNUM: "",
-    UseBaseUn: "",
-    Quantity: 0,
-    WhsCode: "",
-    ShipDate: "",
-    OcrCode: "",
-    OcrCode2: "",
-    PriceBefDi: 0,
-    DiscPrcnt: "",
-    TaxCode: ""
-  }
-];
-
 export default observer(({ showSidebar, sidebar }: any) => {
   const [data, setData] = useState(sample);
-  const [items, setItems] = useState(sampleList);
+  const [items, setItems] = useState<any[]>([]);
   const [saving, setSaving] = useState(false);
+  const [qShip, setQShip] = useState(false);
+  const [qBill, setQBill] = useState(false);
 
   const ActionIt = () => {
     return (<UIButton
@@ -74,6 +59,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
           OcrCode2: "",
           PriceBefDi: 0,
           DiscPrcnt: "",
+          UomEntry: "",
           TaxCode: ""
         }])
       }}
@@ -97,8 +83,11 @@ export default observer(({ showSidebar, sidebar }: any) => {
     });
 
     try {
+      let number: any = await getLastNumbering("SO", "TIM-001");
       await APIPost('SalesOrder', {
-        ...data, Lines: [...Lines_IT],
+        ...data, U_IDU_SO_INTNUM: number.format, Lines: [...Lines_IT],
+      }).then(() => {
+        updateLastNumbering(number.id, number.last_count + 1);
       });
     }
     catch (e) {
@@ -145,6 +134,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
                 {
                   key: "U_IDU_SO_INTNUM",
                   label: "SO Number",
+                  type: "field",
                   size: 12
                 },
                 { key: "DocDate", size: 6, type: "date", label: "Posting Date" },
@@ -154,7 +144,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
                   component: (
                     <SAPDropdown label="Document Currency" field="Currency" value={(data as any).DocCur} setValue={(v) => { setData({ ...data, DocCur: v }) }} />)
                 },
-                { key: "DocRate", size: 4, label: "Document Rate" },
+                // { key: "DocRate", size: 4, label: "Document Rate" },
                 // { key: "SlpCode", label: "Sales Employee" }
               ]
             },
@@ -165,7 +155,11 @@ export default observer(({ showSidebar, sidebar }: any) => {
               value: [
                 {
                   key: "CardCode", label: "Customer/Vendor", size: 12, component: (
-                    <SAPDropdown label="Customer" field="CustomerCode" value={(data as any).CardCode} setValue={(v) => { setData({ ...data, CardCode: v }) }} />)
+                    <SAPDropdown label="Customer" field="CustomerCode" value={(data as any).CardCode} setValue={(v, _, r) => {
+                      setData({ ...data, CardCode: v, GroupNum: r.item.GroupNum, DocCur: r.item.Currency });
+                      setQBill(true);
+                      setQShip(true);
+                    }} />)
                 },
                 // { key: "CardName", label: "Name" },
                 {
@@ -188,25 +182,34 @@ export default observer(({ showSidebar, sidebar }: any) => {
                   label: "Ship To",
                   size: 12,
                   component: (
-                    <SAPDropdown label="Ship To" field="Custom" customQuery={{
+                    <SAPDropdown label="Ship To" field="Custom" mustInit={false} customQuery={{
                       Table: "CRD1",
                       Fields: ["Street"],
                       Condition: [{
                         field: "AdresType",
                         cond: "=",
                         value: "S"
+                      }, { cond: "AND" }, {
+                        field: "CardCode",
+                        cond: "=",
+                        value: data.CardCode
                       }]
-                    }} value={(data as any).Address2} setValue={(v) => { setData({ ...data, Address2: v }) }} />)
+                    }} value={(data as any).Address2} setValue={(v) => { setData({ ...data, Address2: v }) }} refresh={qShip} setRefresh={setQShip} />)
                 },
                 {
                   key: "Address",
                   label: "Bill To",
                   size: 12,
                   component: (
-                    <SAPDropdown label="Bill To" field="Custom" customQuery={{
+                    <SAPDropdown label="Bill To" field="Custom" mustInit={false} customQuery={{
                       Table: "CRD1",
-                      Fields: ["Street"]
-                    }} value={(data as any).Address} setValue={(v) => { setData({ ...data, Address: v }) }} />)
+                      Fields: ["Street"],
+                      Condition: [{
+                        field: "CardCode",
+                        cond: "=",
+                        value: data.CardCode
+                      }]
+                    }} value={(data as any).Address} setValue={(v) => { setData({ ...data, Address: v }) }} refresh={qBill} setRefresh={setQBill} />)
                 },
                 {
                   key: "GroupNum",
@@ -241,7 +244,9 @@ export default observer(({ showSidebar, sidebar }: any) => {
               justifyContent: "space-between",
               flex: 1,
               flexDirection: "row",
-              alignItems: "center"
+              alignItems: "center",
+              paddingLeft: 10,
+              backgroundColor: "#fff"
             }}
           >
             <UIText
@@ -255,7 +260,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
             </UIText>
             <ActionIt />
           </View>
-          <FormSODetailItems items={items} setItems={setItems} />
+          <FormSODetailItems data={data} items={items} setItems={setItems} />
         </View>
       </UIBody>
     </UIContainer>

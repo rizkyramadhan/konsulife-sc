@@ -12,13 +12,16 @@ import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 import FormPRDetailItems from "./FormPRDetailItems";
+import IconCheck from '@app/libs/ui/Icons/IconCheck';
 
 export default withRouter(
   observer(({ match, showSidebar, sidebar }: any) => {
     const [saving, setSaving] = useState(false);
+    const [editable, setEdit] = useState(false);
     const [data, setData] = useState([]);
     const [item, setItem] = useState([]);
-
+    const [selected, setSelected] = useState([]);
+    const param = atob(match.params.id).split("|");
     useEffect(() => {
       let query: APISearchProps = {
         Table: "OPOR",
@@ -26,31 +29,59 @@ export default withRouter(
           "DocNum",
           "DocEntry",
           "DocCur",
-          "DocRate",
-          "GroupNum",
           "SlpCode",
           "CntctCode",
           "NumAtCard",
           "Address2",
           "Address",
-          "Comments",
           "CardName",
           "CardCode",
           "U_IDU_PO_INTNUM",
-          "U_IDU_SO_INTNUM",
           "U_IDU_SUP_SONUM"
         ],
         Condition: [
           {
             field: "DocEntry",
-            cond: "=",
-            value: match.params.id
+            cond: "IN",
+            value: param
           }
         ]
       };
       APISearch(query).then((res: any) => {
+        let poNum:any[] = [];
+        let soNum:any[] = [];
+        res.forEach((val:any) => {
+          if(val.U_IDU_PO_INTNUM!== null && val.U_IDU_PO_INTNUM !== "")
+          {
+            poNum.push(val.U_IDU_PO_INTNUM);
+          }
+          if(val.U_IDU_SUP_SONUM !== null && val.U_IDU_SUP_SONUM !== "")
+          {
+            soNum.push(val.U_IDU_SUP_SONUM);
+          }
+          
+        });
+
         if (res.length > 0)
+        {
+          // let today = new Date();
+          // let dd:any = today.getDate();
+          // let mm:any = today.getMonth() + 1; //January is 0!
+
+          // let yyyy = today.getFullYear();
+          // if (dd < 10) {
+          //   dd = '0' + dd;
+          // } 
+          // if (mm < 10) {
+          //   mm = '0' + mm;
+          // }
+
+          // res[0].DocDate = yyyy+"-"+mm+"-"+dd;
+          res[0].U_IDU_PO_INTNUM = poNum.join(";");
+          res[0].U_IDU_SUP_SONUM = soNum.join(";");
           setData(res[0]);
+        }
+          
       });
 
       query = {
@@ -65,6 +96,7 @@ export default withRouter(
           "WhsCode",
           "Quantity",
           "UomCode",
+          "UomEntry",
           "OpenCreQty",
 
           "UseBaseUn",
@@ -78,14 +110,16 @@ export default withRouter(
         Condition: [
           {
             field: "DocEntry",
-            cond: "=",
-            value: match.params.id
+            cond: "IN",
+            value: param
           }
         ]
       };
 
       APISearch(query).then((res: any) => {
         res.forEach((item: any) => {
+          item.PK = btoa(item.LineNum + "|" + item.DocEntry);
+          item.Quantity = item.OpenCreQty;
           item.BaseType = "22";
           item.BaseLine = item.LineNum;
           item.BaseEntry = item.DocEntry;
@@ -99,7 +133,7 @@ export default withRouter(
       try {
         await APIPost("PurchaseReceipt", {
           ...data,
-          Lines: item
+          Lines: selected
         });
       } catch (e) {
         alert(e.Message);
@@ -144,9 +178,16 @@ export default withRouter(
                     key: "U_IDU_PO_INTNUM",
                     type: "field",
                     label: "PO Number",
-                    size: 7
+                    size: 8
                   },
-                  { type: "empty", size: 5 },
+                  { type: "empty", size: 4 },
+                  {
+                    key: "U_IDU_SUP_SONUM",
+                    type: "field",
+                    label: "SO Number",
+                    size: 8
+                  },
+                  { type: "empty", size: 4 },
                   {
                     key: "DocDate",
                     size: 4,
@@ -154,24 +195,13 @@ export default withRouter(
                     label: "Posting Date"
                   },
                   {
-                    key: "DocDueDate",
-                    size: 4,
-                    type: "date",
-                    label: "Delivery Date"
-                  },
-                  { type: "empty", size: 2 },
-                  {
                     key: "DocCur",
                     size: 4,
                     type: "field",
                     label: "Document Currency"
                   },
-                  {
-                    key: "DocRate",
-                    size: 4,
-                    type: "field",
-                    label: "Document Rate"
-                  },
+                  { type: "empty", size: 2 },
+                  
                   { key: "SlpCode", type: "field", label: "Sales Employee" }
                 ]
               },
@@ -182,35 +212,19 @@ export default withRouter(
                   {
                     key: "CardCode",
                     type: "field",
-                    label: "Customer",
-                    size: 3
+                    label: "Code",
+                    size: 4
                   },
-                  { key: "CardName", type: "field", label: "Name" },
+                  { key: "CardName", type: "field", label: "Name", size:8 },
                   { key: "CntctCode", type: "field", label: "Contact Person" },
                   { key: "NumAtCard", type: "field", label: "Ref No.", size: 8 }
                 ]
               },
               {
-                key: "payment",
-                label: "Payment",
-                sublabel: "Informasi Pembayaran",
-                value: [
-                  { key: "Address2", type: "field", label: "Ship To", size: 8 },
-                  { key: "Address", type: "field", label: "Bill To", size: 8 },
-                  {
-                    key: "GroupNum",
-                    type: "field",
-                    label: "Payment Method",
-                    size: 8
-                  }
-                ]
-              },
-              { type: "empty" },
-              {
                 key: "optional",
                 label: "Optional",
                 value: [
-                  { key: "Comments", type: "field", label: "Remark", size: 12 }
+                  { key: "Comments", label: "Remark", size: 12 }
                 ]
               }
             ]}
@@ -223,7 +237,40 @@ export default withRouter(
             tabs={[
               {
                 label: "Detail Items",
-                content: <FormPRDetailItems items={item} setItems={setItem} />
+                content: <FormPRDetailItems items={item} setItems={setItem} flag={editable} setSelected={setSelected} />,
+                action:(
+                  <UIButton
+                    style={{
+                      flexShrink: "none",
+                      marginRight: 0
+                    }}
+                    color={!editable?"success":"warning"}
+                    size="small"
+                    onPress={()=>{
+                      setEdit(!editable);
+                      if(editable == true)
+                      {
+                        setSelected([]);
+                      }
+                    }}
+                  >
+                    <IconCheck
+                      color="#fff"
+                      height={18}
+                      width={18}
+                      style={{
+                        marginTop: -5,
+                        marginRight: 5,
+                        marginLeft: -5
+                      }}
+                    />
+                    {isSize(["md", "lg"]) && (
+                      <UIText style={{ color: "#fff" }} size="small">
+                        {!editable?" Edit":" Select"}
+                      </UIText>
+                    )}
+                  </UIButton>
+                )
               }
             ]}
           />
