@@ -65,19 +65,17 @@ export const APISearch = async (p: APISearchProps) => {
           console.error(res.data);
           reject();
         } else {
-          if (!p.Cache || (!!p.Cache && p.Cache.length == 0)) {
-            if (p.Cache === undefined) {p.Cache = []};
+          try {
             createRecord("cache", {
               id: url + params.Table + params.Condition,
               data: res.data
             })
-          } else {
+          } catch (e) {
             updateRecord("cache", {
               id: url + params.Table + params.Condition,
               data: res.data
             });
           }
-
           resolve(res.data);
         }
       })
@@ -104,7 +102,8 @@ export const APISearchCache = (Table: string, Condition: any) => {
   Condition = cond;
   return new Promise(resolve => {
     query("cache", ['data'], { where: { id: config.wsSAP + "Search" + Table + Condition } }).then((res) => {
-      resolve(res.data);
+      if (res) resolve(res.data);
+      resolve([]);
     });
   })
 };

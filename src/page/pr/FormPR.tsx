@@ -18,6 +18,8 @@ export default withRouter(
   observer(({ match, showSidebar, sidebar }: any) => {
     const [saving, setSaving] = useState(false);
     const [data, setData] = useState([]);
+    const [item, setItem] = useState([]);
+
     useEffect(() => {
       let query: APISearchProps = {
         Table: "OPOR",
@@ -58,12 +60,9 @@ export default withRouter(
           if (res.length > 0)
             setData(res[0]);
         })
-      })
-    }, []);
+      });
 
-    const [item, setItem] = useState([]);
-    useEffect(() => {
-      let query: APISearchProps = {
+      query = {
         Table: "POR1",
         Fields: [
           "DocEntry",
