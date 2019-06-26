@@ -1,19 +1,18 @@
+import { APIPost, APISearch, APISearchProps } from "@app/api";
 import IconSave from "@app/libs/ui/Icons/IconSave";
 import { isSize } from "@app/libs/ui/MediaQuery";
 import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
-import UIText from "@app/libs/ui/UIText";
-import { observer } from "mobx-react-lite";
-import React, { useState, useEffect } from "react";
-import { withRouter } from "react-router";
-import { APISearchProps, APISearch, APIPost } from "@app/api";
-import { View } from "reactxp";
-// import IconAdd from '@app/libs/ui/Icons/IconAdd';
-import FormPRDetailItems from "./FormPRDetailItems";
 import UIJsonField from "@app/libs/ui/UIJsonField";
 import UITabs from "@app/libs/ui/UITabs";
+import UIText from "@app/libs/ui/UIText";
+import { observer } from "mobx-react-lite";
+import React, { useEffect, useState } from "react";
+import { withRouter } from "react-router";
+// import IconAdd from '@app/libs/ui/Icons/IconAdd';
+import FormPRDetailItems from "./FormPRDetailItems";
 
 export default withRouter(
   observer(({ match, showSidebar, sidebar }: any) => {
