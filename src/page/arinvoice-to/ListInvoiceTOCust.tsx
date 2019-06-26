@@ -19,15 +19,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
             {
                 field: "CardType",
                 cond: "=",
-                value: "S"
-            },
-            {
-                cond:"AND"
-            },
-            {
-                field: "CardCode",
-                cond: "=",
-                value: "S00050"
+                value: "C"
             }
         ],
       Limit:20,
@@ -41,7 +33,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   
   return (
     <UIContainer>
-      <UIHeader showSidebar={showSidebar} sidebar={sidebar} center={"Purchase Receipt"}>
+      <UIHeader showSidebar={showSidebar} sidebar={sidebar} center={"AR Invoice (Taking Order)"}>
       </UIHeader>
       <UIBody>
         <UIList
@@ -49,7 +41,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
           primaryKey="CardCode"
           selection="single"
           onSelect={(item) => {
-            history.push("/pr/list/" + btoa(item.CardCode+"|"+item.CardName));
+            history.push("/ar-invoice-to/list/" + btoa(item.CardCode+"|"+item.CardName));
           }}
           fields={{
             CardCode: {
@@ -59,7 +51,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
             },
             CardName: {
               table: {
-                header: "Vendor"
+                header: "Customer"
               }
             }
           }}

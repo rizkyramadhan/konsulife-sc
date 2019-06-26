@@ -10,6 +10,9 @@ import { observer } from 'mobx-react-lite';
 import React, { useState } from "react";
 import { withRouter } from 'react-router';
 import SAPDropdown from '@app/components/SAPDropdown';
+import global from '@app/global';
+import { encodeSAPDate } from '@app/utils/Helper';
+import { APIPost } from '@app/api';
 
 const defData = {
   DocDate: "",
@@ -21,11 +24,40 @@ const defData = {
   TrsfrAcct: "",
   TrsfrSum: "",
   TrsfrDate: "",
-  TrsfrRef: ""
+  TrsfrRef: "", 
+  U_Remark: "",
+  U_SONUM: "",
+  U_IDU_PAYNUM: "",
+  U_USERID : global.session.user.id,
+  U_GENERATED : "W",
+  U_BRANCH : ""
+
 }
 
 export default withRouter(observer(({ showSidebar, sidebar }: any) => {
   const [data, setData] = useState(defData);
+  const [saving, setSaving] = useState(false);
+  
+  const save = async () => {
+    setSaving(true);
+    try {
+      for(let i in data)
+      {
+        if(i === "DocDate" || i === "DocDueDate" || i ==="TrsfrDate")
+        {
+          data[i] = encodeSAPDate(data[i]);
+        }
+      }
+
+      await APIPost('ARInvoice', {data});
+    }
+    catch (e) {
+      alert(e.Message);
+    }
+    finally {
+      setSaving(false);
+    }
+  }
 
   return (
     <UIContainer>
@@ -38,13 +70,12 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
           color="primary"
           size="small"
           onPress={() => {
-            console.log(data);
-            console.log("save");
+            save();
           }}
         >
           <IconSave color="#fff" />
           {isSize(["md", "lg"]) && (
-            <UIText style={{ color: "#fff" }}>{" Save"}</UIText>
+            <UIText style={{ color: "#fff" }}>{saving ? " Saving..." : " Save"}</UIText>
           )}
         </UIButton>
       </UIHeader>
@@ -73,6 +104,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
                     <SAPDropdown label="Cash Account" field="ChartOfAccount" value={(data as any).CashAcct} setValue={(v) => { setData({ ...data, CashAcct: v }) }} />)
                 },
                 { key: "CashSum", size: 12, label: "Cash Amount" },
+                { key: "U_Remark", size: 12, label: "Remarks" },
               ]
             },
             {

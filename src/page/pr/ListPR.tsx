@@ -13,7 +13,6 @@ import UIText from '@app/libs/ui/UIText';
 
 let selectedItems:any[];  
 const BtnCopy = withRouter(({ history }: any) => {
-  
   return (
     <UIButton
       size="small"
