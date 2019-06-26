@@ -9,7 +9,7 @@ import UIText from '@app/libs/ui/UIText';
 import { observer } from 'mobx-react-lite';
 import React, { useState, useEffect } from "react";
 import { withRouter } from 'react-router';
-import { APISearch, APISearchProps, APIPost } from '@app/api';
+import { APISearch, APISearchProps, APIPost, APISearchCache } from '@app/api';
 import FormInvTransferDetail from './FormInvTransferDetail';
 import { View } from 'reactxp';
 
@@ -44,9 +44,17 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                 value: match.params.id
             }]
         };
-        APISearch(query).then((res: any) => {
-            if (res.length > 0)
-                setData(res[0]);
+
+        APISearchCache(query.Table, query.Condition).then((cache: any) => {
+            setData(cache);
+            if (cache.length > 0)
+                setData(cache[0]);
+
+            query.Cache = cache;
+            APISearch(query).then((res: any) => {
+                if (res.length > 0)
+                    setData(res[0]);
+            })
         })
     }, []);
 
@@ -83,17 +91,17 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
     const save = async () => {
         setSaving(true);
         try {
-          await APIPost('InventoryTransfer', {
-            ...data, Lines: item,
-          });
+            await APIPost('InventoryTransfer', {
+                ...data, Lines: item,
+            });
         }
         catch (e) {
-          alert(e.Message);
+            alert(e.Message);
         }
         finally {
-          setSaving(false);
+            setSaving(false);
         }
-      }
+    }
 
     return (
         <UIContainer>
@@ -122,24 +130,24 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                             key: "general",
                             label: "General",
                             value: [
-                                { key: "U_IDU_ITR_INTNUM",type: "field", label: "ITR No.",size: 7 },
+                                { key: "U_IDU_ITR_INTNUM", type: "field", label: "ITR No.", size: 7 },
                                 { type: "empty", size: 5 },
-                                { key: "DocDate", size: 4, type:"date" ,label: "Posting Date" },
-                                { key: "DocDueDate", size: 4, type:"date",label: "Delivery Date" },
+                                { key: "DocDate", size: 4, type: "date", label: "Posting Date" },
+                                { key: "DocDueDate", size: 4, type: "date", label: "Delivery Date" },
                                 { type: "empty", size: 2 },
-                                { key: "Filler", size: 4, type:"field" ,label: "From Warehouse" },
-                                { key: "ToWhsCode", size: 4, type:"field",label: "To Warehouse" },
-                                
+                                { key: "Filler", size: 4, type: "field", label: "From Warehouse" },
+                                { key: "ToWhsCode", size: 4, type: "field", label: "To Warehouse" },
+
                             ]
                         },
                         {
                             key: "vendor",
                             label: "Business Partner",
                             value: [
-                                { key: "CardCode",type: "field", label: "BP Code", size: 3 },
-                                { key: "CardName",type: "field", label: "BP Name", size:7 },
-                                { key: "SlpCode",type: "field", label: "Sales Employee" ,size:7},
-                                { key: "Address",type: "field", label: "Ship To",size:7 }
+                                { key: "CardCode", type: "field", label: "BP Code", size: 3 },
+                                { key: "CardName", type: "field", label: "BP Name", size: 7 },
+                                { key: "SlpCode", type: "field", label: "Sales Employee", size: 7 },
+                                { key: "Address", type: "field", label: "Ship To", size: 7 }
                             ]
                         },
                         {

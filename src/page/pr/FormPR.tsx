@@ -1,4 +1,4 @@
-import { APIPost, APISearch, APISearchProps } from "@app/api";
+import { APIPost, APISearch, APISearchProps, APISearchCache } from "@app/api";
 import IconSave from "@app/libs/ui/Icons/IconSave";
 import { isSize } from "@app/libs/ui/MediaQuery";
 import UIBody from "@app/libs/ui/UIBody";
@@ -47,9 +47,18 @@ export default withRouter(
           }
         ]
       };
-      APISearch(query).then((res: any) => {
-        if (res.length > 0) setData(res[0]);
-      });
+
+      APISearchCache(query.Table, query.Condition).then((cache: any) => {
+        setData(cache);
+        if (cache.length > 0)
+          setData(cache[0]);
+
+        query.Cache = cache;
+        APISearch(query).then((res: any) => {
+          if (res.length > 0)
+            setData(res[0]);
+        })
+      })
     }, []);
 
     const [item, setItem] = useState([]);
@@ -84,14 +93,25 @@ export default withRouter(
           }
         ]
       };
-      APISearch(query).then((res: any) => {
-        res.forEach((item: any) => {
+
+      APISearchCache(query.Table, query.Condition).then((cache: any) => {
+        cache.forEach((item: any) => {
           item.BaseType = "22";
           item.BaseLine = item.LineNum;
           item.BaseEntry = item.DocEntry;
         });
-        setItem(res);
-      });
+        setItem(cache);
+
+        query.Cache = cache;
+        APISearch(query).then((res: any) => {
+          res.forEach((item: any) => {
+            item.BaseType = "22";
+            item.BaseLine = item.LineNum;
+            item.BaseEntry = item.DocEntry;
+          });
+          setItem(res);
+        })
+      })
     }, []);
 
     const save = async () => {
