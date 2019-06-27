@@ -34,16 +34,16 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
           cond: "=",
           value: "S"
         },
-        // {
-        //   cond: "AND"
-        // },
-        // {
-        //   field: "CardCode",
-        //   cond: "=",
-        //   value: "S00050"
-        // }
+        {
+          cond: "AND"
+        },
+        {
+          field: "CardCode",
+          cond: "=",
+          value: "S00050"
+        }
       ],
-      Limit: 100,
+      Limit: 200,
       Page: 1
     };
 

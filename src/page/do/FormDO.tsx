@@ -103,7 +103,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
 
     APISearch(query).then((res: any) => {
       const items = res.map((item: any) => {
-        item.Key = btoa(item.DocEntry + item.LineNum);
+        item.Key = btoa(item.DocEntry +'|'+ item.LineNum);
         item.BaseType = item.ObjType;
         item.BaseLine = item.LineNum;
         item.BaseEntry = item.DocEntry;

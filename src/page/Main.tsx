@@ -53,6 +53,7 @@ import FormRute from './rute/FormRute';
 import ListPRVendor from './pr/ListPRVendor';
 import IconNavigation from '@app/libs/ui/Icons/IconNavigation';
 import ListDOCopySO from './do/ListDOCopySO';
+import ListInvoiceTOCust from './arinvoice-to/ListInvoiceTOCust';
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
@@ -313,7 +314,8 @@ export default observer((_props: any) => {
                 "/it/form/:id?": <FormInvTransfer />,
                 "/ar-invoice": <ListARInvoice />,
                 "/ar-invoice/form/:id?": <FormARInvoice />,
-                "/ar-invoice-to": <ListARInvoiceTO />,
+                "/ar-invoice-to": <ListInvoiceTOCust />,
+                "/ar-invoice-to/list/:id?": <ListARInvoiceTO />,
                 "/ar-invoice-to/form/:id?": <FormARInvoiceTO />,
                 "/customer": <ListCustomer />,
                 "/customer/form/:id?": <FormCustomer />,

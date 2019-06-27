@@ -54,7 +54,10 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                         if (!record.password) delete record.password;
                         if (!!record.id)
                             await updateRecord("user", record).then(() => alert("Saved!"));
-                        else await createRecord("user", record).then(() => alert("Saved!"));
+                        else {
+                            record.id = await createRecord("user", record).then(() => alert("Saved!"));
+                        } 
+                        
                         if (!!record.password) hashPassword(record.id);
                     }}
                 >

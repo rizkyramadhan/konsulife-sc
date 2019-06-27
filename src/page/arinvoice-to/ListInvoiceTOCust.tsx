@@ -7,6 +7,7 @@ import UISearch from '@app/libs/ui/UISearch';
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
+import global from '@app/global';
 
 export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
@@ -34,7 +35,14 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
           field: "CardType",
           cond: "=",
           value: "C"
-        }
+        },{
+          cond : "AND"
+        },
+        {
+          field: "U_IDU_BRANCH",
+          cond: "=",
+          value: global.session.user.branch
+        },
       ],
       Limit: 20,
       Page: 1

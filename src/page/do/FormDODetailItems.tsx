@@ -106,7 +106,7 @@ export default ({ items, setItems, flag, setSelected }: any) => {
             field={[
               {
                 key: 'WhsCode', size: 12, label: "Warehouse", component: (
-                  <SAPDropdown label="Warehouse" field="WarehouseCodeAll" where={[]} value={(item as any).item.WhsCode} setValue={(v) => {
+                  <SAPDropdown label="Warehouse" field="WarehouseCodeAll" value={(item as any).item.WhsCode} setValue={(v) => {
                     const idx = items.findIndex((x: any) => x.Key === item.pkval);
                     items[idx]['WhsCode'] = v;
                     setItems([...items]);
@@ -114,15 +114,6 @@ export default ({ items, setItems, flag, setSelected }: any) => {
               },
               {
                 key: 'Quantity', size: 12, label: 'Quantity', type: "number"
-              },
-              {
-                key: 'UomEntry', size: 12, label: "UoM", component: (
-                  <SAPDropdown label="UoMCode" field="UomCode" value={(item as any).item.UomEntry} setValue={(v, l) => {
-                    const idx = items.findIndex((x: any) => x.Key === item.pkval);
-                    items[idx]['UomEntry'] = v;
-                    items[idx]['UomCode'] = l;
-                    setItems([...items]);
-                  }} />)
               }
 
             ]}

@@ -25,7 +25,7 @@ const sample = {
   DocRate: 1,
   U_IDU_SO_INTNUM: -1,
   GroupNum: -1,
-  SlpCode: -1,
+  SlpCode: !!global.session.user.slp_code||-1,
   CntctCode: 1,
   Address2: "",
   Address: "",
@@ -134,12 +134,6 @@ export default observer(({ showSidebar, sidebar }: any) => {
               label: "General",
               sublabel: "Informasi Sales Order",
               value: [
-                {
-                  key: "U_IDU_SO_INTNUM",
-                  label: "SO Number",
-                  type: "field",
-                  size: 12
-                },
                 { key: "DocDate", size: 6, type: "date", label: "Posting Date" },
                 { key: "DocDueDate", size: 6, type: "date", label: "Delivery Date" },
                 {

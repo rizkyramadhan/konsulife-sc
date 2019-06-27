@@ -28,7 +28,7 @@ export const APISearch = async (p: APISearchProps) => {
     Table: p.Table,
     Condition: "",
     Sort: p.Sort ? p.Sort : "",
-    Page: p.Page ? p.Page : 0,
+    Page: p.Page ? p.Page : 1,
     Limit: p.Limit ? p.Limit : 0
   };
 
@@ -313,11 +313,11 @@ export const SAPFieldMap = {
   WarehouseCodeAll: {
     Table: "OWHS",
     Fields: ["WhsCode"],
-    Condition: [{
-      field: "U_BRANCH",
-      cond: "=",
-      value: ""
-    }]
+    // Condition: [{
+    //   field: "U_BRANCH",
+    //   cond: "=",
+    //   value: ""
+    // }]
   } as APISearchProps,
   OcrCode: {
     Table: "OPRC",

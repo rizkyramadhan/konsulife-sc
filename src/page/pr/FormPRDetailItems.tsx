@@ -74,14 +74,17 @@ export default ({ items, setItems, flag, setSelected }: any) => {
                 padding: 10
               }}
               field={[
-                { key: 'Quantity', size: 12, label: "Quantity" },
-                { key: 'UomEntry', size: 12, label: "UoM", component: (
-                  <SAPDropdown label="UoM" field="UomCode" value={(item as any).item.UomEntry} setValue={(v,l) => {
-                    const idx = items.findIndex((x: any) => x.PK === item.item.PK);
-                    items[idx]['UomEntry'] = v;
-                    items[idx]['UomCode'] = l;
-                    setItems([...items]);
-                  }} />) },
+                {
+                  key: 'WhsCode', size: 12, label: "Warehouse", component: (
+                    <SAPDropdown label="Warehouse" field="WarehouseCodeAll" value={(item as any).item.WhsCode} setValue={(v) => {
+                      const idx = items.findIndex((x: any) => x.PK === item.pkval);
+                      items[idx]['WhsCode'] = v;
+                      setItems([...items]);
+                    }} />)
+                },
+                {
+                  key: 'Quantity', size: 12, label: 'Quantity', type: "number"
+                }
               ]}
             />
 
