@@ -19,6 +19,9 @@ import global from '@app/global';
 export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
   const [saving, setSaving] = useState(false);
   const [data, setData] = useState([]);
+  const [item, setItem] = useState([]);
+
+  const param = atob(match.params.id).split("|");
   useEffect(() => {
     let query: APISearchProps = {
       Table: "ORDR",
@@ -26,8 +29,6 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
         "CardCode",
         "CardName",
         "NumAtCard",
-        "DocDate",
-        "DocDueDate",
         "DocCur",
         "DocRate",
         "U_IDU_SO_INTNUM",
@@ -40,18 +41,21 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
       ],
       Condition: [{
         field: "DocEntry",
-        cond: "=",
-        value: match.params.id
+        cond: "IN",
+        value: param
       }]
     };
 
     APISearch(query).then((res: any) => {
+      res[0].U_BRANCH = global.session.user.branch;
+      res[0].U_USERID = global.session.user.id;
+      res[0].U_GENERATED = "W";
+
       if (res.length > 0)
         setData(res[0]);
     });
   }, []);
 
-  const [item, setItem] = useState([]);
   useEffect(() => {
     let query: APISearchProps = {
       Table: "RDR1",
@@ -145,12 +149,6 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                   key: "U_IDU_SO_INTNUM",
                   type: "field",
                   label: "SO Number",
-                  size: 7
-                },
-                {
-                  key: "U_IDU_DO_INTNUM",
-                  type: "field",
-                  label: "DO Number",
                   size: 7
                 },
                 { type: "empty", size: 5 },
