@@ -80,8 +80,8 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
       ],
       Condition: [{
         field: "DocEntry",
-        cond: "=",
-        value: match.params.id
+        cond: "IN",
+        value: param
       }]
     };
 
@@ -152,15 +152,10 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                   size: 7
                 },
                 { type: "empty", size: 5 },
-                { key: "DocDate", size: 4, label: "Posting Date" },
-                { key: "DocDueDate", size: 4, label: "Delivery Date" },
+                { key: "DocDate", size: 4, type:"date", label: "Posting Date",options:{pastDate:true} },
+                { key: "DocDueDate", size: 4, type:"date", label: "Delivery Date",options:{pastDate:true} },
                 { type: "empty", size: 2 },
-                {
-                  key: "U_BRANCH",
-                  type: "field",
-                  label: "Cabang",
-                  size: 7
-                }
+                { key: "U_IDU_FP", size: 8, label: "Faktur Pajak" },
               ]
             },
             {
@@ -168,8 +163,8 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
               label: "Customer",
               sublabel: "Toko Penerima Barang",
               value: [
-                { key: "CardCode", label: "Customer", size: 3 },
-                { key: "CardName", label: "Name" }
+                { key: "CardCode", label: "Customer", size: 3, type:"field" },
+                { key: "CardName", label: "Name", type:"field" }
               ]
             },
             {

@@ -190,8 +190,8 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                   size: 8
                 },
                 { type: "empty", size: 4 },
-                { key: "DocDate", size: 4, type: "date", label: "Posting Date" },
-                { key: "DocDueDate", size: 4, type: "date", label: "Delivery Date" },
+                { key: "DocDate", size: 4, type: "date", label: "Posting Date",options:{pastDate:true} },
+                { key: "DocDueDate", size: 4, type: "date", label: "Delivery Date",options:{pastDate:true} },
                 { key: "U_IDU_FP", size: 8, label: "Faktur Pajak" },
               ]
             },

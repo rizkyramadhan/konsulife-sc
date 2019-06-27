@@ -138,7 +138,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
               sublabel: "Informasi Sales Order",
               value: [
                 { key: "DocDate", size: 6, type: "date", label: "Posting Date", options: { futureDate: true } },
-                { key: "DocDueDate", size: 6, type: "date", label: "Delivery Date" },
+                { key: "DocDueDate", size: 6, type: "date", label: "Delivery Date",options:{pastDate:true} },
                 {
                   key: "DocCur", size: 8, label: "Document Currency",
                   component: (

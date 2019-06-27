@@ -36,7 +36,7 @@ const BtnCopy = withRouter(({ history }: any) => {
     >
       <IconCopy color="#fff" />
       {isSize(["md", "lg"]) && (
-        <UIText style={{ color: "#fff" }}>Copy PO</UIText>
+        <UIText style={{ color: "#fff" }}>Copy DO</UIText>
       )}
     </UIButton>
   );

@@ -137,8 +137,8 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
               key: "general",
               label: "General",
               value: [
-                { key: "DocDate", size: 5, type: "date", label: "Posting Date" },
-                { key: "DocDueDate", size: 5, type: "date", label: "Delivery Date" },
+                { key: "DocDate", size: 5, type: "date", label: "Posting Date",options:{pastDate:true} },
+                { key: "DocDueDate", size: 5, type: "date", label: "Delivery Date",options:{pastDate:true} },
                 { type: "empty", size: 2 },
                 { key: "Filler", size: 5, type: "field", label: "From Warehouse", component: (
                   <SAPDropdown label="From Warehouse" field="Custom" customQuery={{ 

@@ -88,8 +88,8 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
               key: "general",
               label: "General",
               value: [
-                { key: "DocDate", size: 4, label: "Posting Date" },
-                { key: "DocDueDate", size: 4, label: "Delivery Date" },
+                { key: "DocDate", size: 4, label: "Posting Date",options:{pastDate:true} },
+                { key: "DocDueDate", size: 4, label: "Delivery Date",options:{pastDate:true} },
                 {
                   key: "CardCode", label: "BP Partner", size: 12, component: (
                     <SAPDropdown label="BP Partner" field="SalesAsEmployee" value={(data as any).CardCode} setValue={(v) => { setData({ ...data, CardCode: v }) }} />)

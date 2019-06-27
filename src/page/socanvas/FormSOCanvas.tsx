@@ -36,7 +36,7 @@ const sample = {
 };
 
 export default observer(({ showSidebar, sidebar }: any) => {
-  const [data, setData] = useState(sample);
+  const [data, setData] = useState<any>(sample);
   const [items, setItems] = useState<any[]>([]);
   const [saving, setSaving] = useState(false);
   const [qShip, setQShip] = useState(false);
@@ -82,6 +82,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
   const save = async () => {
     setSaving(true);
     const Lines_IT = items.map(d => {
+      d.ShipDate = data.DocDate;
       d.OcrCode = global.session.user.area;
       d.OcrCode2 = global.session.user.branch;
 
@@ -138,8 +139,8 @@ export default observer(({ showSidebar, sidebar }: any) => {
               label: "General",
               sublabel: "Informasi Sales Order",
               value: [
-                { key: "DocDate", size: 6, type: "date", label: "Posting Date" },
-                { key: "DocDueDate", size: 6, type: "date", label: "Delivery Date" },
+                { key: "DocDate", size: 6, type: "date", label: "Posting Date",options:{pastDate:true} },
+                { key: "DocDueDate", size: 6, type: "date", label: "Delivery Date",options:{pastDate:true} },
                 {
                   key: "DocCur", size: 8, label: "Document Currency",
                   component: (
@@ -155,13 +156,12 @@ export default observer(({ showSidebar, sidebar }: any) => {
                 { key: "CardCode", size: 8, type: "field", label: "Customer/Vendor Code" },
                 {
                   key: "CardCode", label: "Customer/Vendor", size: 12, component: (
-                    <SAPDropdown label="Customer" field="CustomerCode" value={(data as any).CardCode} setValue={(v, _, r) => {
-                      setData({ ...data, CardCode: v, GroupNum: r.item.GroupNum, DocCur: r.item.Currency });
+                    <SAPDropdown label="Customer" field="CustomerCode" value={(data as any).CardCode} setValue={(v, l, r) => {
+                      setData({ ...data, CardCode: v, CardName: l, GroupNum: r.item.GroupNum, DocCur: r.item.Currency });
                       setQBill(true);
                       setQShip(true);
                     }} />)
                 },
-                // { key: "CardName", label: "Name" },
                 {
                   key: "CntctCode", label: "Contact Person", size: 7, component: (
                     <SAPDropdown label="Contact Person" field="Custom" customQuery={{
