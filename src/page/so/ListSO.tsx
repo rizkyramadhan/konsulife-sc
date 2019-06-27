@@ -38,7 +38,7 @@ const BtnCreate = withRouter(({ history }: any) => {
 export default withRouter(observer(({ showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
   const [_data, _setData] = useState([]);
-  const field = ["DocNum", "U_IDU_SO_INTNUM", "CardName", "CardCode", "DocDate", "DocDueDate"];
+  const field = ["DocNum","DocEntry", "U_IDU_SO_INTNUM", "CardName", "CardCode", "DocDate", "DocDueDate"];
   const funcSearch = (value: string) => {
     _setData([...(value ? data.filter((x: any) => {
       let res = false;
@@ -82,7 +82,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
         <UISearch onSearch={funcSearch}></UISearch>
         <UIList
           style={{ flex: 1 }}
-          primaryKey="DocNum"
+          primaryKey="DocEntry"
           selection="detail"
           fields={{
             U_IDU_SO_INTNUM: {

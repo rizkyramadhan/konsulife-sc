@@ -18,8 +18,6 @@ import { getLastNumbering, updateLastNumbering } from '@app/utils';
 
 const sample = {
   CardCode: "",
-  // CardName: "",
-  IsCanvas: "N",
   NumAtCard: "",
   DocCur: "",
   DocRate: 1,
@@ -32,7 +30,8 @@ const sample = {
   Comments: "",
   U_BRANCH : global.session.user.branch,
   U_USERID : global.session.user.id,
-  U_GENERATED : "W"
+  U_GENERATED : "W",
+  U_IDU_ISCANVAS: "N",
 };
 
 export default observer(({ showSidebar, sidebar }: any) => {
@@ -104,7 +103,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
     }
 
   }
-
+  
   return (
     <UIContainer>
       <UIHeader

@@ -239,7 +239,11 @@ export default withRouter(
         delete d.No;
         return d;
       });
-      console.log(data,global.session);
+
+      data.U_IDU_AREA = global.session.user.area;
+      data.U_IDU_BRANCH = global.session.user.area;
+      data.U_USERID = global.session.user.id;
+      
       try {
         await APIPost("Customer", {
           ...data,

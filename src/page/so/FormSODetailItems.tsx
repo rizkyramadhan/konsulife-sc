@@ -14,6 +14,7 @@ import UISelectField from '@app/libs/ui/UISelectField';
 import { APISearch } from '@app/api';
 
 export default ({ data, items, setItems }: any) => {
+  console.log(data,items);
   return (
     <UIList
       primaryKey="LineNum"
