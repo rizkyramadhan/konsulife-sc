@@ -81,6 +81,9 @@ export default observer(({ showSidebar, sidebar }: any) => {
   const save = async () => {
     setSaving(true);
     const Lines_IT = items.map(d => {
+      d.OcrCode = global.session.user.area;
+      d.OcrCode2 = global.session.user.branch;
+      
       delete d.LineNum;
       return d;
     });
