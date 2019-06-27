@@ -79,7 +79,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
   const save = async () => {
     setSaving(true);
     try {
-      let number: any = await getLastNumbering("PGK-T", global.getSession().user.warehouse_id);
+      let number: any = await getLastNumbering("PGK-R", global.getSession().user.warehouse_id);
       let postItem:any[] = [];
       items.forEach((val:any)=>{
         postItem.push({
@@ -115,7 +115,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
       <UIHeader
         isBack={true}
         showSidebar={showSidebar}
-        sidebar={sidebar} center="Stock Transfer Form">
+        sidebar={sidebar} center="Stock Return Form">
         <UIButton
           color="primary"
           size="small"

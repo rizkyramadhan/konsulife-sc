@@ -54,6 +54,7 @@ import ListPRVendor from './pr/ListPRVendor';
 import IconNavigation from '@app/libs/ui/Icons/IconNavigation';
 import ListDOCopySO from './do/ListDOCopySO';
 import ListInvoiceTOCust from './arinvoice-to/ListInvoiceTOCust';
+import FormInvTransferReturn from './it/FormInvTransferReturn';
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
@@ -306,6 +307,7 @@ export default observer((_props: any) => {
                 "/do/form/:CardCode/:CardName/:ItemSelect": <FormDO />,
                 "/it": <ListInvTransfer />,
                 "/it/form": <FormInvTransfer />,
+                "/it-ret/form": <FormInvTransferReturn />,
                 "/pr": <ListPRVendor />,
                 "/pr/list/:id?": <ListPR />,
                 "/pr/form/:id?": <FormPR />,

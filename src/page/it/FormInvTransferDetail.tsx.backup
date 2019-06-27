@@ -5,8 +5,6 @@ import { MainStyle } from '@app/config';
 import UIText from '@app/libs/ui/UIText';
 import UIJsonField from '@app/libs/ui/UIJsonField';
 import UISeparator from '@app/libs/ui/UISeparator';
-import UISelectField from '@app/libs/ui/UISelectField';
-import SAPDropdown from '@app/components/SAPDropdown';
 
 export default ({ items, setItems }: any) => {
   return (
@@ -63,42 +61,7 @@ export default ({ items, setItems }: any) => {
                 padding: 10
               }}
               field={[
-                {
-                  key: 'ItemCode', size: 12, label: 'Item Code', component: (
-                    <SAPDropdown label="Item Code" field="ItemCodeAll" value={(item as any).item.ItemCode} setValue={async (v, l) => {
-                      const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
-                      items[idx]['ItemCode'] = v;
-                      items[idx]["Dscription"] = l;
-                      setItems([...items]);
-                    }} />)
-                },
-                {
-                  key: 'UseBaseUn', size: 12, label: 'Inventory UoM', component: (
-                    <UISelectField
-                      label="Inventory UoM"
-                      items={[
-                        { label: "Yes", value: "Y" },
-                        { label: "No", value: "N" }
-                      ]}
-                      value={(item as any).item.UseBaseUn}
-                      setValue={v => {
-                        const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
-                        items[idx]['UseBaseUn'] = v;
-                        setItems([...items]);
-                      }}
-                    />
-                  )
-                },
                 { key: 'Quantity', size: 12, label: "Quantity" },
-                {
-                  key: 'UomEntry', size: 12, label: 'Uom', component: (
-                    <SAPDropdown label="UoM Code" field="UomCode" value={(item as any).item.UomEntry} setValue={(v) => {
-                      const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
-                      items[idx]['UomEntry'] = v;
-                      setItems([...items]);
-                    }} />)
-                },
-                { key: 'SerialNum', size: 12, label: "Serial Number" },
               ]}
             />
 
@@ -118,24 +81,9 @@ export default ({ items, setItems }: any) => {
             header: "Item Name"
           }
         },
-        UseBaseUn: {
+        U_IDU_PARTNUM: {
           table: {
-            header: "Inventory UoM"
-          }
-        },
-        Quantity: {
-          table: {
-            header: "Quantity"
-          }
-        },
-        UomEntry: {
-          table: {
-            header: "UoM Code"
-          }
-        },
-        SerialNum: {
-          table: {
-            header: "Serial Number"
+            header: "Part Number"
           }
         },
         WhsCode: {
@@ -143,7 +91,21 @@ export default ({ items, setItems }: any) => {
             header: "Warehouse"
           }
         },
-        
+        Quantity: {
+          table: {
+            header: "Quantity"
+          }
+        },
+        UomCode: {
+          table: {
+            header: "UoM Code"
+          }
+        },
+        OpenCreQty: {
+          table: {
+            header: "Open Qty"
+          }
+        },
       }}
     />
   );

@@ -18,6 +18,7 @@ import { getLastNumbering, updateLastNumbering } from '@app/utils';
 
 const sample = {
   CardCode: "",
+  CardName: "",
   NumAtCard: "",
   DocCur: "",
   DocRate: 1,
@@ -143,8 +144,6 @@ export default observer(({ showSidebar, sidebar }: any) => {
                   component: (
                     <SAPDropdown label="Document Currency" field="Currency" value={(data as any).DocCur} setValue={(v) => { setData({ ...data, DocCur: v }) }} />)
                 },
-                // { key: "DocRate", size: 4, label: "Document Rate" },
-                // { key: "SlpCode", label: "Sales Employee" }
               ]
             },
             {
@@ -155,8 +154,8 @@ export default observer(({ showSidebar, sidebar }: any) => {
                 { key: "CardCode", size: 8, type: "field", label: "Customer/Vendor Code" },
                 {
                   key: "CardCode", label: "Customer/Vendor", size: 12, component: (
-                    <SAPDropdown label="Customer" field="CustomerCode" value={(data as any).CardCode} setValue={(v, _, r) => {
-                      setData({ ...data, CardCode: v, GroupNum: r.item.GroupNum, DocCur: r.item.Currency });
+                    <SAPDropdown label="Customer" field="CustomerCode" value={(data as any).CardCode} setValue={(v, l, r) => {
+                      setData({ ...data, CardCode: v, CardName:l,GroupNum: r.item.GroupNum, DocCur: r.item.Currency });
                       setQBill(true);
                       setQShip(true);
                     }} />)

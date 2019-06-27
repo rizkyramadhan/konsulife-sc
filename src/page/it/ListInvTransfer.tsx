@@ -1,15 +1,62 @@
 import { APISearch, APISearchProps } from '@app/api';
-import IconRemove from '@app/libs/ui/Icons/IconRemove';
 import UIBody from "@app/libs/ui/UIBody";
-import UIButton from '@app/libs/ui/UIButton';
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
-import UIRow from '@app/libs/ui/UIRow';
 import UISearch from '@app/libs/ui/UISearch';
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
+import global from '@app/global';
+import UIButton from '@app/libs/ui/UIButton';
+import UIText from '@app/libs/ui/UIText';
+import { isSize } from '@app/libs/ui/MediaQuery';
+import IconCheck from '@app/libs/ui/Icons/IconCheck';
+import IconLuggageCart from '@app/libs/ui/Icons/IconLuggageCart';
+
+const BtnTransfer = withRouter(({ history }: any) => {
+  return (
+    <UIButton
+      size="small"
+      color="primary"
+      onPress={() => {
+        history.push("/it/form");
+      }}
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "flex-end"
+      }}
+    >
+      <IconLuggageCart color="#fff" />
+      {isSize(["md", "lg"]) && (
+        <UIText style={{ color: "#fff" }}>Stock Transfer</UIText>
+      )}
+    </UIButton>
+  );
+});
+
+const BtnReturn = withRouter(({ history }: any) => {
+  return (
+    <UIButton
+      size="small"
+      color="success"
+      onPress={() => {
+        history.push("/it-ret/form");
+      }}
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "flex-end"
+      }}
+    >
+      <IconCheck color="#fff" />
+      {isSize(["md", "lg"]) && (
+        <UIText style={{ color: "#fff" }}>Stock Return</UIText>
+      )}
+    </UIButton>
+  );
+});
 
 export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
@@ -30,13 +77,21 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
 
   useEffect(() => {
     let query: APISearchProps = {
-      Table: "OWTQ",
+      Table: "OWTR",
       Fields: ["DocNum", "DocEntry", "CardName", "CardCode", "U_IDU_ITR_INTNUM", "DocDate"],
       Condition: [
         {
           field: "DocStatus",
           cond: "=",
           value: "O"
+        },
+        {
+          cond:"AND"
+        },
+        {
+          field:"U_BRANCH",
+          cond:"=",
+          value:global.session.user.branch
         }
       ]
     };
@@ -50,6 +105,8 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   return (
     <UIContainer>
       <UIHeader showSidebar={showSidebar} sidebar={sidebar} center={"Inventory Transfer"}>
+        <BtnTransfer></BtnTransfer>
+        <BtnReturn></BtnReturn>
       </UIHeader>
       <UIBody>
         <UISearch onSearch={funcSearch}></UISearch>
@@ -59,9 +116,14 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
           selection="single"
           onSelect={(item) => { history.push('/it/form/' + item.DocEntry) }}
           fields={{
+            U_IDU_ITR_INTNUM: {
+              table: {
+                header: 'Request No.'
+              }
+            },
             CardName: {
               table: {
-                header: 'Customer/Vendor'
+                header: 'BP'
               }
             },
             CardCode: {
@@ -69,48 +131,14 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
                 header: 'Code'
               }
             },
-            U_IDU_ITR_INTNUM: {
-              table: {
-                header: 'Request No.'
-              }
-            },
             DocDate: {
               table: {
                 header: 'Posting Date'
-              }
-            },
-            action: {
-              table: {
-                header: 'Action'
               }
             }
           }}
           items={_data.map((item: any) => ({
             ...item,
-            action: (
-              <UIRow style={{ marginTop: 0 }}>
-                <UIButton
-                  size="small"
-                  fill="clear"
-                  style={{
-                    marginTop: 0,
-                    marginBottom: 0
-                  }}
-                  onPress={() => {
-                    alert("remove!");
-                  }}
-                >
-                  <IconRemove
-                    height={18}
-                    width={18}
-                    color="red"
-                    onPress={() => {
-                      alert("remove!");
-                    }}
-                  />
-                </UIButton>
-              </UIRow>
-            )
           }))}
         />
       </UIBody>
