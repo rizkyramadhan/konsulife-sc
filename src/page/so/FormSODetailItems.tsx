@@ -14,7 +14,7 @@ import UISelectField from '@app/libs/ui/UISelectField';
 import { APISearch } from '@app/api';
 
 export default ({ data, items, setItems }: any) => {
-  console.log(data,items);
+  console.log(data, items);
   return (
     <UIList
       primaryKey="LineNum"
@@ -209,7 +209,6 @@ export default ({ data, items, setItems }: any) => {
                   <SAPDropdown label="UoM" field="UomCode" value={(item as any).item.UomEntry} setValue={(v) => {
                     const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
                     items[idx]['UomEntry'] = v;
-                    console.log(v);
                     setItems([...items]);
                   }} />)
               },

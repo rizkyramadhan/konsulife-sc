@@ -24,14 +24,14 @@ const sample = {
   DocRate: 1,
   U_IDU_SO_INTNUM: -1,
   GroupNum: -1,
-  SlpCode: !!global.session.user.slp_code||-1,
+  SlpCode: !!global.session.user.slp_code || -1,
   CntctCode: 1,
   Address2: "",
   Address: "",
   Comments: "",
-  U_BRANCH : global.session.user.branch,
-  U_USERID : global.session.user.id,
-  U_GENERATED : "W",
+  U_BRANCH: global.session.user.branch,
+  U_USERID: global.session.user.id,
+  U_GENERATED: "W",
   U_IDU_ISCANVAS: "N",
 };
 
@@ -84,7 +84,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
     const Lines_IT = items.map(d => {
       d.OcrCode = global.session.user.area;
       d.OcrCode2 = global.session.user.branch;
-      
+
       delete d.LineNum;
       return d;
     });
@@ -107,7 +107,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
     }
 
   }
-  
+
   return (
     <UIContainer>
       <UIHeader
@@ -137,7 +137,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
               label: "General",
               sublabel: "Informasi Sales Order",
               value: [
-                { key: "DocDate", size: 6, type: "date", label: "Posting Date" },
+                { key: "DocDate", size: 6, type: "date", label: "Posting Date", options: { futureDate: true } },
                 { key: "DocDueDate", size: 6, type: "date", label: "Delivery Date" },
                 {
                   key: "DocCur", size: 8, label: "Document Currency",
@@ -155,7 +155,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
                 {
                   key: "CardCode", label: "Customer/Vendor", size: 12, component: (
                     <SAPDropdown label="Customer" field="CustomerCode" value={(data as any).CardCode} setValue={(v, l, r) => {
-                      setData({ ...data, CardCode: v, CardName:l,GroupNum: r.item.GroupNum, DocCur: r.item.Currency });
+                      setData({ ...data, CardCode: v, CardName: l, GroupNum: r.item.GroupNum, DocCur: r.item.Currency });
                       setQBill(true);
                       setQShip(true);
                     }} />)
