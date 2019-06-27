@@ -104,7 +104,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                                 // { key: "sap_id", size: 4, label: "SAP Code" },
                                 {
                                     key: "sales_as_customer", size: 12, label: "Sales As Customer", component: (
-                                        <SAPDropdown label="Sales As Customer" field="CustomerCode" value={(data as any).sales_as_customer} setValue={(v) => { setData({ ...data, sales_as_customer: v }) }} />)
+                                        <SAPDropdown label="Sales As Customer" field="SalesAsEmployee" value={(data as any).sales_as_customer} setValue={(v) => { setData({ ...data, sales_as_customer: v }) }} />)
                                 }
                             ]
                         },

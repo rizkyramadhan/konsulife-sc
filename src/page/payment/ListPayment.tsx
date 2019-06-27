@@ -6,9 +6,7 @@ import UIList from "@app/libs/ui/UIList";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
-import UIRow from '@app/libs/ui/UIRow';
 import UIButton from '@app/libs/ui/UIButton';
-import IconRemove from '@app/libs/ui/Icons/IconRemove';
 import { isSize } from '@app/libs/ui/MediaQuery';
 import IconAdd from '@app/libs/ui/Icons/IconAdd';
 import UIText from '@app/libs/ui/UIText';
@@ -95,39 +93,10 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
               table: {
                 header: 'Posting Date'
               }
-            },
-            action: {
-              table: {
-                header: 'Action'
-              }
             }
           }}
           items={_data.map((item: any) => ({
-            ...item,
-            action: (
-              <UIRow style={{ marginTop: 0 }}>
-                <UIButton
-                  size="small"
-                  fill="clear"
-                  style={{
-                    marginTop: 0,
-                    marginBottom: 0
-                  }}
-                  onPress={() => {
-                    alert("remove!");
-                  }}
-                >
-                  <IconRemove
-                    height={18}
-                    width={18}
-                    color="red"
-                    onPress={() => {
-                      alert("remove!");
-                    }}
-                  />
-                </UIButton>
-              </UIRow>
-            )
+            ...item
           }))}
         />
       </UIBody>

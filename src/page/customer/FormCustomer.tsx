@@ -18,22 +18,31 @@ import { View } from "reactxp";
 import FormCustomerBillToItems from "./FormCustomerBillToItems";
 import FormCustomerCPItems from "./FormCustomerCPItems";
 import FormCustomerShipToItems from "./FormCustomerShipToItems";
+import global from '@app/global';
 
-// const customer = {
-//   Series: "",
-//   CardName: "",
-//   CardType: "",
-//   GroupCode: "",
-//   LicTradNum: "",
-//   AddID: "",
-//   SlpCode: "",
-//   Phone1: "",
-//   Phone2: "",
-//   Fax: "",
-//   Cellular: "",
-//   E_Mail: "",
-//   GroupNum: ""
-// };
+const customer = {
+  Series: "",
+  CardName: "",
+  CardType: "",
+  GroupCode: "",
+  LicTradNum: "",
+  AddID: "",
+  SlpCode: "-1",
+  Phone1: "",
+  Phone2: "",
+  Fax: "",
+  Cellular: "",
+  E_Mail: "",
+  GroupNum: "",
+  U_IDU_AREA: global.session.user.area,
+  U_IDU_BRANCH:global.session.user.area,
+  U_LATITUDE : "",
+  U_LONGITUDE : "",
+  U_SALES:"N",
+  U_USERID : global.session.user.id,
+  U_GENERATED : "W",
+
+};
 
 const cpList = [
   {
@@ -76,7 +85,7 @@ const shipToList = [
 
 export default withRouter(
   observer(({ match, showSidebar, sidebar }: any) => {
-    const [data, setData] = useState({});
+    const [data, setData] = useState(customer);
     const [itemCP, setItemCP] = useState(cpList);
     const [itemBillTo, setItemBillTo] = useState(billToList);
     const [itemShipTo, setItemShipTo] = useState(shipToList);
@@ -230,7 +239,7 @@ export default withRouter(
         delete d.No;
         return d;
       });
-
+      console.log(data,global.session);
       try {
         await APIPost("Customer", {
           ...data,
@@ -329,9 +338,7 @@ export default withRouter(
                       <UISelectField
                         label="BP Type"
                         items={[
-                          { label: "Lead", value: "L" },
-                          { label: "Customer", value: "C" },
-                          { label: "Vendor", value: "S" }
+                          { label: "Lead", value: "L" }
                         ]}
                         value={(data as any).CardType}
                         setValue={v => {
@@ -367,8 +374,7 @@ export default withRouter(
                         }}
                       />
                     )
-                  },
-                  { key: "SlpCode", size: 7, label: "Sales Employee Code" }
+                  }
                 ]
               },
               {
@@ -383,36 +389,6 @@ export default withRouter(
                   { key: "Fax", size: 6, label: "Fax Number" },
                   { key: "Cellular", size: 6, label: "Mobile Phone" },
                   { key: "E_Mail", size: 7, label: "E-Mail" },
-                  // { key: "U_IDU_AREA", size: 7, label: "Area" },
-                  {
-                    key: "U_IDU_AREA",
-                    size: 12,
-                    component: (
-                      <SAPDropdown
-                        label="Area"
-                        field="Area"
-                        value={(data as any).U_IDU_AREA}
-                        setValue={v => {
-                          setData({ ...data, U_IDU_AREA: v });
-                        }}
-                      />
-                    )
-                  },
-                  {
-                    key: "U_IDU_BRANCH",
-                    size: 8,
-                    component: (
-                      <SAPDropdown
-                        label="Branch"
-                        field="Branch"
-                        value={(data as any).U_IDU_BRANCH}
-                        setValue={v => {
-                          setData({ ...data, U_IDU_BRANCH: v });
-                        }}
-                      />
-                    )
-                  }
-                  // { key: "U_IDU_BRANCH", size: 7, label: "Branch" }
                 ]
               }
             ]}

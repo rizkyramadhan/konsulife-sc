@@ -31,6 +31,7 @@ export default withRouter(
           "DocNum",
           "DocEntry",
           "DocCur",
+          "DocRate",
           "SlpCode",
           "CntctCode",
           "NumAtCard",
@@ -39,7 +40,8 @@ export default withRouter(
           "CardName",
           "CardCode",
           "U_IDU_PO_INTNUM",
-          "U_IDU_SUP_SONUM"
+          "U_IDU_SUP_SONUM",
+          "U_IDU_SO_INTNUM"
         ],
         Condition: [
           {
@@ -76,8 +78,8 @@ export default withRouter(
           // }
 
           // res[0].DocDate = yyyy+"-"+mm+"-"+dd;
-          res[0].U_IDU_PO_INTNUM = poNum.join(";");
-          res[0].U_IDU_SUP_SONUM = soNum.join(";");
+          //res[0].U_IDU_PO_INTNUM = poNum.join(";");
+          //res[0].U_IDU_SUP_SONUM = soNum.join(";");
           res[0].U_BRANCH = global.session.user.branch;
           res[0].U_USERID = global.session.user.id;
           res[0].U_GENERATED = "W";
@@ -133,10 +135,9 @@ export default withRouter(
     const save = async () => {
       setSaving(true);
       try {
-
         let number: any = await getLastNumbering("LPB", global.getSession().user.warehouse_id);
         await APIPost("PurchaseReceipt", {
-          ...data, 
+          ...data, U_IDU_GRPO_INTNUM: number.format,
           Lines: selected
         });
         updateLastNumbering(number.id, number.last_count + 1);

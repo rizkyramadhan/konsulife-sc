@@ -232,6 +232,15 @@ export const SAPFieldMap = {
       value: ""
     }]
   } as APISearchProps,
+  SalesAsEmployee: {
+    Table: "OCRD",
+    Fields: ["CardCode", "CardName"],
+    Condition: [{
+      field: "U_SALES",
+      cond: "=",
+      value: "Y"
+    }]
+  } as APISearchProps,
   ShipTo: {
     Table: "CRD1",
     Fields: ["Address", "Street", "City"],
