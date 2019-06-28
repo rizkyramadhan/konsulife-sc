@@ -229,6 +229,12 @@ export default withRouter(
                   },
                   { type: "empty", size: 4 },
                   {
+                    key: "I_IDU_DO_INTNUM",
+                    label: "NO DO Supplier",
+                    size: 8
+                  },
+                  { type: "empty", size: 4 },
+                  {
                     key: "DocDate",
                     size: 6,
                     type: "date",
