@@ -7,14 +7,43 @@ import React from "react";
 import { Button, View } from 'reactxp/dist/web/ReactXP';
 import UIButton from '@app/libs/ui/UIButton';
 import IconRemove from '@app/libs/ui/Icons/IconRemove';
+import UIRow from '@app/libs/ui/UIRow';
+import SAPDropdown from '@app/components/SAPDropdown';
 
 export default ({ items, setItems }: any) => {
   return (
     <View>
       <UIList
         style={{ flex: 1 }}
-        primaryKey="No"
+        primaryKey="Key"
         items={items}
+        fields={{
+          Address: {
+            table: {
+              header: "Address"
+            }
+          },
+          Street: {
+            table: {
+              header: "Street"
+            }
+          },
+          ZipCode: {
+            table: {
+              header: "ZIP Code"
+            }
+          },
+          City: {
+            table: {
+              header: "City"
+            }
+          },
+          StateName: {
+            table: {
+              header: "State"
+            }
+          }
+        }}
         selection="detail"
         detailComponent={(item) => (
           <View
@@ -48,7 +77,7 @@ export default ({ items, setItems }: any) => {
                 <UIText>{item.pkval}</UIText>
               </View>
               <View style={{ justifyContent: "center", alignItems: "center" }}>
-                <Button onPress={() => { setItems([...items]); item.close; }}>
+                <Button onPress={() => item.close()}>
                   <UIText size="large">&times;</UIText>
                 </Button>
               </View>
@@ -57,9 +86,9 @@ export default ({ items, setItems }: any) => {
             <UIJsonField
               items={item.item}
               setValue={(val: any, key: string) => {
-                const idx = items.findIndex((x: any) => x.No === item.item.No);
+                const idx = items.findIndex((x: any) => x.Key === item.pkval);
                 items[idx][key] = val;
-                setItems(items);
+                setItems([...items]);
               }}
               style={{
                 padding: 10
@@ -69,26 +98,44 @@ export default ({ items, setItems }: any) => {
                 { key: 'Street', size: 12, label: "Street" },
                 { key: 'ZipCode', size: 12, label: "ZIP Code" },
                 { key: 'City', size: 12, label: "City" },
-                { key: 'State', size: 12, label: "State" }
+                {
+                  key: "State",
+                  size: 12,
+                  component: (
+                    <SAPDropdown
+                      label="State"
+                      field="State"
+                      value={item.item.State}
+                      setValue={(v: any, l: any) => {
+                        const idx = items.findIndex((x: any) => x.Key === item.pkval);
+                        items[idx].State = v;
+                        items[idx].StateName = l;
+                        setItems([...items]);
+                      }}
+                    />
+                  )
+                }
               ]}
             />
 
-            <UIButton
-              style={{
-                flexShrink: 'none'
-              }}
-              color="error"
-              size="small"
-              onPress={() => {
-                const idx = items.findIndex((x: any) => x.No === item.item.No);
-                items.splice(idx, 1);
-                setItems([...items]);
-              }}
-            >
-              <IconRemove color="#fff" height={18} width={18} style={{
-                marginTop: -9
-              }} />
-            </UIButton>
+            <UIRow style={{
+              paddingLeft: 10
+            }}>
+              <UIButton
+                style={{
+                  flexShrink: 'none'
+                }}
+                color="error"
+                size="small"
+                onPress={() => {
+                  const idx = items.findIndex((x: any) => x.Key === item.pkval);
+                  items.splice(idx, 1);
+                  setItems([...items]);
+                }}
+              >
+                <IconRemove color="#fff" height={18} width={18} />
+              </UIButton>
+            </UIRow>
           </View>
         )}
       />

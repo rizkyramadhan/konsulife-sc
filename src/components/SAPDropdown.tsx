@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 interface SAPDropdownProps extends UIProps {
   value: string | number;
   setValue: (value: any, label?: any, row?: any) => any;
-  field: 'SalesAsEmployee' |'OcrCode' | 'OcrCode2' | 'Series' | 'State' | 'BPGroup' | 'Currency' | 'CustomerCode' | 'PaymentTerms' | 'ContactPerson' | 'ShipTo' | 'BillTo' | 'TaxCode' | 'ItemCodeCanvas' | 'ItemCodeAll' | 'UomCode' | 'WarehouseCodeCanvas' | 'WarehouseCodeAll' | 'VendorCode' | 'SAPSalesCode' | 'Area' | 'Branch' | 'ChartOfAccount' | 'ItemCodeCanvas' | 'Custom';
+  field: 'SalesAsEmployee' | 'OcrCode' | 'OcrCode2' | 'Series' | 'State' | 'BPGroup' | 'Currency' | 'CustomerCode' | 'PaymentTerms' | 'ContactPerson' | 'ShipTo' | 'BillTo' | 'TaxCode' | 'ItemCodeCanvas' | 'ItemCodeAll' | 'UomCode' | 'WarehouseCodeCanvas' | 'WarehouseCodeAll' | 'VendorCode' | 'SAPSalesCode' | 'Area' | 'Branch' | 'ChartOfAccount' | 'ItemCodeCanvas' | 'Custom';
   itemField?: {
     value: string,
     label: string
@@ -72,8 +72,10 @@ export default ({
     }
 
     query.Limit = 50;
-
     if (refresh || mustInit) {
+      _setItems([]);
+      setItems([]);
+
       APISearch(query).then((res: any) => {
         let items = res.map((item: any) => {
           let fields = (SAPFieldMap as any)[field] ? (SAPFieldMap as any)[field].Fields : Object.keys(item);
@@ -95,6 +97,6 @@ export default ({
   return (
     <UISelectField items={_items} value={value} setValue={(v: any, l: any) => { const idx: any = _items.findIndex((x: any) => x.value === v); setValue(v, l, _items[idx]) }} label={label} style={style} color={color} search={true} onSearch={(value) => {
       setItems([...(value ? items.filter((x: any) => x.value.toLowerCase().includes(value.toLowerCase()) || x.label.toLowerCase().includes(value.toLowerCase())) : items)]);
-    }} onDismiss={(value:any) => value && setItems([...items])} />
+    }} onDismiss={(value: any) => value && setItems([...items])} />
   );
 };

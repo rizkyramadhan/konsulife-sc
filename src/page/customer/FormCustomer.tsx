@@ -8,7 +8,6 @@ import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIJsonField from "@app/libs/ui/UIJsonField";
-import UISelectField from "@app/libs/ui/UISelectField";
 import UITabs from "@app/libs/ui/UITabs";
 import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
@@ -23,7 +22,7 @@ import global from '@app/global';
 const customer = {
   Series: "",
   CardName: "",
-  CardType: "",
+  CardType: "L",
   GroupCode: "",
   LicTradNum: "",
   AddID: "",
@@ -35,60 +34,60 @@ const customer = {
   E_Mail: "",
   GroupNum: "",
   U_IDU_AREA: global.session.user.area,
-  U_IDU_BRANCH:global.session.user.area,
-  U_LATITUDE : "",
-  U_LONGITUDE : "",
-  U_SALES:"N",
-  U_USERID : global.session.user.id,
-  U_GENERATED : "W",
-
+  U_IDU_BRANCH: global.session.user.branch,
+  U_LATITUDE: "",
+  U_LONGITUDE: "",
+  U_SALES: "N",
+  U_USERID: global.session.user.username,
+  U_GENERATED: "W",
+  SeriesName: ""
 };
 
-const cpList = [
-  {
-    No: 1,
-    Name: "",
-    FirstName: "",
-    MiddleName: "",
-    LastName: "",
-    Tel1: "",
-    Tel2: "",
-    Cellolar: ""
-  }
-];
+// const cpList = [
+//   {
+//     No: 1,
+//     Name: "",
+//     FirstName: "",
+//     MiddleName: "",
+//     LastName: "",
+//     Tel1: "",
+//     Tel2: "",
+//     Cellolar: ""
+//   }
+// ];
 
-const billToList = [
-  {
-    No: 1,
-    Address: "",
-    Street: "",
-    ZipCode: "",
-    City: "",
-    State: "01",
-    AdresType: "B",
-    IsDefault: "Y"
-  }
-];
+// const billToList = [
+//   {
+//     No: 1,
+//     Address: "",
+//     Street: "",
+//     ZipCode: "",
+//     City: "",
+//     State: "01",
+//     AdresType: "B",
+//     IsDefault: "Y"
+//   }
+// ];
 
-const shipToList = [
-  {
-    No: 1,
-    Address: "",
-    Street: "",
-    ZipCode: "",
-    City: "",
-    State: "01",
-    AdresType: "S",
-    IsDefault: "Y"
-  }
-];
+// const shipToList = [
+//   {
+//     No: 1,
+//     Address: "",
+//     Street: "",
+//     ZipCode: "",
+//     City: "",
+//     State: "01",
+//     AdresType: "S",
+//     IsDefault: "Y"
+//   }
+// ];
 
 export default withRouter(
-  observer(({ match, showSidebar, sidebar }: any) => {
+  observer(({ history, match, showSidebar, sidebar }: any) => {
     const [data, setData] = useState(customer);
-    const [itemCP, setItemCP] = useState(cpList);
-    const [itemBillTo, setItemBillTo] = useState(billToList);
-    const [itemShipTo, setItemShipTo] = useState(shipToList);
+    const [itemCP, setItemCP] = useState<any[]>([]);
+    const [itemBillTo, setItemBillTo] = useState<any[]>([]);
+    const [itemShipTo, setItemShipTo] = useState<any[]>([]);
     const [saving, setSaving] = useState(false);
 
     const ActionCP = () => {
@@ -104,7 +103,7 @@ export default withRouter(
             setItemCP([
               ...(itemCP as any),
               {
-                No: Math.floor(Math.random() * Math.floor(999)),
+                Key: new Date().valueOf(),
                 Name: "",
                 FirstName: "",
                 MiddleName: "",
@@ -128,7 +127,7 @@ export default withRouter(
           />
           {isSize(["md", "lg"]) && (
             <UIText style={{ color: "#fff" }} size="small">
-              {" Add"}
+              {" Add Row"}
             </UIText>
           )}
         </UIButton>
@@ -148,12 +147,12 @@ export default withRouter(
             setItemShipTo([
               ...itemShipTo,
               {
-                No: Math.floor(Math.random() * Math.floor(999)),
+                Key: new Date().valueOf(),
                 Address: "",
                 Street: "",
                 ZipCode: "",
                 City: "",
-                State: "01",
+                State: "",
                 AdresType: "S",
                 IsDefault: itemShipTo.length === 0 ? "Y" : "N"
               }
@@ -172,7 +171,7 @@ export default withRouter(
           />
           {isSize(["md", "lg"]) && (
             <UIText style={{ color: "#fff" }} size="small">
-              {" Add"}
+              {" Add Row"}
             </UIText>
           )}
         </UIButton>
@@ -192,12 +191,12 @@ export default withRouter(
             setItemBillTo([
               ...itemBillTo,
               {
-                No: Math.floor(Math.random() * Math.floor(999)),
+                Key: new Date().valueOf(),
                 Address: "",
                 Street: "",
                 ZipCode: "",
                 City: "",
-                State: "01",
+                State: "",
                 AdresType: "B",
                 IsDefault: itemBillTo.length === 0 ? "Y" : "N"
               }
@@ -216,7 +215,7 @@ export default withRouter(
           />
           {isSize(["md", "lg"]) && (
             <UIText style={{ color: "#fff" }} size="small">
-              {" Add"}
+              {" Add Row"}
             </UIText>
           )}
         </UIButton>
@@ -226,30 +225,31 @@ export default withRouter(
     const save = async () => {
       setSaving(true);
       const Lines_CP = itemCP.map(d => {
-        delete d.No;
+        delete d.Key;
         return d;
       });
 
       const Lines_BT = itemBillTo.map(d => {
-        delete d.No;
+        delete d.Key;
         return d;
       });
 
       const Lines_ST = itemShipTo.map(d => {
-        delete d.No;
+        delete d.Key;
         return d;
       });
 
-      data.U_IDU_AREA = global.session.user.area;
-      data.U_IDU_BRANCH = global.session.user.area;
-      data.U_USERID = global.session.user.id;
-      
       try {
-        await APIPost("Customer", {
-          ...data,
-          Lines_CP: [...Lines_CP],
-          Lines_Address: [...Lines_BT, ...Lines_ST]
-        });
+        data.U_IDU_AREA = global.session.user.area;
+        data.U_IDU_BRANCH = global.session.user.branch,
+          data.U_USERID = global.session.user.username,
+
+          await APIPost("Customer", {
+            ...data,
+            Lines_CP: [...Lines_CP],
+            Lines_Address: [...Lines_BT, ...Lines_ST]
+          });
+        history.push("/customer")
       } catch (e) {
         alert(e.Message);
         console.error({
@@ -263,6 +263,18 @@ export default withRouter(
     };
 
     useEffect(() => {
+      APISearch({
+        Table: "NNM1",
+        Condition: [{
+          field: "SeriesName",
+          cond: "=",
+          value: global.getSession().user.branch
+        }],
+        Page: 1,
+        Limit: 1
+      }).then((res: any) => setData({ ...data, Series: res[0].Series, SeriesName: res[0].SeriesName }));
+
+
       const get = () => {
         let query: APISearchProps = {
           Table: "OCRD",
@@ -317,6 +329,20 @@ export default withRouter(
             items={data}
             field={[
               {
+                key: "info",
+                label: "Customer",
+                sublabel: "Informasi Customer",
+                value: [
+                  { key: "LicTradNum", size: 8, label: "NPWP" },
+                  { key: "AddID", size: 8, label: "No KTP" },
+                  { key: "Phone1", size: 6, label: "Telephone 1" },
+                  { key: "Phone2", size: 6, label: "Telephone 2" },
+                  { key: "Fax", size: 6, label: "Fax Number" },
+                  { key: "Cellular", size: 6, label: "Mobile Phone" },
+                  { key: "E_Mail", size: 7, label: "E-Mail" },
+                ]
+              },
+              {
                 key: "general",
                 label: "General",
                 value: [
@@ -336,36 +362,6 @@ export default withRouter(
                     )
                   },
                   {
-                    key: "CardType",
-                    size: 6,
-                    component: (
-                      <UISelectField
-                        label="BP Type"
-                        items={[
-                          { label: "Lead", value: "L" }
-                        ]}
-                        value={(data as any).CardType}
-                        setValue={v => {
-                          setData({ ...data, CardType: v });
-                        }}
-                      />
-                    )
-                  },
-                  {
-                    key: "Series",
-                    size: 7,
-                    component: (
-                      <SAPDropdown
-                        label="Series"
-                        field="Series"
-                        value={(data as any).Series}
-                        setValue={v => {
-                          setData({ ...data, Series: v });
-                        }}
-                      />
-                    )
-                  },
-                  {
                     key: "GroupNum",
                     size: 5,
                     component: (
@@ -378,21 +374,23 @@ export default withRouter(
                         }}
                       />
                     )
-                  }
-                ]
-              },
-              {
-                key: "info",
-                label: "Customer",
-                sublabel: "Informasi Customer",
-                value: [
-                  { key: "LicTradNum", size: 8, label: "NPWP" },
-                  { key: "AddID", size: 8, label: "No KTP" },
-                  { key: "Phone1", size: 6, label: "Telephone 1" },
-                  { key: "Phone2", size: 6, label: "Telephone 2" },
-                  { key: "Fax", size: 6, label: "Fax Number" },
-                  { key: "Cellular", size: 6, label: "Mobile Phone" },
-                  { key: "E_Mail", size: 7, label: "E-Mail" },
+                  },
+                  {
+                    key: "SeriesName",
+                    size: 7,
+                    label: "Series",
+                    type: "field"
+                    // component: (
+                    //   <SAPDropdown
+                    //     label="Series"
+                    //     field="Series"
+                    //     value={(data as any).Series}
+                    //     setValue={v => {
+                    //       setData({ ...data, Series: v });
+                    //     }}
+                    //   />
+                    // )
+                  },
                 ]
               }
             ]}

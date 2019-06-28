@@ -2,7 +2,7 @@ import query from './libs/gql/data/query';
 import createRecord from './libs/gql/data/createRecord';
 import updateRecord from './libs/gql/data/updateRecord';
 
-const lpad = (n: string, width: number, z?: string) => {
+export const lpad = (n: string, width: number, z?: string) => {
   z = z || '0';
   n = n + '';
   return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;

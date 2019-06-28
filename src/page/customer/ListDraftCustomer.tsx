@@ -1,17 +1,30 @@
-import { APISearch, APISearchProps } from "@app/api";
 import UIBody from "@app/libs/ui/UIBody";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
 import { observer } from "mobx-react-lite";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
+import { APISearch, APISearchProps } from '@app/api';
 import UISearch from '@app/libs/ui/UISearch';
 
-export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
+export default withRouter(observer(({ showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
   const [_data, _setData] = useState([]);
-  const [field, setField] = useState<any[]>([]);
+  const field = [
+    "CardName",
+    "CardFName",
+    "CardCode",
+    "CardType",
+    "GroupCode",
+    "LicTradNum",
+    "AddID",
+    "SlpCode",
+    "Phone1",
+    "Phone2",
+    "U_IDU_AREA",
+    "U_IDU_BRANCH"
+  ];
   const funcSearch = (value: string) => {
     _setData([...(value ? data.filter((x: any) => {
       let res = false;
@@ -28,27 +41,15 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   useEffect(() => {
     let query: APISearchProps = {
       Table: "OCRD",
-      Condition: [
-        {
-          field: "CardType",
-          cond: "=",
-          value: "S"
-        },
-        // {
-        //   cond: "AND"
-        // },
-        // {
-        //   field: "CardCode",
-        //   cond: "=",
-        //   value: "S00050"
-        // }
-      ],
-      Limit: 1000,
-      Page: 1
+      Fields: field,
+      Condition: [{
+        field: "CardType",
+        cond: "=",
+        value: "L"
+      }]
     };
 
     APISearch(query).then((res: any) => {
-      setField(Object.keys(res[0]));
       setData(res);
       _setData(res);
     });
@@ -56,31 +57,32 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
 
   return (
     <UIContainer>
-      <UIHeader showSidebar={showSidebar} sidebar={sidebar} center={"Purchase Receipt"}>
-      </UIHeader>
+      <UIHeader showSidebar={showSidebar} sidebar={sidebar} center={"Customer Draft"} />
       <UIBody>
         <UISearch onSearch={funcSearch}></UISearch>
         <UIList
           style={{ flex: 1 }}
           primaryKey="CardCode"
-          selection="single"
-          onSelect={(item) => {
-            history.push("/pr/list/" + btoa(item.CardCode + "|" + item.CardName));
-          }}
+          selection="detail"
           fields={{
             CardCode: {
               table: {
-                header: "Code"
+                header: 'BP Code'
               }
             },
             CardName: {
               table: {
-                header: "Vendor"
+                header: 'BP Name'
+              }
+            },
+            CardFName: {
+              table: {
+                header: 'Foreign Name'
               }
             }
           }}
           items={_data.map((item: any) => ({
-            ...item
+            ...item,
           }))}
         />
       </UIBody>

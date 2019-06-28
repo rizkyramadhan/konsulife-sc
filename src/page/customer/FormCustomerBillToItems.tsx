@@ -15,14 +15,41 @@ export default ({ items, setItems }: any) => {
     <View>
       <UIList
         style={{ flex: 1 }}
-        primaryKey="No"
+        primaryKey="Key"
         items={items}
         selection="detail"
+        fields={{
+          Address: {
+            table: {
+              header: "Address"
+            }
+          },
+          Street: {
+            table: {
+              header: "Street"
+            }
+          },
+          ZipCode: {
+            table: {
+              header: "ZIP Code"
+            }
+          },
+          City: {
+            table: {
+              header: "City"
+            }
+          },
+          StateName: {
+            table: {
+              header: "State"
+            }
+          }
+        }}
         detailComponent={item => {
           const setValue = (val: any, key: string) => {
-            const idx = items.findIndex((x: any) => x.No === item.item.No);
+            const idx = items.findIndex((x: any) => x.Key === item.pkval);
             items[idx][key] = val;
-            setItems(items);
+            setItems([...items]);
           };
           return (
             <View
@@ -59,10 +86,7 @@ export default ({ items, setItems }: any) => {
                   style={{ justifyContent: "center", alignItems: "center" }}
                 >
                   <Button
-                    onPress={() => {
-                      setItems([...items]);
-                      item.close;
-                    }}
+                    onPress={() => item.close()}
                   >
                     <UIText size="large">&times;</UIText>
                   </Button>
@@ -88,15 +112,20 @@ export default ({ items, setItems }: any) => {
                         label="State"
                         field="State"
                         value={item.item.State}
-                        setValue={v => {
-                          setValue(v, "State");
+                        setValue={(v: any, l: any) => {
+                          const idx = items.findIndex((x: any) => x.Key === item.pkval);
+                          items[idx].State = v;
+                          items[idx].StateName = l;
+                          setItems([...items]);
                         }}
                       />
                     )
                   }
                 ]}
               />
-              <UIRow>
+              <UIRow style={{
+                paddingLeft: 10
+              }}>
                 <UIButton
                   style={{
                     flexShrink: "none"
@@ -105,20 +134,14 @@ export default ({ items, setItems }: any) => {
                   size="small"
                   onPress={() => {
                     const idx = items.findIndex(
-                      (x: any) => x.No === item.item.No
+                      (x: any) => x.Key === item.pkval
                     );
                     items.splice(idx, 1);
                     setItems([...items]);
+                    item.close();
                   }}
                 >
-                  <IconTrash
-                    color="#fff"
-                    height={18}
-                    width={18}
-                    style={{
-                      marginTop: -9
-                    }}
-                  />
+                  <IconTrash color="#fff" height={18} width={18} />
                 </UIButton>
               </UIRow>
             </View>

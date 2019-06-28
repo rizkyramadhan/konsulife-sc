@@ -14,10 +14,9 @@ import UISelectField from '@app/libs/ui/UISelectField';
 import { APISearch } from '@app/api';
 
 export default ({ data, items, setItems }: any) => {
-  console.log(data, items);
   return (
     <UIList
-      primaryKey="LineNum"
+      primaryKey="Key"
       selection="detail"
       fields={{
         ItemCode: {
@@ -40,9 +39,9 @@ export default ({ data, items, setItems }: any) => {
             header: "Inventory UoM"
           }
         },
-        UomEntry: {
+        UoMName: {
           table: {
-            header: "UoM"
+            header: "UoMName"
           }
         },
         Quantity: {
@@ -63,11 +62,6 @@ export default ({ data, items, setItems }: any) => {
         DiscPrcnt: {
           table: {
             header: "Discount(%)"
-          }
-        },
-        TaxCode: {
-          table: {
-            header: "Tax Code"
           }
         },
       }}
@@ -151,29 +145,31 @@ export default ({ data, items, setItems }: any) => {
             field={[
               {
                 key: 'ItemCode', size: 12, label: 'Item Code', component: (
-                  <SAPDropdown label="Item Code" field="ItemCodeAll" value={(item as any).item.ItemCode} setValue={async (v, l, r) => {
-                    const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
-                    console.log(r);
-                    items[idx]['ItemCode'] = v;
-                    items[idx]["Dscription"] = l;
-                    items[idx]["U_IDU_PARTNUM"] = r.item.U_IDU_PARTNUM;
-                    setItems([...items]);
-                    APISearch({
-                      CustomQuery: "UnitPriceSO",
-                      Condition: [{
-                        field: "CardCode",
-                        cond: "=",
-                        value: data.CardCode
-                      }, { cond: 'AND' }, {
-                        field: "ItemCode",
-                        cond: "=",
-                        value: v
-                      }]
-                    }).then((res: any) => {
-                      items[idx]["PriceBefDi"] = res[0]["Price"];
+                  <SAPDropdown label="Item Code" field="ItemCodeAll" itemField={{ value: "ItemCode", label: "ItemName" }}
+                    value={(item as any).item.ItemCode} setValue={async (v, l, r) => {
+                      const idx = items.findIndex((x: any) => x.Key === item.pkval);
+                      items[idx]['ItemCode'] = v;
+                      items[idx]["Dscription"] = l;
+                      items[idx]["U_IDU_PARTNUM"] = r.item.U_IDU_PARTNUM;
+                      items[idx]["TaxCode"] = r.item.VatGourpSa;
+                      items[idx]["UoMEntry"] = r.item.IUoMEntry;
                       setItems([...items]);
-                    })
-                  }} />)
+                      APISearch({
+                        CustomQuery: "UnitPriceSO",
+                        Condition: [{
+                          field: "CardCode",
+                          cond: "=",
+                          value: data.CardCode
+                        }, { cond: 'AND' }, {
+                          field: "ItemCode",
+                          cond: "=",
+                          value: v
+                        }]
+                      }).then((res: any) => {
+                        items[idx]["PriceBefDi"] = parseInt(res[0]["Price"]);
+                        setItems([...items]);
+                      })
+                    }} />)
               },
               {
                 key: 'UseBaseUn', size: 12, label: 'Inventory UoM', component: (
@@ -185,7 +181,7 @@ export default ({ data, items, setItems }: any) => {
                     ]}
                     value={(item as any).item.UseBaseUn}
                     setValue={v => {
-                      const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
+                      const idx = items.findIndex((x: any) => x.Key === item.pkval);
                       items[idx]['UseBaseUn'] = v;
                       setItems([...items]);
                     }}
@@ -197,18 +193,20 @@ export default ({ data, items, setItems }: any) => {
                 key: 'WhsCode', size: 12, label: 'Warehouse', component: (
                   <SAPDropdown label="Warehouse" field="Custom" customQuery={{
                     Table: 'OWHS',
-                    Fields: ["WhsCode", "WhsName"]
+                    Fields: ["WhsCode", "WhsName"],
+                    // Condition: [{field: 'U_BRANCH', cond: "=", value: global.getSession().user.branch}]
                   }} value={(item as any).item.WhsCode} setValue={(v) => {
-                    const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
+                    const idx = items.findIndex((x: any) => x.Key === item.pkval);
                     items[idx]['WhsCode'] = v;
                     setItems([...items]);
                   }} />)
               },
               {
-                key: 'UomEntry', size: 12, label: 'Uom', component: (
-                  <SAPDropdown label="UoM" field="UomCode" value={(item as any).item.UomEntry} setValue={(v) => {
-                    const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
-                    items[idx]['UomEntry'] = v;
+                key: 'UoMEntry', size: 12, label: 'Uom', component: (
+                  <SAPDropdown label="UoM" field="UomCode" value={(item as any).item.UoMEntry} setValue={(v, l) => {
+                    const idx = items.findIndex((x: any) => x.Key === item.pkval);
+                    items[idx]['UoMEntry'] = v;
+                    items[idx]['UoMName'] = l;
                     setItems([...items]);
                   }} />)
               },
@@ -216,14 +214,18 @@ export default ({ data, items, setItems }: any) => {
               { key: 'DiscPrcnt', size: 12, label: 'Disc Prcnt' },
               {
                 key: 'TaxCode', size: 12, label: 'Tax Code', component: (
-                  <SAPDropdown label="Tax Code" field="Custom" customQuery={{
-                    Table: "OVTG",
-                    Fields: ["Code", "Name"],
-                  }} value={(item as any).item.TaxCode} setValue={(v) => {
-                    const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
-                    items[idx]['TaxCode'] = v;
-                    setItems([...items]);
-                  }} />)
+                  <SAPDropdown label="Tax Code" field="Custom"
+                    customQuery={{
+                      Table: "OVTG",
+                      Fields: ["Code", "Name"],
+                      // Condition: [{ field: "Code", cond: "=", value: item.item.TaxCode }]
+                    }} value={(item as any).item.TaxCode}
+                    setValue={(v: any, l: any) => {
+                      console.log(l)
+                      const idx = items.findIndex((x: any) => x.Key === item.pkval);
+                      items[idx]['TaxCode'] = v;
+                      setItems([...items]);
+                    }} />)
               },
             ]}
           />

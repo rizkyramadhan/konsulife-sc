@@ -296,7 +296,7 @@ export const SAPFieldMap = {
   } as APISearchProps,
   ItemCodeAll: {
     Table: "OITM",
-    Fields: ["ItemCode", "ItemName", "U_IDU_PARTNUM"]
+    Fields: ["ItemCode", "ItemName", "U_IDU_PARTNUM", "VatGourpSa", "SUoMEntry", "IUoMEntry", "CstGrpCode"]
   } as APISearchProps,
   UomCode: {
     Table: "OUOM",
