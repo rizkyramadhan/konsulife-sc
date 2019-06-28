@@ -30,7 +30,7 @@ const header = {
   DocRate: "1",
   U_IDU_SO_INTNUM: "",
   GroupNum: "",
-  SlpCode: !!global.session.user.slp_code || "",
+  SlpCode: !!global.session.user.slp_code || "-1",
   CntctCode: "",
   Address2: "",
   Address: "",
@@ -111,6 +111,9 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
       let number: any = await getLastNumbering("SO", global.getSession().user.warehouse_id);
       (data as any).DocDate = encodeSAPDate((data as any).DocDate);
       (data as any).DocDueDate = encodeSAPDate((data as any).DocDueDate);
+      (data as any).SlpCode = !!global.session.user.slp_code || "-1";
+      (data as any).U_BRANCH = global.session.user.branch;
+      (data as any).U_USERID = global.session.user.username;
       await APIPost('SalesOrder', {
         ...data, U_IDU_SO_INTNUM: number.format, Lines: [...Lines_IT],
       })
@@ -120,7 +123,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
     catch (e) {
       (data as any).DocDate = encodeSAPDate((data as any).DocDate);
       (data as any).DocDueDate = encodeSAPDate((data as any).DocDueDate);
-      setData({...data});
+      setData({ ...data });
       alert(e.Message)
       console.error({
         ...data, Lines: [...Lines_IT],
