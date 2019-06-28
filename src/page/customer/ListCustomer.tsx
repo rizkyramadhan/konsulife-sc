@@ -1,38 +1,14 @@
-import { isSize } from "@app/libs/ui/MediaQuery";
 import UIBody from "@app/libs/ui/UIBody";
-import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
-import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
 import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
-import IconAdd from "@app/libs/ui/Icons/IconAdd";
 import { APISearch, APISearchProps } from '@app/api';
 import UISearch from '@app/libs/ui/UISearch';
-
-const BtnCreate = withRouter(({ history }: any) => {
-  return (
-    <UIButton
-      size="small"
-      color="primary"
-      onPress={() => {
-        history.push("/customer/form");
-      }}
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "flex-end"
-      }}
-    >
-      <IconAdd color="#fff" />
-      {isSize(["md", "lg"]) && (
-        <UIText style={{ color: "#fff" }}>Create</UIText>
-      )}
-    </UIButton>
-  );
-});
+import BtnDraft from '@app/components/BtnDraft';
+import BtnCreate from '@app/components/BtnCreate';
 
 export default withRouter(observer(({ showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
@@ -72,16 +48,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
         field: "CardType",
         cond: "=",
         value: "C"
-      },
-      {
-        cond: "OR"
-      },
-      {
-        field: "CardType",
-        cond: "=",
-        value: "L"
-      }
-      ]
+      }]
     };
 
     APISearch(query).then((res: any) => {
@@ -93,7 +60,8 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
   return (
     <UIContainer>
       <UIHeader showSidebar={showSidebar} sidebar={sidebar} center={"Customer"}>
-        <BtnCreate />
+        <BtnDraft path="/customer/draft" />
+        <BtnCreate path="/customer/form" />
       </UIHeader>
       <UIBody>
         <UISearch onSearch={funcSearch}></UISearch>
@@ -115,11 +83,6 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
             CardFName: {
               table: {
                 header: 'Foreign Name'
-              }
-            },
-            CardType: {
-              table: {
-                header: 'BP Type'
               }
             }
           }}

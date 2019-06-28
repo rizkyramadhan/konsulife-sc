@@ -14,14 +14,13 @@ import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 import FormPRDetailItems from "./FormPRDetailItems";
 import IconCheck from '@app/libs/ui/Icons/IconCheck';
-import { getLastNumbering, updateLastNumbering, lpad } from '@app/utils';
-import { encodeSAPDate, decodeSAPDate } from '@app/utils/Helper';
+import { getLastNumbering, updateLastNumbering } from '@app/utils';
 
 export default withRouter(
   observer(({ match, showSidebar, sidebar }: any) => {
     const [saving, setSaving] = useState(false);
     const [editable, setEdit] = useState(false);
-    const [data, setData] = useState({});
+    const [data, setData] = useState([]);
     const [item, setItem] = useState([]);
     const [selected, setSelected] = useState([]);
     const param = atob(match.params.id).split("|");
@@ -42,7 +41,7 @@ export default withRouter(
           "CardCode",
           "U_IDU_PO_INTNUM",
           "U_IDU_SUP_SONUM",
-          "U_IDU_SO_INTNUM"
+          "U_IDU_DO_INTNUM"
         ],
         Condition: [
           {
@@ -82,10 +81,8 @@ export default withRouter(
           //res[0].U_IDU_PO_INTNUM = poNum.join(";");
           //res[0].U_IDU_SUP_SONUM = soNum.join(";");
           res[0].U_BRANCH = global.session.user.branch;
-          res[0].U_USERID = global.session.user.username;
+          res[0].U_USERID = global.session.user.id;
           res[0].U_GENERATED = "W";
-          const date = new Date();
-          res[0].DocDate = `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${date.getDate()}`;
           setData(res[0]);
         }
 
@@ -119,13 +116,6 @@ export default withRouter(
             field: "DocEntry",
             cond: "IN",
             value: param
-          },
-          {
-            cond: "AND"
-          }, {
-            field: "LineStatus",
-            cond: "=",
-            value: "O"
           }
         ]
       };
@@ -133,8 +123,7 @@ export default withRouter(
       APISearch(query).then((res: any) => {
         res.forEach((item: any) => {
           item.PK = btoa(item.LineNum + "|" + item.DocEntry);
-          item.Quantity = parseInt(item.OpenCreQty).toString();
-          item.OpenCreQty = parseInt(item.OpenCreQty).toString();
+          item.Quantity = item.OpenCreQty;
           item.BaseType = "22";
           item.BaseLine = item.LineNum;
           item.BaseEntry = item.DocEntry;
@@ -147,20 +136,15 @@ export default withRouter(
       setSaving(true);
       try {
         let number: any = await getLastNumbering("LPB", global.getSession().user.warehouse_id);
-        (data as any).DocDate = encodeSAPDate((data as any).DocDate);
         await APIPost("PurchaseReceipt", {
           ...data, U_IDU_GRPO_INTNUM: number.format,
           Lines: selected
         });
         updateLastNumbering(number.id, number.last_count + 1);
-        alert("Save success!");
+
+        
       } catch (e) {
-        (data as any).DocDate = decodeSAPDate((data as any).DocDate);
-        setData({ ...data });
         alert(e.Message);
-        console.error({
-          ...data, Lines: selected,
-        });
       } finally {
         setSaving(false);
       }
@@ -195,22 +179,6 @@ export default withRouter(
             // hideUndeclared={true}
             field={[
               {
-                key: "vendor",
-                label: "Vendor",
-                value: [
-                  {
-                    key: "CardCode",
-                    type: "field",
-                    label: "Code",
-                    size: 4
-                  },
-                  { type: "empty" },
-                  { key: "CardName", type: "field", label: "Name", size: 12 },
-                  { key: "CntctCode", type: "field", label: "Contact Person" },
-                  { key: "NumAtCard", type: "field", label: "Ref No.", size: 8 }
-                ]
-              },
-              {
                 key: "general",
                 label: "General",
                 value: [
@@ -230,7 +198,7 @@ export default withRouter(
                   { type: "empty", size: 4 },
                   {
                     key: "DocDate",
-                    size: 6,
+                    size: 4,
                     type: "date",
                     label: "Posting Date"
                   },
@@ -240,6 +208,24 @@ export default withRouter(
                     type: "field",
                     label: "Document Currency"
                   },
+                  { type: "empty", size: 2 },
+
+                  { key: "SlpCode", type: "field", label: "Sales Employee" }
+                ]
+              },
+              {
+                key: "vendor",
+                label: "Vendor",
+                value: [
+                  {
+                    key: "CardCode",
+                    type: "field",
+                    label: "Code",
+                    size: 4
+                  },
+                  { key: "CardName", type: "field", label: "Name", size: 8 },
+                  { key: "CntctCode", type: "field", label: "Contact Person" },
+                  { key: "NumAtCard", type: "field", label: "Ref No.", size: 8 }
                 ]
               },
               {

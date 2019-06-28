@@ -12,37 +12,55 @@ import UIJsonField from "@app/libs/ui/UIJsonField";
 import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
-import { View } from "reactxp";
 import FormSODetailItems from './FormSODetailItems';
-import { getLastNumbering, updateLastNumbering } from '@app/utils';
+import { getLastNumbering, updateLastNumbering, lpad } from '@app/utils';
+import UITabs from '@app/libs/ui/UITabs';
+import { withRouter } from 'react-router';
+import { encodeSAPDate } from '@app/utils/Helper';
 
-const sample = {
+const date = new Date();
+
+const header = {
   CardCode: "",
   CardName: "",
   NumAtCard: "",
+  DocDate: `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${date.getDate()}`,
+  DocDueDate: `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${date.getDate()}`,
   DocCur: "",
-  DocRate: 1,
-  U_IDU_SO_INTNUM: -1,
-  GroupNum: -1,
-  SlpCode: !!global.session.user.slp_code||-1,
-  CntctCode: 1,
+  DocRate: "1",
+  U_IDU_SO_INTNUM: "",
+  GroupNum: "",
+  SlpCode: !!global.session.user.slp_code || "",
+  CntctCode: "",
   Address2: "",
   Address: "",
   Comments: "",
-  U_BRANCH : global.session.user.branch,
-  U_USERID : global.session.user.id,
-  U_GENERATED : "W",
+  U_BRANCH: global.session.user.branch,
+  U_USERID: global.session.user.username,
+  U_GENERATED: "W",
   U_IDU_ISCANVAS: "N",
 };
 
-export default observer(({ showSidebar, sidebar }: any) => {
-  const [data, setData] = useState(sample);
+export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
+  const [data, setData] = useState(header);
   const [items, setItems] = useState<any[]>([]);
   const [saving, setSaving] = useState(false);
+  const [qCP, setQCP] = useState(false);
   const [qShip, setQShip] = useState(false);
   const [qBill, setQBill] = useState(false);
 
-  const ActionIt = () => {
+  // sample
+  // useEffect(() => {
+  //   APISearch({
+  //     Table: "OITM",
+  //     Page: 1,
+  //     Limit: 2
+  //   }).then((res) => {
+  //     console.log(res);
+  //   })
+  // }, [])
+
+  const AddRow = () => {
     return (<UIButton
       style={{
         flexShrink: 'none'
@@ -51,17 +69,17 @@ export default observer(({ showSidebar, sidebar }: any) => {
       size="small"
       onPress={() => {
         setItems([...(items as any), {
-          LineNum: Math.floor(Math.random() * Math.floor(999)),
+          Key: new Date().valueOf(),
           ItemCode: "",
           Dscription: "",
           U_IDU_PARTNUM: "",
           UseBaseUn: "",
-          Quantity: 0,
+          Quantity: "",
           WhsCode: "",
           ShipDate: "",
           OcrCode: "",
           OcrCode2: "",
-          PriceBefDi: 0,
+          PriceBefDi: "",
           DiscPrcnt: "",
           UomEntry: "",
           TaxCode: ""
@@ -73,7 +91,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
       }} />
       {isSize(["md", "lg"]) && (
         <UIText style={{ color: "#fff" }} size="small">
-          {" Add"}
+          {" Add Row"}
         </UIText>
       )}
     </UIButton>);
@@ -84,19 +102,25 @@ export default observer(({ showSidebar, sidebar }: any) => {
     const Lines_IT = items.map(d => {
       d.OcrCode = global.session.user.area;
       d.OcrCode2 = global.session.user.branch;
-      
+
       delete d.LineNum;
       return d;
     });
 
     try {
       let number: any = await getLastNumbering("SO", global.getSession().user.warehouse_id);
+      (data as any).DocDate = encodeSAPDate((data as any).DocDate);
+      (data as any).DocDueDate = encodeSAPDate((data as any).DocDueDate);
       await APIPost('SalesOrder', {
         ...data, U_IDU_SO_INTNUM: number.format, Lines: [...Lines_IT],
       })
       updateLastNumbering(number.id, number.last_count + 1);
+      history.push("/so");
     }
     catch (e) {
+      (data as any).DocDate = encodeSAPDate((data as any).DocDate);
+      (data as any).DocDueDate = encodeSAPDate((data as any).DocDueDate);
+      setData({...data});
       alert(e.Message)
       console.error({
         ...data, Lines: [...Lines_IT],
@@ -107,7 +131,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
     }
 
   }
-  
+
   return (
     <UIContainer>
       <UIHeader
@@ -133,20 +157,6 @@ export default observer(({ showSidebar, sidebar }: any) => {
           items={data}
           field={[
             {
-              key: "general",
-              label: "General",
-              sublabel: "Informasi Sales Order",
-              value: [
-                { key: "DocDate", size: 6, type: "date", label: "Posting Date" },
-                { key: "DocDueDate", size: 6, type: "date", label: "Delivery Date" },
-                {
-                  key: "DocCur", size: 8, label: "Document Currency",
-                  component: (
-                    <SAPDropdown label="Document Currency" field="Currency" value={(data as any).DocCur} setValue={(v) => { setData({ ...data, DocCur: v }) }} />)
-                },
-              ]
-            },
-            {
               key: "customer",
               label: "Customer",
               sublabel: "Toko Penerima Barang",
@@ -155,18 +165,21 @@ export default observer(({ showSidebar, sidebar }: any) => {
                 {
                   key: "CardCode", label: "Customer/Vendor", size: 12, component: (
                     <SAPDropdown label="Customer" field="CustomerCode" value={(data as any).CardCode} setValue={(v, l, r) => {
-                      setData({ ...data, CardCode: v, CardName:l,GroupNum: r.item.GroupNum, DocCur: r.item.Currency });
+                      setData({ ...data, CardCode: v, CardName: l, GroupNum: r.item.GroupNum, DocCur: r.item.Currency });
+                      setQCP(true);
                       setQBill(true);
                       setQShip(true);
                     }} />)
                 },
-                // { key: "CardName", label: "Name" },
                 {
                   key: "CntctCode", label: "Contact Person", size: 7, component: (
-                    <SAPDropdown label="Contact Person" field="Custom" customQuery={{
-                      Table: "OCPR",
-                      Fields: ["CardCode", "Name"],
-                    }} value={(data as any).CntctCode} setValue={(v) => { setData({ ...data, CntctCode: v }) }} />)
+                    <SAPDropdown label="Contact Person" field="Custom" itemField={{ value: "CardCode", label: "Name" }}
+                      customQuery={{
+                        Table: "OCPR",
+                        Fields: ["CardCode", "Name"],
+                        Condition: [{ field: "CardCode", cond: "=", value: data.CardCode }]
+                      }} value={(data as any).CntctCode} setValue={(v) => { setData({ ...data, CntctCode: v }) }}
+                      mustInit={false} refresh={qCP} setRefresh={setQCP} />)
                 },
                 { key: "NumAtCard", label: "PO Customer No", size: 8 }
               ]
@@ -219,6 +232,15 @@ export default observer(({ showSidebar, sidebar }: any) => {
                 }
               ]
             },
+            {
+              key: "general",
+              label: "General",
+              sublabel: "Informasi Sales Order",
+              value: [
+                { key: "DocDate", size: 6, type: "date", label: "Posting Date" },
+                { key: "DocDueDate", size: 6, type: "date", label: "Delivery Date" },
+              ]
+            },
             { type: "empty", key: "c" },
             {
               key: "optional",
@@ -237,31 +259,16 @@ export default observer(({ showSidebar, sidebar }: any) => {
           }}
         />
 
-        <View style={{ marginTop: 50 }}>
-          <View
-            style={{
-              justifyContent: "space-between",
-              flex: 1,
-              flexDirection: "row",
-              alignItems: "center",
-              paddingLeft: 10,
-              backgroundColor: "#fff"
-            }}
-          >
-            <UIText
-              style={{
-                fontSize: 19,
-                color: "#333",
-                fontWeight: 400
-              }}
-            >
-              Detail Items
-            </UIText>
-            <ActionIt />
-          </View>
-          <FormSODetailItems data={data} items={items} setItems={setItems} />
-        </View>
+        <UITabs
+          tabs={[
+            {
+              label: "Detail Items",
+              content: <FormSODetailItems data={data} items={items} setItems={setItems} />,
+              action: <AddRow />
+            }
+          ]}
+        />
       </UIBody>
     </UIContainer>
   );
-});
+}));
