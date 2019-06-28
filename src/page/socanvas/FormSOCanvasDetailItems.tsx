@@ -192,23 +192,27 @@ export default ({ data, items, setItems }: any) => {
                 )
               },
               { key: 'Quantity', size: 12, label: 'Quantity' },
-              // {
-              //   key: 'WhsCode', size: 12, label: 'Warehouse', component: (
-              //     <SAPDropdown label="Warehouse" field="Custom" customQuery={{
-              //       Table: 'OWHS',
-              //       Fields: ["WhsCode", "WhsName"]
-              //     }} value={(item as any).item.WhsCode} setValue={(v) => {
-              //       const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
-              //       items[idx]['WhsCode'] = v;
-              //       setItems([...items]);
-              //     }} />)
-              // },
+              {
+                key: 'WhsCode', size: 12, label: 'Warehouse', component: (
+                  <SAPDropdown label="Warehouse" field="Custom" customQuery={{
+                    Table: 'OWHS',
+                    Fields: ["WhsCode", "WhsName"],
+                    Condition: [{
+                      field: "U_IDU_WHSETYPE",
+                      cond: "=",
+                      value: "Canvassing"
+                    }]
+                  }} value={(item as any).item.WhsCode} setValue={(v) => {
+                    const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
+                    items[idx]['WhsCode'] = v;
+                    setItems([...items]);
+                  }} />)
+              },
               {
                 key: 'UomEntry', size: 12, label: 'Uom', component: (
                   <SAPDropdown label="UoM" field="UomCode" value={(item as any).item.UomEntry} setValue={(v) => {
                     const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
                     items[idx]['UomEntry'] = v;
-                    console.log(v);
                     setItems([...items]);
                   }} />)
               },

@@ -42,7 +42,7 @@ export default withRouter(
           "CardCode",
           "U_IDU_PO_INTNUM",
           "U_IDU_SUP_SONUM",
-          "U_IDU_SO_INTNUM"
+          "U_IDU_DO_INTNUM"
         ],
         Condition: [
           {

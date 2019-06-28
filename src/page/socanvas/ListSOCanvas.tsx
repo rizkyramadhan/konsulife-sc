@@ -59,7 +59,8 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
         field: "DocStatus",
         cond: "=",
         value: "O"
-      }, { cond: "AND" }, { field: "ObjType", cond: "=", value: 17 }]
+      }, { cond: "AND" }, { field: "ObjType", cond: "=", value: 17 },
+         { cond: "AND" }, { field: "U_IDU_ISCANVAS", cond: "=", value: "Y" }]
     };
 
     APISearch(query).then((res: any) => {

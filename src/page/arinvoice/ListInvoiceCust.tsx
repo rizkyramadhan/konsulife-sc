@@ -35,7 +35,8 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
           field: "CardType",
           cond: "=",
           value: "C"
-        },{
+        },
+        {
           cond : "AND"
         },
         {
@@ -44,7 +45,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
           value: global.session.user.branch
         },
       ],
-      Limit: 20,
+      Limit: 1000,
       Page: 1
     };
 
@@ -57,7 +58,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
 
   return (
     <UIContainer>
-      <UIHeader showSidebar={showSidebar} sidebar={sidebar} center={"AR Invoice (Taking Order)"}>
+      <UIHeader showSidebar={showSidebar} sidebar={sidebar} center={"AR Invoice (Canvassing)"}>
       </UIHeader>
       <UIBody>
         <UISearch onSearch={funcSearch}></UISearch>

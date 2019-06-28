@@ -216,7 +216,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                   label: "SO Number",
                   size: 12
                 },
-                { key: "DocDate", size: 6, label: "Posting Date", type: "date" },
+                { key: "DocDate", size: 6, label: "Posting Date", type: "date",options:{pastDate:true} },
               ]
             },
             {

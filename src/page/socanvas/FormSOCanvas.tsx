@@ -14,25 +14,29 @@ import React, { useState } from "react";
 import { View } from "reactxp";
 import FormSOCanvasDetailItems from './FormSOCanvasDetailItems';
 import { getLastNumbering, updateLastNumbering } from '@app/utils';
+import global from '@app/global';
 
 const sample = {
   CardCode: "",
-  // CardName: "",
-  IsCanvas: "N",
+  CardName: "",
   NumAtCard: "",
   DocCur: "",
   DocRate: 1,
   U_IDU_SO_INTNUM: -1,
   GroupNum: -1,
-  SlpCode: -1,
+  SlpCode: !!global.session.user.slp_code || -1,
   CntctCode: 1,
   Address2: "",
   Address: "",
-  Comments: ""
+  Comments: "",
+  U_BRANCH: global.session.user.branch,
+  U_USERID: global.session.user.id,
+  U_GENERATED: "W",
+  U_IDU_ISCANVAS: "Y",
 };
 
 export default observer(({ showSidebar, sidebar }: any) => {
-  const [data, setData] = useState(sample);
+  const [data, setData] = useState<any>(sample);
   const [items, setItems] = useState<any[]>([]);
   const [saving, setSaving] = useState(false);
   const [qShip, setQShip] = useState(false);
@@ -78,6 +82,10 @@ export default observer(({ showSidebar, sidebar }: any) => {
   const save = async () => {
     setSaving(true);
     const Lines_IT = items.map(d => {
+      d.ShipDate = data.DocDate;
+      d.OcrCode = global.session.user.area;
+      d.OcrCode2 = global.session.user.branch;
+
       delete d.LineNum;
       return d;
     });
@@ -107,7 +115,7 @@ export default observer(({ showSidebar, sidebar }: any) => {
       <UIHeader
         showSidebar={showSidebar}
         sidebar={sidebar}
-        center="Form SO Taking Order"
+        center="Form SO Canvasing"
       >
         <UIButton
           color="primary"
@@ -131,21 +139,13 @@ export default observer(({ showSidebar, sidebar }: any) => {
               label: "General",
               sublabel: "Informasi Sales Order",
               value: [
-                {
-                  key: "U_IDU_SO_INTNUM",
-                  label: "SO Number",
-                  type: "field",
-                  size: 12
-                },
-                { key: "DocDate", size: 6, type: "date", label: "Posting Date" },
-                { key: "DocDueDate", size: 6, type: "date", label: "Delivery Date" },
+                { key: "DocDate", size: 6, type: "date", label: "Posting Date",options:{pastDate:true} },
+                { key: "DocDueDate", size: 6, type: "date", label: "Delivery Date",options:{pastDate:true} },
                 {
                   key: "DocCur", size: 8, label: "Document Currency",
                   component: (
                     <SAPDropdown label="Document Currency" field="Currency" value={(data as any).DocCur} setValue={(v) => { setData({ ...data, DocCur: v }) }} />)
                 },
-                // { key: "DocRate", size: 4, label: "Document Rate" },
-                // { key: "SlpCode", label: "Sales Employee" }
               ]
             },
             {
@@ -153,15 +153,15 @@ export default observer(({ showSidebar, sidebar }: any) => {
               label: "Customer",
               sublabel: "Toko Penerima Barang",
               value: [
+                { key: "CardCode", size: 8, type: "field", label: "Customer/Vendor Code" },
                 {
                   key: "CardCode", label: "Customer/Vendor", size: 12, component: (
-                    <SAPDropdown label="Customer" field="CustomerCode" value={(data as any).CardCode} setValue={(v, _, r) => {
-                      setData({ ...data, CardCode: v, GroupNum: r.item.GroupNum, DocCur: r.item.Currency });
+                    <SAPDropdown label="Customer" field="CustomerCode" value={(data as any).CardCode} setValue={(v, l, r) => {
+                      setData({ ...data, CardCode: v, CardName: l, GroupNum: r.item.GroupNum, DocCur: r.item.Currency });
                       setQBill(true);
                       setQShip(true);
                     }} />)
                 },
-                // { key: "CardName", label: "Name" },
                 {
                   key: "CntctCode", label: "Contact Person", size: 7, component: (
                     <SAPDropdown label="Contact Person" field="Custom" customQuery={{
@@ -245,6 +245,8 @@ export default observer(({ showSidebar, sidebar }: any) => {
               flex: 1,
               flexDirection: "row",
               alignItems: "center",
+              paddingLeft: 10,
+              backgroundColor: "#fff"
             }}
           >
             <UIText
