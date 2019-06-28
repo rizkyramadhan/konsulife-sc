@@ -167,8 +167,8 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
                 { key: "CardCode", size: 8, type: "field", label: "Customer/Vendor Code" },
                 {
                   key: "CardCode", label: "Customer/Vendor", size: 12, component: (
-                    <SAPDropdown label="Customer" field="CustomerCode" value={(data as any).CardCode} setValue={(v) => {
-                      setData({ ...data, CardCode: v});
+                    <SAPDropdown label="Customer" field="CustomerCode" value={(data as any).CardCode} setValue={(v,l) => {
+                      setData({ ...data, CardCode: v, CardName:l});
                       setQShip(true);
                     }} />)
                 },
