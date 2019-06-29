@@ -65,7 +65,17 @@ export default ({ items, setItems }: any) => {
               field={[
                 {
                   key: 'ItemCode', size: 12, label: 'Item Code', component: (
-                    <SAPDropdown label="Item Code" field="ItemCodeAll" value={(item as any).item.ItemCode} setValue={async (v, l) => {
+                    <SAPDropdown label="Item Code" field="Custom" customQuery={{
+                      Table: 'OITM',
+                      Fields: ["ItemCode", "ItemName", "U_IDU_PARTNUM"],
+                      Condition: [{
+                        field: "OnHand",
+                        cond: ">",
+                        value: "0"
+                      }]
+                    }}
+                    
+                    value={(item as any).item.ItemCode} setValue={async (v, l) => {
                       const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
                       items[idx]['ItemCode'] = v;
                       items[idx]["Dscription"] = l;
