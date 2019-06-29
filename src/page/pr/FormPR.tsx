@@ -135,6 +135,7 @@ export default withRouter(
           item.PK = btoa(item.LineNum + "|" + item.DocEntry);
           item.Quantity = parseInt(item.OpenCreQty).toString();
           item.OpenCreQty = parseInt(item.OpenCreQty).toString();
+          item.Quantity = item.OpenCreQty;  
           item.BaseType = "22";
           item.BaseLine = item.LineNum;
           item.BaseEntry = item.DocEntry;
