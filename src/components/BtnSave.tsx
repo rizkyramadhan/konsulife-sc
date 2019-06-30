@@ -5,7 +5,7 @@ import IconSave from '@app/libs/ui/Icons/IconSave';
 import { isSize } from '@app/libs/ui/MediaQuery';
 import UIText from '@app/libs/ui/UIText';
 
-export default ({ onPress, saving = false }: any) => {
+export default ({ onPress, saving = false, type = "save" }: any) => {
     return <UIButton
         color="primary"
         size="small"
@@ -13,7 +13,7 @@ export default ({ onPress, saving = false }: any) => {
     >
         <IconSave color="#fff" />
         {isSize(["md", "lg"]) && (
-            <UIText style={{ color: "#fff" }}>{saving ? " Saving..." : " Save"}</UIText>
+            <UIText style={{ color: "#fff" }}>{saving ? (type === "save" ? " Saving..." : "Updating") : (type === "save" ? " Save" : " Update")}</UIText>
         )}
     </UIButton>
 }
