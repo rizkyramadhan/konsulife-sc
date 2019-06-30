@@ -77,6 +77,14 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
           field: "CardCode",
           cond: "=",
           value: param[0]
+        },
+        {
+          cond: "AND"
+        },
+        {
+          field: "validFor",
+          cond: "=",
+          value: "Y"
         }
       ]
     };

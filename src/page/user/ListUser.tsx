@@ -10,6 +10,7 @@ import UIButton from '@app/libs/ui/UIButton';
 import IconAdd from '@app/libs/ui/Icons/IconAdd';
 import { isSize } from '@app/libs/ui/MediaQuery';
 import UIText from '@app/libs/ui/UIText';
+import global from '@app/global';
 
 const BtnCreate = withRouter(({ history }: any) => {
     return (
@@ -35,11 +36,11 @@ const BtnCreate = withRouter(({ history }: any) => {
 
 export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
     const [data, setData] = useState([]);
-
+    console.log(global.session.user.branch);
     useEffect(() => {
         const getUser = async () => {
             await rawQuery(`{
-                user {
+                user(where: {branch: {_eq: "${global.session.user.branch}"}}) {
                   bpgroup
                   fullname
                   id
@@ -48,7 +49,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
                   sap_id
                   role
                 }
-              }`).then(res => setData(res.user))
+              }`, ).then(res => setData(res.user))
         }
         getUser();
     }, []);

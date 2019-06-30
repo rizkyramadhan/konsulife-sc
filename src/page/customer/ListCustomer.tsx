@@ -1,14 +1,15 @@
+import { APISearch, APISearchProps } from '@app/api';
+import BtnCreate from '@app/components/BtnCreate';
+import BtnDraft from '@app/components/BtnDraft';
 import UIBody from "@app/libs/ui/UIBody";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
-import { observer } from "mobx-react-lite";
-import React, { useState, useEffect } from "react";
-import { withRouter } from "react-router";
-import { APISearch, APISearchProps } from '@app/api';
 import UISearch from '@app/libs/ui/UISearch';
-import BtnDraft from '@app/components/BtnDraft';
-import BtnCreate from '@app/components/BtnCreate';
+import { observer } from "mobx-react-lite";
+import React, { useEffect, useState } from "react";
+import { withRouter } from "react-router";
+import global from '@app/global';
 
 export default withRouter(observer(({ showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
@@ -48,12 +49,16 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
         field: "CardType",
         cond: "=",
         value: "C"
-      },{
+      }, {
         cond: "AND"
       }, {
         field: "validFor",
         cond: "=",
         value: "Y"
+      }, { cond: "AND" }, {
+        field: "U_IDU_BRANCH",
+        cond: "=",
+        value: global.session.user.branch
       }]
     };
 
