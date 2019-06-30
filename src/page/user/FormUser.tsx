@@ -15,11 +15,9 @@ import UIText from '@app/libs/ui/UIText';
 import updateRecord from '@app/libs/gql/data/updateRecord';
 import createRecord from '@app/libs/gql/data/createRecord';
 import { hashPassword } from '@app/libs/gql/session/hashPassword';
-import global from '@app/global';
 
 export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
     const [data, setData] = useState({} as any);
-    console.log(global.session);
     useEffect(() => {
         const get = async () => {
             await query("user", [
@@ -138,7 +136,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                                         value={(data as any).role} setValue={(v) => { setData({ ...data, role: v }) }} />)
                                 },
                                 { key: "username", size: 10, label: "Username" },
-                                { key: "password", type: "password", size: 10, label: "Password" },
+                                { key: "password", type: "password", size: 10, label: "Password" }                                
                             ]
                         }
                     ]}
