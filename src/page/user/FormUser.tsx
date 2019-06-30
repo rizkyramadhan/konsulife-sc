@@ -18,7 +18,7 @@ import { hashPassword } from '@app/libs/gql/session/hashPassword';
 import global from '@app/global';
 
 export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
-    const [data, setData] = useState({});
+    const [data, setData] = useState({} as any);
     console.log(global.session);
     useEffect(() => {
         const get = async () => {
@@ -32,12 +32,13 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                 'warehouse_id',
                 'username',
                 'transfer_account',
-                // 'sap_id',
+                'slp_id',
                 'sales_as_customer',
                 'role',
                 'password'
             ], { where: { id: match.params.id } }).then(res => {
                 res['password'] = '';
+                
                 setData(res);
             });
         };
@@ -50,15 +51,26 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                     color="primary"
                     size="small"
                     onPress={async () => {
-                        let record: any = { ...data };
+                        let record: any = { ...data, 
+                            sales_as_customer: data.sales_as_customer || "",
+                            cash_account: data.cash_account || "",
+                            transfer_account: data.transfer_account || "",
+                            slp_id:data.slp_id || "",
+                         };
                         if (!record.password) delete record.password;
-                        if (!!record.id)
-                            await updateRecord("user", record).then(() => alert("Saved!"));
+                        if (!!record.id) {
+                            await updateRecord("user", record);
+                            alert("Updated!")
+                        }
                         else {
-                            record.id = await createRecord("user", record).then(() => alert("Saved!"));
-                        } 
+                            record.id = await createRecord("user", record);
+                            alert("Saved!")
+                        }
                         
-                        if (!!record.password) hashPassword(record.id);
+
+                        if (!!record.password) {
+                            hashPassword(record.id);
+                        }
                     }}
                 >
                     <IconSave color="#fff" />
@@ -95,10 +107,10 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                                 },
                                 {
                                     key: "warehouse_id", size: 12, label: "Warehouse Code", component: (
-                                        <SAPDropdown label="Warehouse Code" field="Custom" customQuery={{ 
-                                            Table: "OWHS", 
+                                        <SAPDropdown label="Warehouse Code" field="Custom" customQuery={{
+                                            Table: "OWHS",
                                             Fields: ["WhsCode"],
-                                            Page:1 
+                                            Page: 1
                                         }} value={(data as any).warehouse_id} setValue={(v) => { setData({ ...data, warehouse_id: v }) }} />)
                                 },
                                 // { key: "sap_id", size: 4, label: "SAP Code" },
@@ -113,9 +125,20 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                             label: "Account",
                             sublabel: "User Account",
                             value: [
-                                { key: "role", label: "Role", size: 12, component: (<UISelectField label="Role" items={[{ label: 'Admin', value: 'admin' }, { label: 'Sales Canvasing', value: 'sales_canvas' }, { label: 'Sales Taking Order', value: 'sales_to' }]} value={(data as any).role} setValue={(v) => { setData({ ...data, role: v }) }} />) },
+                                {
+                                    key: "role", label: "Role", size: 12,
+                                    component: (<UISelectField label="Role" items={
+                                        [
+                                            { label: 'Admin', value: 'admin' },
+                                            { label: 'Branch Admin', value: 'branch' },
+                                            { label: 'Inventory Admin', value: 'inventory' },
+                                            { label: 'Sales Canvasing', value: 'sales_canvas' },
+                                            { label: 'Sales Taking Order', value: 'sales_to' }
+                                        ]}
+                                        value={(data as any).role} setValue={(v) => { setData({ ...data, role: v }) }} />)
+                                },
                                 { key: "username", size: 10, label: "Username" },
-                                { key: "password", size: 10, label: "Password" },
+                                { key: "password", type: "password", size: 10, label: "Password" },
                             ]
                         }
                     ]}
