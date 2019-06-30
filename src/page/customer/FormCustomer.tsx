@@ -32,55 +32,16 @@ const customer = {
   Fax: "",
   Cellular: "",
   E_Mail: "",
-  GroupNum: "",
-  U_IDU_AREA: global.session.user.area,
-  U_IDU_BRANCH: global.session.user.branch,
+  GroupNum: "-1",
+  U_IDU_AREA: "",
+  U_IDU_BRANCH: "",
   U_LATITUDE: "",
   U_LONGITUDE: "",
   U_SALES: "N",
-  U_USERID: global.session.user.username,
+  U_USERID: "",
   U_GENERATED: "W",
   SeriesName: ""
 };
-
-// const cpList = [
-//   {
-//     No: 1,
-//     Name: "",
-//     FirstName: "",
-//     MiddleName: "",
-//     LastName: "",
-//     Tel1: "",
-//     Tel2: "",
-//     Cellolar: ""
-//   }
-// ];
-
-// const billToList = [
-//   {
-//     No: 1,
-//     Address: "",
-//     Street: "",
-//     ZipCode: "",
-//     City: "",
-//     State: "01",
-//     AdresType: "B",
-//     IsDefault: "Y"
-//   }
-// ];
-
-// const shipToList = [
-//   {
-//     No: 1,
-//     Address: "",
-//     Street: "",
-//     ZipCode: "",
-//     City: "",
-//     State: "01",
-//     AdresType: "S",
-//     IsDefault: "Y"
-//   }
-// ];
 
 export default withRouter(
   observer(({ history, match, showSidebar, sidebar }: any) => {
@@ -223,6 +184,9 @@ export default withRouter(
     };
 
     const save = async () => {
+      if (saving) return;
+      if (!data.CardName || data.CardName === "" || !data.AddID || data.AddID === "") return alert("Field Nama dana KTP wajib diisi");
+
       setSaving(true);
       const Lines_CP = itemCP.map(d => {
         delete d.Key;
@@ -239,16 +203,19 @@ export default withRouter(
         return d;
       });
 
-      try {
-        data.U_IDU_AREA = global.session.user.area;
-        data.U_IDU_BRANCH = global.session.user.branch,
-          data.U_USERID = global.session.user.username,
+      (data as any).U_IDU_AREA = global.session.user.area;
+      (data as any).U_IDU_BRANCH = global.session.user.branch;
+      data.U_USERID = global.session.user.username;
 
-          await APIPost("Customer", {
-            ...data,
-            Lines_CP: [...Lines_CP],
-            Lines_Address: [...Lines_BT, ...Lines_ST]
-          });
+      const SeriesName = data.SeriesName;
+      delete data.SeriesName;
+
+      try {
+        await APIPost("Customer", {
+          ...data,
+          Lines_CP: [...Lines_CP],
+          Lines_Address: [...Lines_BT, ...Lines_ST]
+        });
         history.push("/customer")
       } catch (e) {
         alert(e.Message);
@@ -258,6 +225,7 @@ export default withRouter(
           Lines_Address: [...Lines_BT, ...Lines_ST]
         });
       } finally {
+        data.SeriesName = SeriesName;
         setSaving(false);
       }
     };
@@ -286,7 +254,7 @@ export default withRouter(
             }
           ]
         };
-        APISearch(query).then((res: any) => setData(res[0]));
+        APISearch(query).then((res: any) => setData({ ...res[0] }));
 
         // let query2: APISearchProps = {
         //   Table: "OCPR",
@@ -396,7 +364,7 @@ export default withRouter(
             ]}
             setValue={(value: any, key: any) => {
               (data as any)[key] = value;
-              setData(data);
+              setData({ ...data });
             }}
           />
 
