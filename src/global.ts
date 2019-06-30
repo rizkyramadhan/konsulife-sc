@@ -48,7 +48,7 @@ const Store = types
           ...s.user
         };
       }
-
+      console.log(n,s);
       self.session = n;
     },
     removeSession() {

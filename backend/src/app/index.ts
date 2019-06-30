@@ -57,7 +57,6 @@ app.use(async (ctx: Context) => {
                 )
               : user[config.identifier.role],
           "X-Hasura-BPGroup": user.bpgroup,
-          "X-Hasura-Warehouse-Id": user.warehouse_id,
           "X-Hasura-Session-Id": sessionId,
           "X-Hasura-Branch": user.branch,
           "X-Hasura-Area": user.area,
@@ -94,8 +93,13 @@ app.use(async (ctx: Context) => {
                 )
               : user[config.identifier.role],
           "X-Hasura-BPGroup": user.bpgroup,
-          "X-Hasura-Warehouse-Id": user.warehouse_id,
-          "X-Hasura-Session-Id": session.id
+          "X-Hasura-Session-Id": session.id,
+          "X-Hasura-Branch": user.branch,
+          "X-Hasura-Area": user.area,
+          "X-Hasura-SalesAsCust": user.sales_as_customer,
+          "X-Hasura-Cash-Account": user.cash_account,
+          "X-Hasura-Transfer-Account": user.transfer_account,
+          "X-Hasaru-SlpCode": user.slp_id
         });
       } else {
         send(ctx, 300, {
