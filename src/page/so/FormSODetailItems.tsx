@@ -138,7 +138,7 @@ export default ({ data, items, setItems }: any) => {
             setValue={(val: any, key: string) => {
               const idx = items.findIndex((x: any) => x.Key === item.pkval);
               items[idx][key] = val;
-              setItems(items);
+              setItems([...items]);
             }}
             style={{
               padding: 10
@@ -221,8 +221,7 @@ export default ({ data, items, setItems }: any) => {
                       Fields: ["Code", "Name"],
                       // Condition: [{ field: "Code", cond: "=", value: item.item.TaxCode }]
                     }} value={(item as any).item.TaxCode}
-                    setValue={(v: any, l: any) => {
-                      console.log(l)
+                    setValue={(v: any) => {
                       const idx = items.findIndex((x: any) => x.Key === item.pkval);
                       items[idx]['TaxCode'] = v;
                       setItems([...items]);

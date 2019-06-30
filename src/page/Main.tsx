@@ -57,6 +57,7 @@ import ListInvoiceTOCust from './arinvoice-to/ListInvoiceTOCust';
 import FormInvTransferReturn from './it/FormInvTransferReturn';
 import ListInvoiceCust from './arinvoice/ListInvoiceCust';
 import ListDraftCustomer from './customer/ListDraftCustomer';
+import ListDraftSO from './so/ListDraftSO';
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
@@ -301,6 +302,7 @@ export default observer((_props: any) => {
                 "/wo": <ListWO />,
                 "/wo/form/:id?": <FormWO />,
                 "/so": <ListSO />,
+                "/so/draft": <ListDraftSO />,
                 "/so/form": <FormSO />,
                 "/so-canvas": <ListSOCanvas />,
                 "/so-canvas/form": <FormSOCanvas />,

@@ -12,11 +12,12 @@ import UIJsonField from '@app/libs/ui/UIJsonField';
 import SAPDropdown from '@app/components/SAPDropdown';
 import UISelectField from '@app/libs/ui/UISelectField';
 import { APISearch } from '@app/api';
+import global from '@app/global';
 
 export default ({ data, items, setItems }: any) => {
   return (
     <UIList
-      primaryKey="LineNum"
+      primaryKey="Key"
       selection="detail"
       fields={{
         ItemCode: {
@@ -41,7 +42,7 @@ export default ({ data, items, setItems }: any) => {
         },
         UomEntry: {
           table: {
-            header: "UoM"
+            header: "UoMName"
           }
         },
         Quantity: {
@@ -63,12 +64,7 @@ export default ({ data, items, setItems }: any) => {
           table: {
             header: "Discount(%)"
           }
-        },
-        TaxCode: {
-          table: {
-            header: "Tax Code"
-          }
-        },
+        }
       }}
       items={items.map((item: any, index: any) => ({
         ...item,
@@ -140,9 +136,9 @@ export default ({ data, items, setItems }: any) => {
           <UIJsonField
             items={item.item}
             setValue={(val: any, key: string) => {
-              const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
+              const idx = items.findIndex((x: any) => x.Key === item.pkval);
               items[idx][key] = val;
-              setItems(items);
+              setItems([...items]);
             }}
             style={{
               padding: 10
@@ -151,11 +147,13 @@ export default ({ data, items, setItems }: any) => {
               {
                 key: 'ItemCode', size: 12, label: 'Item Code', component: (
                   <SAPDropdown label="Item Code" field="ItemCodeAll" value={(item as any).item.ItemCode} setValue={async (v, l, r) => {
-                    const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
+                    const idx = items.findIndex((x: any) => x.Key === item.pkval);
                     console.log(r);
                     items[idx]['ItemCode'] = v;
                     items[idx]["Dscription"] = l;
                     items[idx]["U_IDU_PARTNUM"] = r.item.U_IDU_PARTNUM;
+                    items[idx]["TaxCode"] = r.item.VatGourpSa;
+                    items[idx]["UoMEntry"] = r.item.IUoMEntry;
                     setItems([...items]);
                     APISearch({
                       CustomQuery: "UnitPriceSO",
@@ -169,7 +167,7 @@ export default ({ data, items, setItems }: any) => {
                         value: v
                       }]
                     }).then((res: any) => {
-                      items[idx]["PriceBefDi"] = res[0]["Price"];
+                      items[idx]["PriceBefDi"] = parseInt(res[0]["Price"]);
                       setItems([...items]);
                     })
                   }} />)
@@ -184,7 +182,7 @@ export default ({ data, items, setItems }: any) => {
                     ]}
                     value={(item as any).item.UseBaseUn}
                     setValue={v => {
-                      const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
+                      const idx = items.findIndex((x: any) => x.Key === item.pkval);
                       items[idx]['UseBaseUn'] = v;
                       setItems([...items]);
                     }}
@@ -201,18 +199,25 @@ export default ({ data, items, setItems }: any) => {
                       field: "U_IDU_WHSETYPE",
                       cond: "=",
                       value: "Canvassing"
+                    }, {
+                      cond: "AND"
+                    }, {
+                      field: 'U_BRANCH',
+                      cond: "=",
+                      value: global.getSession().user.branch
                     }]
                   }} value={(item as any).item.WhsCode} setValue={(v) => {
-                    const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
+                    const idx = items.findIndex((x: any) => x.Key === item.pkval);
                     items[idx]['WhsCode'] = v;
                     setItems([...items]);
                   }} />)
               },
               {
                 key: 'UomEntry', size: 12, label: 'Uom', component: (
-                  <SAPDropdown label="UoM" field="UomCode" value={(item as any).item.UomEntry} setValue={(v) => {
-                    const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
+                  <SAPDropdown label="UoM" field="UomCode" value={(item as any).item.UomEntry} setValue={(v, l) => {
+                    const idx = items.findIndex((x: any) => x.Key === item.pkval);
                     items[idx]['UomEntry'] = v;
+                    items[idx]['UoMName'] = l;
                     setItems([...items]);
                   }} />)
               },
@@ -223,8 +228,9 @@ export default ({ data, items, setItems }: any) => {
                   <SAPDropdown label="Tax Code" field="Custom" customQuery={{
                     Table: "OVTG",
                     Fields: ["Code", "Name"],
+                    // Condition: [{ field: "Code", cond: "=", value: item.item.TaxCode }]
                   }} value={(item as any).item.TaxCode} setValue={(v) => {
-                    const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
+                    const idx = items.findIndex((x: any) => x.Key === item.pkval);
                     items[idx]['TaxCode'] = v;
                     setItems([...items]);
                   }} />)

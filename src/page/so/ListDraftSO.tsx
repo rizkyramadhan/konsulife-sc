@@ -1,44 +1,18 @@
-import IconAdd from "@app/libs/ui/Icons/IconAdd";
-import { isSize } from "@app/libs/ui/MediaQuery";
 import UIBody from "@app/libs/ui/UIBody";
-import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
-import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
 import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
 import { APISearchProps, APISearch } from "@app/api";
 import UISearch from "@app/libs/ui/UISearch";
-import global from "@app/global";
-
-const BtnCreate = withRouter(({ history }: any) => {
-  return (
-    <UIButton
-      size="small"
-      color="primary"
-      onPress={() => {
-        history.push("/so-canvas/form");
-      }}
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "flex-end"
-      }}
-    >
-      <IconAdd color="#fff" />
-      {isSize(["md", "lg"]) && (
-        <UIText style={{ color: "#fff" }}>Create</UIText>
-      )}
-    </UIButton>
-  );
-});
+import global from '@app/global';
 
 export default withRouter(observer(({ showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
   const [_data, _setData] = useState([]);
-  const field = ["DocNum", "U_IDU_SO_INTNUM", "CardName", "CardCode", "DocDate", "DocDueDate"];
+  const field = ["DocNum", "DocEntry", "U_IDU_SO_INTNUM", "CardName", "CardCode", "DocDate", "DocDueDate"];
   const funcSearch = (value: string) => {
     _setData([...(value ? data.filter((x: any) => {
       let res = false;
@@ -61,14 +35,13 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
     }
 
     let query: APISearchProps = {
-      Table: "ORDR",
+      Table: "ODRF",
       Fields: field,
       Condition: [{
         field: "DocStatus",
         cond: "=",
-        value: "O"
-      }, { cond: "AND" }, { field: "ObjType", cond: "=", value: 17 },
-      { cond: "AND" }, { field: "U_IDU_ISCANVAS", cond: "=", value: "Y" }, ...cond]
+        value: "D"
+      }, { cond: "AND" }, { field: "ObjType", cond: "=", value: 17 }, ...cond]
     };
 
     APISearch(query).then((res: any) => {
@@ -82,15 +55,14 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
       <UIHeader
         showSidebar={showSidebar}
         sidebar={sidebar}
-        center={"SO Canvasing"}
+        center={"Draft SO Taking Order"}
       >
-        <BtnCreate />
       </UIHeader>
       <UIBody>
         <UISearch onSearch={funcSearch}></UISearch>
         <UIList
           style={{ flex: 1 }}
-          primaryKey="DocNum"
+          primaryKey="DocEntry"
           selection="detail"
           fields={{
             U_IDU_SO_INTNUM: {
@@ -112,7 +84,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
               table: {
                 header: "Posting Date"
               }
-            },
+            }
           }}
           items={_data.map((item: any) => ({
             ...item,

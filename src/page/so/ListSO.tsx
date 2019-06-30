@@ -9,6 +9,7 @@ import { APISearchProps, APISearch } from "@app/api";
 import UISearch from "@app/libs/ui/UISearch";
 import BtnCreate from '@app/components/BtnCreate';
 import global from '@app/global';
+import BtnDraft from '@app/components/BtnDraft';
 
 export default withRouter(observer(({ showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
@@ -58,6 +59,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
         sidebar={sidebar}
         center={"SO Taking Order"}
       >
+        <BtnDraft path="/so/draft" />
         <BtnCreate path="/so/form" />
       </UIHeader>
       <UIBody>

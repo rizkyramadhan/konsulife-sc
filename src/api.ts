@@ -189,6 +189,14 @@ export const SAPFieldMap = {
       field: "U_IDU_BRANCH",
       cond: "=",
       value: ""
+    },
+    {
+      cond: "AND"
+    },
+    {
+      field: "validFor",
+      cond: "=",
+      value: "Y"
     }]
   } as APISearchProps,
   DocumentRate: {
