@@ -20,5 +20,6 @@ export default {
   url: "https://hasura.publicfigure.site/v1/graphql",
   wsurl: "wss://hasura.publicfigure.site/v1/graphql",
   hasura_admin_secret: "figure1234",
-  wsSAP: "http://172.16.145.3:8087/MBGPService/Api/"
+  // wsSAP: "http://172.16.145.3:8087/MBGPService/Api/"
+  wsSAP: "http://116.254.101.121:5000/MBGPWebService/Api/"
 };
