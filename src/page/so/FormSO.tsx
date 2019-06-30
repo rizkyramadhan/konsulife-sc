@@ -119,7 +119,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
     });
 
     try {
-      let number: any = await getLastNumbering("SO", global.getSession().user.warehouse_id);
+      let number: any = await getLastNumbering("SO", items[0].WhsCode);
       (data as any).DocDate = encodeSAPDate((data as any).DocDate);
       (data as any).DocDueDate = encodeSAPDate((data as any).DocDueDate);
       (data as any).SlpCode = !!global.session.user.slp_code || "-1";

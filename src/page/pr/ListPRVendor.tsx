@@ -7,6 +7,7 @@ import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 import UISearch from '@app/libs/ui/UISearch';
+import global from '@app/global';
 
 export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
@@ -34,6 +35,22 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
           cond: "=",
           value: "S"
         },
+        {
+          cond: "AND"
+        },
+        {
+          field: "validFor",
+          cond: "=",
+          value: "Y"
+        },
+        {
+          cond: "AND"
+        },
+        {
+          field: "U_IDU_BRANCH",
+          cond: "=",
+          value: global.getSession().user.branch
+        }
         // {
         //   cond: "AND"
         // },

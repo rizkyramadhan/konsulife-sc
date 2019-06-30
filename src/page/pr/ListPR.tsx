@@ -11,6 +11,7 @@ import IconCopy from '@app/libs/ui/Icons/IconCopy';
 import { isSize } from '@app/libs/ui/MediaQuery';
 import UIText from '@app/libs/ui/UIText';
 import UISearch from '@app/libs/ui/UISearch';
+import global from '@app/global';
 
 let selectedItems: any[];
 const BtnCopy = withRouter(({ history }: any) => {
@@ -77,7 +78,15 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
           field: "CardCode",
           cond: "=",
           value: param[0]
-        }
+        },
+        // {
+        //   cond: "AND"
+        // },
+        // {
+        //   field: "U_IDU_BRANCH",
+        //   cond: "=",
+        //   value: global.getSession().user.branch
+        // }
       ]
     };
 
