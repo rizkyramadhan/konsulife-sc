@@ -35,8 +35,14 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
           field: "CardType",
           cond: "=",
           value: "C"
-        },{
-          cond : "AND"
+        },
+        { cond: "AND" },
+        {
+          field: "validFor",
+          cond: "=",
+          value: "Y"
+        }, {
+          cond: "AND"
         },
         {
           field: "U_IDU_BRANCH",

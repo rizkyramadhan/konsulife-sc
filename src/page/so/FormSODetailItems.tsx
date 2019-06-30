@@ -12,6 +12,7 @@ import UIJsonField from '@app/libs/ui/UIJsonField';
 import SAPDropdown from '@app/components/SAPDropdown';
 import UISelectField from '@app/libs/ui/UISelectField';
 import { APISearch } from '@app/api';
+import global from '@app/global';
 
 export default ({ data, items, setItems }: any) => {
   return (
@@ -135,9 +136,9 @@ export default ({ data, items, setItems }: any) => {
           <UIJsonField
             items={item.item}
             setValue={(val: any, key: string) => {
-              const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
+              const idx = items.findIndex((x: any) => x.Key === item.pkval);
               items[idx][key] = val;
-              setItems(items);
+              setItems([...items]);
             }}
             style={{
               padding: 10
@@ -194,7 +195,7 @@ export default ({ data, items, setItems }: any) => {
                   <SAPDropdown label="Warehouse" field="Custom" customQuery={{
                     Table: 'OWHS',
                     Fields: ["WhsCode", "WhsName"],
-                    // Condition: [{field: 'U_BRANCH', cond: "=", value: global.getSession().user.branch}]
+                    Condition: [{ field: 'U_BRANCH', cond: "=", value: global.getSession().user.branch }]
                   }} value={(item as any).item.WhsCode} setValue={(v) => {
                     const idx = items.findIndex((x: any) => x.Key === item.pkval);
                     items[idx]['WhsCode'] = v;
@@ -220,8 +221,7 @@ export default ({ data, items, setItems }: any) => {
                       Fields: ["Code", "Name"],
                       // Condition: [{ field: "Code", cond: "=", value: item.item.TaxCode }]
                     }} value={(item as any).item.TaxCode}
-                    setValue={(v: any, l: any) => {
-                      console.log(l)
+                    setValue={(v: any) => {
                       const idx = items.findIndex((x: any) => x.Key === item.pkval);
                       items[idx]['TaxCode'] = v;
                       setItems([...items]);

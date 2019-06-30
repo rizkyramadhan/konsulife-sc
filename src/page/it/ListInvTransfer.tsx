@@ -25,12 +25,13 @@ const BtnTransfer = withRouter(({ history }: any) => {
       style={{
         display: "flex",
         flexDirection: "row",
-        justifyContent: "flex-end"
+        justifyContent: "flex-end",
+        height: 45,
       }}
     >
-      <IconLuggageCart color="#fff" />
+      <IconLuggageCart color="#fff" width={20} height={20} />
       {isSize(["md", "lg"]) && (
-        <UIText style={{ color: "#fff" }}>Stock Transfer</UIText>
+        <UIText style={{ color: "#fff" }} size="small"> Stock Transfer</UIText>
       )}
     </UIButton>
   );
@@ -47,12 +48,13 @@ const BtnReturn = withRouter(({ history }: any) => {
       style={{
         display: "flex",
         flexDirection: "row",
+        height: 45,
         justifyContent: "flex-end"
       }}
     >
-      <IconCheck color="#fff" />
+      <IconCheck color="#fff" width={20} height={20} />
       {isSize(["md", "lg"]) && (
-        <UIText style={{ color: "#fff" }}>Stock Return</UIText>
+        <UIText style={{ color: "#fff" }} size="small">Stock Return</UIText>
       )}
     </UIButton>
   );
@@ -86,12 +88,12 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
           value: "O"
         },
         {
-          cond:"AND"
+          cond: "AND"
         },
         {
-          field:"U_BRANCH",
-          cond:"=",
-          value:global.session.user.branch
+          field: "U_BRANCH",
+          cond: "=",
+          value: global.session.user.branch
         }
       ]
     };

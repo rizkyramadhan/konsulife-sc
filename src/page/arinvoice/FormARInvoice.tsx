@@ -1,19 +1,17 @@
-import IconSave from '@app/libs/ui/Icons/IconSave';
-import { isSize } from '@app/libs/ui/MediaQuery';
+import { APIPost, APISearch, APISearchProps } from '@app/api';
+import BtnSave from '@app/components/BtnSave';
+import global from '@app/global';
 import UIBody from '@app/libs/ui/UIBody';
-import UIButton from '@app/libs/ui/UIButton';
 import UIContainer from '@app/libs/ui/UIContainer';
 import UIHeader from '@app/libs/ui/UIHeader';
 import UIJsonField from '@app/libs/ui/UIJsonField';
 import UIText from '@app/libs/ui/UIText';
-import { observer } from 'mobx-react-lite';
-import React, { useState, useEffect } from "react";
-import { withRouter } from 'react-router';
-import { APISearch, APISearchProps, APIPost } from '@app/api';
-import FormARInvoiceDetailItems from './FormARInvoiceDetailItems';
-import { View } from 'reactxp';
 import { getLastNumbering, updateLastNumbering } from '@app/utils';
-import global from '@app/global';
+import { observer } from 'mobx-react-lite';
+import React, { useEffect, useState } from "react";
+import { withRouter } from 'react-router';
+import { View } from 'reactxp';
+import FormARInvoiceDetailItems from './FormARInvoiceDetailItems';
 
 
 export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
@@ -123,18 +121,9 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
         sidebar={sidebar}
         center="Form AR Invoice"
       >
-        <UIButton
-          color="primary"
-          size="small"
-          onPress={() => {
-            save();
-          }}
-        >
-          <IconSave color="#fff" />
-          {isSize(["md", "lg"]) && (
-            <UIText style={{ color: "#fff" }}>{saving ? " Saving..." : " Save"}</UIText>
-          )}
-        </UIButton>
+        <BtnSave saving={saving} onPress={() => {
+          save();
+        }} />
       </UIHeader>
       <UIBody scroll={true}>
         <UIJsonField
@@ -152,8 +141,8 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                   size: 7
                 },
                 { type: "empty", size: 5 },
-                { key: "DocDate", size: 4, type:"date", label: "Posting Date",options:{pastDate:true} },
-                { key: "DocDueDate", size: 4, type:"date", label: "Delivery Date",options:{pastDate:true} },
+                { key: "DocDate", size: 4, type: "date", label: "Posting Date", options: { pastDate: true } },
+                { key: "DocDueDate", size: 4, type: "date", label: "Delivery Date", options: { pastDate: true } },
                 { type: "empty", size: 2 },
                 { key: "U_IDU_FP", size: 8, label: "Faktur Pajak" },
               ]
@@ -163,8 +152,8 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
               label: "Customer",
               sublabel: "Toko Penerima Barang",
               value: [
-                { key: "CardCode", label: "Customer", size: 3, type:"field" },
-                { key: "CardName", label: "Name", type:"field" }
+                { key: "CardCode", label: "Customer", size: 3, type: "field" },
+                { key: "CardName", label: "Name", type: "field" }
               ]
             },
             {

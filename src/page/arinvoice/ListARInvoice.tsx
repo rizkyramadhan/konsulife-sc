@@ -1,48 +1,17 @@
+import { APISearch, APISearchProps } from '@app/api';
+import BtnCopy from '@app/components/BtnCopy';
 import UIBody from "@app/libs/ui/UIBody";
-import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
-import { observer } from "mobx-react-lite";
-import React, { useState, useEffect } from "react";
-import { withRouter } from "react-router";
-import { APISearch, APISearchProps } from '@app/api';
-import IconCopy from '@app/libs/ui/Icons/IconCopy';
-import { isSize } from '@app/libs/ui/MediaQuery';
-import UIText from '@app/libs/ui/UIText';
 import UISearch from '@app/libs/ui/UISearch';
+import { observer } from "mobx-react-lite";
+import React, { useEffect, useState } from "react";
+import { withRouter } from "react-router";
 
 let selectedItems: any[];
-const BtnCopy = withRouter(({ history }: any) => {
-  return (
-    <UIButton
-      size="small"
-      color="success"
-      onPress={() => {
-        if (selectedItems !== undefined && selectedItems.length > 0) {
-          let key = selectedItems.join("|");
-          history.push("/ar-invoice/form/" + btoa(key));
-        }
-        else {
-          alert("Please Select SO!");
-        }
 
-      }}
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "flex-end"
-      }}
-    >
-      <IconCopy color="#fff" />
-      {isSize(["md", "lg"]) && (
-        <UIText style={{ color: "#fff" }}>Copy SO</UIText>
-      )}
-    </UIButton>
-  );
-});
-
-export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
+export default withRouter(observer(({ history, match, showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
   const param = atob(match.params.id).split("|", 2);
   const [_data, _setData] = useState([]);
@@ -70,20 +39,20 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
           value: "O"
         },
         {
-          cond:"AND"
+          cond: "AND"
         },
         {
           field: "CardCode",
-          cond:"=",
-          value:param[0]
+          cond: "=",
+          value: param[0]
         },
         {
-          cond : "AND"
+          cond: "AND"
         },
         {
-          field:"U_IDU_ISCANVAS",
-          cond:"=",
-          value:"Y"
+          field: "U_IDU_ISCANVAS",
+          cond: "=",
+          value: "Y"
         }
       ]
     };
@@ -102,7 +71,21 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
         sidebar={sidebar}
         center={"AR Invoice  " + param[1]}
       >
-        <BtnCopy></BtnCopy>
+        <BtnCopy onPress={() => {
+          if (selectedItems !== undefined && selectedItems.length > 0) {
+            let key = selectedItems.join("|");
+            history.push("/ar-invoice/form/" + btoa(key));
+          }
+          else {
+            alert("Please Select SO!");
+          }
+
+        }}
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "flex-end"
+          }} />
       </UIHeader>
       <UIBody>
         <UISearch onSearch={funcSearch}></UISearch>

@@ -1,12 +1,13 @@
+import BtnCreate from "@app/components/BtnCreate";
+import rawQuery from '@app/libs/gql/data/rawQuery';
 import UIBody from "@app/libs/ui/UIBody";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
 import { observer } from "mobx-react-lite";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
-import BtnCreate from "@app/components/BtnCreate";
-import rawQuery from '@app/libs/gql/data/rawQuery';
+import global from '@app/global';
 
 interface IRute {
   id: number,
@@ -18,18 +19,19 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const [data, setData]: any = useState<IRute[]>([]);
   useEffect(() => {
     rawQuery(`{
-            work_order (where: {status: {_in: ["pending", "open"]}}) {
-              id
-              number
-              return_date
-              sales_details
-              sales_id
-              sales_name
-              visite_date
-              sopir
-              sopir_nopol
-            }
-        }`).then((res) => {
+      work_order (where: {branch: {_eq: "${global.getSession().user.branch}"}, status: {_in: ["pending", "open"]}}) {
+        id
+        number
+        return_date
+        sales_details
+        sales_id
+        sales_name
+        visite_date
+        sopir
+        sopir_nopol
+        status
+      }
+    }`).then((res) => {
       setData([...res.work_order]);
     });
   }, []);
@@ -72,16 +74,21 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
                 header: "Nopol"
               }
             },
+            status: {
+              table: {
+                header: "Status"
+              }
+            },
             visite_date: {
               table: {
                 header: "Visite"
               }
             },
-            return_date: {
-              table: {
-                header: "Return"
-              }
-            }
+            // return_date: {
+            //   table: {
+            //     header: "Return"
+            //   }
+            // }
           }}
           items={data}
         />

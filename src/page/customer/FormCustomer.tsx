@@ -1,7 +1,8 @@
 import { APIPost, APISearch, APISearchProps } from "@app/api";
+import BtnSave from '@app/components/BtnSave';
 import SAPDropdown from "@app/components/SAPDropdown";
+import global from '@app/global';
 import IconAdd from "@app/libs/ui/Icons/IconAdd";
-import IconSave from "@app/libs/ui/Icons/IconSave";
 import { isSize } from "@app/libs/ui/MediaQuery";
 import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
@@ -17,7 +18,6 @@ import { View } from "reactxp";
 import FormCustomerBillToItems from "./FormCustomerBillToItems";
 import FormCustomerCPItems from "./FormCustomerCPItems";
 import FormCustomerShipToItems from "./FormCustomerShipToItems";
-import global from '@app/global';
 
 const customer = {
   Series: "",
@@ -32,55 +32,16 @@ const customer = {
   Fax: "",
   Cellular: "",
   E_Mail: "",
-  GroupNum: "",
-  U_IDU_AREA: global.session.user.area,
-  U_IDU_BRANCH: global.session.user.branch,
+  GroupNum: "-1",
+  U_IDU_AREA: "",
+  U_IDU_BRANCH: "",
   U_LATITUDE: "",
   U_LONGITUDE: "",
   U_SALES: "N",
-  U_USERID: global.session.user.username,
+  U_USERID: "",
   U_GENERATED: "W",
   SeriesName: ""
 };
-
-// const cpList = [
-//   {
-//     No: 1,
-//     Name: "",
-//     FirstName: "",
-//     MiddleName: "",
-//     LastName: "",
-//     Tel1: "",
-//     Tel2: "",
-//     Cellolar: ""
-//   }
-// ];
-
-// const billToList = [
-//   {
-//     No: 1,
-//     Address: "",
-//     Street: "",
-//     ZipCode: "",
-//     City: "",
-//     State: "01",
-//     AdresType: "B",
-//     IsDefault: "Y"
-//   }
-// ];
-
-// const shipToList = [
-//   {
-//     No: 1,
-//     Address: "",
-//     Street: "",
-//     ZipCode: "",
-//     City: "",
-//     State: "01",
-//     AdresType: "S",
-//     IsDefault: "Y"
-//   }
-// ];
 
 export default withRouter(
   observer(({ history, match, showSidebar, sidebar }: any) => {
@@ -119,11 +80,6 @@ export default withRouter(
             color="#fff"
             height={18}
             width={18}
-            style={{
-              marginTop: -5,
-              marginRight: 5,
-              marginLeft: -5
-            }}
           />
           {isSize(["md", "lg"]) && (
             <UIText style={{ color: "#fff" }} size="small">
@@ -163,11 +119,6 @@ export default withRouter(
             color="#fff"
             height={18}
             width={18}
-            style={{
-              marginTop: -5,
-              marginRight: 5,
-              marginLeft: -5
-            }}
           />
           {isSize(["md", "lg"]) && (
             <UIText style={{ color: "#fff" }} size="small">
@@ -207,11 +158,6 @@ export default withRouter(
             color="#fff"
             height={18}
             width={18}
-            style={{
-              marginTop: -5,
-              marginRight: 5,
-              marginLeft: -5
-            }}
           />
           {isSize(["md", "lg"]) && (
             <UIText style={{ color: "#fff" }} size="small">
@@ -223,6 +169,9 @@ export default withRouter(
     };
 
     const save = async () => {
+      if (saving) return;
+      if (!data.CardName || data.CardName === "" || !data.AddID || data.AddID === "") return alert("Field Nama dana KTP wajib diisi");
+
       setSaving(true);
       const Lines_CP = itemCP.map(d => {
         delete d.Key;
@@ -239,16 +188,19 @@ export default withRouter(
         return d;
       });
 
-      try {
-        data.U_IDU_AREA = global.session.user.area;
-        data.U_IDU_BRANCH = global.session.user.branch,
-          data.U_USERID = global.session.user.username,
+      (data as any).U_IDU_AREA = global.session.user.area;
+      (data as any).U_IDU_BRANCH = global.session.user.branch;
+      data.U_USERID = global.session.user.username;
 
-          await APIPost("Customer", {
-            ...data,
-            Lines_CP: [...Lines_CP],
-            Lines_Address: [...Lines_BT, ...Lines_ST]
-          });
+      const SeriesName = data.SeriesName;
+      delete data.SeriesName;
+
+      try {
+        await APIPost("Customer", {
+          ...data,
+          Lines_CP: [...Lines_CP],
+          Lines_Address: [...Lines_BT, ...Lines_ST]
+        });
         history.push("/customer")
       } catch (e) {
         alert(e.Message);
@@ -258,6 +210,7 @@ export default withRouter(
           Lines_Address: [...Lines_BT, ...Lines_ST]
         });
       } finally {
+        data.SeriesName = SeriesName;
         setSaving(false);
       }
     };
@@ -286,7 +239,7 @@ export default withRouter(
             }
           ]
         };
-        APISearch(query).then((res: any) => setData(res[0]));
+        APISearch(query).then((res: any) => setData({ ...res[0] }));
 
         // let query2: APISearchProps = {
         //   Table: "OCPR",
@@ -309,20 +262,9 @@ export default withRouter(
           sidebar={sidebar}
           center="Form Master Customer"
         >
-          <UIButton
-            color="primary"
-            size="small"
-            onPress={() => {
-              save();
-            }}
-          >
-            <IconSave color="#fff" />
-            {isSize(["md", "lg"]) && (
-              <UIText style={{ color: "#fff" }}>
-                {saving ? " Saving..." : " Save"}
-              </UIText>
-            )}
-          </UIButton>
+          <BtnSave saving={saving} onPress={() => {
+            save();
+          }} />
         </UIHeader>
         <UIBody scroll={true}>
           <UIJsonField
@@ -396,7 +338,7 @@ export default withRouter(
             ]}
             setValue={(value: any, key: any) => {
               (data as any)[key] = value;
-              setData(data);
+              setData({ ...data });
             }}
           />
 

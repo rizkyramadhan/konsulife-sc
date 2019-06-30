@@ -1,15 +1,12 @@
+import { APISearch, APISearchProps } from '@app/api';
+import BtnCopy from '@app/components/BtnCopy';
 import UIBody from "@app/libs/ui/UIBody";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
 import { observer } from "mobx-react-lite";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
-import { APISearch, APISearchProps } from '@app/api';
-import UIButton from '@app/libs/ui/UIButton';
-import IconCopy from '@app/libs/ui/Icons/IconCopy';
-import { isSize } from '@app/libs/ui/MediaQuery';
-import UIText from '@app/libs/ui/UIText';
 
 export default withRouter(observer(({ match, history, showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
@@ -56,24 +53,10 @@ export default withRouter(observer(({ match, history, showSidebar, sidebar }: an
         sidebar={sidebar}
         center={`Delivery Order #${atob(match.params.CardCode)} - ${atob(match.params.CardName)}`}
       >
-        <UIButton
-          size="small"
-          color="success"
-          onPress={() => {
-            if (itemSelect.length === 0) return;
-            history.push(`/do/form/${match.params.CardCode}/${match.params.CardName}/${btoa(JSON.stringify(itemSelect))}`)
-          }}
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "flex-end"
-          }}
-        >
-          <IconCopy color="#fff" />
-          {isSize(["md", "lg"]) && (
-            <UIText style={{ color: "#fff" }}>Copy</UIText>
-          )}
-        </UIButton>
+        <BtnCopy onPress={() => {
+          if (itemSelect.length === 0) return;
+          history.push(`/do/form/${match.params.CardCode}/${match.params.CardName}/${btoa(JSON.stringify(itemSelect))}`)
+        }} />
       </UIHeader>
       <UIBody scroll={true}>
         <UIList

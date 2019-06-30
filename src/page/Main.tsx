@@ -16,129 +16,47 @@ import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 import { Platform, View } from "reactxp";
+import FormARInvoiceTO from './arinvoice-to/FormARInvoiceTO';
+import ListARInvoiceTO from './arinvoice-to/ListARInvoiceTO';
+import ListInvoiceTOCust from './arinvoice-to/ListInvoiceTOCust';
 import FormARInvoice from "./arinvoice/FormARInvoice";
 import ListARInvoice from "./arinvoice/ListARInvoice";
+import ListInvoiceCust from './arinvoice/ListInvoiceCust';
 import FormCustomer from "./customer/FormCustomer";
 import ListCustomer from "./customer/ListCustomer";
+import ListDraftCustomer from './customer/ListDraftCustomer';
+import FormDO from './do/FormDO';
+import ListDO from './do/ListDO';
+import ListDOCopySO from './do/ListDOCopySO';
+import FormInvTransfer from './it/FormInvTransfer';
+import FormInvTransferReturn from './it/FormInvTransferReturn';
+import ListInvTransfer from './it/ListInvTransfer';
 import Login from "./Login";
 import MainMenu from "./MainMenu";
+import MenuList from './MenuList';
+import FormPayment from './payment/FormPayment';
+import ListPayment from './payment/ListPayment';
+import FormPR from './pr/FormPR';
+import ListPR from './pr/ListPR';
+import ListPRVendor from './pr/ListPRVendor';
+import FormRute from './rute/FormRute';
+import ListRute from './rute/ListRute';
 import FormSO from "./so/FormSO";
 import ListSO from "./so/ListSO";
 import FormSOCanvas from "./socanvas/FormSOCanvas";
 import ListSOCanvas from "./socanvas/ListSOCanvas";
-import ListUser from "./user/ListUser";
-import IconUser from "@app/libs/ui/Icons/IconUser";
-import IconAddressCard from "@app/libs/ui/Icons/IconAddressCard";
-import IconInvoice from "@app/libs/ui/Icons/IconInvoice";
-import IconReceipt from "@app/libs/ui/Icons/IconReceipt";
-import IconCartPlus from "@app/libs/ui/Icons/IconCartPlus";
-import IconShoppingCart from "@app/libs/ui/Icons/IconShoppingCart";
-import IconTruck from "@app/libs/ui/Icons/IconTruck";
-import IconLuggageCart from "@app/libs/ui/Icons/IconLuggageCart";
-import ListDO from './do/ListDO';
-import FormDO from './do/FormDO';
-import ListInvTransfer from './it/ListInvTransfer';
-import FormInvTransfer from './it/FormInvTransfer';
-import ListPR from './pr/ListPR';
-import FormPR from './pr/FormPR';
-import ListWO from './wo/ListWO';
-import FormWO from './wo/FormWO';
 import FormUser from './user/FormUser';
-import ListPayment from './payment/ListPayment';
-import ListARInvoiceTO from './arinvoice-to/ListARInvoiceTO';
-import FormARInvoiceTO from './arinvoice-to/FormARInvoiceTO';
-import FormPayment from './payment/FormPayment';
-import ListRute from './rute/ListRute';
-import FormRute from './rute/FormRute';
-import ListPRVendor from './pr/ListPRVendor';
-import IconNavigation from '@app/libs/ui/Icons/IconNavigation';
-import ListDOCopySO from './do/ListDOCopySO';
-import ListInvoiceTOCust from './arinvoice-to/ListInvoiceTOCust';
-import FormInvTransferReturn from './it/FormInvTransferReturn';
-import ListInvoiceCust from './arinvoice/ListInvoiceCust';
-import ListDraftCustomer from './customer/ListDraftCustomer';
+import ListUser from "./user/ListUser";
+import FormWO from './wo/FormWO';
+import ListDraftSO from './so/ListDraftSO';
+import ListWO from './wo/ListWO';
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
 }
 
-export const menuList = [
-  {
-    title: "Rute",
-    subtitle: "Lorem Ipsum is simply dummy text.",
-    icon: <IconNavigation width={20} height={20} color="#1D6EF7" />,
-    path: "/rute"
-  },
-  {
-    title: "Working Order",
-    subtitle: "Lorem Ipsum is simply dummy text.",
-    icon: <IconLuggageCart width={20} height={20} color="#1D6EF7" />,
-    path: "/wo"
-  },
-  {
-    title: "Purchase Receipt",
-    subtitle: "Lorem Ipsum is simply dummy text.",
-    icon: <IconInvoice width={20} height={20} color="#1D6EF7" />,
-    path: "/pr"
-  },
-  {
-    title: "SO Taking Order",
-    subtitle: "Lorem Ipsum is simply dummy text.",
-    icon: <IconCartPlus width={20} height={20} color="#1D6EF7" />,
-    path: "/so"
-  },
-  {
-    title: "SO Canvasing",
-    subtitle: "Lorem Ipsum is simply dummy text.",
-    icon: <IconShoppingCart width={20} height={20} color="#1D6EF7" />,
-    path: "/so-canvas"
-  },
-  {
-    title: "Delivery Order",
-    subtitle: "Lorem Ipsum is simply dummy text.",
-    icon: <IconTruck width={20} height={20} color="#1D6EF7" />,
-    path: "/do"
-  },
-  {
-    title: "Payment Receipt",
-    subtitle: "Lorem Ipsum is simply dummy text.",
-    icon: <IconReceipt width={20} height={20} color="#1D6EF7" />,
-    path: "/payment-receipt"
-  },
-  {
-    title: "Inventory Transfer",
-    subtitle: "Lorem Ipsum is simply dummy text.",
-    icon: <IconInvoice width={20} height={20} color="#1D6EF7" />,
-    path: "/it"
-  },
-  {
-    title: "AR Invoice (Taking Order)",
-    subtitle: "Lorem Ipsum is simply dummy text.",
-    icon: <IconInvoice width={20} height={20} color="#1D6EF7" />,
-    path: "/ar-invoice-to"
-  },
-  {
-    title: "AR Invoice (Canvasing)",
-    subtitle: "Lorem Ipsum is simply dummy text.",
-    icon: <IconInvoice width={20} height={20} color="#1D6EF7" />,
-    path: "/ar-invoice"
-  },
-  {
-    title: "Customer",
-    subtitle: "Lorem Ipsum is simply dummy text.",
-    icon: <IconAddressCard width={20} height={20} color="#1D6EF7" />,
-    path: "/customer"
-  },
-  {
-    title: "User",
-    subtitle: "Lorem Ipsum is simply dummy text.",
-    icon: <IconUser width={20} height={20} color="#1D6EF7" />,
-    path: "/user"
-  }
-];
-
 const Menu = withRouter(({ history, setSide }: MenuProps) => {
-  RouteState.setRootPaths(menuList.map(item => item.path));
+  RouteState.setRootPaths(MenuList.map(item => item.path));
   const [path, setPath] = useState("");
   const active = {
     backgroundColor: "#cee0ff"
@@ -151,15 +69,13 @@ const Menu = withRouter(({ history, setSide }: MenuProps) => {
       style={{
         paddingTop: 0,
         paddingBottom: 0,
-        // paddingLeft: 15,
-        // paddingRight: 15,
         flex: 1,
         overflow: "auto"
       }}
-      data={menuList}
+      data={MenuList}
       renderItems={(item, opt) => {
-        return (
-          <View key={opt.index} style={{ padding: 0 }}>
+        if (item.roles.indexOf(global.session.user.role) > -1) return (
+          <View key={opt.index} style={{ padding: 0, ...(path == item.path ? active : {}) }}>
             <UIButton
               onPress={() => {
                 history.replace(item.path);
@@ -171,9 +87,12 @@ const Menu = withRouter(({ history, setSide }: MenuProps) => {
               animation={false}
               fill="clear"
               style={{
+                margin: 0,
                 width: "100%",
+                flexShrink: "none",
                 justifyContent: "flex-start",
-                ...(path == item.path ? active : {})
+                paddingTop: 15,
+                paddingBottom: 15
               }}
             >
               {item.icon}
@@ -187,11 +106,12 @@ const Menu = withRouter(({ history, setSide }: MenuProps) => {
               style={{
                 marginTop: 0,
                 marginBottom: 0,
-                borderColor: "#9c9c9c"
+                borderColor: "#e8f1ff"
               }}
             />
           </View>
         );
+        else return;
       }}
     >
       <View>
@@ -231,7 +151,6 @@ export default observer((_props: any) => {
   useEffect(() => {
     const check = async () => {
       global.setSession(await getSession());
-      console.log(global.session);
       setLoading(false);
     };
     check();
@@ -258,18 +177,18 @@ export default observer((_props: any) => {
       {!global.session.uid ? (
         <Login />
       ) : (
-        <UISidebar
-          style={{ width: 300, background: "#fff" }}
-          visible={global.sidebar}
-          setVisible={global.setSidebar}
-          sidebar={
-            // <UIGradient
-            //   style={{ flex: 1 }}
-            //   angle={30}
-            //   colors={["#7F53AC", "#647DEE"]}
-            // >
-            <View style={{ flex: 1 }}>
-              {/* <Image
+          <UISidebar
+            style={{ width: 300, background: "#fff" }}
+            visible={global.sidebar}
+            setVisible={global.setSidebar}
+            sidebar={
+              // <UIGradient
+              //   style={{ flex: 1 }}
+              //   angle={30}
+              //   colors={["#7F53AC", "#647DEE"]}
+              // >
+              <View style={{ flex: 1 }}>
+                {/* <Image
                 source={require("@app/libs/sample/imgs/logo.png")}
                 resizeMode="contain"
                 style={{
@@ -301,6 +220,7 @@ export default observer((_props: any) => {
                 "/wo": <ListWO />,
                 "/wo/form/:id?": <FormWO />,
                 "/so": <ListSO />,
+                "/so/draft": <ListDraftSO />,
                 "/so/form": <FormSO />,
                 "/so-canvas": <ListSOCanvas />,
                 "/so-canvas/form": <FormSOCanvas />,

@@ -5,27 +5,14 @@ import UIList from "@app/libs/ui/UIList";
 import { observer } from "mobx-react-lite";
 import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
-import { APISearch, APISearchProps } from '@app/api';
-import UISearch from '@app/libs/ui/UISearch';
+import { APISearchProps, APISearch } from "@app/api";
+import UISearch from "@app/libs/ui/UISearch";
 import global from '@app/global';
 
 export default withRouter(observer(({ showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
   const [_data, _setData] = useState([]);
-  const field = [
-    "CardName",
-    "CardFName",
-    "CardCode",
-    "CardType",
-    "GroupCode",
-    "LicTradNum",
-    "AddID",
-    "SlpCode",
-    "Phone1",
-    "Phone2",
-    "U_IDU_AREA",
-    "U_IDU_BRANCH"
-  ];
+  const field = ["DocNum", "DocEntry", "U_IDU_SO_INTNUM", "CardName", "CardCode", "DocDate", "DocDueDate"];
   const funcSearch = (value: string) => {
     _setData([...(value ? data.filter((x: any) => {
       let res = false;
@@ -40,24 +27,21 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
   }
 
   useEffect(() => {
+    let cond: any[] = [];
+    if (global.getSession().role === "branch") {
+      cond = [{ cond: "AND" }, { field: "U_BRANCH", cond: "=", value: global.getSession().user.branch }];
+    } else if (global.getSession().role === "sales_to") {
+      cond = [{ cond: "AND" }, { field: "U_USERID", cond: "=", value: global.getSession().user.username }];
+    }
+
     let query: APISearchProps = {
-      Table: "OCRD",
+      Table: "ODRF",
       Fields: field,
       Condition: [{
-        field: "CardType",
+        field: "DocStatus",
         cond: "=",
-        value: "L"
-      }, {
-        cond: "AND"
-      }, {
-        field: "validFor",
-        cond: "=",
-        value: "Y"
-      }, { cond: "AND" }, {
-        field: "U_IDU_BRANCH",
-        cond: "=",
-        value: global.session.user.branch
-      }]
+        value: "D"
+      }, { cond: "AND" }, { field: "ObjType", cond: "=", value: 17 }, ...cond]
     };
 
     APISearch(query).then((res: any) => {
@@ -68,27 +52,37 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
 
   return (
     <UIContainer>
-      <UIHeader showSidebar={showSidebar} sidebar={sidebar} center={"Customer Draft"} />
+      <UIHeader
+        showSidebar={showSidebar}
+        sidebar={sidebar}
+        center={"Draft SO Taking Order"}
+      >
+      </UIHeader>
       <UIBody>
         <UISearch onSearch={funcSearch}></UISearch>
         <UIList
           style={{ flex: 1 }}
-          primaryKey="CardCode"
+          primaryKey="DocEntry"
           selection="detail"
           fields={{
+            U_IDU_SO_INTNUM: {
+              table: {
+                header: "No. SO"
+              }
+            },
             CardCode: {
               table: {
-                header: 'BP Code'
+                header: "Customer Code"
               }
             },
             CardName: {
               table: {
-                header: 'BP Name'
+                header: "Customer"
               }
             },
-            CardFName: {
+            DocDate: {
               table: {
-                header: 'Foreign Name'
+                header: "Posting Date"
               }
             }
           }}

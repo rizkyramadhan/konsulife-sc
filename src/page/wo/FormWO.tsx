@@ -16,6 +16,11 @@ import { View } from "reactxp";
 import createRecord from "@app/libs/gql/data/createRecord";
 import updateRecord from "@app/libs/gql/data/updateRecord";
 import deleteRecord from "@app/libs/gql/data/deleteRecord";
+import global from '@app/global';
+import { getLastNumbering, updateLastNumbering, lpad } from '@app/utils';
+
+const date = new Date();
+const today = `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${date.getDate()}`;
 
 interface IWO {
   id?: number,
@@ -50,7 +55,10 @@ interface IRute {
 }
 
 export default withRouter(observer(({ history, match, showSidebar, sidebar }: any) => {
-  const [data, setData] = useState<IWO>({});
+  const [data, setData] = useState<IWO>({
+    visite_date: today,
+    return_date: today
+  });
   const [items, setItems] = useState<Array<IWOItem>>([]);
   const [rute, setRute] = useState<Array<IRute>>([]);
   const [saving, setSaving] = useState(false);
@@ -76,7 +84,7 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
     }
 
     rawQuery(`{
-      rute {
+      rute (where: {branch: {_eq: "${global.getSession().user.branch}"}}) {
         id
         name
       }
@@ -92,7 +100,10 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
     setSaving(true);
     try {
       if (!data.id) {
-        data.number = new Date().valueOf().toString();
+        let number: any = await getLastNumbering("WO", global.getSession().user.branch || "");
+        data.number = number.format;
+        data.branch = global.getSession().user.branch || "";
+        data.area = global.getSession().user.area || "";
         let id = await createRecord("work_order", data);
         items.forEach(async (item: any) => {
           delete item.id;
@@ -100,6 +111,7 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
           data.work_order_id = id;
           await createRecord("work_order_items", data);
         });
+        updateLastNumbering(number.id, number.last_count + 1);
       } else {
         await updateRecord("work_order", data);
         await deleteRecord("work_order_items", { work_order_id: match.params.id }, { primaryKey: "work_order_id" })

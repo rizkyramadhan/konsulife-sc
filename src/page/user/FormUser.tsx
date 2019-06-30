@@ -1,23 +1,22 @@
+import BtnSave from '@app/components/BtnSave';
+import SAPDropdown from '@app/components/SAPDropdown';
+import createRecord from '@app/libs/gql/data/createRecord';
+import query from '@app/libs/gql/data/query';
+import updateRecord from '@app/libs/gql/data/updateRecord';
+import { hashPassword } from '@app/libs/gql/session/hashPassword';
 import UIBody from '@app/libs/ui/UIBody';
 import UIContainer from '@app/libs/ui/UIContainer';
 import UIHeader from '@app/libs/ui/UIHeader';
+import UIJsonField from '@app/libs/ui/UIJsonField';
+import UISelectField from '@app/libs/ui/UISelectField';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from "react";
 import { withRouter } from 'react-router';
-import UIJsonField from '@app/libs/ui/UIJsonField';
-import query from '@app/libs/gql/data/query';
-import UISelectField from '@app/libs/ui/UISelectField';
-import SAPDropdown from '@app/components/SAPDropdown';
-import UIButton from '@app/libs/ui/UIButton';
-import IconSave from '@app/libs/ui/Icons/IconSave';
-import { isSize } from '@app/libs/ui/MediaQuery';
-import UIText from '@app/libs/ui/UIText';
-import updateRecord from '@app/libs/gql/data/updateRecord';
-import createRecord from '@app/libs/gql/data/createRecord';
-import { hashPassword } from '@app/libs/gql/session/hashPassword';
 
 export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
     const [data, setData] = useState({} as any);
+    const [saving, setSaving] = useState(false);
+
     useEffect(() => {
         const get = async () => {
             await query("user", [
@@ -36,7 +35,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                 'password'
             ], { where: { id: match.params.id } }).then(res => {
                 res['password'] = '';
-                
+
                 setData(res);
             });
         };
@@ -45,37 +44,31 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
     return (
         <UIContainer>
             <UIHeader showSidebar={showSidebar} sidebar={sidebar} center="Form User">
-                <UIButton
-                    color="primary"
-                    size="small"
-                    onPress={async () => {
-                        let record: any = { ...data, 
-                            sales_as_customer: data.sales_as_customer || "",
-                            cash_account: data.cash_account || "",
-                            transfer_account: data.transfer_account || "",
-                            slp_id:data.slp_id || "",
-                         };
-                        if (!record.password) delete record.password;
-                        if (!!record.id) {
-                            await updateRecord("user", record);
-                            alert("Updated!")
-                        }
-                        else {
-                            record.id = await createRecord("user", record);
-                            alert("Saved!")
-                        }
-                        
+                <BtnSave saving={saving} onPress={async () => {
+                    setSaving(true);
+                    let record: any = {
+                        ...data,
+                        sales_as_customer: data.sales_as_customer || "",
+                        cash_account: data.cash_account || "",
+                        transfer_account: data.transfer_account || "",
+                        slp_id: data.slp_id || "",
+                    };
+                    if (!record.password) delete record.password;
+                    if (!!record.id) {
+                        await updateRecord("user", record);
+                        alert("Updated!")
+                    }
+                    else {
+                        record.id = await createRecord("user", record);
+                        alert("Saved!")
+                    }
 
-                        if (!!record.password) {
-                            hashPassword(record.id);
-                        }
-                    }}
-                >
-                    <IconSave color="#fff" />
-                    {isSize(["md", "lg"]) && (
-                        <UIText style={{ color: "#fff" }}>{" Save"}</UIText>
-                    )}
-                </UIButton>
+
+                    if (!!record.password) {
+                        hashPassword(record.id);
+                    }
+                    setSaving(false);
+                }} type={match.params.id ? "update" : "save"} />
             </UIHeader>
             <UIBody>
                 <UIJsonField
@@ -136,7 +129,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                                         value={(data as any).role} setValue={(v) => { setData({ ...data, role: v }) }} />)
                                 },
                                 { key: "username", size: 10, label: "Username" },
-                                { key: "password", type: "password", size: 10, label: "Password" }                                
+                                { key: "password", type: "password", size: 10, label: "Password" },
                             ]
                         }
                     ]}

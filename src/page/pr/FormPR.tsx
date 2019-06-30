@@ -1,6 +1,7 @@
 import { APIPost, APISearch, APISearchProps } from "@app/api";
+import BtnSave from '@app/components/BtnSave';
 import global from '@app/global';
-import IconSave from "@app/libs/ui/Icons/IconSave";
+import IconCheck from '@app/libs/ui/Icons/IconCheck';
 import { isSize } from "@app/libs/ui/MediaQuery";
 import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
@@ -9,21 +10,26 @@ import UIHeader from "@app/libs/ui/UIHeader";
 import UIJsonField from "@app/libs/ui/UIJsonField";
 import UITabs from "@app/libs/ui/UITabs";
 import UIText from "@app/libs/ui/UIText";
+import { getLastNumbering, lpad, updateLastNumbering } from '@app/utils';
+import { decodeSAPDate, encodeSAPDate } from '@app/utils/Helper';
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 import FormPRDetailItems from "./FormPRDetailItems";
-import IconCheck from '@app/libs/ui/Icons/IconCheck';
-import { getLastNumbering, updateLastNumbering, lpad } from '@app/utils';
-import { encodeSAPDate, decodeSAPDate } from '@app/utils/Helper';
+import UISelectField from '@app/libs/ui/UISelectField';
+import rawQuery from '@app/libs/gql/data/rawQuery';
+
+const date = new Date();
+const today = `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${date.getDate()}`;
 
 export default withRouter(
-  observer(({ match, showSidebar, sidebar }: any) => {
+  observer(({ history, match, showSidebar, sidebar }: any) => {
     const [saving, setSaving] = useState(false);
     const [editable, setEdit] = useState(false);
     const [data, setData] = useState({});
     const [item, setItem] = useState([]);
     const [selected, setSelected] = useState([]);
+    const [WOList, setWOList] = useState<any[]>([]);
     const param = atob(match.params.id).split("|");
     useEffect(() => {
       let query: APISearchProps = {
@@ -84,9 +90,8 @@ export default withRouter(
           res[0].U_BRANCH = global.session.user.branch;
           res[0].U_USERID = global.session.user.username;
           res[0].U_GENERATED = "W";
-          const date = new Date();
-          res[0].DocDate = `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${date.getDate()}`;
-          setData(res[0]);
+          res[0].DocDate = today;
+          setData({ ...res[0] });
         }
 
       });
@@ -105,7 +110,6 @@ export default withRouter(
           "UomCode",
           "UomEntry",
           "OpenCreQty",
-
           "UseBaseUn",
           "ShipDate",
           "OcrCode",
@@ -135,26 +139,41 @@ export default withRouter(
           item.PK = btoa(item.LineNum + "|" + item.DocEntry);
           item.Quantity = parseInt(item.OpenCreQty).toString();
           item.OpenCreQty = parseInt(item.OpenCreQty).toString();
-          item.Quantity = item.OpenCreQty;  
+          item.Quantity = item.OpenCreQty;
           item.BaseType = "22";
           item.BaseLine = item.LineNum;
           item.BaseEntry = item.DocEntry;
         });
         setItem(res);
       })
+
+      rawQuery(`{
+        work_order (where: {status: {_eq: "open"}}) {
+          number
+        }
+      }`).then((res) => {
+        let wo = res.work_order.map((v: any) => {
+          return {
+            value: v.number,
+            label: v.number
+          }
+        })
+        setWOList([...wo]);
+      });
     }, []);
 
     const save = async () => {
       setSaving(true);
       try {
-        let number: any = await getLastNumbering("LPB", global.getSession().user.warehouse_id);
+        let number: any = await getLastNumbering("LPB", (selected[0] as any).WhsCode);
         (data as any).DocDate = encodeSAPDate((data as any).DocDate);
         await APIPost("PurchaseReceipt", {
           ...data, U_IDU_GRPO_INTNUM: number.format,
           Lines: selected
         });
         updateLastNumbering(number.id, number.last_count + 1);
-        alert("Save success!");
+        // alert("Save success!");
+        history.push("/pr/")
       } catch (e) {
         (data as any).DocDate = decodeSAPDate((data as any).DocDate);
         setData({ ...data });
@@ -175,20 +194,9 @@ export default withRouter(
           sidebar={sidebar}
           center="Purchase Receipt Form"
         >
-          <UIButton
-            color="primary"
-            size="small"
-            onPress={() => {
-              save();
-            }}
-          >
-            <IconSave color="#fff" />
-            {isSize(["md", "lg"]) && (
-              <UIText style={{ color: "#fff" }}>
-                {saving ? " Saving..." : " Save"}
-              </UIText>
-            )}
-          </UIButton>
+          <BtnSave saving={saving} onPress={() => {
+            save();
+          }} />
         </UIHeader>
         <UIBody scroll={true}>
           <UIJsonField
@@ -234,6 +242,7 @@ export default withRouter(
                     label: "NO DO Supplier",
                     size: 8
                   },
+                  { key: "U_WONUM", size: 8, component: (<UISelectField label="WO Number" items={WOList} value={(data as any).U_WONUM || ""} setValue={(v) => { setData({ ...data, U_WONUM: v }) }} />) },
                   { type: "empty", size: 4 },
                   {
                     key: "DocDate",
@@ -258,7 +267,13 @@ export default withRouter(
               }
             ]}
             setValue={(value: any, key: any) => {
+              if (key === "DocDate") {
+                if (value > today) {
+                  value = today;
+                }
+              }
               (data as any)[key] = value;
+              setData({ ...data });
             }}
           />
 
@@ -284,13 +299,8 @@ export default withRouter(
                   >
                     <IconCheck
                       color="#fff"
-                      height={18}
-                      width={18}
-                      style={{
-                        marginTop: -5,
-                        marginRight: 5,
-                        marginLeft: -5
-                      }}
+                      height={20}
+                      width={20}
                     />
                     {isSize(["md", "lg"]) && (
                       <UIText style={{ color: "#fff" }} size="small">

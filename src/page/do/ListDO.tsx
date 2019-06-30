@@ -35,6 +35,12 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
           cond: "=",
           value: "C"
         },
+        { cond: "AND" },
+        {
+          field: "validFor",
+          cond: "=",
+          value: "Y"
+        },
         {
           cond: "AND"
         },
