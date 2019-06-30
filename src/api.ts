@@ -43,17 +43,15 @@ export const APISearch = async (p: APISearchProps) => {
     p.Condition.forEach((c: any) => {
       if (c.cond === "AND" || c.cond === "OR" || c.cond === "XOR") {
         cond += ` ${c.cond} `;
-      } 
-      else if(c.cond === "IN")
-      {
-        let value:any;
-        if(Array.isArray(c.value))
-        {
-          value = c.value.map(function(val:any){
-            return val!==null?"'"+val+"'" : "NULL";
+      }
+      else if (c.cond === "IN") {
+        let value: any;
+        if (Array.isArray(c.value)) {
+          value = c.value.map(function (val: any) {
+            return val !== null ? "'" + val + "'" : "NULL";
           }).join(",");
         }
-        else{
+        else {
           value = c.value;
         }
         cond += `[${c.field}] ${c.cond} (${value})`;

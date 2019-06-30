@@ -62,13 +62,20 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
 
     let query: APISearchProps = {
       Table: "ORDR",
-      Fields: field,
       Condition: [{
         field: "DocStatus",
         cond: "=",
         value: "O"
-      }, { cond: "AND" }, { field: "ObjType", cond: "=", value: 17 },
-      { cond: "AND" }, { field: "U_IDU_ISCANVAS", cond: "=", value: "Y" }, ...cond]
+      }, { cond: "AND" }, {
+        field: "ObjType",
+        cond: "=",
+        value: 17
+      },
+      { cond: "AND" }, {
+        field: "U_IDU_ISCANVAS",
+        cond: "=",
+        value: "Y"
+      }]
     };
 
     APISearch(query).then((res: any) => {

@@ -48,7 +48,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
         }
       }
 
-      let number: any = await getLastNumbering("TP", global.getSession().user.branch || '');
+      let number: any = await getLastNumbering("PR", global.getSession().user.branch || '');
       await APIPost('ARInvoice', { ...data, U_IDU_PAYNUM: number.format });
       updateLastNumbering(number.id, number.last_count + 1);
     }
@@ -88,8 +88,8 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
               key: "general",
               label: "General",
               value: [
-                { key: "DocDate", size: 4, label: "Posting Date",options:{pastDate:true} },
-                { key: "DocDueDate", size: 4, label: "Delivery Date",options:{pastDate:true} },
+                { key: "DocDate", size: 4, label: "Posting Date", options: { pastDate: true } },
+                { key: "DocDueDate", size: 4, label: "Delivery Date", options: { pastDate: true } },
                 {
                   key: "CardCode", label: "BP Partner", size: 12, component: (
                     <SAPDropdown label="BP Partner" field="SalesAsEmployee" value={(data as any).CardCode} setValue={(v) => { setData({ ...data, CardCode: v }) }} />)
