@@ -18,18 +18,19 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const [data, setData]: any = useState<IRute[]>([]);
   useEffect(() => {
     rawQuery(`{
-            work_order (where: {status: {_in: ["pending", "open"]}}) {
-              id
-              number
-              return_date
-              sales_details
-              sales_id
-              sales_name
-              visite_date
-              sopir
-              sopir_nopol
-            }
-        }`).then((res) => {
+      work_order (where: {status: {_in: ["pending", "open"]}}) {
+        id
+        number
+        return_date
+        sales_details
+        sales_id
+        sales_name
+        visite_date
+        sopir
+        sopir_nopol
+        status
+      }
+    }`).then((res) => {
       setData([...res.work_order]);
     });
   }, []);
@@ -72,16 +73,21 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
                 header: "Nopol"
               }
             },
+            status: {
+              table: {
+                header: "Status"
+              }
+            },
             visite_date: {
               table: {
                 header: "Visite"
               }
             },
-            return_date: {
-              table: {
-                header: "Return"
-              }
-            }
+            // return_date: {
+            //   table: {
+            //     header: "Return"
+            //   }
+            // }
           }}
           items={data}
         />
