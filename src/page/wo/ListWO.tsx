@@ -18,7 +18,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const [data, setData]: any = useState<IRute[]>([]);
   useEffect(() => {
     rawQuery(`{
-            work_order {
+            work_order (where: {status: {_in: ["pending", "open"]}}) {
               id
               number
               return_date

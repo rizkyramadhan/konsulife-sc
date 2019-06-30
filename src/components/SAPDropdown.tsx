@@ -22,6 +22,7 @@ interface SAPDropdownProps extends UIProps {
   mustInit?: boolean;
   refresh?: boolean;
   setRefresh?: any;
+  disable?: boolean
 }
 
 export default ({
@@ -37,7 +38,8 @@ export default ({
   style,
   mustInit = true,
   setRefresh,
-  itemField
+  itemField,
+  disable
 }: SAPDropdownProps) => {
   const [items, setItems] = useState<any[]>([]);
   const [_items, _setItems] = useState<any[]>([]);
@@ -97,6 +99,6 @@ export default ({
   return (
     <UISelectField items={_items} value={value} setValue={(v: any, l: any) => { const idx: any = _items.findIndex((x: any) => x.value === v); setValue(v, l, _items[idx]) }} label={label} style={style} color={color} search={true} onSearch={(value) => {
       setItems([...(value ? items.filter((x: any) => x.value.toLowerCase().includes(value.toLowerCase()) || x.label.toLowerCase().includes(value.toLowerCase())) : items)]);
-    }} onDismiss={(value: any) => value && setItems([...items])} />
+    }} onDismiss={(value: any) => value && setItems([...items])} disable={disable} />
   );
 };
