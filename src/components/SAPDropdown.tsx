@@ -73,7 +73,7 @@ export default ({
       }
     }
 
-    query.Limit = 50;
+    // query.Limit = 50;
     if (refresh || mustInit) {
       _setItems([]);
       setItems([]);

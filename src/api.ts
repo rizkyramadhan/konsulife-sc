@@ -1,7 +1,7 @@
 import Axios from "axios";
-import createRecord from './libs/gql/data/createRecord';
-import query from './libs/gql/data/query';
-import updateRecord from './libs/gql/data/updateRecord';
+// import createRecord from './libs/gql/data/createRecord';
+// import query from './libs/gql/data/query';
+// import updateRecord from './libs/gql/data/updateRecord';
 import config from './config';
 
 // const urlDev: string = "http://mock.rx.plansys.co";
@@ -69,8 +69,8 @@ export const APISearch = async (p: APISearchProps) => {
 
   return new Promise(async (resolve, reject) => {
     let url = config.wsSAP + "Search";
-    const cache = await query("cache", ['data'], { where: { id: config.wsSAP + "Search" + params.Table + params.Condition } });
-    if (cache) resolve(cache.data);
+    // const cache = await query("cache", ['data'], { where: { id: config.wsSAP + "Search" + params.Table + params.Condition } });
+    // if (cache) resolve(cache.data);
 
     Axios.post(url, JSON.stringify(params), {
       headers: {
@@ -82,17 +82,17 @@ export const APISearch = async (p: APISearchProps) => {
         if (typeof res.data == 'object' && !!res.data && !!res.data.ErrorCode) {
           reject();
         } else {
-          if (!cache || (Array.isArray(cache.data) && cache.data.length === 0)) {
-            createRecord("cache", {
-              id: url + params.Table + params.Condition,
-              data: res.data
-            })
-          } else {
-            updateRecord("cache", {
-              id: url + params.Table + params.Condition,
-              data: res.data
-            });
-          }
+          // if (!cache || (Array.isArray(cache.data) && cache.data.length === 0)) {
+          //   createRecord("cache", {
+          //     id: url + params.Table + params.Condition,
+          //     data: res.data
+          //   })
+          // } else {
+          //   updateRecord("cache", {
+          //     id: url + params.Table + params.Condition,
+          //     data: res.data
+          //   });
+          // }
           resolve(res.data)
         }
       })
@@ -179,16 +179,16 @@ export const SAPFieldMap = {
     Fields: ["CardCode", "CardName", "Currency", "GroupNum"],
     Condition: [{
       field: "CardType",
-      cond: "=",
-      value: "C"
+      cond: "IN",
+      value: ["C", "L"]
     },
     {
-      cond: "OR"
+      cond: "AND"
     },
     {
-      field: "CardType",
+      field: "U_IDU_BRANCH",
       cond: "=",
-      value: "L"
+      value: ""
     }]
   } as APISearchProps,
   DocumentRate: {

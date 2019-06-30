@@ -7,6 +7,7 @@ import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
 import BtnCreate from "@app/components/BtnCreate";
 import rawQuery from '@app/libs/gql/data/rawQuery';
+import global from '@app/global';
 
 interface IRute {
   id: number,
@@ -18,7 +19,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const [data, setData]: any = useState<IRute[]>([]);
   useEffect(() => {
     rawQuery(`{
-      work_order (where: {status: {_in: ["pending", "open"]}}) {
+      work_order (where: {branch: {_eq: "${global.getSession().user.branch}"}, status: {_in: ["pending", "open"]}}) {
         id
         number
         return_date

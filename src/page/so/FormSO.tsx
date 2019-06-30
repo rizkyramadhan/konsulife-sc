@@ -11,21 +11,24 @@ import UIHeader from "@app/libs/ui/UIHeader";
 import UIJsonField from "@app/libs/ui/UIJsonField";
 import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FormSODetailItems from './FormSODetailItems';
 import { getLastNumbering, updateLastNumbering, lpad } from '@app/utils';
 import UITabs from '@app/libs/ui/UITabs';
 import { withRouter } from 'react-router';
 import { encodeSAPDate } from '@app/utils/Helper';
+import rawQuery from '@app/libs/gql/data/rawQuery';
+import UISelectField from '@app/libs/ui/UISelectField';
 
 const date = new Date();
+const today = `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${date.getDate()}`;
 
 const header = {
   CardCode: "",
   CardName: "",
   NumAtCard: "",
-  DocDate: `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${date.getDate()}`,
-  DocDueDate: `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${date.getDate()}`,
+  DocDate: today,
+  DocDueDate: today,
   DocCur: "",
   DocRate: "1",
   U_IDU_SO_INTNUM: "",
@@ -39,26 +42,33 @@ const header = {
   U_USERID: global.session.user.username,
   U_GENERATED: "W",
   U_IDU_ISCANVAS: "N",
+  U_WONUM: ""
 };
 
 export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const [data, setData] = useState(header);
+  const [WOList, setWOList] = useState<any[]>([]);
   const [items, setItems] = useState<any[]>([]);
   const [saving, setSaving] = useState(false);
   const [qCP, setQCP] = useState(false);
   const [qShip, setQShip] = useState(false);
   const [qBill, setQBill] = useState(false);
 
-  // sample
-  // useEffect(() => {
-  //   APISearch({
-  //     Table: "OITM",
-  //     Page: 1,
-  //     Limit: 2
-  //   }).then((res) => {
-  //     console.log(res);
-  //   })
-  // }, [])
+  useEffect(() => {
+    rawQuery(`{
+      work_order (where: {status: {_eq: "open"}}) {
+        number
+      }
+    }`).then((res) => {
+      let wo = res.work_order.map((v: any) => {
+        return {
+          value: v.number,
+          label: v.number
+        }
+      })
+      setWOList([...wo]);
+    });
+  }, [])
 
   const AddRow = () => {
     return (<UIButton
@@ -98,6 +108,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   }
 
   const save = async () => {
+    if (saving) return;
     setSaving(true);
     const Lines_IT = items.map(d => {
       d.OcrCode = global.session.user.area;
@@ -167,8 +178,8 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
                 { key: "CardCode", size: 8, type: "field", label: "Customer/Vendor Code" },
                 {
                   key: "CardCode", label: "Customer/Vendor", size: 12, component: (
-                    <SAPDropdown label="Customer" field="CustomerCode" value={(data as any).CardCode} setValue={(v, l, r) => {
-                      setData({ ...data, CardCode: v, CardName: l, GroupNum: r.item.GroupNum, DocCur: r.item.Currency });
+                    <SAPDropdown label="Customer" field="CustomerCode" where={[{ field: "U_IDU_BRANCH", value: global.getSession().user.branch }]} value={(data as any).CardCode} setValue={(v, l, r) => {
+                      setData({ ...data, CardCode: v, CardName: l, GroupNum: r.item.GroupNum, DocCur: r.item.Currency, CntctCode: "" });
                       setQCP(true);
                       setQBill(true);
                       setQShip(true);
@@ -240,6 +251,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
               label: "General",
               sublabel: "Informasi Sales Order",
               value: [
+                { key: "U_WONUM", size: 8, component: (<UISelectField label="WO Number" items={WOList} value={data.U_WONUM} setValue={(v) => { setData({ ...data, U_WONUM: v }) }} />) },
                 { key: "DocDate", size: 6, type: "date", label: "Posting Date" },
                 { key: "DocDueDate", size: 6, type: "date", label: "Delivery Date" },
               ]
@@ -258,7 +270,13 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
             }
           ]}
           setValue={(value: any, key: any) => {
+            if (key === "DocDate") {
+              if (value > today) {
+                value = today;
+              }
+            }
             (data as any)[key] = value;
+            setData({ ...data });
           }}
         />
 

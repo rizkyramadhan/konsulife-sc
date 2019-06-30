@@ -7,6 +7,7 @@ import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
 import BtnCreate from "@app/components/BtnCreate";
 import rawQuery from '@app/libs/gql/data/rawQuery';
+import global from '@app/global';
 
 interface IRute {
   id: number,
@@ -18,12 +19,12 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const [data, setData]: any = useState<IRute[]>([]);
   useEffect(() => {
     rawQuery(`{
-            rute {
-                name
-                id
-                description
-            }
-          }`).then((res) => {
+      rute (where: {branch: {_eq: "${global.getSession().user.branch}"}}) {
+          name
+          id
+          description
+      }
+    }`).then((res) => {
       setData([...res.rute]);
     });
   }, []);

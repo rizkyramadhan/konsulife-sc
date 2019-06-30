@@ -14,6 +14,7 @@ import updateRecord from '@app/libs/gql/data/updateRecord';
 import { withRouter } from 'react-router-dom';
 import query from '@app/libs/gql/data/query';
 import rawQuery from '@app/libs/gql/data/rawQuery';
+import global from '@app/global';
 
 interface IRute {
   id?: number,
@@ -63,6 +64,8 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
     setSaving(true);
     try {
       if (!data.id) {
+        data.branch = global.getSession().user.branch || "";
+        data.area = global.getSession().user.area || "";
         let id = await createRecord("rute", data);
         items.forEach(async (item) => {
           let data = { ...item };
