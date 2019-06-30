@@ -1,39 +1,14 @@
-import IconAdd from "@app/libs/ui/Icons/IconAdd";
-import { isSize } from "@app/libs/ui/MediaQuery";
+import { APISearch, APISearchProps } from '@app/api';
+import BtnCreate from '@app/components/BtnCreate';
 import UIBody from "@app/libs/ui/UIBody";
-import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
-import UIText from "@app/libs/ui/UIText";
+import UISearch from '@app/libs/ui/UISearch';
 import { observer } from "mobx-react-lite";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
-import { APISearchProps, APISearch } from "@app/api";
-import UISearch from "@app/libs/ui/UISearch";
-import global from "@app/global";
-
-const BtnCreate = withRouter(({ history }: any) => {
-  return (
-    <UIButton
-      size="small"
-      color="primary"
-      onPress={() => {
-        history.push("/so-canvas/form");
-      }}
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "flex-end"
-      }}
-    >
-      <IconAdd color="#fff" />
-      {isSize(["md", "lg"]) && (
-        <UIText style={{ color: "#fff" }}>Create</UIText>
-      )}
-    </UIButton>
-  );
-});
+import global from '@app/global';
 
 export default withRouter(observer(({ showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
@@ -75,7 +50,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
         field: "U_IDU_ISCANVAS",
         cond: "=",
         value: "Y"
-      }]
+      }, ...cond]
     };
 
     APISearch(query).then((res: any) => {
@@ -91,7 +66,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
         sidebar={sidebar}
         center={"SO Canvasing"}
       >
-        <BtnCreate />
+        <BtnCreate path="/so-canvas/form" />
       </UIHeader>
       <UIBody>
         <UISearch onSearch={funcSearch}></UISearch>

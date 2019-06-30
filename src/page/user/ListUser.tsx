@@ -1,3 +1,5 @@
+import BtnCreate from '@app/components/BtnCreate';
+import global from '@app/global';
 import rawQuery from '@app/libs/gql/data/rawQuery';
 import UIBody from '@app/libs/ui/UIBody';
 import UIContainer from '@app/libs/ui/UIContainer';
@@ -6,37 +8,31 @@ import UIList from '@app/libs/ui/UIList';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from "react";
 import { withRouter } from 'react-router';
-import UIButton from '@app/libs/ui/UIButton';
-import IconAdd from '@app/libs/ui/Icons/IconAdd';
-import { isSize } from '@app/libs/ui/MediaQuery';
-import UIText from '@app/libs/ui/UIText';
-import global from '@app/global';
 
-const BtnCreate = withRouter(({ history }: any) => {
-    return (
-        <UIButton
-            size="small"
-            color="primary"
-            onPress={() => {
-                history.push("/user/form");
-            }}
-            style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "flex-end"
-            }}
-        >
-            <IconAdd color="#fff" />
-            {isSize(["md", "lg"]) && (
-                <UIText style={{ color: "#fff" }}>Create</UIText>
-            )}
-        </UIButton>
-    );
-});
+// const BtnCreate = withRouter(({ history }: any) => {
+//     return (
+//         <UIButton
+//             size="small"
+//             color="primary"
+//             onPress={() => {
+//                 history.push("/user/form");
+//             }}
+//             style={{
+//                 display: "flex",
+//                 flexDirection: "row",
+//                 justifyContent: "flex-end"
+//             }}
+//         >
+//             <IconAdd color="#fff" />
+//             {isSize(["md", "lg"]) && (
+//                 <UIText style={{ color: "#fff" }}>Create</UIText>
+//             )}
+//         </UIButton>
+//     );
+// });
 
 export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
     const [data, setData] = useState([]);
-    console.log(global.session.user.branch);
     useEffect(() => {
         const getUser = async () => {
             await rawQuery(`{
@@ -56,7 +52,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
     return (
         <UIContainer>
             <UIHeader showSidebar={showSidebar} sidebar={sidebar} center="User">
-                <BtnCreate />
+                <BtnCreate path="/user/form" />
             </UIHeader>
             <UIBody>
                 <UIList

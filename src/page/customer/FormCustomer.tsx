@@ -1,7 +1,8 @@
 import { APIPost, APISearch, APISearchProps } from "@app/api";
+import BtnSave from '@app/components/BtnSave';
 import SAPDropdown from "@app/components/SAPDropdown";
+import global from '@app/global';
 import IconAdd from "@app/libs/ui/Icons/IconAdd";
-import IconSave from "@app/libs/ui/Icons/IconSave";
 import { isSize } from "@app/libs/ui/MediaQuery";
 import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
@@ -17,7 +18,6 @@ import { View } from "reactxp";
 import FormCustomerBillToItems from "./FormCustomerBillToItems";
 import FormCustomerCPItems from "./FormCustomerCPItems";
 import FormCustomerShipToItems from "./FormCustomerShipToItems";
-import global from '@app/global';
 
 const customer = {
   Series: "",
@@ -80,11 +80,6 @@ export default withRouter(
             color="#fff"
             height={18}
             width={18}
-            style={{
-              marginTop: -5,
-              marginRight: 5,
-              marginLeft: -5
-            }}
           />
           {isSize(["md", "lg"]) && (
             <UIText style={{ color: "#fff" }} size="small">
@@ -124,11 +119,6 @@ export default withRouter(
             color="#fff"
             height={18}
             width={18}
-            style={{
-              marginTop: -5,
-              marginRight: 5,
-              marginLeft: -5
-            }}
           />
           {isSize(["md", "lg"]) && (
             <UIText style={{ color: "#fff" }} size="small">
@@ -168,11 +158,6 @@ export default withRouter(
             color="#fff"
             height={18}
             width={18}
-            style={{
-              marginTop: -5,
-              marginRight: 5,
-              marginLeft: -5
-            }}
           />
           {isSize(["md", "lg"]) && (
             <UIText style={{ color: "#fff" }} size="small">
@@ -277,20 +262,9 @@ export default withRouter(
           sidebar={sidebar}
           center="Form Master Customer"
         >
-          <UIButton
-            color="primary"
-            size="small"
-            onPress={() => {
-              save();
-            }}
-          >
-            <IconSave color="#fff" />
-            {isSize(["md", "lg"]) && (
-              <UIText style={{ color: "#fff" }}>
-                {saving ? " Saving..." : " Save"}
-              </UIText>
-            )}
-          </UIButton>
+          <BtnSave saving={saving} onPress={() => {
+            save();
+          }} />
         </UIHeader>
         <UIBody scroll={true}>
           <UIJsonField

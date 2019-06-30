@@ -17,12 +17,13 @@ export default withRouter(({ history, path, style }: any) => {
                 display: "flex",
                 flexDirection: "row",
                 justifyContent: "flex-end",
+                height: 45,
                 ...style
             }}
         >
-            <IconAdd color="#fff" />
+            <IconAdd color="#fff" width={20} height={20} />
             {isSize(["md", "lg"]) && (
-                <UIText style={{ color: "#fff" }}>Create</UIText>
+                <UIText style={{ color: "#fff" }} size="small"> Create</UIText>
             )}
         </UIButton>
     );

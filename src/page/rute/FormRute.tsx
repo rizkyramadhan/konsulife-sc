@@ -1,20 +1,20 @@
+import BtnAdd from '@app/components/BtnAdd';
+import BtnSave from '@app/components/BtnSave';
+import global from '@app/global';
+import createRecord from '@app/libs/gql/data/createRecord';
+import query from '@app/libs/gql/data/query';
+import rawQuery from '@app/libs/gql/data/rawQuery';
+import updateRecord from '@app/libs/gql/data/updateRecord';
 import UIBody from "@app/libs/ui/UIBody";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIJsonField from "@app/libs/ui/UIJsonField";
-import UIText from "@app/libs/ui/UIText";
+import UITabs from '@app/libs/ui/UITabs';
 import { observer } from "mobx-react-lite";
-import React, { useState, useEffect } from "react";
-import { View } from "reactxp";
-import BtnSave from '@app/components/BtnSave';
-import FormRuteItems from './FormRuteItems';
-import BtnAdd from '@app/components/BtnAdd';
-import createRecord from '@app/libs/gql/data/createRecord';
-import updateRecord from '@app/libs/gql/data/updateRecord';
+import React, { useEffect, useState } from "react";
 import { withRouter } from 'react-router-dom';
-import query from '@app/libs/gql/data/query';
-import rawQuery from '@app/libs/gql/data/rawQuery';
-import global from '@app/global';
+import { View } from "reactxp";
+import FormRuteItems from './FormRuteItems';
 
 interface IRute {
   id?: number,
@@ -60,6 +60,17 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
     }
   }, [])
 
+  const AddRow = () => {
+    return (<BtnAdd onPress={() => {
+      setItems([...items, {
+        id: new Date().valueOf(),
+        rute_id: data.id,
+        isNewRecord: true
+      }])
+    }} />
+    );
+  }
+
   const save = async () => {
     setSaving(true);
     try {
@@ -103,7 +114,7 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
         sidebar={sidebar}
         center="Form Master Rute"
       >
-        <BtnSave onPress={save} saving={saving} />
+        <BtnSave onPress={save} saving={saving} type={match.params.id ? "update" : "save"} />
       </UIHeader>
       <UIBody scroll={true}>
         <UIJsonField
@@ -129,32 +140,16 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
         />
 
         <View style={{ marginTop: 50 }}>
-          <View
-            style={{
-              justifyContent: "space-between",
-              flex: 1,
-              flexDirection: "row",
-              alignItems: "center"
-            }}
-          >
-            <UIText
-              style={{
-                fontSize: 19,
-                color: "#333",
-                fontWeight: 400
-              }}
-            >
-              Detail Items
-            </UIText>
-            <BtnAdd onPress={() => {
-              setItems([...items, {
-                id: new Date().valueOf(),
-                rute_id: data.id,
-                isNewRecord: true
-              }])
-            }} />
-          </View>
-          <FormRuteItems items={items} setItems={setItems} />
+          <UITabs
+            tabs={[
+              {
+                label: "Detail Items",
+                content: () => (
+                  <FormRuteItems items={items} setItems={setItems} />
+                ),
+                action: AddRow()
+              }]}
+          />
         </View>
       </UIBody>
     </UIContainer>

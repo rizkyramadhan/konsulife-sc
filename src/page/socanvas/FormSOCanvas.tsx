@@ -1,24 +1,22 @@
 import { APIPost } from '@app/api';
+import BtnAdd from '@app/components/BtnAdd';
+import BtnSave from '@app/components/BtnSave';
 import SAPDropdown from '@app/components/SAPDropdown';
-import IconAdd from "@app/libs/ui/Icons/IconAdd";
-import IconSave from "@app/libs/ui/Icons/IconSave";
-import { isSize } from "@app/libs/ui/MediaQuery";
+import global from '@app/global';
 import UIBody from "@app/libs/ui/UIBody";
-import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIJsonField from "@app/libs/ui/UIJsonField";
-import UIText from "@app/libs/ui/UIText";
+import UITabs from '@app/libs/ui/UITabs';
+import { getLastNumbering, updateLastNumbering, lpad } from '@app/utils';
 import { observer } from "mobx-react-lite";
 import React, { useState, useEffect } from "react";
 import FormSOCanvasDetailItems from './FormSOCanvasDetailItems';
-import { getLastNumbering, updateLastNumbering, lpad } from '@app/utils';
-import global from '@app/global';
 import { withRouter } from 'react-router-dom';
 import rawQuery from '@app/libs/gql/data/rawQuery';
 import { encodeSAPDate } from '@app/libs/utils/Helper';
-import UITabs from '@app/libs/ui/UITabs';
 import UISelectField from '@app/libs/ui/UISelectField';
+import { View } from 'reactxp';
 
 const date = new Date();
 const today = `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${date.getDate()}`;
@@ -70,43 +68,6 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
     });
   }, [])
 
-  const AddRow = () => {
-    return (<UIButton
-      style={{
-        flexShrink: 'none'
-      }}
-      color="success"
-      size="small"
-      onPress={() => {
-        setItems([...(items as any), {
-          Key: new Date().valueOf(),
-          ItemCode: "",
-          Dscription: "",
-          U_IDU_PARTNUM: "",
-          UseBaseUn: "",
-          Quantity: "",
-          WhsCode: "",
-          ShipDate: "",
-          OcrCode: "",
-          OcrCode2: "",
-          PriceBefDi: "",
-          DiscPrcnt: "",
-          UomEntry: "",
-          TaxCode: ""
-        }])
-      }}
-    >
-      <IconAdd color="#fff" height={18} width={18} style={{
-        marginTop: -9
-      }} />
-      {isSize(["md", "lg"]) && (
-        <UIText style={{ color: "#fff" }} size="small">
-          {" Add Row"}
-        </UIText>
-      )}
-    </UIButton>);
-  }
-
   const save = async () => {
     if (saving) return;
     setSaving(true);
@@ -155,18 +116,9 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
         sidebar={sidebar}
         center="Form SO Canvasing"
       >
-        <UIButton
-          color="primary"
-          size="small"
-          onPress={() => {
-            save();
-          }}
-        >
-          <IconSave color="#fff" />
-          {isSize(["md", "lg"]) && (
-            <UIText style={{ color: "#fff" }}>{saving ? " Saving..." : " Save"}</UIText>
-          )}
-        </UIButton>
+        <BtnSave saving={saving} onPress={() => {
+          save();
+        }} />
       </UIHeader>
       <UIBody scroll={true}>
         <UIJsonField
@@ -282,15 +234,36 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
           }}
         />
 
-        <UITabs
-          tabs={[
-            {
-              label: "Detail Items",
-              content: <FormSOCanvasDetailItems data={data} items={items} setItems={setItems} />,
-              action: <AddRow />
-            }
-          ]}
-        />
+        <View style={{ marginTop: 50 }}>
+          <UITabs
+            tabs={[
+              {
+                label: "Detail Items",
+                content: () => (
+                  <FormSOCanvasDetailItems data={data} items={items} setItems={setItems} />
+                ),
+                action: <BtnAdd
+                  onPress={() => {
+                    setItems([...(items as any), {
+                      Key: new Date().valueOf(),
+                      ItemCode: "",
+                      Dscription: "",
+                      U_IDU_PARTNUM: "",
+                      UseBaseUn: "",
+                      Quantity: "",
+                      WhsCode: "",
+                      ShipDate: "",
+                      OcrCode: "",
+                      OcrCode2: "",
+                      PriceBefDi: "",
+                      DiscPrcnt: "",
+                      UomEntry: "",
+                      TaxCode: ""
+                    }])
+                  }} />
+              }
+            ]} />
+        </View>
       </UIBody>
     </UIContainer>
   );

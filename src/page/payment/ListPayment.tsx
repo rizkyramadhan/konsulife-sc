@@ -1,38 +1,13 @@
 import { APISearch, APISearchProps } from '@app/api';
-import IconAdd from '@app/libs/ui/Icons/IconAdd';
-import { isSize } from '@app/libs/ui/MediaQuery';
+import BtnCreate from '@app/components/BtnCreate';
 import UIBody from "@app/libs/ui/UIBody";
-import UIButton from '@app/libs/ui/UIButton';
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
 import UISearch from '@app/libs/ui/UISearch';
-import UIText from '@app/libs/ui/UIText';
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
-
-const BtnCreate = withRouter(({ history }: any) => {
-  return (
-    <UIButton
-      size="small"
-      color="primary"
-      onPress={() => {
-        history.push("/payment-receipt/form");
-      }}
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "flex-end"
-      }}
-    >
-      <IconAdd color="#fff" />
-      {isSize(["md", "lg"]) && (
-        <UIText style={{ color: "#fff" }}>Create</UIText>
-      )}
-    </UIButton>
-  );
-});
 
 export default withRouter(observer(({ showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
@@ -79,7 +54,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
   return (
     <UIContainer>
       <UIHeader showSidebar={showSidebar} sidebar={sidebar} center={"Payment Receipt"}>
-        <BtnCreate />
+        <BtnCreate path="/payment-receipt/form" />
       </UIHeader>
       <UIBody>
         <UISearch onSearch={funcSearch}></UISearch>
