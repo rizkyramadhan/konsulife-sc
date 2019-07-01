@@ -70,7 +70,7 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
         ...data,
         U_IDU_SO_INTNUM: itemSelectSONUmber.join(";"),
         Comments: "",
-        DocDate: "2019-01-25"
+        DocDate: today
       })
     });
 
@@ -167,7 +167,7 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
           "U_IDU_PARTNUM": d.U_IDU_PARTNUM,
           "UseBaseUn": d.UseBaseUn,
           "Quantity": d.Quantity,
-          "UoMEntry": d.UoMEntry,
+          "UomEntry": d.UomEntry,
           "WhsCode": d.WhsCode,
           "ShipDate": d.ShipDate,
           "OcrCode": d.OcrCode,
@@ -180,12 +180,13 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
 
       let number: any = await getLastNumbering("DO", l[0].WhsCode);
       (d as any)['U_IDU_DO_INTNUM'] = number.format;
-      (d as any)['U_IDU_DO_TRANSCODE'] = "DO";
+      (d as any)['U_IDU_TRANSCODE'] = "DO";
+      (d as any)['DocDueDate'] = (d as any).DocDate; 
       await APIPost('DeliveryOrder', {
         ...d, Lines: l,
       });
       updateLastNumbering(number.id, number.last_count + 1);
-      history.push("/do/");
+      history.goBack();
     }
     catch (e) {
       alert(e.Message);

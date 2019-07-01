@@ -153,10 +153,10 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
                 },
                 {
                   key: "CntctCode", label: "Contact Person", size: 7, component: (
-                    <SAPDropdown label="Contact Person" field="Custom" itemField={{ value: "CardCode", label: "Name" }}
+                    <SAPDropdown label="Contact Person" field="Custom" itemField={{ value: "CntctCode", label: "Name" }}
                       customQuery={{
                         Table: "OCPR",
-                        Fields: ["CardCode", "Name"],
+                        Fields: ["CntctCode", "Name"],
                         Condition: [{ field: "CardCode", cond: "=", value: data.CardCode }]
                       }} value={(data as any).CntctCode} setValue={(v) => { setData({ ...data, CntctCode: v }) }}
                       mustInit={false} refresh={qCP} setRefresh={setQCP} />)

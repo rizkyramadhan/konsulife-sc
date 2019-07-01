@@ -65,23 +65,11 @@ export default withRouter(
         });
 
         if (res.length > 0) {
-          // let today = new Date();
-          // let dd:any = today.getDate();
-          // let mm:any = today.getMonth() + 1; //January is 0!
 
-          // let yyyy = today.getFullYear();
-          // if (dd < 10) {
-          //   dd = '0' + dd;
-          // } 
-          // if (mm < 10) {
-          //   mm = '0' + mm;
-          // }
-
-          // res[0].DocDate = yyyy+"-"+mm+"-"+dd;
           //res[0].U_IDU_PO_INTNUM = poNum.join(";");
           //res[0].U_IDU_SUP_SONUM = soNum.join(";");
           res[0].U_BRANCH = global.session.user.branch;
-          res[0].U_USERID = global.session.user.id;
+          res[0].U_USERID = global.session.user.username;
           res[0].U_GENERATED = "W";
           setData(res[0]);
         }

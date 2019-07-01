@@ -43,7 +43,7 @@ export default ({ items, setItems, flag, setSelected }: any) => {
             header: "Warehouse"
           }
         },
-        UomCode: {
+        UoMEntry: {
           table: {
             header: "UoMCode"
           }

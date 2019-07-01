@@ -98,7 +98,13 @@ export default ({
 
   return (
     <UISelectField items={_items} value={value} setValue={(v: any, l: any) => { const idx: any = _items.findIndex((x: any) => x.value === v); setValue(v, l, _items[idx]) }} label={label} style={style} color={color} search={true} onSearch={(value) => {
-      setItems([...(value ? items.filter((x: any) => x.value.toLowerCase().includes(value.toLowerCase()) || x.label.toLowerCase().includes(value.toLowerCase())) : items)]);
+      if (value) {
+        let search = items.filter((x: any) => x.value.toLowerCase().includes(value.toLowerCase()) || x.label.toLowerCase().includes(value.toLowerCase()));
+        _setItems([...search]);
+      } else {
+        _setItems([...items]);
+      }
+      //setItems([...(value ? items.filter((x: any) => x.value.toLowerCase().includes(value.toLowerCase()) || x.label.toLowerCase().includes(value.toLowerCase())) : items)]);
     }} onDismiss={(value: any) => value && setItems([...items])} disable={disable} />
   );
 };

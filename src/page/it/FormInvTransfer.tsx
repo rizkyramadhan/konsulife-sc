@@ -90,7 +90,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
         U_IDU_IT_INTNUM: number.format,
         SlpCode: global.session.user.slp_code !== "" && global.session.user.slp_code !== null ? global.session.user.slp_code : -1,
         U_BRANCH: global.session.user.branch,
-        U_USERID: global.session.user.id,
+        U_USERID: global.session.user.username,
         Lines: postItem,
       });
       updateLastNumbering(number.id, number.last_count + 1);
