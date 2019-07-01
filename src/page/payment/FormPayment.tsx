@@ -1,4 +1,4 @@
-import { APIPost } from '@app/api';
+import { APIPost, APISearchProps, APISearch } from '@app/api';
 import BtnSave from '@app/components/BtnSave';
 import SAPDropdown from '@app/components/SAPDropdown';
 import global from '@app/global';
@@ -9,8 +9,9 @@ import UIJsonField from '@app/libs/ui/UIJsonField';
 import { getLastNumbering, updateLastNumbering } from '@app/utils';
 import { encodeSAPDate } from '@app/utils/Helper';
 import { observer } from 'mobx-react-lite';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { withRouter } from 'react-router';
+import UITagField from '@app/libs/ui/UITagField';
 
 const defData = {
   DocDate: "",
@@ -35,6 +36,7 @@ const defData = {
 export default withRouter(observer(({ showSidebar, sidebar }: any) => {
   const [data, setData] = useState(defData);
   const [saving, setSaving] = useState(false);
+  const [_items, _setItems] = useState<any[]>([]);
 
   const save = async () => {
     setSaving(true);
@@ -56,6 +58,44 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
       setSaving(false);
     }
   }
+
+  useEffect(() => {
+    let cond: any[] = [];
+    if (global.getSession().role === "branch") {
+      cond = [{ cond: "AND" }, { field: "U_BRANCH", cond: "=", value: global.getSession().user.branch }];
+    } else if (global.getSession().role === "sales_to") {
+      cond = [{ cond: "AND" }, { field: "U_USERID", cond: "=", value: global.getSession().user.username }];
+    }
+
+    let query: APISearchProps = {
+      Table: "ORDR",
+      Fields: ["U_IDU_SO_INTNUM"],
+      Condition: [{
+        field: "DocStatus",
+        cond: "=",
+        value: "O"
+      }, { cond: "AND" }, {
+        field: "ObjType",
+        cond: "=",
+        value: 17
+      },
+      { cond: "AND" }, {
+        field: "U_IDU_ISCANVAS",
+        cond: "=",
+        value: "Y"
+      }, ...cond]
+    };
+
+    APISearch(query).then((res: any) => {
+      let items = res.map((item: any) => {
+        return {
+          value: item["U_IDU_SO_INTNUM"],
+          label: item["U_IDU_SO_INTNUM"]
+        }
+      });
+      _setItems([...items]);
+    });
+  })
 
   return (
     <UIContainer>
@@ -82,6 +122,14 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
                   key: "CardCode", label: "BP Partner", size: 12, component: (
                     <SAPDropdown label="BP Partner" field="SalesAsEmployee" value={(data as any).CardCode} setValue={(v) => { setData({ ...data, CardCode: v }) }} />)
                 },
+                { key: "U_SONUM", size:12, label:"No. SO", component: (<UITagField 
+                        label="No. SO" items={_items} 
+                        value={(data as any).U_SONUM} 
+                        setValue={(v:any) => {
+                            data.U_SONUM = v.join(";");
+                        }}
+                    />),
+                }
               ]
             },
             {
