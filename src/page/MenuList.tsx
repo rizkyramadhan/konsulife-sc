@@ -38,7 +38,7 @@ export default [
         subtitle: "Lorem Ipsum is simply dummy text.",
         icon: <IconInvoice width={20} height={20} color="#1D6EF7" />,
         path: "/it",
-        roles: ["admin", "branch"]
+        roles: ["admin", "branch","inventory"]
     },
     {
         title: "SO Taking Order",
@@ -73,14 +73,14 @@ export default [
         subtitle: "Lorem Ipsum is simply dummy text.",
         icon: <IconInvoice width={20} height={20} color="#1D6EF7" />,
         path: "/ar-invoice-to",
-        roles: ["admin", "branch", "sales_to"]
+        roles: ["admin", "branch"]
     },
     {
         title: "AR Invoice (Canvasing)",
         subtitle: "Lorem Ipsum is simply dummy text.",
         icon: <IconInvoice width={20} height={20} color="#1D6EF7" />,
         path: "/ar-invoice",
-        roles: ["admin", "branch", "sales_canvas"]
+        roles: ["admin", "branch"]
     },
     {
         title: "Customer",

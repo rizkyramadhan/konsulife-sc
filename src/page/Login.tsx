@@ -19,8 +19,8 @@ import IconSignIn from '@app/libs/ui/Icons/IconSignIn';
 const background = require("@app/assets/images/bg-login.jpg");
 
 const LoginForm = withRouter(({ history }: RouteComponentProps) => {
-  const [username, setUsername] = useState("coba");
-  const [password, setPassword] = useState("123");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     (async () => {

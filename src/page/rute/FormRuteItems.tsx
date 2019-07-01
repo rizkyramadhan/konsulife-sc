@@ -7,6 +7,7 @@ import { Button } from 'reactxp';
 import UISeparator from '@app/libs/ui/UISeparator';
 import UIJsonField from '@app/libs/ui/UIJsonField';
 import SAPDropdown from '@app/components/SAPDropdown';
+import global from '@app/global';
 
 interface IRuteItem {
   id?: number,
@@ -71,7 +72,33 @@ const DetailComponent = ({ item, items, setItems }: any) => {
       field={[
         {
           key: 'customer_id', size: 12, component: (
-            <SAPDropdown label="Customer" field="CustomerCode" value={(item as any).item.customer_id} setValue={(value, label, row) => {
+            <SAPDropdown label="Customer" field="Custom" 
+            customQuery={{
+              Table: "OCRD",
+              Fields: ["CardCode", "CardName", "Currency", "GroupNum"],
+              Condition: [{
+                field: "CardType",
+                cond: "IN",
+                value: ["C", "L"]
+              },
+              {
+                cond: "AND"
+              },
+              {
+                field: "U_IDU_BRANCH",
+                cond: "=",
+                value: global.getSession().user.branch
+              },
+              {
+                cond: "AND"
+              },
+              {
+                field: "validFor",
+                cond: "=",
+                value: "Y"
+              }]
+            }}
+            value={(item as any).item.customer_id} setValue={(value, label, row) => {
               const idx = items.findIndex((x: any) => x.id === item.pkval);
               items[idx]['customer_id'] = value;
               items[idx]["customer_name"] = label;
@@ -94,6 +121,7 @@ const DetailComponent = ({ item, items, setItems }: any) => {
 }
 
 export default ({ items, setItems }: IProps) => {
+  console.log(global.session);
   return (
     <UIList
       primaryKey="id"
