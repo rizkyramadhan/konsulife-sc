@@ -31,6 +31,13 @@ export default [
         subtitle: "Lorem Ipsum is simply dummy text.",
         icon: <IconInvoice width={20} height={20} color="#1D6EF7" />,
         path: "/pr",
+        roles: ["admin", "branch","inventory"]
+    },
+    {
+        title: "Inventory Transfer",
+        subtitle: "Lorem Ipsum is simply dummy text.",
+        icon: <IconInvoice width={20} height={20} color="#1D6EF7" />,
+        path: "/it",
         roles: ["admin", "branch"]
     },
     {
@@ -62,13 +69,6 @@ export default [
         roles: ["admin", "branch", "sales_to", "sales_canvas"]
     },
     {
-        title: "Inventory Transfer",
-        subtitle: "Lorem Ipsum is simply dummy text.",
-        icon: <IconInvoice width={20} height={20} color="#1D6EF7" />,
-        path: "/it",
-        roles: ["admin", "branch"]
-    },
-    {
         title: "AR Invoice (Taking Order)",
         subtitle: "Lorem Ipsum is simply dummy text.",
         icon: <IconInvoice width={20} height={20} color="#1D6EF7" />,
@@ -94,6 +94,6 @@ export default [
         subtitle: "Lorem Ipsum is simply dummy text.",
         icon: <IconUser width={20} height={20} color="#1D6EF7" />,
         path: "/user",
-        roles: ["admin", "branch"]
+        roles: ["admin"]
     }
 ];
