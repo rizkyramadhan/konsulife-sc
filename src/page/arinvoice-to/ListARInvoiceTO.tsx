@@ -135,7 +135,9 @@ export default withRouter(observer(({ match, history, showSidebar, sidebar }: an
               }
             }
           }}
-          items={data}
+          items={_data.map((item: any) => ({
+            ...item,
+          }))}
         />
       </UIBody>
     </UIContainer>

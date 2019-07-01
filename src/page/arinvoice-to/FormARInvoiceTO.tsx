@@ -14,7 +14,6 @@ import { View } from 'reactxp';
 import FormARInvoiceDetailTO from './FormARInvoiceDetailTO';
 import UISelectField from '@app/libs/ui/UISelectField';
 import rawQuery from '@app/libs/gql/data/rawQuery';
-import { encodeSAPDate } from '@app/libs/utils/Helper';
 
 const date = new Date();
 const today = `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${lpad(date.getDate().toString(), 2)}`;
