@@ -50,6 +50,8 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
     };
 
     APISearch(query).then((res: any) => {
+      res[0].DocDate = today;
+      res[0].DocDueDate = today;
       res[0].U_BRANCH = global.session.user.branch;
       res[0].U_USERID = global.session.user.username;
       res[0].U_GENERATED = "W";
