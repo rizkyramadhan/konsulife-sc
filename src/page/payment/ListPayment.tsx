@@ -8,11 +8,12 @@ import UISearch from '@app/libs/ui/UISearch';
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
+import global from '@app/global';
 
 export default withRouter(observer(({ showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
   const [_data, _setData] = useState([]);
-  const field = ["DocEntry", "DocDate", "DocDueDate", "CardCode", "CardName", "U_IDU_PAYNUM"];
+  const field = ["DocEntry", "DocDate", "DocDueDate", "CardCode", "CardName", "U_IDU_PAYNUM", "U_WONUM"];
   const funcSearch = (value: string) => {
     _setData([...(value ? data.filter((x: any) => {
       let res = false;
@@ -42,7 +43,8 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
   useEffect(() => {
     let query: APISearchProps = {
       Table: "ORCT",
-      Fields: field
+      Fields: field,
+      Condition: [{ field: "U_BRANCH", cond: "=", value: global.getSession().user.branch }]
     };
 
     APISearch(query).then((res: any) => {
@@ -83,6 +85,11 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
             U_IDU_PAYNUM: {
               table: {
                 header: 'No. PR'
+              }
+            },
+            U_WONUM: {
+              table: {
+                header: 'No. WO'
               }
             },
             CardName: {

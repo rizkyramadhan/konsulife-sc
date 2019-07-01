@@ -241,8 +241,24 @@ export const SAPFieldMap = {
   SalesAsEmployee: {
     Table: "OCRD",
     Fields: ["CardCode", "CardName"],
-    Condition: [{
+    Condition: [/*{
       field: "U_SALES",
+      cond: "=",
+      value: "Y"
+    },
+    {
+      cond: "AND"
+    },*/
+    {
+      field: "U_IDU_BRANCH",
+      cond: "=",
+      value: ""
+    },
+    {
+      cond: "AND"
+    },
+    {
+      field: "validFor",
       cond: "=",
       value: "Y"
     }]

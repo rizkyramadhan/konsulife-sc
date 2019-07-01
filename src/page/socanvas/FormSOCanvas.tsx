@@ -19,7 +19,7 @@ import UISelectField from '@app/libs/ui/UISelectField';
 import { View } from 'reactxp';
 
 const date = new Date();
-const today = `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${date.getDate()}`;
+const today = `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${lpad(date.getDate().toString(), 2)}`;
 
 const header = {
   CardCode: "",

@@ -6,16 +6,21 @@ import UIBody from '@app/libs/ui/UIBody';
 import UIContainer from '@app/libs/ui/UIContainer';
 import UIHeader from '@app/libs/ui/UIHeader';
 import UIJsonField from '@app/libs/ui/UIJsonField';
-import { getLastNumbering, updateLastNumbering } from '@app/utils';
+import { getLastNumbering, updateLastNumbering, lpad } from '@app/utils';
 import { encodeSAPDate } from '@app/utils/Helper';
 import { observer } from 'mobx-react-lite';
 import React, { useState, useEffect } from "react";
 import { withRouter } from 'react-router';
 import UITagField from '@app/libs/ui/UITagField';
+import rawQuery from '@app/libs/gql/data/rawQuery';
+import UISelectField from '@app/libs/ui/UISelectField';
+
+const date = new Date();
+const today = `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${lpad(date.getDate().toString(), 2)}`;
 
 const defData = {
-  DocDate: "",
-  DocDueDate: "",
+  DocDate: today,
+  DocDueDate: today,
   CardCode: "",
   CardName: "",
   CashAcct: "",
@@ -29,12 +34,14 @@ const defData = {
   U_IDU_PAYNUM: "",
   U_USERID: global.session.user.id,
   U_GENERATED: "W",
-  U_BRANCH: ""
+  U_BRANCH: "",
+  U_WONUM: ""
 
 }
 
-export default withRouter(observer(({ showSidebar, sidebar }: any) => {
+export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const [data, setData] = useState(defData);
+  const [WOList, setWOList] = useState<any[]>([]);
   const [saving, setSaving] = useState(false);
   const [_items, _setItems] = useState<any[]>([]);
 
@@ -47,9 +54,10 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
         }
       }
 
-      let number: any = await getLastNumbering("PR", global.getSession().user.branch || '');
+      let number: any = await getLastNumbering("TP", global.getSession().user.branch || '');
       await APIPost('ARInvoice', { ...data, U_IDU_PAYNUM: number.format });
       updateLastNumbering(number.id, number.last_count + 1);
+      history.push("/payment-receipt/")
     }
     catch (e) {
       alert(e.Message);
@@ -95,7 +103,21 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
       });
       _setItems([...items]);
     });
-  })
+
+    rawQuery(`{
+      work_order (where: {status: {_eq: "open"}, branch: {_eq: "${global.getSession().user.branch}"}}) {
+        number
+      }
+    }`).then((res) => {
+      let wo = res.work_order.map((v: any) => {
+        return {
+          value: v.number,
+          label: v.number
+        }
+      })
+      setWOList([...wo]);
+    });
+  }, []);
 
   return (
     <UIContainer>
@@ -116,20 +138,22 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
               key: "general",
               label: "General",
               value: [
-                { key: "DocDate", size: 4, label: "Posting Date", options: { pastDate: true } },
-                { key: "DocDueDate", size: 4, label: "Delivery Date", options: { pastDate: true } },
+                { key: "DocDate", size: 6, label: "Posting Date", type: "date", options: { pastDate: true } },
+                { key: "DocDueDate", size: 6, label: "Delivery Date", type: "date", options: { pastDate: true } },
                 {
                   key: "CardCode", label: "BP Partner", size: 12, component: (
-                    <SAPDropdown label="BP Partner" field="SalesAsEmployee" value={(data as any).CardCode} setValue={(v) => { setData({ ...data, CardCode: v }) }} />)
+                    <SAPDropdown label="BP Partner" field="SalesAsEmployee" where={[{ field: "U_IDU_BRANCH", value: global.getSession().user.branch }]} value={(data as any).CardCode} setValue={(v) => { setData({ ...data, CardCode: v }) }} />)
                 },
-                { key: "U_SONUM", size:12, label:"No. SO", component: (<UITagField 
-                        label="No. SO" items={_items} 
-                        value={(data as any).U_SONUM} 
-                        setValue={(v:any) => {
-                            data.U_SONUM = v.join(";");
-                        }}
-                    />),
-                }
+                {
+                  key: "U_SONUM", size: 12, label: "No. SO", component: (<UITagField
+                    label="No. SO" items={_items}
+                    value={(data as any).U_SONUM}
+                    setValue={(v: any) => {
+                      data.U_SONUM = v.join(";");
+                    }}
+                  />),
+                },
+                { key: "U_WONUM", size: 8, component: (<UISelectField label="WO Number" items={WOList} value={data.U_WONUM} setValue={(v) => { setData({ ...data, U_WONUM: v }) }} />) },
               ]
             },
             {

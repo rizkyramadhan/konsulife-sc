@@ -20,7 +20,7 @@ import UISelectField from '@app/libs/ui/UISelectField';
 import rawQuery from '@app/libs/gql/data/rawQuery';
 
 const date = new Date();
-const today = `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${date.getDate()}`;
+const today = `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${lpad(date.getDate().toString(), 2)}`;
 
 export default withRouter(
   observer(({ history, match, showSidebar, sidebar }: any) => {

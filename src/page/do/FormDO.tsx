@@ -19,9 +19,9 @@ import rawQuery from '@app/libs/gql/data/rawQuery';
 import UISelectField from '@app/libs/ui/UISelectField';
 
 const date = new Date();
-const today = `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${date.getDate()}`;
+const today = `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${lpad(date.getDate().toString(), 2)}`;
 
-export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
+export default withRouter(observer(({ history, match, showSidebar, sidebar }: any) => {
   const [saving, setSaving] = useState(false);
   const [data, setData] = useState<any>({});
   const [WOList, setWOList] = useState<any[]>([]);
@@ -201,6 +201,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
         ...d, Lines: l,
       });
       updateLastNumbering(number.id, number.last_count + 1);
+      history.push("/do/");
     }
     catch (e) {
       alert(e.Message);

@@ -21,7 +21,7 @@ import { withRouter } from 'react-router';
 import FormSODetailItems from './FormSODetailItems';
 
 const date = new Date();
-const today = `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${date.getDate()}`;
+const today = `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${lpad(date.getDate().toString(), 2)}`;
 
 const header = {
   CardCode: "",
