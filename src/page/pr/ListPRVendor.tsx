@@ -7,7 +7,6 @@ import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 import UISearch from '@app/libs/ui/UISearch';
-import global from '@app/global';
 
 export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);

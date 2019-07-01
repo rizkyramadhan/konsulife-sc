@@ -15,7 +15,6 @@ import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 import FormPRDetailItems from "./FormPRDetailItems";
-import rawQuery from '@app/libs/gql/data/rawQuery';
 
 const date = new Date();
 const today = `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${lpad(date.getDate().toString(), 2)}`;
@@ -27,7 +26,6 @@ export default withRouter(
     const [data, setData] = useState({});
     const [item, setItem] = useState([]);
     const [selected, setSelected] = useState([]);
-    const [WOList, setWOList] = useState<any[]>([]);
     const param = atob(match.params.id).split("|");
     useEffect(() => {
       let query: APISearchProps = {
@@ -145,19 +143,6 @@ export default withRouter(
         setItem(res);
       })
 
-      rawQuery(`{
-        work_order (where: {status: {_eq: "open"}, branch: {_eq: "${global.getSession().user.branch}"}}) {
-          number
-        }
-      }`).then((res) => {
-        let wo = res.work_order.map((v: any) => {
-          return {
-            value: v.number,
-            label: v.number
-          }
-        })
-        setWOList([...wo]);
-      });
     }, []);
 
     const save = async () => {

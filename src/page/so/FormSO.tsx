@@ -2,7 +2,6 @@ import { APIPost } from '@app/api';
 import BtnSave from '@app/components/BtnSave';
 import SAPDropdown from '@app/components/SAPDropdown';
 import global from '@app/global';
-import rawQuery from '@app/libs/gql/data/rawQuery';
 import IconAdd from "@app/libs/ui/Icons/IconAdd";
 import { isSize } from "@app/libs/ui/MediaQuery";
 import UIBody from "@app/libs/ui/UIBody";
@@ -10,12 +9,11 @@ import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIJsonField from "@app/libs/ui/UIJsonField";
-import UISelectField from '@app/libs/ui/UISelectField';
 import UITabs from '@app/libs/ui/UITabs';
 import UIText from "@app/libs/ui/UIText";
 import { getLastNumbering, lpad, updateLastNumbering } from '@app/utils';
 import { observer } from "mobx-react-lite";
-import React, { useEffect, useState } from "react";
+import React, {useState } from "react";
 import { withRouter } from 'react-router';
 import FormSODetailItems from './FormSODetailItems';
 
@@ -46,28 +44,12 @@ const header = {
 
 export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const [data, setData] = useState(header);
-  const [WOList, setWOList] = useState<any[]>([]);
   const [items, setItems] = useState<any[]>([]);
   const [saving, setSaving] = useState(false);
   const [qCP, setQCP] = useState(false);
   const [qShip, setQShip] = useState(false);
   const [qBill, setQBill] = useState(false);
 
-  useEffect(() => {
-    rawQuery(`{
-      work_order (where: {status: {_eq: "open"}, branch: {_eq: "${global.getSession().user.branch}"}}) {
-        number
-      }
-    }`).then((res) => {
-      let wo = res.work_order.map((v: any) => {
-        return {
-          value: v.number,
-          label: v.number
-        }
-      })
-      setWOList([...wo]);
-    });
-  }, [])
 
   const AddRow = () => {
     return (<UIButton
@@ -235,7 +217,6 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
               label: "General",
               sublabel: "Informasi Sales Order",
               value: [
-                { key: "U_WONUM", size: 8, component: (<UISelectField label="WO Number" items={WOList} value={data.U_WONUM} setValue={(v) => { setData({ ...data, U_WONUM: v }) }} />) },
                 { key: "DocDate", size: 6, type: "date", label: "Posting Date" },
                 { key: "DocDueDate", size: 6, type: "date", label: "Delivery Date" },
               ]

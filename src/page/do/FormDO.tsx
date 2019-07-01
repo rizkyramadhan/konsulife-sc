@@ -15,8 +15,6 @@ import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from "react";
 import { withRouter } from 'react-router';
 import FormDODetailItems from './FormDODetailItems';
-import rawQuery from '@app/libs/gql/data/rawQuery';
-import UISelectField from '@app/libs/ui/UISelectField';
 
 const date = new Date();
 const today = `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${lpad(date.getDate().toString(), 2)}`;
@@ -24,7 +22,6 @@ const today = `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)
 export default withRouter(observer(({ history, match, showSidebar, sidebar }: any) => {
   const [saving, setSaving] = useState(false);
   const [data, setData] = useState<any>({});
-  const [WOList, setWOList] = useState<any[]>([]);
   const [items, setItems] = useState<any[]>([]);
   const [editable, setEdit] = useState(false);
   const [selected, setSelected] = useState([]);
@@ -129,19 +126,6 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
       setItems([...items]);
     })
 
-    rawQuery(`{
-      work_order (where: {status: {_eq: "open"}, branch: {_eq: "${global.getSession().user.branch}"}}) {
-        number
-      }
-    }`).then((res) => {
-      let wo = res.work_order.map((v: any) => {
-        return {
-          value: v.number,
-          label: v.number
-        }
-      })
-      setWOList([...wo]);
-    });
   }, []);
 
   const save = async () => {
@@ -170,8 +154,7 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
         "U_IDU_DRIVER": data.U_IDU_DRIVER,
         "U_BRANCH": global.session.user.branch,
         "U_USERID": global.session.user.username,
-        "U_GENERATED": "W",
-        U_WONUM: data.U_WONUM
+        "U_GENERATED": "W"
       };
 
       const l = selected.map((d: any) => {
@@ -262,7 +245,6 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
                   label: "SO Number",
                   size: 12
                 },
-                { key: "U_WONUM", size: 8, component: (<UISelectField label="WO Number" items={WOList} value={data.U_WONUM} setValue={(v) => { setData({ ...data, U_WONUM: v }) }} />) },
                 { key: "DocDate", size: 6, label: "Posting Date", type: "date", options: { pastDate: true } },
               ]
             },

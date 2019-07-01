@@ -12,8 +12,6 @@ import React, { useEffect, useState } from "react";
 import { withRouter } from 'react-router';
 import { View } from 'reactxp';
 import FormARInvoiceDetailTO from './FormARInvoiceDetailTO';
-import UISelectField from '@app/libs/ui/UISelectField';
-import rawQuery from '@app/libs/gql/data/rawQuery';
 
 const date = new Date();
 const today = `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${lpad(date.getDate().toString(), 2)}`;
@@ -21,7 +19,6 @@ const today = `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)
 export default withRouter(observer(({ history, match, showSidebar, sidebar }: any) => {
   const [saving, setSaving] = useState(false);
   const [data, setData] = useState<any[]>([]);
-  const [WOList, setWOList] = useState<any[]>([]);
   const [item, setItem] = useState([]);
 
   const param = atob(match.params.id).split("|");
@@ -123,19 +120,6 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
       setItem(res);
     })
 
-    rawQuery(`{
-      work_order (where: {status: {_eq: "open"}, branch: {_eq: "${global.getSession().user.branch}"}}) {
-        number
-      }
-    }`).then((res) => {
-      let wo = res.work_order.map((v: any) => {
-        return {
-          value: v.number,
-          label: v.number
-        }
-      })
-      setWOList([...wo]);
-    });
   }, []);
 
   const save = async () => {
@@ -209,8 +193,6 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
                   label: "DO Number",
                   size: 8
                 },
-                { type: "empty", size: 4 },
-                { key: "U_WONUM", size: 8, component: (<UISelectField label="WO Number" items={WOList} value={(data as any).U_WONUM} setValue={(v) => { let d = { ...data }; (d as any).U_WONUM = v; setData({ ...d }) }} />) },
                 { type: "empty", size: 4 },
                 { key: "DocDate", size: 4, type: "date", label: "Posting Date", options: { pastDate: true } },
                 { key: "DocDueDate", size: 4, type: "date", label: "Delivery Date", options: { pastDate: true } },
