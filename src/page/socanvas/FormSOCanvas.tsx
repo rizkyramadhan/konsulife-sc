@@ -14,7 +14,6 @@ import React, { useState, useEffect } from "react";
 import FormSOCanvasDetailItems from './FormSOCanvasDetailItems';
 import { withRouter } from 'react-router-dom';
 import rawQuery from '@app/libs/gql/data/rawQuery';
-import { encodeSAPDate } from '@app/libs/utils/Helper';
 import UISelectField from '@app/libs/ui/UISelectField';
 import { View } from 'reactxp';
 

@@ -14,7 +14,6 @@ import UISelectField from '@app/libs/ui/UISelectField';
 import UITabs from '@app/libs/ui/UITabs';
 import UIText from "@app/libs/ui/UIText";
 import { getLastNumbering, lpad, updateLastNumbering } from '@app/utils';
-import { encodeSAPDate } from '@app/utils/Helper';
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from 'react-router';
