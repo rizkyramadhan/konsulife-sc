@@ -18,7 +18,7 @@ export default withRouter(observer(({ match, history, showSidebar, sidebar }: an
   useEffect(() => {
     let query: APISearchProps = {
       Table: "ORDR",
-      // Fields: ["DocEntry", "CardCode", "CardName", "U_IDU_SO_INTNUM", "DocDate"],
+      Fields: ["DocEntry", "CardCode", "CardName", "U_IDU_SO_INTNUM", "DocDate"],
       Condition: [
         {
           field: "DocStatus",

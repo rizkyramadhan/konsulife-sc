@@ -75,7 +75,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
         field: "U_IDU_ISCANVAS",
         cond: "=",
         value: "Y"
-      }]
+      }, ...cond]
     };
 
     APISearch(query).then((res: any) => {

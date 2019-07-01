@@ -56,7 +56,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
 
   useEffect(() => {
     rawQuery(`{
-      work_order (where: {status: {_eq: "open"}}) {
+      work_order (where: {status: {_eq: "open"}, branch: {_eq: "${global.getSession().user.branch}"}}) {
         number
       }
     }`).then((res) => {
