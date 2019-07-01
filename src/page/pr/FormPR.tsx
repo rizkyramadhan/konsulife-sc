@@ -148,7 +148,7 @@ export default withRouter(
       })
 
       rawQuery(`{
-        work_order (where: {status: {_eq: "open"}}) {
+        work_order (where: {status: {_eq: "open"}, branch: {_eq: "${global.getSession().user.branch}"}}) {
           number
         }
       }`).then((res) => {
