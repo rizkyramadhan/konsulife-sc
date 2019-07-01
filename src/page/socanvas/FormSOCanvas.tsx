@@ -81,21 +81,17 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
 
     try {
       let number: any = await getLastNumbering("SOK", items[0].WhsCode);
-      // (data as any).DocDate = encodeSAPDate((data as any).DocDate);
-      // (data as any).DocDueDate = encodeSAPDate((data as any).DocDueDate);
       (data as any).SlpCode = !!global.session.user.slp_code || "-1";
       (data as any).U_BRANCH = global.session.user.branch;
       (data as any).U_USERID = global.session.user.username;
       await APIPost('SalesOrder', {
-        ...data, U_IDU_SO_INTNUM: number.format, Lines: [...Lines_IT],
+        ...data, U_IDU_SO_INTNUM: number.format, U_IDU_SO_TRANSCODE:"SOK", Lines: [...Lines_IT],
       }).then(() => {
         updateLastNumbering(number.id, number.last_count + 1);
         history.push("/so");
       });
     }
     catch (e) {
-      // (data as any).DocDate = encodeSAPDate((data as any).DocDate);
-      // (data as any).DocDueDate = encodeSAPDate((data as any).DocDueDate);
       setData({ ...data });
       alert(e.Message)
       console.error({

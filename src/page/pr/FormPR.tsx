@@ -11,12 +11,10 @@ import UIJsonField from "@app/libs/ui/UIJsonField";
 import UITabs from "@app/libs/ui/UITabs";
 import UIText from "@app/libs/ui/UIText";
 import { getLastNumbering, lpad, updateLastNumbering } from '@app/utils';
-import { decodeSAPDate, encodeSAPDate } from '@app/utils/Helper';
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 import FormPRDetailItems from "./FormPRDetailItems";
-import UISelectField from '@app/libs/ui/UISelectField';
 import rawQuery from '@app/libs/gql/data/rawQuery';
 
 const date = new Date();
@@ -166,16 +164,13 @@ export default withRouter(
       setSaving(true);
       try {
         let number: any = await getLastNumbering("LPB", (selected[0] as any).WhsCode);
-        (data as any).DocDate = encodeSAPDate((data as any).DocDate);
         await APIPost("PurchaseReceipt", {
-          ...data, U_IDU_GRPO_INTNUM: number.format,
+          ...data, U_IDU_GRPO_TRANSCODE:"LPB" ,U_IDU_GRPO_INTNUM: number.format,
           Lines: selected
         });
         updateLastNumbering(number.id, number.last_count + 1);
-        // alert("Save success!");
-        history.push("/pr/")
+        history.goBack()
       } catch (e) {
-        (data as any).DocDate = decodeSAPDate((data as any).DocDate);
         setData({ ...data });
         alert(e.Message);
         console.error({
@@ -242,7 +237,6 @@ export default withRouter(
                     label: "NO DO Supplier",
                     size: 8
                   },
-                  { key: "U_WONUM", size: 8, component: (<UISelectField label="WO Number" items={WOList} value={(data as any).U_WONUM || ""} setValue={(v) => { setData({ ...data, U_WONUM: v }) }} />) },
                   { type: "empty", size: 4 },
                   {
                     key: "DocDate",

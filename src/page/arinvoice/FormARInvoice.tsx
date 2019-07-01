@@ -124,6 +124,7 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
     try {
       let number: any = await getLastNumbering("INV", (item[0] as any).WhsCode);
       (data as any)['U_IDU_SI_INTNUM'] = number.format;
+      (data as any)['U_IDU_SI_TRANSCODE'] = "INV";
       await APIPost('ARInvoice', {
         ...data, Lines: item,
       });

@@ -7,7 +7,6 @@ import UIContainer from '@app/libs/ui/UIContainer';
 import UIHeader from '@app/libs/ui/UIHeader';
 import UIJsonField from '@app/libs/ui/UIJsonField';
 import { getLastNumbering, updateLastNumbering, lpad } from '@app/utils';
-import { encodeSAPDate } from '@app/utils/Helper';
 import { observer } from 'mobx-react-lite';
 import React, { useState, useEffect } from "react";
 import { withRouter } from 'react-router';
@@ -48,14 +47,9 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const save = async () => {
     setSaving(true);
     try {
-      for (let i in data) {
-        if (i === "DocDate" || i === "DocDueDate" || i === "TrsfrDate") {
-          data[i] = encodeSAPDate(data[i]);
-        }
-      }
 
       let number: any = await getLastNumbering("TP", global.getSession().user.branch || '');
-      await APIPost('ARInvoice', { ...data, U_IDU_PAYNUM: number.format });
+      await APIPost('ARInvoice', { ...data, U_IDU_PAYNUM: number.format, U_IDU_PAY_TRANSCODE:"TP" });
       updateLastNumbering(number.id, number.last_count + 1);
       history.push("/payment-receipt/")
     }

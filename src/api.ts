@@ -1,7 +1,4 @@
 import Axios from "axios";
-// import createRecord from './libs/gql/data/createRecord';
-// import query from './libs/gql/data/query';
-// import updateRecord from './libs/gql/data/updateRecord';
 import config from './config';
 
 // const urlDev: string = "http://mock.rx.plansys.co";
@@ -241,14 +238,14 @@ export const SAPFieldMap = {
   SalesAsEmployee: {
     Table: "OCRD",
     Fields: ["CardCode", "CardName"],
-    Condition: [/*{
+    Condition: [{
       field: "U_SALES",
       cond: "=",
       value: "Y"
     },
     {
       cond: "AND"
-    },*/
+    },
     {
       field: "U_IDU_BRANCH",
       cond: "=",
@@ -350,6 +347,15 @@ export const SAPFieldMap = {
     //   value: ""
     // }]
   } as APISearchProps,
+  WarehouseCodeBranch: {
+    Table: "OWHS",
+    Fields: ["WhsCode"],
+    Condition: [{
+      field: "U_BRANCH",
+      cond: "=",
+      value: ""
+    }]
+  } as APISearchProps,
   OcrCode: {
     Table: "OPRC",
     Fields: ["PrcCode"],
@@ -379,7 +385,13 @@ export const SAPFieldMap = {
   } as APISearchProps,
   SAPSalesCode: {
     Table: "OSLP",
-    Fields: ["SlpCode", "SlpName"]
+    Fields: ["SlpCode", "SlpName"],
+    Condition: 
+    [{
+      field: "U_IDU_BRANCH",
+      cond: "=",
+      value: ""
+    }]
   } as APISearchProps,
   SAPSalesCodeUser: {
     Table: "OSLP",

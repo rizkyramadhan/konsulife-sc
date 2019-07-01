@@ -197,6 +197,7 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
 
       let number: any = await getLastNumbering("DO", l[0].WhsCode);
       (d as any)['U_IDU_DO_INTNUM'] = number.format;
+      (d as any)['U_IDU_DO_TRANSCODE'] = "DO";
       await APIPost('DeliveryOrder', {
         ...d, Lines: l,
       });

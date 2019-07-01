@@ -8,36 +8,9 @@ import UISearch from '@app/libs/ui/UISearch';
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
+import global from '@app/global';
 
 let selectedItems: any[];
-// const BtnCopy = withRouter(({ history }: any) => {
-//   return (
-//     <UIButton
-//       size="small"
-//       color="success"
-//       onPress={() => {
-//         if (selectedItems !== undefined && selectedItems.length > 0) {
-//           let key = selectedItems.join("|");
-//           history.push("/pr/form/" + btoa(key));
-//         }
-//         else {
-//           alert("Please Select PO!");
-//         }
-
-//       }}
-//       style={{
-//         display: "flex",
-//         flexDirection: "row",
-//         justifyContent: "flex-end"
-//       }}
-//     >
-//       <IconCopy color="#fff" />
-//       {isSize(["md", "lg"]) && (
-//         <UIText style={{ color: "#fff" }}>Copy PO</UIText>
-//       )}
-//     </UIButton>
-//   );
-// });
 
 export default withRouter(observer(({ history, match, showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
@@ -74,6 +47,14 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
           field: "CardCode",
           cond: "=",
           value: param[0]
+        },
+        {
+          cond: "AND"
+        },
+        {
+          field:"U_BRANCH",
+          cond:"=",
+          value : global.getSession().user.branch
         }
       ]
     };

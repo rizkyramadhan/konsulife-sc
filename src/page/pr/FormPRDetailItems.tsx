@@ -6,6 +6,7 @@ import UIText from '@app/libs/ui/UIText';
 import UIJsonField from '@app/libs/ui/UIJsonField';
 import UISeparator from '@app/libs/ui/UISeparator';
 import SAPDropdown from '@app/components/SAPDropdown';
+import global from '@app/global';
 
 export default ({ items, setItems, flag, setSelected }: any) => {
   return (
@@ -76,7 +77,14 @@ export default ({ items, setItems, flag, setSelected }: any) => {
               field={[
                 {
                   key: 'WhsCode', size: 12, label: "Warehouse", component: (
-                    <SAPDropdown label="Warehouse" field="WarehouseCodeAll" value={(item as any).item.WhsCode} setValue={(v) => {
+                    <SAPDropdown label="Warehouse" field="WarehouseCodeBranch" 
+                     where={[
+                       {
+                         field:"U_BRANCH",
+                         value:global.getSession().user.branch
+                       }
+                     ]}
+                     value={(item as any).item.WhsCode} setValue={(v) => {
                       const idx = items.findIndex((x: any) => x.PK === item.pkval);
                       items[idx]['WhsCode'] = v;
                       setItems([...items]);

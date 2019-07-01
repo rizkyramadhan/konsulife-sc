@@ -122,10 +122,17 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
               key: "vendor",
               label: "Business Partner",
               value: [
-                { key: "CardCode", size: 8, type: "field", label: "Customer/Vendor Code" },
+                { key: "CardCode", size: 8, type: "field", label: "BP Code" },
                 {
-                  key: "CardCode", label: "Customer/Vendor", size: 12, component: (
-                    <SAPDropdown label="Customer" field="CustomerCode" value={(data as any).CardCode} setValue={(v, l) => {
+                  key: "CardCode", label: "Business Partner", size: 12, component: (
+                    <SAPDropdown label="Business Partner" field="SalesAsEmployee"
+                    where={[
+                      {
+                        field:"U_IDU_BRANCH",
+                        value:global.getSession().user.branch
+                      }
+                    ]} 
+                    value={(data as any).CardCode} setValue={(v, l) => {
                       setData({ ...data, CardCode: v, CardName: l });
                       setQShip(true);
                     }} />)
@@ -164,6 +171,13 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
                     <SAPDropdown label="From Warehouse" field="Custom" customQuery={{
                       Table: "OWHS",
                       Fields: ["WhsCode"],
+                      Condition:[
+                        {
+                          field:"U_BRANCH",
+                          cond:"=",
+                          value:global.getSession().user.branch
+                        }
+                      ],
                       Page: 1
                     }} value={(data as any).Filler} setValue={(v) => {
                       setData({ ...data, Filler: v });
@@ -177,6 +191,13 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
                     <SAPDropdown label="To Warehouse" field="Custom" customQuery={{
                       Table: "OWHS",
                       Fields: ["WhsCode"],
+                      Condition:[
+                        {
+                          field:"U_BRANCH",
+                          cond:"=",
+                          value:global.getSession().user.branch
+                        }
+                      ],
                       Page: 1
                     }} value={(data as any).ToWhsCode} setValue={(v) => { setData({ ...data, ToWhsCode: v }) }} />)
                 },

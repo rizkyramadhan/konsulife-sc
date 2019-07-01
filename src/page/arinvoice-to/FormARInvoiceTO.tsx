@@ -141,15 +141,6 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
   const save = async () => {
     setSaving(true);
     try {
-      // for(let i in data)
-      // {
-      //   if(i === "DocDate" || i === "DocDueDate")
-      //   {
-      //     data[i] = encodeSAPDate(data[i]);
-      //   }
-      // }
-      // (data as any).DocDate = encodeSAPDate((data as any).DocDate);
-      // (data as any).DocDueDate = encodeSAPDate((data as any).DocDueDate);
       
       let Lines = item.map((val: any) => {
         let res = { ...val };
@@ -161,6 +152,7 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
 
       let number: any = await getLastNumbering("INV", (item[0] as any).WhsCode);
       (data as any)['U_IDU_SI_INTNUM'] = number.format;
+      (data as any)['U_IDU_SI_TRANSCODE'] = "INV";
       await APIPost('ARInvoice', {
         ...data, Lines: Lines,
       });
@@ -168,8 +160,6 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
       history.push("/ar-invoice-to")
     }
     catch (e) {
-      // (data as any).DocDate = encodeSAPDate((data as any).DocDate);
-      // (data as any).DocDueDate = encodeSAPDate((data as any).DocDueDate);
       alert(e.Message);
     }
     finally {

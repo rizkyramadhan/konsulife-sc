@@ -75,11 +75,11 @@ const DetailComponent = ({ item, items, setItems }: any) => {
             <SAPDropdown label="Customer" field="Custom" 
             customQuery={{
               Table: "OCRD",
-              Fields: ["CardCode", "CardName", "Currency", "GroupNum"],
+              Fields: ["CardCode", "CardName", "MailAddres"],
               Condition: [{
                 field: "CardType",
                 cond: "IN",
-                value: ["C", "L"]
+                value: ["C"]
               },
               {
                 cond: "AND"
@@ -102,6 +102,7 @@ const DetailComponent = ({ item, items, setItems }: any) => {
               const idx = items.findIndex((x: any) => x.id === item.pkval);
               items[idx]['customer_id'] = value;
               items[idx]["customer_name"] = label;
+              items[idx]["customer_address"] = row.MailAddres;
               items[idx]["customer_details"] = JSON.stringify(row);
               setItems([...items]);
             }} />)
