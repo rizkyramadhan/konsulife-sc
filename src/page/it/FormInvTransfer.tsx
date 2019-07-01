@@ -8,14 +8,21 @@ import UIContainer from '@app/libs/ui/UIContainer';
 import UIHeader from '@app/libs/ui/UIHeader';
 import UIJsonField from '@app/libs/ui/UIJsonField';
 import UITabs from '@app/libs/ui/UITabs';
-import { getLastNumbering, updateLastNumbering } from '@app/utils';
+import { getLastNumbering, updateLastNumbering, lpad } from '@app/utils';
 import { observer } from 'mobx-react-lite';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { withRouter } from 'react-router';
 import { View } from 'reactxp';
 import FormInvTransferDetail from './FormInvTransferDetail';
+import rawQuery from '@app/libs/gql/data/rawQuery';
+import UISelectField from '@app/libs/ui/UISelectField';
+
+const date = new Date();
+const today = `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${lpad(date.getDate().toString(), 2)}`;
 
 const initData = {
+  DocDate: today,
+  DocDueDate: today,
   DocNum: "",
   DocEntry: "",
   CardName: "",
@@ -35,19 +42,37 @@ const initData = {
   U_IDU_NOSEAL: "",
   U_IDU_NOPL: "",
   U_IDU_NOPOL: "",
-  U_IDU_DRIVER: ""
+  U_IDU_DRIVER: "",
+  U_WONUM: ""
 }
 
-export default withRouter(observer(({ showSidebar, sidebar }: any) => {
+export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const [saving, setSaving] = useState(false);
   const [data, setData] = useState(initData);
+  const [WOList, setWOList] = useState<any[]>([]);
   const [qShip, setQShip] = useState(false);
   const [items, setItems] = useState<any[]>([]);
+
+  useEffect(() => {
+    rawQuery(`{
+      work_order (where: {status: {_eq: "open"}, branch: {_eq: "${global.getSession().user.branch}"}}) {
+        number
+      }
+    }`).then((res) => {
+      let wo = res.work_order.map((v: any) => {
+        return {
+          value: v.number,
+          label: v.number
+        }
+      })
+      setWOList([...wo]);
+    });
+  }, [])
 
   const save = async () => {
     setSaving(true);
     try {
-      let number: any = await getLastNumbering("PGK-T", global.getSession().user.warehouse_id);
+      let number: any = await getLastNumbering("PGK-T", data.Filler);
       let postItem: any[] = [];
       items.forEach((val: any) => {
         postItem.push({
@@ -69,6 +94,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
         Lines: postItem,
       });
       updateLastNumbering(number.id, number.last_count + 1);
+      history.push("/it/");
     }
     catch (e) {
       alert(e.Message);
@@ -92,37 +118,6 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
         <UIJsonField
           items={data}
           field={[
-            {
-              key: "general",
-              label: "General",
-              value: [
-                { key: "DocDate", size: 5, type: "date", label: "Posting Date", options: { pastDate: true } },
-                { key: "DocDueDate", size: 5, type: "date", label: "Delivery Date", options: { pastDate: true } },
-                { type: "empty", size: 2 },
-                {
-                  key: "Filler", size: 5, type: "field", label: "From Warehouse", component: (
-                    <SAPDropdown label="From Warehouse" field="Custom" customQuery={{
-                      Table: "OWHS",
-                      Fields: ["WhsCode"],
-                      Page: 1
-                    }} value={(data as any).Filler} setValue={(v) => {
-                      setData({ ...data, Filler: v });
-                      items.forEach((val: any) => {
-                        val.WhsCode = v;
-                      });
-                    }} />)
-                },
-                {
-                  key: "ToWhsCode", size: 5, type: "field", label: "To Warehouse", component: (
-                    <SAPDropdown label="To Warehouse" field="Custom" customQuery={{
-                      Table: "OWHS",
-                      Fields: ["WhsCode"],
-                      Page: 1
-                    }} value={(data as any).ToWhsCode} setValue={(v) => { setData({ ...data, ToWhsCode: v }) }} />)
-                },
-
-              ]
-            },
             {
               key: "vendor",
               label: "Business Partner",
@@ -154,6 +149,38 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
                       }]
                     }} value={(data as any).Address} setValue={(v) => { setData({ ...data, Address: v }) }} refresh={qShip} setRefresh={setQShip} />)
                 }
+              ]
+            },
+            {
+              key: "general",
+              label: "General",
+              value: [
+                { key: "U_WONUM", size: 8, component: (<UISelectField label="WO Number" items={WOList} value={data.U_WONUM} setValue={(v) => { setData({ ...data, U_WONUM: v }) }} />) },
+                { key: "DocDate", size: 5, type: "date", label: "Posting Date", options: { pastDate: true } },
+                { key: "DocDueDate", size: 5, type: "date", label: "Delivery Date", options: { pastDate: true } },
+                { type: "empty", size: 2 },
+                {
+                  key: "Filler", size: 5, type: "field", label: "From Warehouse", component: (
+                    <SAPDropdown label="From Warehouse" field="Custom" customQuery={{
+                      Table: "OWHS",
+                      Fields: ["WhsCode"],
+                      Page: 1
+                    }} value={(data as any).Filler} setValue={(v) => {
+                      setData({ ...data, Filler: v });
+                      items.forEach((val: any) => {
+                        val.WhsCode = v;
+                      });
+                    }} />)
+                },
+                {
+                  key: "ToWhsCode", size: 5, type: "field", label: "To Warehouse", component: (
+                    <SAPDropdown label="To Warehouse" field="Custom" customQuery={{
+                      Table: "OWHS",
+                      Fields: ["WhsCode"],
+                      Page: 1
+                    }} value={(data as any).ToWhsCode} setValue={(v) => { setData({ ...data, ToWhsCode: v }) }} />)
+                },
+
               ]
             },
             {
