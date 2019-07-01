@@ -60,6 +60,7 @@ export default withRouter(observer(({ match, history, showSidebar, sidebar }: an
   useEffect(() => {
     let query: APISearchProps = {
       Table: "ODLN",
+      Fields: ["DocEntry", "CardName", "CardCode", "U_IDU_SO_INTNUM", "NumAtCard", "DocDate"],
       Condition: [{
         field: "DocStatus",
         cond: "=",
@@ -134,9 +135,7 @@ export default withRouter(observer(({ match, history, showSidebar, sidebar }: an
               }
             }
           }}
-          items={_data.map((item: any) => ({
-            ...item,
-          }))}
+          items={data}
         />
       </UIBody>
     </UIContainer>

@@ -29,7 +29,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   useEffect(() => {
     let query: APISearchProps = {
       Table: "OCRD",
-      Fields: [],
+      Fields: ["CardCode", "CardName"],
       Condition: [
         {
           field: "CardType",

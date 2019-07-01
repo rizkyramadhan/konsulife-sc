@@ -6,16 +6,23 @@ import UIContainer from '@app/libs/ui/UIContainer';
 import UIHeader from '@app/libs/ui/UIHeader';
 import UIJsonField from '@app/libs/ui/UIJsonField';
 import UITabs from '@app/libs/ui/UITabs';
-import { getLastNumbering, updateLastNumbering } from '@app/utils';
+import { getLastNumbering, updateLastNumbering, lpad } from '@app/utils';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from "react";
 import { withRouter } from 'react-router';
 import { View } from 'reactxp';
 import FormARInvoiceDetailTO from './FormARInvoiceDetailTO';
+import UISelectField from '@app/libs/ui/UISelectField';
+import rawQuery from '@app/libs/gql/data/rawQuery';
+import { encodeSAPDate } from '@app/libs/utils/Helper';
 
-export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
+const date = new Date();
+const today = `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${lpad(date.getDate().toString(), 2)}`;
+
+export default withRouter(observer(({ history, match, showSidebar, sidebar }: any) => {
   const [saving, setSaving] = useState(false);
   const [data, setData] = useState<any[]>([]);
+  const [WOList, setWOList] = useState<any[]>([]);
   const [item, setItem] = useState([]);
 
   const param = atob(match.params.id).split("|");
@@ -62,13 +69,17 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
 
       });
 
+      res[0].DocDate = today;
+      res[0].DocDueDate = today;
       res[0].NumAtCard = poNum.join(";");
       res[0].U_IDU_SO_INTNUM = soNum.join(";");
       res[0].U_IDU_DO_INTNUM = doNum.join(";");
 
       res[0].U_BRANCH = global.session.user.branch;
-      res[0].U_USERID = global.session.user.id;
+      res[0].U_USERID = global.session.user.username;
       res[0].U_GENERATED = "W";
+      res[0].U_WONUM = "";
+      res[0].U_IDU_FP = ""
 
       if (res.length > 0)
         setData(res[0]);
@@ -112,6 +123,20 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
       });
       setItem(res);
     })
+
+    rawQuery(`{
+      work_order (where: {status: {_eq: "open"}, branch: {_eq: "${global.getSession().user.branch}"}}) {
+        number
+      }
+    }`).then((res) => {
+      let wo = res.work_order.map((v: any) => {
+        return {
+          value: v.number,
+          label: v.number
+        }
+      })
+      setWOList([...wo]);
+    });
   }, []);
 
   const save = async () => {
@@ -124,21 +149,28 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
       //     data[i] = encodeSAPDate(data[i]);
       //   }
       // }
-
-      item.forEach((val: any) => {
-        delete val.PK;
-        delete val.LineNum;
-        delete val.DocEntry;
+      // (data as any).DocDate = encodeSAPDate((data as any).DocDate);
+      // (data as any).DocDueDate = encodeSAPDate((data as any).DocDueDate);
+      
+      let Lines = item.map((val: any) => {
+        let res = { ...val };
+        delete res.PK;
+        delete res.LineNum;
+        delete res.DocEntry;
+        return res;
       });
 
-      let number: any = await getLastNumbering("INV", global.getSession().user.warehouse_id);
+      let number: any = await getLastNumbering("INV", (item[0] as any).WhsCode);
       (data as any)['U_IDU_SI_INTNUM'] = number.format;
       await APIPost('ARInvoice', {
-        ...data, Lines: item,
+        ...data, Lines: Lines,
       });
       updateLastNumbering(number.id, number.last_count + 1);
+      history.push("/ar-invoice-to")
     }
     catch (e) {
+      // (data as any).DocDate = encodeSAPDate((data as any).DocDate);
+      // (data as any).DocDueDate = encodeSAPDate((data as any).DocDueDate);
       alert(e.Message);
     }
     finally {
@@ -162,6 +194,16 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
           items={data}
           field={[
             {
+              key: "customer",
+              label: "Customer",
+              sublabel: "Cust Penerima Barang",
+              value: [
+                { key: "CardCode", type: "field", label: "Code", size: 4 },
+                { key: "CardName", type: "field", label: "Customer", size: 8 },
+                { key: "NumAtCard", type: "field", label: "No PO. Cust", size: 12 }
+              ]
+            },
+            {
               key: "general",
               label: "General",
               sublabel: "Informasi SO/DO",
@@ -179,19 +221,11 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                   size: 8
                 },
                 { type: "empty", size: 4 },
+                { key: "U_WONUM", size: 8, component: (<UISelectField label="WO Number" items={WOList} value={(data as any).U_WONUM} setValue={(v) => { let d = { ...data }; (d as any).U_WONUM = v; setData({ ...d }) }} />) },
+                { type: "empty", size: 4 },
                 { key: "DocDate", size: 4, type: "date", label: "Posting Date", options: { pastDate: true } },
                 { key: "DocDueDate", size: 4, type: "date", label: "Delivery Date", options: { pastDate: true } },
                 { key: "U_IDU_FP", size: 8, label: "Faktur Pajak" },
-              ]
-            },
-            {
-              key: "customer",
-              label: "Customer",
-              sublabel: "Cust Penerima Barang",
-              value: [
-                { key: "CardCode", type: "field", label: "Code", size: 4 },
-                { key: "CardName", type: "field", label: "Customer", size: 8 },
-                { key: "NumAtCard", type: "field", label: "No PO. Cust", size: 12 }
               ]
             },
             {
