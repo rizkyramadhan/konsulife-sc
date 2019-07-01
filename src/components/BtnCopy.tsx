@@ -1,18 +1,16 @@
-import { withRouter } from 'react-router-dom';
-import React from 'react';
-import UIButton from '@app/libs/ui/UIButton';
+import IconCopy from '@app/libs/ui/Icons/IconCopy';
 import { isSize } from '@app/libs/ui/MediaQuery';
+import UIButton from '@app/libs/ui/UIButton';
 import UIText from '@app/libs/ui/UIText';
-import IconReceipt from '@app/libs/ui/Icons/IconReceipt';
+import React from 'react';
+import { withRouter } from 'react-router-dom';
 
-export default withRouter(({ history, path, style }: any) => {
+export default withRouter(({ onPress, style = {}, label = "Copy" }: any) => {
     return (
         <UIButton
             size="small"
             color="success"
-            onPress={() => {
-                history.push(path);
-            }}
+            onPress={onPress}
             style={{
                 display: "flex",
                 flexDirection: "row",
@@ -21,9 +19,9 @@ export default withRouter(({ history, path, style }: any) => {
                 ...style
             }}
         >
-            <IconReceipt color="#fff" width={20} height={20} />
+            <IconCopy color="#fff" width={20} height={20} />
             {isSize(["md", "lg"]) && (
-                <UIText style={{ color: "#fff" }} size="small"> Draft</UIText>
+                <UIText style={{ color: "#fff" }} size="small"> {label}</UIText>
             )}
         </UIButton>
     );

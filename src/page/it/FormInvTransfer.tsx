@@ -1,43 +1,41 @@
-import IconSave from '@app/libs/ui/Icons/IconSave';
-import { isSize } from '@app/libs/ui/MediaQuery';
+import { APIPost } from '@app/api';
+import BtnAdd from '@app/components/BtnAdd';
+import BtnSave from '@app/components/BtnSave';
+import SAPDropdown from '@app/components/SAPDropdown';
+import global from '@app/global';
 import UIBody from '@app/libs/ui/UIBody';
-import UIButton from '@app/libs/ui/UIButton';
 import UIContainer from '@app/libs/ui/UIContainer';
 import UIHeader from '@app/libs/ui/UIHeader';
 import UIJsonField from '@app/libs/ui/UIJsonField';
-import UIText from '@app/libs/ui/UIText';
+import UITabs from '@app/libs/ui/UITabs';
+import { getLastNumbering, updateLastNumbering } from '@app/utils';
 import { observer } from 'mobx-react-lite';
 import React, { useState } from "react";
 import { withRouter } from 'react-router';
-import { APIPost } from '@app/api';
-import FormInvTransferDetail from './FormInvTransferDetail';
 import { View } from 'reactxp';
-import global from '@app/global';
-import IconAdd from '@app/libs/ui/Icons/IconAdd';
-import { getLastNumbering, updateLastNumbering } from '@app/utils';
-import SAPDropdown from '@app/components/SAPDropdown';
+import FormInvTransferDetail from './FormInvTransferDetail';
 
 const initData = {
-  DocNum:"",
-  DocEntry:"",
-  CardName:"",
-  CardCode:"",
-  U_IDU_ITR_INTNUM:"",
-  Address:"",
-  Filler:"",
-  ToWhsCode:"",
-  Comments:"",
-  SlpCode: !!global.session.user.slp_code||-1,
-  U_BRANCH:global.session.user.branch,
-  U_USERID:global.session.user.id,
+  DocNum: "",
+  DocEntry: "",
+  CardName: "",
+  CardCode: "",
+  U_IDU_ITR_INTNUM: "",
+  Address: "",
+  Filler: "",
+  ToWhsCode: "",
+  Comments: "",
+  SlpCode: !!global.session.user.slp_code || -1,
+  U_BRANCH: global.session.user.branch,
+  U_USERID: global.session.user.id,
   U_GENERATED: "W",
-  U_WO:"",
-  U_IDU_IT_INTNUM:"",
-  U_IDU_CONTNUM:"",
-  U_IDU_NOSEAL:"",
-  U_IDU_NOPL:"",
-  U_IDU_NOPOL:"",
-  U_IDU_DRIVER:""
+  U_WO: "",
+  U_IDU_IT_INTNUM: "",
+  U_IDU_CONTNUM: "",
+  U_IDU_NOSEAL: "",
+  U_IDU_NOPL: "",
+  U_IDU_NOPOL: "",
+  U_IDU_DRIVER: ""
 }
 
 export default withRouter(observer(({ showSidebar, sidebar }: any) => {
@@ -45,43 +43,13 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
   const [data, setData] = useState(initData);
   const [qShip, setQShip] = useState(false);
   const [items, setItems] = useState<any[]>([]);
-  const ActionIt = () => {
-    return (<UIButton
-      style={{
-        flexShrink: 'none'
-      }}
-      color="success"
-      size="small"
-      onPress={() => {
-        setItems([...(items as any), {
-          LineNum: Math.floor(Math.random() * Math.floor(999)),
-          ItemCode: "",
-          Dscription: "",
-          UseBaseUn: "",
-          Quantity: 0,
-          UomEntry: "",
-          WhsCode: data.Filler,
-          SerialNum:"",
-        }])
-      }}
-    >
-      <IconAdd color="#fff" height={18} width={18} style={{
-        marginTop: -9
-      }} />
-      {isSize(["md", "lg"]) && (
-        <UIText style={{ color: "#fff" }} size="small">
-          {" Add"}
-        </UIText>
-      )}
-    </UIButton>);
-  }
 
   const save = async () => {
     setSaving(true);
     try {
       let number: any = await getLastNumbering("PGK-T", global.getSession().user.warehouse_id);
-      let postItem:any[] = [];
-      items.forEach((val:any)=>{
+      let postItem: any[] = [];
+      items.forEach((val: any) => {
         postItem.push({
           ItemCode: val.ItemCode,
           Dscription: val.Dscription,
@@ -94,10 +62,10 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
       });
       await APIPost('InventoryTransfer', {
         ...data,
-        U_IDU_IT_INTNUM:number.format,
-        SlpCode:global.session.user.slp_code!=="" &&global.session.user.slp_code!== null?global.session.user.slp_code:-1,
-        U_BRANCH:global.session.user.branch,
-        U_USERID:global.session.user.id,
+        U_IDU_IT_INTNUM: number.format,
+        SlpCode: global.session.user.slp_code !== "" && global.session.user.slp_code !== null ? global.session.user.slp_code : -1,
+        U_BRANCH: global.session.user.branch,
+        U_USERID: global.session.user.id,
         Lines: postItem,
       });
       updateLastNumbering(number.id, number.last_count + 1);
@@ -116,18 +84,9 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
         isBack={true}
         showSidebar={showSidebar}
         sidebar={sidebar} center="Stock Transfer Form">
-        <UIButton
-          color="primary"
-          size="small"
-          onPress={() => {
-            save();
-          }}
-        >
-          <IconSave color="#fff" />
-          {isSize(["md", "lg"]) && (
-            <UIText style={{ color: "#fff" }}>{saving ? " Saving..." : " Save"}</UIText>
-          )}
-        </UIButton>
+        <BtnSave saving={saving} onPress={() => {
+          save();
+        }} />
       </UIHeader>
       <UIBody scroll={true}>
         <UIJsonField
@@ -137,26 +96,30 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
               key: "general",
               label: "General",
               value: [
-                { key: "DocDate", size: 5, type: "date", label: "Posting Date",options:{pastDate:true} },
-                { key: "DocDueDate", size: 5, type: "date", label: "Delivery Date",options:{pastDate:true} },
+                { key: "DocDate", size: 5, type: "date", label: "Posting Date", options: { pastDate: true } },
+                { key: "DocDueDate", size: 5, type: "date", label: "Delivery Date", options: { pastDate: true } },
                 { type: "empty", size: 2 },
-                { key: "Filler", size: 5, type: "field", label: "From Warehouse", component: (
-                  <SAPDropdown label="From Warehouse" field="Custom" customQuery={{ 
-                      Table: "OWHS", 
+                {
+                  key: "Filler", size: 5, type: "field", label: "From Warehouse", component: (
+                    <SAPDropdown label="From Warehouse" field="Custom" customQuery={{
+                      Table: "OWHS",
                       Fields: ["WhsCode"],
-                      Page:1 
-                  }} value={(data as any).Filler} setValue={(v) => { 
-                    setData({ ...data, Filler: v });
-                    items.forEach((val:any) => {
-                      val.WhsCode = v;
-                    }); 
-                  }} />) },
-                { key: "ToWhsCode", size: 5, type: "field", label: "To Warehouse", component: (
-                  <SAPDropdown label="To Warehouse" field="Custom" customQuery={{ 
-                      Table: "OWHS", 
+                      Page: 1
+                    }} value={(data as any).Filler} setValue={(v) => {
+                      setData({ ...data, Filler: v });
+                      items.forEach((val: any) => {
+                        val.WhsCode = v;
+                      });
+                    }} />)
+                },
+                {
+                  key: "ToWhsCode", size: 5, type: "field", label: "To Warehouse", component: (
+                    <SAPDropdown label="To Warehouse" field="Custom" customQuery={{
+                      Table: "OWHS",
                       Fields: ["WhsCode"],
-                      Page:1 
-                  }} value={(data as any).ToWhsCode} setValue={(v) => { setData({ ...data, ToWhsCode: v }) }} />) },
+                      Page: 1
+                    }} value={(data as any).ToWhsCode} setValue={(v) => { setData({ ...data, ToWhsCode: v }) }} />)
+                },
 
               ]
             },
@@ -167,8 +130,8 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
                 { key: "CardCode", size: 8, type: "field", label: "Customer/Vendor Code" },
                 {
                   key: "CardCode", label: "Customer/Vendor", size: 12, component: (
-                    <SAPDropdown label="Customer" field="CustomerCode" value={(data as any).CardCode} setValue={(v,l) => {
-                      setData({ ...data, CardCode: v, CardName:l});
+                    <SAPDropdown label="Customer" field="CustomerCode" value={(data as any).CardCode} setValue={(v, l) => {
+                      setData({ ...data, CardCode: v, CardName: l });
                       setQShip(true);
                     }} />)
                 },
@@ -212,26 +175,27 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
         />
 
         <View style={{ marginTop: 50 }}>
-          <View
-            style={{
-              justifyContent: "space-between",
-              flex: 1,
-              flexDirection: "row",
-              alignItems: "center"
-            }}
-          >
-            <UIText
-              style={{
-                fontSize: 19,
-                color: "#333",
-                fontWeight: 400
-              }}
-            >
-              Detail items
-              </UIText>
-              <ActionIt />
-          </View>
-          <FormInvTransferDetail items={items} setItems={setItems} />
+          <UITabs
+            tabs={[
+              {
+                label: "Detail items",
+                content: () => (
+                  <FormInvTransferDetail items={items} setItems={setItems} />
+                ),
+                action: <BtnAdd onPress={() => {
+                  setItems([...(items as any), {
+                    LineNum: Math.floor(Math.random() * Math.floor(999)),
+                    ItemCode: "",
+                    Dscription: "",
+                    UseBaseUn: "",
+                    Quantity: 0,
+                    UomEntry: "",
+                    WhsCode: data.Filler,
+                    SerialNum: "",
+                  }])
+                }} />
+              }
+            ]} />
         </View>
       </UIBody>
     </UIContainer>

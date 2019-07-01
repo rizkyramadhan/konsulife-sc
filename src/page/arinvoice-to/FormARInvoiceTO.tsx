@@ -1,19 +1,17 @@
 import { APIPost, APISearch, APISearchProps } from '@app/api';
+import BtnSave from '@app/components/BtnSave';
 import global from '@app/global';
-import IconSave from '@app/libs/ui/Icons/IconSave';
-import { isSize } from '@app/libs/ui/MediaQuery';
 import UIBody from '@app/libs/ui/UIBody';
-import UIButton from '@app/libs/ui/UIButton';
 import UIContainer from '@app/libs/ui/UIContainer';
 import UIHeader from '@app/libs/ui/UIHeader';
 import UIJsonField from '@app/libs/ui/UIJsonField';
-import UIText from '@app/libs/ui/UIText';
+import UITabs from '@app/libs/ui/UITabs';
+import { getLastNumbering, updateLastNumbering } from '@app/utils';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from "react";
 import { withRouter } from 'react-router';
 import { View } from 'reactxp';
 import FormARInvoiceDetailTO from './FormARInvoiceDetailTO';
-import { getLastNumbering, updateLastNumbering } from '@app/utils';
 
 export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
   const [saving, setSaving] = useState(false);
@@ -155,18 +153,9 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
         sidebar={sidebar}
         center="Form AR Invoice"
       >
-        <UIButton
-          color="primary"
-          size="small"
-          onPress={() => {
-            save();
-          }}
-        >
-          <IconSave color="#fff" />
-          {isSize(["md", "lg"]) && (
-            <UIText style={{ color: "#fff" }}>{saving ? " Saving..." : " Save"}</UIText>
-          )}
-        </UIButton>
+        <BtnSave saving={saving} onPress={() => {
+          save();
+        }} />
       </UIHeader>
       <UIBody scroll={true}>
         <UIJsonField
@@ -190,8 +179,8 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                   size: 8
                 },
                 { type: "empty", size: 4 },
-                { key: "DocDate", size: 4, type: "date", label: "Posting Date",options:{pastDate:true} },
-                { key: "DocDueDate", size: 4, type: "date", label: "Delivery Date",options:{pastDate:true} },
+                { key: "DocDate", size: 4, type: "date", label: "Posting Date", options: { pastDate: true } },
+                { key: "DocDueDate", size: 4, type: "date", label: "Delivery Date", options: { pastDate: true } },
                 { key: "U_IDU_FP", size: 8, label: "Faktur Pajak" },
               ]
             },
@@ -223,25 +212,15 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
         />
 
         <View style={{ marginTop: 50 }}>
-          <View
-            style={{
-              justifyContent: "space-between",
-              flex: 1,
-              flexDirection: "row",
-              alignItems: "center"
-            }}
-          >
-            <UIText
-              style={{
-                fontSize: 19,
-                color: "#333",
-                fontWeight: 400
-              }}
-            >
-              Detail Items
-            </UIText>
-          </View>
-          <FormARInvoiceDetailTO items={item} setItems={setItem} />
+          <UITabs
+            tabs={[
+              {
+                label: "Detail items",
+                content: () => (
+                  <FormARInvoiceDetailTO items={item} setItems={setItem} />
+                )
+              }
+            ]} />
         </View>
       </UIBody>
     </UIContainer>

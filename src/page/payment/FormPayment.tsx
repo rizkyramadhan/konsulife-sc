@@ -1,19 +1,16 @@
-import IconSave from '@app/libs/ui/Icons/IconSave';
-import { isSize } from '@app/libs/ui/MediaQuery';
+import { APIPost } from '@app/api';
+import BtnSave from '@app/components/BtnSave';
+import SAPDropdown from '@app/components/SAPDropdown';
+import global from '@app/global';
 import UIBody from '@app/libs/ui/UIBody';
-import UIButton from '@app/libs/ui/UIButton';
 import UIContainer from '@app/libs/ui/UIContainer';
 import UIHeader from '@app/libs/ui/UIHeader';
 import UIJsonField from '@app/libs/ui/UIJsonField';
-import UIText from '@app/libs/ui/UIText';
+import { getLastNumbering, updateLastNumbering } from '@app/utils';
+import { encodeSAPDate } from '@app/utils/Helper';
 import { observer } from 'mobx-react-lite';
 import React, { useState } from "react";
 import { withRouter } from 'react-router';
-import SAPDropdown from '@app/components/SAPDropdown';
-import global from '@app/global';
-import { encodeSAPDate } from '@app/utils/Helper';
-import { APIPost } from '@app/api';
-import { getLastNumbering, updateLastNumbering } from '@app/utils';
 
 const defData = {
   DocDate: "",
@@ -67,18 +64,9 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
         sidebar={sidebar}
         center="Form Payment Receipt"
       >
-        <UIButton
-          color="primary"
-          size="small"
-          onPress={() => {
-            save();
-          }}
-        >
-          <IconSave color="#fff" />
-          {isSize(["md", "lg"]) && (
-            <UIText style={{ color: "#fff" }}>{saving ? " Saving..." : " Save"}</UIText>
-          )}
-        </UIButton>
+        <BtnSave saving={saving} onPress={() => {
+          save();
+        }} />
       </UIHeader>
       <UIBody scroll={true}>
         <UIJsonField

@@ -13,7 +13,10 @@ import UIText from "@app/libs/ui/UIText";
 import UITextField from "@app/libs/ui/UITextField";
 import React, { useEffect, useState } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
-import { Alert } from "reactxp";
+import { Alert, View, Image } from "reactxp";
+import IconSignIn from '@app/libs/ui/Icons/IconSignIn';
+
+const background = require("@app/assets/images/bg-login.jpg");
 
 const LoginForm = withRouter(({ history }: RouteComponentProps) => {
   const [username, setUsername] = useState("coba");
@@ -32,8 +35,12 @@ const LoginForm = withRouter(({ history }: RouteComponentProps) => {
   }, []);
 
   return (
-    <UICol size={4} xs={12} sm={12}>
-      <UICard style={{ padding: 25 }}>
+    <UICol size={4} xs={12} sm={12} style={{ alignItems: 'center' }}>
+      <UICard style={{
+        maxWidth: 450,
+        padding: 25,
+        backgroundColor: "#ffffffbd"
+      }}>
         <UIText
           size="extralarge"
           style={{ paddingTop: 50, textAlign: "center" }}
@@ -62,28 +69,32 @@ const LoginForm = withRouter(({ history }: RouteComponentProps) => {
             setPassword(value);
           }}
         />
-        <UIRow>
+        <UIRow style={{
+          marginTop: 15,
+          justifyContent: 'flex-end'
+        }}>
           {loading ? (
             <UILoading />
           ) : (
-            <UIButton
-              onPress={async () => {
-                setLoading(true);
-                const res = await login(username, password);
-                if (!res) {
-                  Alert.show("Gagal Login");
-                  setLoading(false);
-                } else {
-                  setLoading(false);
-                  global.setSession(res);
-                  history.replace("/");
-                  // global.setSidebar(isSize(['md', 'lg']));
-                }
-              }}
-            >
-              Login
-            </UIButton>
-          )}
+              <UIButton
+                onPress={async () => {
+                  setLoading(true);
+                  const res = await login(username, password);
+                  if (!res) {
+                    Alert.show("Gagal Login");
+                    setLoading(false);
+                  } else {
+                    setLoading(false);
+                    global.setSession(res);
+                    history.replace("/");
+                    // global.setSidebar(isSize(['md', 'lg']));
+                  }
+                }}
+              >
+                <IconSignIn color="#fff" width={20} height={20} />
+                <UIText style={{ color: "#fff" }} size="small"> Login</UIText>
+              </UIButton>
+            )}
         </UIRow>
       </UICard>
     </UICol>
@@ -91,13 +102,27 @@ const LoginForm = withRouter(({ history }: RouteComponentProps) => {
 });
 
 export default () => {
+  const imgstyle: any = {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+  };
+  const style: any = {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+  };
   return (
     <UIContainer>
+      <View style={style}>
+        <Image resizeMode="cover" style={imgstyle} source={background} />
+      </View>
       <UIBody
         style={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "center"
+          justifyContent: "center",
+          backgroundColor: "#00000061"
         }}
       >
         <UIRow

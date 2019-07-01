@@ -1,24 +1,24 @@
 import { APIPost } from '@app/api';
-import global from '@app/global';
+import BtnSave from '@app/components/BtnSave';
 import SAPDropdown from '@app/components/SAPDropdown';
+import global from '@app/global';
+import rawQuery from '@app/libs/gql/data/rawQuery';
 import IconAdd from "@app/libs/ui/Icons/IconAdd";
-import IconSave from "@app/libs/ui/Icons/IconSave";
 import { isSize } from "@app/libs/ui/MediaQuery";
 import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIJsonField from "@app/libs/ui/UIJsonField";
-import UIText from "@app/libs/ui/UIText";
-import { observer } from "mobx-react-lite";
-import React, { useState, useEffect } from "react";
-import FormSODetailItems from './FormSODetailItems';
-import { getLastNumbering, updateLastNumbering, lpad } from '@app/utils';
-import UITabs from '@app/libs/ui/UITabs';
-import { withRouter } from 'react-router';
-import { encodeSAPDate } from '@app/utils/Helper';
-import rawQuery from '@app/libs/gql/data/rawQuery';
 import UISelectField from '@app/libs/ui/UISelectField';
+import UITabs from '@app/libs/ui/UITabs';
+import UIText from "@app/libs/ui/UIText";
+import { getLastNumbering, lpad, updateLastNumbering } from '@app/utils';
+import { encodeSAPDate } from '@app/utils/Helper';
+import { observer } from "mobx-react-lite";
+import React, { useEffect, useState } from "react";
+import { withRouter } from 'react-router';
+import FormSODetailItems from './FormSODetailItems';
 
 const date = new Date();
 const today = `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${date.getDate()}`;
@@ -96,9 +96,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
         }])
       }}
     >
-      <IconAdd color="#fff" height={18} width={18} style={{
-        marginTop: -9
-      }} />
+      <IconAdd color="#fff" height={18} width={18} />
       {isSize(["md", "lg"]) && (
         <UIText style={{ color: "#fff" }} size="small">
           {" Add Row"}
@@ -153,18 +151,9 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
         sidebar={sidebar}
         center="Form SO Taking Order"
       >
-        <UIButton
-          color="primary"
-          size="small"
-          onPress={() => {
-            save();
-          }}
-        >
-          <IconSave color="#fff" />
-          {isSize(["md", "lg"]) && (
-            <UIText style={{ color: "#fff" }}>{saving ? " Saving..." : " Save"}</UIText>
-          )}
-        </UIButton>
+        <BtnSave saving={saving} onPress={() => {
+          save();
+        }} />
       </UIHeader>
       <UIBody scroll={true}>
         <UIJsonField

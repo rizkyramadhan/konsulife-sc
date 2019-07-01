@@ -151,7 +151,6 @@ export default observer((_props: any) => {
   useEffect(() => {
     const check = async () => {
       global.setSession(await getSession());
-      console.log(global.session);
       setLoading(false);
     };
     check();

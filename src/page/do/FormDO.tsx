@@ -1,20 +1,20 @@
-import IconSave from '@app/libs/ui/Icons/IconSave';
+import { APIPost, APISearch, APISearchProps } from '@app/api';
+import BtnSave from '@app/components/BtnSave';
+import global from '@app/global';
+import IconCheck from '@app/libs/ui/Icons/IconCheck';
 import { isSize } from '@app/libs/ui/MediaQuery';
 import UIBody from '@app/libs/ui/UIBody';
 import UIButton from '@app/libs/ui/UIButton';
 import UIContainer from '@app/libs/ui/UIContainer';
 import UIHeader from '@app/libs/ui/UIHeader';
 import UIJsonField from '@app/libs/ui/UIJsonField';
-import UIText from '@app/libs/ui/UIText';
-import { observer } from 'mobx-react-lite';
-import React, { useState, useEffect } from "react";
-import { withRouter } from 'react-router';
-import { APISearch, APISearchProps, APIPost } from '@app/api';
-import FormDODetailItems from './FormDODetailItems';
-import IconCheck from '@app/libs/ui/Icons/IconCheck';
 import UITabs from '@app/libs/ui/UITabs';
+import UIText from '@app/libs/ui/UIText';
 import { getLastNumbering, updateLastNumbering, lpad } from '@app/utils';
-import global from '@app/global';
+import { observer } from 'mobx-react-lite';
+import React, { useEffect, useState } from "react";
+import { withRouter } from 'react-router';
+import FormDODetailItems from './FormDODetailItems';
 import rawQuery from '@app/libs/gql/data/rawQuery';
 import UISelectField from '@app/libs/ui/UISelectField';
 
@@ -217,18 +217,9 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
         sidebar={sidebar}
         center={`Form Delivery Order #${atob(match.params.CardCode)} - ${atob(match.params.CardName)}`}
       >
-        <UIButton
-          color="primary"
-          size="small"
-          onPress={() => {
-            save();
-          }}
-        >
-          <IconSave color="#fff" />
-          {isSize(["md", "lg"]) && (
-            <UIText style={{ color: "#fff" }}>{saving ? " Saving..." : " Save"}</UIText>
-          )}
-        </UIButton>
+        <BtnSave saving={saving} onPress={() => {
+          save();
+        }} type={match.params.id ? "update" : "save"} />
       </UIHeader>
       <UIBody scroll={true}>
         <UIJsonField
@@ -318,13 +309,8 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                 >
                   <IconCheck
                     color="#fff"
-                    height={18}
-                    width={18}
-                    style={{
-                      marginTop: -5,
-                      marginRight: 5,
-                      marginLeft: -5
-                    }}
+                    height={20}
+                    width={20}
                   />
                   {isSize(["md", "lg"]) && (
                     <UIText style={{ color: "#fff" }} size="small">
