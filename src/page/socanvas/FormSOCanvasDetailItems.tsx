@@ -1,8 +1,5 @@
-import UIButton from "@app/libs/ui/UIButton";
 import UIList from "@app/libs/ui/UIList";
-import UIRow from "@app/libs/ui/UIRow";
-import React from "react";
-import IconRemove from "@app/libs/ui/Icons/IconRemove";
+import React, { useState } from "react";
 import { View } from 'reactxp/dist/web/Animated';
 import { MainStyle } from '@app/config';
 import UIText from '@app/libs/ui/UIText';
@@ -12,9 +9,60 @@ import UIJsonField from '@app/libs/ui/UIJsonField';
 import SAPDropdown from '@app/components/SAPDropdown';
 import UISelectField from '@app/libs/ui/UISelectField';
 import { APISearch } from '@app/api';
-import global from '@app/global';
+import IconTrash from '@app/libs/ui/Icons/IconTrash';
 
 export default ({ data, items, setItems }: any) => {
+  const [uoMEntry, setUoMEntry] = useState<any>({});
+  const [iUoMEntry, setIUoMEntry] = useState<any>({});
+
+  const getPrice = (idx: any, value: any) => {
+    APISearch({
+      CustomQuery: "UnitPriceSO",
+      Condition: [{
+        field: "CardCode",
+        cond: "=",
+        value: data.CardCode
+      }, { cond: 'AND' }, {
+        field: "ItemCode",
+        cond: "=",
+        value: value
+      }]
+    }).then((res: any) => {
+      if (Array.isArray(res) && res.length > 0) {
+        items[idx]["PriceBefDi"] = parseInt(res[0]["Price"]);
+        setItems([...items]);
+      }
+    });
+  };
+
+  const getUoM = (idx: any, value: any) => {
+    APISearch({
+      CustomQuery: `GetUom,${value}`,
+    }).then((res: any) => {
+      // jika uom group entry = -1 maka set uom entry = manual
+      // jika bukan maka set uom entry sesuai sales uom entry
+      items[idx]["UseBaseUn"] = "N";
+      if (res.UgpEntry == -1) {
+        items[idx]["UoMEntry"] = -1;
+        items[idx]["UoMName"] = "Manual";
+      } else {
+        items[idx]["UoMEntry"] = res.SUoMEntry;
+        items[idx]["UoMName"] = res.SUoMCode;
+      }
+      setItems([...items]);
+
+      // group list uom entry berdasarkan item code karena uom entry setiap item code berbeda
+      uoMEntry[value] = res.Lines.map((d: any) => {
+        return { value: d.UomEntry, label: d.UomCode }
+      });
+      setUoMEntry({ ...uoMEntry });
+      
+      // group list sales uom berdasarkan item code karena sales uom setiap item berbeda 
+      iUoMEntry[value] = res.IUoMEntry;
+      setIUoMEntry({ ...iUoMEntry });
+    });
+  };
+
   return (
     <UIList
       primaryKey="Key"
@@ -37,12 +85,12 @@ export default ({ data, items, setItems }: any) => {
         },
         UseBaseUn: {
           table: {
-            header: "Inventory UoM"
+            header: "Inv UoM"
           }
         },
-        UomEntry: {
+        UoMName: {
           table: {
-            header: "UoMName"
+            header: "UoM Name"
           }
         },
         Quantity: {
@@ -57,44 +105,16 @@ export default ({ data, items, setItems }: any) => {
         },
         PriceBefDi: {
           table: {
-            header: "Unit Price"
+            header: "Price"
           }
         },
         DiscPrcnt: {
           table: {
-            header: "Discount(%)"
+            header: "Disc(%)"
           }
         }
       }}
-      items={items.map((item: any, index: any) => ({
-        ...item,
-        action: (
-          <UIRow style={{ marginTop: 0 }}>
-            <UIButton
-              size="small"
-              fill="clear"
-              style={{
-                marginTop: 0,
-                marginBottom: 0,
-                flexShrink: "none"
-              }}
-              onPress={() => {
-                alert("remove!");
-              }}
-            >
-              <IconRemove
-                height={18}
-                width={18}
-                color="red"
-                onPress={() => {
-                  items.splice(index, 1);
-                  setItems([...items]);
-                }}
-              />
-            </UIButton>
-          </UIRow>
-        )
-      }))}
+      items={items}
       detailComponent={(item) => (
         <View
           style={{
@@ -153,74 +173,75 @@ export default ({ data, items, setItems }: any) => {
                     items[idx]["Dscription"] = l;
                     items[idx]["U_IDU_PARTNUM"] = r.item.U_IDU_PARTNUM;
                     items[idx]["TaxCode"] = r.item.VatGourpSa;
-                    items[idx]["UoMEntry"] = r.item.IUoMEntry;
+
                     setItems([...items]);
-                    APISearch({
-                      CustomQuery: "UnitPriceSO",
-                      Condition: [{
-                        field: "CardCode",
-                        cond: "=",
-                        value: data.CardCode
-                      }, { cond: 'AND' }, {
-                        field: "ItemCode",
-                        cond: "=",
-                        value: v
-                      }]
-                    }).then((res: any) => {
-                      items[idx]["PriceBefDi"] = parseInt(res[0]["Price"]);
-                      setItems([...items]);
-                    })
+                    getPrice(idx, v);
+                    getUoM(idx, v);
                   }} />)
               },
-              {
-                key: 'UseBaseUn', size: 12, label: 'Inventory UoM', component: (
-                  <UISelectField
-                    label="Inventory UoM"
-                    items={[
-                      { label: "Yes", value: "Y" },
-                      { label: "No", value: "N" }
-                    ]}
-                    value={(item as any).item.UseBaseUn}
-                    setValue={v => {
-                      const idx = items.findIndex((x: any) => x.Key === item.pkval);
-                      items[idx]['UseBaseUn'] = v;
-                      setItems([...items]);
-                    }}
-                  />
-                )
-              },
-              { key: 'Quantity', size: 12, label: 'Quantity' },
-              {
-                key: 'WhsCode', size: 12, label: 'Warehouse', component: (
-                  <SAPDropdown label="Warehouse" field="Custom" customQuery={{
-                    Table: 'OWHS',
-                    Fields: ["WhsCode", "WhsName"],
-                    Condition: [{
-                      field: "U_IDU_WHSETYPE",
-                      cond: "=",
-                      value: "Canvassing"
-                    }, {
-                      cond: "AND"
-                    }, {
-                      field: 'U_BRANCH',
-                      cond: "=",
-                      value: global.getSession().user.branch
-                    }]
-                  }} value={(item as any).item.WhsCode} setValue={(v) => {
-                    const idx = items.findIndex((x: any) => x.Key === item.pkval);
-                    items[idx]['WhsCode'] = v;
-                    setItems([...items]);
-                  }} />)
-              },
+              // {
+              //   key: 'UseBaseUn', size: 12, label: 'Inventory UoM', component: (
+              //     <UISelectField
+              //       label="Inventory UoM"
+              //       items={[
+              //         { label: "Yes", value: "Y" },
+              //         { label: "No", value: "N" }
+              //       ]}
+              //       value={(item as any).item.UseBaseUn}
+              //       setValue={v => {
+              //         const idx = items.findIndex((x: any) => x.Key === item.pkval);
+              //         items[idx]['UseBaseUn'] = v;
+              //         setItems([...items]);
+              //       }}
+              //     />
+              //   )
+              // },
+              // {
+              //   key: 'WhsCode', size: 12, label: 'Warehouse', component: (
+              //     <SAPDropdown label="Warehouse" field="Custom" customQuery={{
+              //       Table: 'OWHS',
+              //       Fields: ["WhsCode", "WhsName"],
+              //       Condition: [{
+              //         field: "U_IDU_WHSETYPE",
+              //         cond: "=",
+              //         value: "Canvassing"
+              //       }, {
+              //         cond: "AND"
+              //       }, {
+              //         field: 'U_BRANCH',
+              //         cond: "=",
+              //         value: global.getSession().user.branch
+              //       }]
+              //     }} value={(item as any).item.WhsCode} setValue={(v) => {
+              //       const idx = items.findIndex((x: any) => x.Key === item.pkval);
+              //       items[idx]['WhsCode'] = v;
+              //       setItems([...items]);
+              //     }} />)
+              // },
               {
                 key: 'UomEntry', size: 12, label: 'Uom', component: (
-                  <SAPDropdown label="UoM" field="UomCode" value={(item as any).item.UomEntry} setValue={(v, l) => {
+                  // <SAPDropdown label="UoM" field="UomCode" value={(item as any).item.UomEntry} setValue={(v, l) => {
+                  //   const idx = items.findIndex((x: any) => x.Key === item.pkval);
+                  //   items[idx]['UomEntry'] = v;
+                  //   items[idx]['UoMName'] = l;
+                  //   setItems([...items]);
+                  // }} />
+                  <UISelectField label="UoMCode" items={uoMEntry[(item as any).item.ItemCode] || []} value={(item as any).item.UoMEntry} setValue={(v, l) => {
                     const idx = items.findIndex((x: any) => x.Key === item.pkval);
-                    items[idx]['UomEntry'] = v;
+                    items[idx]['UoMEntry'] = v;
                     items[idx]['UoMName'] = l;
+
+                    // jika uom entry yang dipilih merupakan default inv uom, maka set base un = Y
+                    let itemCode = (item as any).item.ItemCode;
+                    if (v === iUoMEntry[itemCode]) {
+                      items[idx]['UseBaseUn'] = 'Y';
+                    } else {
+                      items[idx]['UseBaseUn'] = 'N';
+                    }
                     setItems([...items]);
                   }} />)
               },
+              { key: 'Quantity', size: 12, label: 'Quantity' },
               { key: 'PriceBefDi', size: 12, label: 'Unit Price' },
               { key: 'DiscPrcnt', size: 12, label: 'Disc Prcnt' },
               {
@@ -228,7 +249,7 @@ export default ({ data, items, setItems }: any) => {
                   <SAPDropdown label="Tax Code" field="Custom" customQuery={{
                     Table: "OVTG",
                     Fields: ["Code", "Name"],
-                    // Condition: [{ field: "Code", cond: "=", value: item.item.TaxCode }]
+                    Condition: [{ field: "Category", cond: "=", value: "O" }, { cond: "AND" }, { field: "Inactive", cond: "=", value: "N" }]
                   }} value={(item as any).item.TaxCode} setValue={(v) => {
                     const idx = items.findIndex((x: any) => x.Key === item.pkval);
                     items[idx]['TaxCode'] = v;
@@ -237,6 +258,16 @@ export default ({ data, items, setItems }: any) => {
               },
             ]}
           />
+          <View style={{ padding: 5, flexDirection: "row-reverse" }}>
+            <Button onPress={() => {
+              const idx = items.findIndex((x: any) => x.Key === item.pkval);
+              items.splice(idx, 1);
+              setItems([...items]);
+              item.close();
+            }}>
+              <IconTrash width={20} height={20} color="red" />
+            </Button>
+          </View>
         </View>
       )}
     />

@@ -2,20 +2,17 @@ import { APIPost } from '@app/api';
 import BtnSave from '@app/components/BtnSave';
 import SAPDropdown from '@app/components/SAPDropdown';
 import global from '@app/global';
-import IconAdd from "@app/libs/ui/Icons/IconAdd";
-import { isSize } from "@app/libs/ui/MediaQuery";
 import UIBody from "@app/libs/ui/UIBody";
-import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIJsonField from "@app/libs/ui/UIJsonField";
 import UITabs from '@app/libs/ui/UITabs';
-import UIText from "@app/libs/ui/UIText";
 import { getLastNumbering, lpad, updateLastNumbering } from '@app/utils';
 import { observer } from "mobx-react-lite";
-import React, {useState } from "react";
+import React, { useState } from "react";
 import { withRouter } from 'react-router';
 import FormSODetailItems from './FormSODetailItems';
+import BtnAdd from '@app/components/BtnAdd';
 
 const date = new Date();
 const today = `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${lpad(date.getDate().toString(), 2)}`;
@@ -50,42 +47,6 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const [qShip, setQShip] = useState(false);
   const [qBill, setQBill] = useState(false);
 
-
-  const AddRow = () => {
-    return (<UIButton
-      style={{
-        flexShrink: 'none'
-      }}
-      color="success"
-      size="small"
-      onPress={() => {
-        setItems([...(items as any), {
-          Key: new Date().valueOf(),
-          ItemCode: "",
-          Dscription: "",
-          U_IDU_PARTNUM: "",
-          UseBaseUn: "",
-          Quantity: "0",
-          WhsCode: "",
-          ShipDate: "",
-          OcrCode: "",
-          OcrCode2: "",
-          PriceBefDi: "0",
-          DiscPrcnt: "0",
-          UomEntry: "",
-          TaxCode: ""
-        }])
-      }}
-    >
-      <IconAdd color="#fff" height={18} width={18} />
-      {isSize(["md", "lg"]) && (
-        <UIText style={{ color: "#fff" }} size="small">
-          {" Add Row"}
-        </UIText>
-      )}
-    </UIButton>);
-  }
-
   const save = async () => {
     if (saving) return;
     setSaving(true);
@@ -103,10 +64,10 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
       (data as any).U_BRANCH = global.session.user.branch;
       (data as any).U_USERID = global.session.user.username;
       await APIPost('SalesOrder', {
-        ...data, U_IDU_SO_INTNUM: number.format, U_IDU_SO_TRANSCODE:"SO", Lines: [...Lines_IT],
+        ...data, U_IDU_SO_INTNUM: number.format, U_IDU_SO_TRANSCODE: "SO", Lines: [...Lines_IT],
       })
       updateLastNumbering(number.id, number.last_count + 1);
-      history.push("/so");
+      history.goBack();
     }
     catch (e) {
       setData({ ...data });
@@ -250,7 +211,25 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
             {
               label: "Detail Items",
               content: <FormSODetailItems data={data} items={items} setItems={setItems} />,
-              action: <AddRow />
+              action: <BtnAdd
+                onPress={() => {
+                  setItems([...(items as any), {
+                    Key: new Date().valueOf(),
+                    ItemCode: "",
+                    Dscription: "",
+                    U_IDU_PARTNUM: "",
+                    UseBaseUn: "N",
+                    Quantity: "0",
+                    WhsCode: "",
+                    ShipDate: "",
+                    OcrCode: "",
+                    OcrCode2: "",
+                    PriceBefDi: "0",
+                    DiscPrcnt: "0",
+                    UomEntry: "",
+                    TaxCode: ""
+                  }])
+                }} />
             }
           ]}
         />

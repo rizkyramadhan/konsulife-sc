@@ -88,7 +88,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
         ...data, U_IDU_SO_INTNUM: number.format, U_IDU_SO_TRANSCODE:"SOK", Lines: [...Lines_IT],
       }).then(() => {
         updateLastNumbering(number.id, number.last_count + 1);
-        history.push("/so");
+        history.goBack();
       });
     }
     catch (e) {
@@ -244,15 +244,15 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
                       ItemCode: "",
                       Dscription: "",
                       U_IDU_PARTNUM: "",
-                      UseBaseUn: "",
-                      Quantity: "",
-                      WhsCode: "",
+                      UseBaseUn: "N",
+                      Quantity: "0",
+                      WhsCode: global.getSession().user.warehouse_id,
                       ShipDate: "",
                       OcrCode: "",
                       OcrCode2: "",
-                      PriceBefDi: "",
-                      DiscPrcnt: "",
-                      UomEntry: "",
+                      PriceBefDi: "0",
+                      DiscPrcnt: "0",
+                      UoMEntry: "",
                       TaxCode: ""
                     }])
                   }} />
