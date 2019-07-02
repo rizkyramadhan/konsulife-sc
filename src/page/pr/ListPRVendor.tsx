@@ -28,6 +28,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   useEffect(() => {
     let query: APISearchProps = {
       Table: "OCRD",
+      Fields: ["CardCode", "CardName"],
       Condition: [
         {
           field: "CardType",
@@ -41,18 +42,8 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
           field: "validFor",
           cond: "=",
           value: "Y"
-        },
-        // {
-        //   cond: "AND"
-        // },
-        // {
-        //   field: "CardCode",
-        //   cond: "=",
-        //   value: "S00050"
-        // }
-      ],
-      Limit: 1000,
-      Page: 1
+        }
+      ]
     };
 
     APISearch(query).then((res: any) => {
