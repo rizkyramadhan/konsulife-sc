@@ -65,13 +65,13 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
           Dscription: "",
           U_IDU_PARTNUM: "",
           UseBaseUn: "",
-          Quantity: "",
+          Quantity: "0",
           WhsCode: "",
           ShipDate: "",
           OcrCode: "",
           OcrCode2: "",
-          PriceBefDi: "",
-          DiscPrcnt: "",
+          PriceBefDi: "0",
+          DiscPrcnt: "0",
           UomEntry: "",
           TaxCode: ""
         }])

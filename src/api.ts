@@ -315,7 +315,18 @@ export const SAPFieldMap = {
   } as APISearchProps,
   ItemCodeAll: {
     Table: "OITM",
-    Fields: ["ItemCode", "ItemName", "U_IDU_PARTNUM", "VatGourpSa", "SUoMEntry", "IUoMEntry", "CstGrpCode"]
+    Fields: ["ItemCode", "ItemName", "U_IDU_PARTNUM", "VatGourpSa", "SUoMEntry", "IUoMEntry", "CstGrpCode"],
+    Condition: [{
+      field: "frozenFor",
+      cond: "=",
+      value: "N"
+    }, {
+      cond: "AND"
+    }, {
+      field: "validFor",
+      cond: "=",
+      value: "Y"
+    }]
   } as APISearchProps,
   UomCode: {
     Table: "OUOM",
@@ -386,12 +397,12 @@ export const SAPFieldMap = {
   SAPSalesCode: {
     Table: "OSLP",
     Fields: ["SlpCode", "SlpName"],
-    Condition: 
-    [{
-      field: "U_IDU_BRANCH",
-      cond: "=",
-      value: ""
-    }]
+    Condition:
+      [{
+        field: "U_IDU_BRANCH",
+        cond: "=",
+        value: ""
+      }]
   } as APISearchProps,
   SAPSalesCodeUser: {
     Table: "OSLP",
