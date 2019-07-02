@@ -15,6 +15,7 @@ import React, { useEffect, useState } from "react";
 import { withRouter } from 'react-router-dom';
 import { View } from "reactxp";
 import FormRuteItems from './FormRuteItems';
+import deleteRecord from '@app/libs/gql/data/deleteRecord';
 
 interface IRute {
   id?: number,
@@ -74,6 +75,14 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
   const save = async () => {
     setSaving(true);
     try {
+      //  cek rute
+      let checkRute = await rawQuery(`{
+        rute(where: {_and:{name: {_eq: "${data.name}"}, branch: {_eq: "${global.getSession().user.branch}"}}}) {
+          name
+        }
+      }`);
+      if (checkRute.rute.length > 0) return alert("Nama rute sudah digunakan!");
+
       if (!data.id) {
         data.branch = global.getSession().user.branch || "";
         data.area = global.getSession().user.area || "";
@@ -87,24 +96,21 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
         });
       } else {
         await updateRecord("rute", data);
+        await deleteRecord("rute_items", { rute_id: data.id }, { primaryKey: "rute_id" });
         items.forEach(async (item) => {
           let data = { ...item };
-
-          if (data.isNewRecord) {
-            data.rute_id = match.params.id;
-            delete data.id;
-            delete data.isNewRecord;
-            await createRecord("rute_items", data);
-          } else {
-            await updateRecord("rute_items", data);
-          }
+          data.rute_id = match.params.id;
+          delete data.id;
+          delete data.isNewRecord;
+          await createRecord("rute_items", data);
         });
       }
-      history.push('/rute')
+      history.goBack();
     } catch (e) {
       alert(e);
+    } finally {
+      setSaving(false);
     }
-    setSaving(false);
   }
 
   return (

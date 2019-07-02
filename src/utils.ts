@@ -37,11 +37,11 @@ export const getLastNumbering = async (code: string, whouse: string) => {
     })
 
     zNumber = lpad("1", 4);
-    return { id, last_count: 0, format: `${code}/${whouse}/${year}/${monthRomanize}/${zNumber}` }
+    return { id, last_count: 0, format: `${code}/${whouse}/${year.substr(2,4)}/${monthRomanize}/${zNumber}` }
   }
 
   zNumber = lpad((lastNumber.last_count + 1), 4);
-  return { ...lastNumber, format: `${code}/${whouse}/${year}/${monthRomanize}/${zNumber}` };
+  return { ...lastNumber, format: `${code}/${whouse}/${year.substr(2,4)}/${monthRomanize}/${zNumber}` };
 }
 
 export const updateLastNumbering = async (id: number, last_count: number) => {

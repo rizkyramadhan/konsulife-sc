@@ -8,6 +8,7 @@ import { withRouter } from "react-router";
 import BtnCreate from "@app/components/BtnCreate";
 import rawQuery from '@app/libs/gql/data/rawQuery';
 import global from '@app/global';
+import UISearch from '@app/libs/ui/UISearch';
 
 interface IRute {
   id: number,
@@ -17,6 +18,9 @@ interface IRute {
 
 export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const [data, setData]: any = useState<IRute[]>([]);
+  const [_data, _setData]: any = useState<IRute[]>([]);
+  const field = ["name", "description"];
+
   useEffect(() => {
     rawQuery(`{
       rute (where: {branch: {_eq: "${global.getSession().user.branch}"}}) {
@@ -26,8 +30,22 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
       }
     }`).then((res) => {
       setData([...res.rute]);
+      _setData([...res.rute]);
     });
   }, []);
+
+  const funcSearch = (value: string) => {
+    _setData([...(value ? data.filter((x: any) => {
+      let res = false;
+      for (var i = 0; i < field.length; i++) {
+        if (x[field[i]] && x[field[i]].toLowerCase().includes(value.toLowerCase())) {
+          res = true;
+          break;
+        }
+      }
+      return res
+    }) : data)])
+  }
 
   return (
     <UIContainer>
@@ -39,6 +57,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
         <BtnCreate path="/rute/form" />
       </UIHeader>
       <UIBody scroll={true}>
+        <UISearch onSearch={funcSearch}></UISearch>
         <UIList
           style={{ flex: 1 }}
           primaryKey="id"
@@ -58,7 +77,9 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
               }
             }
           }}
-          items={data}
+          items={_data.map((item: any) => ({
+            ...item,
+          }))}
         />
       </UIBody>
     </UIContainer>

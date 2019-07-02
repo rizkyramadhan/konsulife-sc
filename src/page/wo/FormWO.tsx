@@ -123,11 +123,12 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
           await createRecord("work_order_items", data);
         });
       }
-      history.push("/wo")
+      history.goBack();
     } catch (e) {
       alert(e);
+    } finally {
+      setSaving(false);
     }
-    setSaving(false);
   }
 
   return (
@@ -149,12 +150,14 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
               sublabel: "Informasi Working Order",
               value: [
                 { key: "number", label: "WO Number", size: 8, type: "field" },
-                { key: "sales_id", size: 7, component: (<SAPDropdown label="Sales" field="SAPSalesCode"
-                  where={[{
-                    field: "U_IDU_BRANCH",
-                    value: global.getSession().user.branch
-                  }]}
-                  value={data.sales_id || ""} setValue={(v, l) => { setData({ ...data, sales_id: v, sales_name: l }) }} />) },
+                {
+                  key: "sales_id", size: 7, component: (<SAPDropdown label="Sales" field="SAPSalesCode"
+                    where={[{
+                      field: "U_IDU_BRANCH",
+                      value: global.getSession().user.branch
+                    }]}
+                    value={data.sales_id || ""} setValue={(v, l) => { setData({ ...data, sales_id: v, sales_name: l }) }} />)
+                },
                 { type: "empty" },
                 {
                   key: "rute", label: "Rute", size: 5, component: (<UISelectField label="Rute" items={rute as any} value={data.rute_id || ""} setValue={(v, l) => {
@@ -227,7 +230,7 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
               Detail Items
             </UIText>
           </View>
-          <FormWOItems items={items} setItems={setItems} />
+          <FormWOItems items={items} />
         </View>
       </UIBody>
     </UIContainer>

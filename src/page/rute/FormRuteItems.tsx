@@ -8,6 +8,7 @@ import UISeparator from '@app/libs/ui/UISeparator';
 import UIJsonField from '@app/libs/ui/UIJsonField';
 import SAPDropdown from '@app/components/SAPDropdown';
 import global from '@app/global';
+import IconTrash from '@app/libs/ui/Icons/IconTrash';
 
 interface IRuteItem {
   id?: number,
@@ -102,27 +103,27 @@ const DetailComponent = ({ item, items, setItems }: any) => {
               const idx = items.findIndex((x: any) => x.id === item.pkval);
               items[idx]['customer_id'] = value;
               items[idx]["customer_name"] = label;
-              items[idx]["customer_address"] = row.MailAddres;
+              items[idx]["customer_address"] = row.item.MailAddres;
               items[idx]["customer_details"] = JSON.stringify(row);
               setItems([...items]);
             }} />)
         }
       ]}
     />
-    {/* <View style={{ padding: 5, flexDirection: "row-reverse" }}>
+    <View style={{ padding: 5, flexDirection: "row-reverse" }}>
       <Button onPress={() => {
         const idx = items.findIndex((x: any) => x.id === item.pkval);
         items.splice(idx, 1);
         setItems([...items]);
+        item.close();
       }}>
         <IconTrash width={20} height={20} color="red" />
       </Button>
-    </View> */}
+    </View>
   </View>
 }
 
 export default ({ items, setItems }: IProps) => {
-  console.log(global.session);
   return (
     <UIList
       primaryKey="id"

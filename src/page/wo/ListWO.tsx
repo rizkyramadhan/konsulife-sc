@@ -8,15 +8,26 @@ import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 import global from '@app/global';
+import UISearch from '@app/libs/ui/UISearch';
 
-interface IRute {
-  id: number,
-  name: string,
-  description: string
+interface IWO {
+  id: number
+  number: string
+  return_date: string
+  sales_details: string
+  sales_id: string
+  sales_name: string
+  visite_date: string
+  sopir: string
+  sopir_nopol: string
+  status: string
 }
 
 export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
-  const [data, setData]: any = useState<IRute[]>([]);
+  const [data, setData]: any = useState<IWO[]>([]);
+  const [_data, _setData]: any = useState<IWO[]>([]);
+  const field = ["number", "return_date", "sales_name", "visite_date", "status", "sopir", "sopir_nopol"];
+
   useEffect(() => {
     rawQuery(`{
       work_order (where: {branch: {_eq: "${global.getSession().user.branch}"}, status: {_in: ["pending", "open"]}}) {
@@ -33,8 +44,22 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
       }
     }`).then((res) => {
       setData([...res.work_order]);
+      _setData([...res.work_order]);
     });
   }, []);
+
+  const funcSearch = (value: string) => {
+    _setData([...(value ? data.filter((x: any) => {
+      let res = false;
+      for (var i = 0; i < field.length; i++) {
+        if (x[field[i]] && x[field[i]].toLowerCase().includes(value.toLowerCase())) {
+          res = true;
+          break;
+        }
+      }
+      return res
+    }) : data)])
+  }
 
   return (
     <UIContainer>
@@ -46,6 +71,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
         <BtnCreate path="/wo/form" />
       </UIHeader>
       <UIBody scroll={true}>
+        <UISearch onSearch={funcSearch}></UISearch>
         <UIList
           style={{ flex: 1 }}
           primaryKey="id"
@@ -56,7 +82,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
           fields={{
             number: {
               table: {
-                header: "No. WO"
+                header: "No. WO",
               }
             },
             sales_name: {
@@ -76,21 +102,18 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
             },
             status: {
               table: {
-                header: "Status"
+                header: "Status",
               }
             },
             visite_date: {
               table: {
-                header: "Visite"
+                header: "Visite",
               }
-            },
-            // return_date: {
-            //   table: {
-            //     header: "Return"
-            //   }
-            // }
+            }
           }}
-          items={data}
+          items={_data.map((item: any) => ({
+            ...item,
+          }))}
         />
       </UIBody>
     </UIContainer>
