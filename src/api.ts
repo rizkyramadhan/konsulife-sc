@@ -38,9 +38,25 @@ export const APISearch = async (p: APISearchProps) => {
   let cond: string = "";
   if (!!p.Condition && p.Condition.length > 0) {
     p.Condition.forEach((c: any) => {
+      let fieldArr = [];
+      let field = null; 
+      if(c.field !== undefined){
+        fieldArr = c.field.split(".");
+        if(fieldArr.length === 2)
+        {
+          field = `${fieldArr[0]}.[${fieldArr[1]}]`;
+        }
+        else
+        {
+          field = `[${fieldArr[0]}]`;
+        }
+      }
+      
+
       if (c.cond === "AND" || c.cond === "OR" || c.cond === "XOR") {
         cond += ` ${c.cond} `;
       }
+
       else if (c.cond === "IN") {
         let value: any;
         if (Array.isArray(c.value)) {
@@ -51,11 +67,11 @@ export const APISearch = async (p: APISearchProps) => {
         else {
           value = c.value;
         }
-        cond += `[${c.field}] ${c.cond} (${value})`;
+        cond += `${field} ${c.cond} (${value})`;
       }
       else {
         let val = typeof c.value == "number" ? parseInt(c.value) : `'${c.value}'`;
-        cond += `[${c.field}] ${c.cond} ${val}`;
+        cond += `${field} ${c.cond} ${val}`;
       }
     });
   }

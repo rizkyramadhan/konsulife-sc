@@ -10,6 +10,7 @@ import SAPDropdown from '@app/components/SAPDropdown';
 import UISelectField from '@app/libs/ui/UISelectField';
 import { APISearch } from '@app/api';
 import IconTrash from '@app/libs/ui/Icons/IconTrash';
+import global from '@app/global';
 
 export default ({ data, items, setItems }: any) => {
   const [uoMEntry, setUoMEntry] = useState<any>({});
@@ -166,7 +167,17 @@ export default ({ data, items, setItems }: any) => {
             field={[
               {
                 key: 'ItemCode', size: 12, label: 'Item Code', component: (
-                  <SAPDropdown label="Item Code" field="ItemCodeAll" value={(item as any).item.ItemCode} setValue={async (v, l, r) => {
+                  <SAPDropdown label="Item Code" field="Custom" customQuery={{
+                    CustomQuery: 'ItemCodeCanvas',
+                    Condition: [
+                    {
+                      field: "T1.WhsCode",
+                      cond: "=",
+                      value: global.getSession().user.warehouse_id
+                    },
+                  ]
+                  }}
+                  value={(item as any).item.ItemCode} setValue={async (v, l, r) => {
                     const idx = items.findIndex((x: any) => x.Key === item.pkval);
                     items[idx]['ItemCode'] = v;
                     items[idx]["Dscription"] = l;

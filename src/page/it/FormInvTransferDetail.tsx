@@ -9,7 +9,7 @@ import UISelectField from '@app/libs/ui/UISelectField';
 import SAPDropdown from '@app/components/SAPDropdown';
 import { APISearch } from '@app/api';
 
-export default ({ items, setItems }: any) => {
+export default ({ items, setItems, header }: any) => {
   const [uoMEntry, setUoMEntry] = useState<any>({});
   const [iUoMEntry, setIUoMEntry] = useState<any>({});
   
@@ -98,22 +98,32 @@ export default ({ items, setItems }: any) => {
                 {
                   key: 'ItemCode', size: 12, label: 'Item Code', component: (
                     <SAPDropdown label="Item Code" field="Custom" customQuery={{
-                      Table: 'OITM',
-                      Fields: ["ItemCode", "ItemName", "U_IDU_PARTNUM"],
-                      Condition: [{
-                        field: "OnHand",
-                        cond: ">",
-                        value: "0"
-                      }]
+                      CustomQuery: 'ItemCodeCanvas',
+                      Condition: [
+                      {
+                        field: "T1.WhsCode",
+                        cond: "=",
+                        value: header.Filler
+                      },
+                      {
+                        cond:"AND"
+                      },
+                      {
+                        field:"T1.OnHand",
+                        cond:">",
+                        value:"0"
+                      }
+                    ]
                     }}
                     
-                    value={(item as any).item.ItemCode} setValue={async (v, l) => {
+                    value={(item as any).item.ItemCode} setValue={async (v, l, r) => {
                       const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
+                      
                       items[idx]['ItemCode'] = v;
                       items[idx]["Dscription"] = l;
 
                       setItems([...items]);
-                      getUoM(idx, v);
+                      getUoM(idx, r.itemCode);
                     }} />)
                 },
                 {

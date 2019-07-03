@@ -228,7 +228,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
               {
                 label: "Detail items",
                 content: () => (
-                  <FormInvTransferDetail items={items} setItems={setItems} />
+                  <FormInvTransferDetail items={items} setItems={setItems} header={data} />
                 ),
                 action: <BtnAdd onPress={() => {
                   setItems([...(items as any), {
