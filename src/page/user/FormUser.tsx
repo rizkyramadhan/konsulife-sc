@@ -12,33 +12,47 @@ import UISelectField from '@app/libs/ui/UISelectField';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from "react";
 import { withRouter } from 'react-router';
+import rawQuery from '@app/libs/gql/data/rawQuery';
+import UITabs from '@app/libs/ui/UITabs';
+import UserWareHouse from './UserWareHouse';
+import BtnAdd from '@app/components/BtnAdd';
 
 export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
     const [data, setData] = useState({} as any);
+    const [itemsWhouse, setItemsWhouse] = useState([] as any);
     const [saving, setSaving] = useState(false);
-
+    const get = async () => {
+        await query("user", [
+            'area',
+            'bpgroup',
+            'branch',
+            'cash_account',
+            'fullname',
+            'id',
+            'username',
+            'transfer_account',
+            'slp_id',
+            'sales_as_customer',
+            'role',
+            'password'
+        ], { where: { id: match.params.id } }).then(res => {
+            res['password'] = '';
+            getWhouse(res.id);
+            setData(res);
+        });
+    };
+    const getWhouse = async (id: any) => {
+        await rawQuery(`{
+            user_warehouse(where: {user_id: {_eq: "${id}"}}) {
+              user_id
+              warehouse_code
+              id
+            }
+          }`, ).then(res => {
+            setItemsWhouse(res.user_warehouse)
+        })
+    }
     useEffect(() => {
-        const get = async () => {
-            await query("user", [
-                'area',
-                'bpgroup',
-                'branch',
-                'cash_account',
-                'fullname',
-                'id',
-                'warehouse_id',
-                'username',
-                'transfer_account',
-                'slp_id',
-                'sales_as_customer',
-                'role',
-                'password'
-            ], { where: { id: match.params.id } }).then(res => {
-                res['password'] = '';
-
-                setData(res);
-            });
-        };
         if (!!match.params.id) get();
     }, []);
     return (
@@ -67,6 +81,19 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                     if (!!record.password) {
                         hashPassword(record.id);
                     }
+
+                    itemsWhouse.forEach(async (item: any, idx: number) => {
+                        let n = { ...item };
+                        if (n.status && n.status == "new" && !!n.warehouse_code) {
+                            delete n.id;
+                            delete n.status;
+                            n.user_id = record.id;
+                            itemsWhouse[idx].id = await createRecord("user_warehouse", n);
+                        } else if (n.status && n.status == 'update' && !!n.warehouse_code) {
+                            delete n.status;
+                            await updateRecord("user_warehouse", n);
+                        }
+                    });
                     setSaving(false);
                 }} type={match.params.id ? "update" : "save"} />
             </UIHeader>
@@ -96,14 +123,14 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                                     key: "cash_account", size: 12, label: "Cash Account", component: (
                                         <SAPDropdown label="Cash Account" field="ChartOfAccount" value={(data as any).cash_account} setValue={(v) => { setData({ ...data, cash_account: v }) }} />)
                                 },
-                                {
-                                    key: "warehouse_id", size: 12, label: "Warehouse Code", component: (
-                                        <SAPDropdown label="Warehouse Code" field="Custom" customQuery={{
-                                            Table: "OWHS",
-                                            Fields: ["WhsCode"],
-                                            Page: 1
-                                        }} value={(data as any).warehouse_id} setValue={(v) => { setData({ ...data, warehouse_id: v }) }} />)
-                                },
+                                // {
+                                //     key: "warehouse_id", size: 12, label: "Warehouse Code", component: (
+                                //         <SAPDropdown label="Warehouse Code" field="Custom" customQuery={{
+                                //             Table: "OWHS",
+                                //             Fields: ["WhsCode"],
+                                //             Page: 1
+                                //         }} value={(data as any).warehouse_id} setValue={(v) => { setData({ ...data, warehouse_id: v }) }} />)
+                                // },
                                 // { key: "sap_id", size: 4, label: "SAP Code" },
                                 {
                                     key: "sales_as_customer", size: 12, label: "Sales As Customer", component: (
@@ -136,6 +163,23 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                     setValue={(value: any, key: any) => {
                         (data as any)[key] = value;
                     }}
+                />
+                <UITabs
+                    tabs={[
+                        {
+                            label: "Warehouse",
+                            content: <UserWareHouse items={itemsWhouse} setItems={setItemsWhouse} />,
+                            action: <BtnAdd
+                                onPress={() => {
+                                    setItemsWhouse([...(itemsWhouse as any), {
+                                        id: new Date().getTime(),
+                                        user_id: "",
+                                        warehouse_code: "",
+                                        status: "new"
+                                    }])
+                                }} />
+                        }
+                    ]}
                 />
             </UIBody>
         </UIContainer>
