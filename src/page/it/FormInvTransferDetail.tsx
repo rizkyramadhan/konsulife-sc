@@ -1,5 +1,5 @@
 import UIList from "@app/libs/ui/UIList";
-import React from "react";
+import React, { useState } from "react";
 import { View, Button } from 'reactxp';
 import { MainStyle } from '@app/config';
 import UIText from '@app/libs/ui/UIText';
@@ -7,8 +7,40 @@ import UIJsonField from '@app/libs/ui/UIJsonField';
 import UISeparator from '@app/libs/ui/UISeparator';
 import UISelectField from '@app/libs/ui/UISelectField';
 import SAPDropdown from '@app/components/SAPDropdown';
+import { APISearch } from '@app/api';
 
 export default ({ items, setItems }: any) => {
+  const [uoMEntry, setUoMEntry] = useState<any>({});
+  const [iUoMEntry, setIUoMEntry] = useState<any>({});
+  
+  const getUoM = (idx: any, value: any) => {
+    APISearch({
+      CustomQuery: `GetUom,${value}`,
+    }).then((res: any) => {
+      // jika uom group entry = -1 maka set uom entry = manual
+      // jika bukan maka set uom entry sesuai sales uom entry
+      items[idx]["UseBaseUn"] = "N";
+      if (res.UgpEntry == -1) {
+        items[idx]["UoMEntry"] = -1;
+        items[idx]["UoMName"] = "Manual";
+      } else {
+        items[idx]["UoMEntry"] = res.IUoMEntry;
+        items[idx]["UoMName"] = res.IUoMCode;
+      }
+      setItems([...items]);
+
+      // group list uom entry berdasarkan item code karena uom entry setiap item code berbeda
+      uoMEntry[value] = res.Lines.map((d: any) => {
+        return { value: d.UomEntry, label: d.UomCode }
+      });
+      setUoMEntry({ ...uoMEntry });
+      
+      // group list sales uom berdasarkan item code karena sales uom setiap item berbeda 
+      iUoMEntry[value] = res.IUoMEntry;
+      setIUoMEntry({ ...iUoMEntry });
+    });
+  };
+
   return (
     <UIList
       selection="detail"
@@ -79,35 +111,29 @@ export default ({ items, setItems }: any) => {
                       const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
                       items[idx]['ItemCode'] = v;
                       items[idx]["Dscription"] = l;
+
                       setItems([...items]);
+                      getUoM(idx, v);
                     }} />)
                 },
-                {
-                  key: 'UseBaseUn', size: 12, label: 'Inventory UoM', component: (
-                    <UISelectField
-                      label="Inventory UoM"
-                      items={[
-                        { label: "Yes", value: "Y" },
-                        { label: "No", value: "N" }
-                      ]}
-                      value={(item as any).item.UseBaseUn}
-                      setValue={v => {
-                        const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
-                        items[idx]['UseBaseUn'] = v;
-                        setItems([...items]);
-                      }}
-                    />
-                  )
-                },
-                { key: 'Quantity', size: 12, label: "Quantity" },
                 {
                   key: 'UomEntry', size: 12, label: 'Uom', component: (
-                    <SAPDropdown label="UoM Code" field="UomCode" value={(item as any).item.UomEntry} setValue={(v) => {
-                      const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
-                      items[idx]['UomEntry'] = v;
+                    <UISelectField label="UoMCode" items={uoMEntry[(item as any).item.ItemCode] || []} value={(item as any).item.UoMEntry} setValue={(v, l) => {
+                      const idx = items.findIndex((x: any) => x.Key === item.pkval);
+                      items[idx]['UoMEntry'] = v;
+                      items[idx]['UoMName'] = l;
+  
+                      // jika uom entry yang dipilih merupakan default inv uom, maka set base un = Y
+                      let itemCode = (item as any).item.ItemCode;
+                      if (v === iUoMEntry[itemCode]) {
+                        items[idx]['UseBaseUn'] = 'Y';
+                      } else {
+                        items[idx]['UseBaseUn'] = 'N';
+                      }
                       setItems([...items]);
                     }} />)
                 },
+                { key: 'Quantity', size: 12, label: "Quantity" },
                 { key: 'SerialNum', size: 12, label: "Serial Number" },
               ]}
             />
@@ -133,14 +159,14 @@ export default ({ items, setItems }: any) => {
             header: "Inventory UoM"
           }
         },
+        UoMName: {
+          table: {
+            header: "UoM Name"
+          }
+        },
         Quantity: {
           table: {
             header: "Quantity"
-          }
-        },
-        UomEntry: {
-          table: {
-            header: "UoM Code"
           }
         },
         SerialNum: {

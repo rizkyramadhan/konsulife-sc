@@ -168,7 +168,6 @@ export default ({ data, items, setItems }: any) => {
                 key: 'ItemCode', size: 12, label: 'Item Code', component: (
                   <SAPDropdown label="Item Code" field="ItemCodeAll" value={(item as any).item.ItemCode} setValue={async (v, l, r) => {
                     const idx = items.findIndex((x: any) => x.Key === item.pkval);
-                    console.log(r);
                     items[idx]['ItemCode'] = v;
                     items[idx]["Dscription"] = l;
                     items[idx]["U_IDU_PARTNUM"] = r.item.U_IDU_PARTNUM;
@@ -179,53 +178,8 @@ export default ({ data, items, setItems }: any) => {
                     getUoM(idx, v);
                   }} />)
               },
-              // {
-              //   key: 'UseBaseUn', size: 12, label: 'Inventory UoM', component: (
-              //     <UISelectField
-              //       label="Inventory UoM"
-              //       items={[
-              //         { label: "Yes", value: "Y" },
-              //         { label: "No", value: "N" }
-              //       ]}
-              //       value={(item as any).item.UseBaseUn}
-              //       setValue={v => {
-              //         const idx = items.findIndex((x: any) => x.Key === item.pkval);
-              //         items[idx]['UseBaseUn'] = v;
-              //         setItems([...items]);
-              //       }}
-              //     />
-              //   )
-              // },
-              // {
-              //   key: 'WhsCode', size: 12, label: 'Warehouse', component: (
-              //     <SAPDropdown label="Warehouse" field="Custom" customQuery={{
-              //       Table: 'OWHS',
-              //       Fields: ["WhsCode", "WhsName"],
-              //       Condition: [{
-              //         field: "U_IDU_WHSETYPE",
-              //         cond: "=",
-              //         value: "Canvassing"
-              //       }, {
-              //         cond: "AND"
-              //       }, {
-              //         field: 'U_BRANCH',
-              //         cond: "=",
-              //         value: global.getSession().user.branch
-              //       }]
-              //     }} value={(item as any).item.WhsCode} setValue={(v) => {
-              //       const idx = items.findIndex((x: any) => x.Key === item.pkval);
-              //       items[idx]['WhsCode'] = v;
-              //       setItems([...items]);
-              //     }} />)
-              // },
               {
                 key: 'UomEntry', size: 12, label: 'Uom', component: (
-                  // <SAPDropdown label="UoM" field="UomCode" value={(item as any).item.UomEntry} setValue={(v, l) => {
-                  //   const idx = items.findIndex((x: any) => x.Key === item.pkval);
-                  //   items[idx]['UomEntry'] = v;
-                  //   items[idx]['UoMName'] = l;
-                  //   setItems([...items]);
-                  // }} />
                   <UISelectField label="UoMCode" items={uoMEntry[(item as any).item.ItemCode] || []} value={(item as any).item.UoMEntry} setValue={(v, l) => {
                     const idx = items.findIndex((x: any) => x.Key === item.pkval);
                     items[idx]['UoMEntry'] = v;

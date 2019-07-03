@@ -180,23 +180,6 @@ export default ({ data, items, setItems }: any) => {
                       getUoM(idx, v);
                     }} />)
               },
-              // {
-              //   key: 'UseBaseUn', size: 12, label: 'Inventory UoM', component: (
-              //     <UISelectField
-              //       label="Inventory UoM"
-              //       items={[
-              //         { label: "Yes", value: "Y" },
-              //         { label: "No", value: "N" }
-              //       ]}
-              //       value={(item as any).item.UseBaseUn}
-              //       setValue={v => {
-              //         const idx = items.findIndex((x: any) => x.Key === item.pkval);
-              //         items[idx]['UseBaseUn'] = v;
-              //         setItems([...items]);
-              //       }}
-              //     />
-              //   )
-              // },
               {
                 key: 'WhsCode', size: 12, label: 'Warehouse', component: (
                   <SAPDropdown label="Warehouse" field="Custom" customQuery={{
@@ -211,12 +194,6 @@ export default ({ data, items, setItems }: any) => {
               },
               {
                 key: 'UoMEntry', size: 12, label: 'Uom', component: () => {
-                  // <SAPDropdown label="UoM" field="UomCode" value={(item as any).item.UoMEntry} setValue={(v, l) => {
-                  //   const idx = items.findIndex((x: any) => x.Key === item.pkval);
-                  //   items[idx]['UoMEntry'] = v;
-                  //   items[idx]['UoMName'] = l;
-                  //   setItems([...items]);
-                  // }} />
                   return <UISelectField label="UoMCode" items={uoMEntry[(item as any).item.ItemCode] || []} value={(item as any).item.UoMEntry} setValue={(v, l) => {
                     const idx = items.findIndex((x: any) => x.Key === item.pkval);
                     items[idx]['UoMEntry'] = v;
