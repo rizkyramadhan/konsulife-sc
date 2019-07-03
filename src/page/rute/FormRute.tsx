@@ -76,12 +76,12 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
     setSaving(true);
     try {
       //  cek rute
-      let checkRute = await rawQuery(`{
-        rute(where: {_and:{name: {_eq: "${data.name}"}, branch: {_eq: "${global.getSession().user.branch}"}}}) {
-          name
-        }
-      }`);
-      if (checkRute.rute.length > 0) return alert("Nama rute sudah digunakan!");
+      // let checkRute = await rawQuery(`{
+      //   rute(where: {_and:{name: {_eq: "${data.name}"}, branch: {_eq: "${global.getSession().user.branch}"}}}) {
+      //     name
+      //   }
+      // }`);
+      // if (checkRute.rute.length > 0) return alert("Nama rute sudah digunakan!");
 
       if (!data.id) {
         data.branch = global.getSession().user.branch || "";

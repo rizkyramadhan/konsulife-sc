@@ -31,9 +31,14 @@ export default ({ items }: any) => {
             header: "Quantity"
           }
         },
-        PriceBefDi: {
+        Price: {
           table: {
             header: "Unit Price"
+          }
+        },
+        LineTotal: {
+          table: {
+            header: "Total"
           }
         },
       }}

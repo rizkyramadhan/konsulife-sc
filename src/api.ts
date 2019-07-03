@@ -187,7 +187,7 @@ export const SAPFieldMap = {
   } as APISearchProps,
   CustomerCode: {
     Table: "OCRD",
-    Fields: ["CardCode", "CardName", "Currency", "GroupNum"],
+    Fields: ["CardCode", "CardName", "Currency", "GroupNum","CntctPrsn"],
     Condition: [{
       field: "CardType",
       cond: "IN",

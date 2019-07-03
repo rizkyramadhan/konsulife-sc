@@ -81,7 +81,7 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
         "ShipDate",
         "OcrCode",
         "OcrCode2",
-        "PriceBefDi",
+        "Price",
         "DiscPrcnt",
         "TaxCode"
       ],
@@ -98,8 +98,9 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
         item.BaseLine = item.LineNum;
         item.BaseEntry = item.DocEntry;
         item.Quantity = parseInt(item.Quantity);
-        item.PriceBefDi = parseFloat(item.PriceBefDi).toFixed(2);
-
+        item.Price = parseFloat(item.Price).toFixed(2); 
+        item.LineTotal = item.Quantity * item.Price;
+        
         delete item.LineNum;
         delete item.DocEntry;
       });

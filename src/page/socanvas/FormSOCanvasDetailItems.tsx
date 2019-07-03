@@ -175,6 +175,14 @@ export default ({ data, items, setItems }: any) => {
                       cond: "=",
                       value: global.getSession().user.warehouse_id
                     },
+                    {
+                      cond:"AND"
+                    },
+                    {
+                      field:"T1.OnHand",
+                      cond:">",
+                      value:"0"
+                    }
                   ]
                   }}
                   value={(item as any).item.ItemCode} setValue={async (v, l, r) => {

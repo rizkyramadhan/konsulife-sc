@@ -27,7 +27,6 @@ const initData = {
   DocEntry: "",
   CardName: "",
   CardCode: "",
-  U_IDU_ITR_INTNUM: "",
   Address: "",
   Filler: "",
   ToWhsCode: "",
@@ -36,7 +35,7 @@ const initData = {
   U_BRANCH: global.session.user.branch,
   U_USERID: global.session.user.id,
   U_GENERATED: "W",
-  U_WO: "",
+  U_IDU_IT_TRANSCODE: "",
   U_IDU_IT_INTNUM: "",
   U_IDU_CONTNUM: "",
   U_IDU_NOSEAL: "",
@@ -80,7 +79,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
           Dscription: val.Dscription,
           UseBaseUn: val.UseBaseUn,
           Quantity: val.Quantity,
-          UomEntry: val.UomEntry,
+          UoMEntry: val.UoMEntry,
           WhsCode: val.WhsCode,
           SerialNum: val.SerialNum,
         });
@@ -88,6 +87,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
       await APIPost('InventoryTransfer', {
         ...data,
         U_IDU_IT_INTNUM: number.format,
+        U_IDU_IT_TRANSCODE:"PGK-T",
         SlpCode: global.session.user.slp_code !== "" && global.session.user.slp_code !== null ? global.session.user.slp_code : -1,
         U_BRANCH: global.session.user.branch,
         U_USERID: global.session.user.username,
@@ -237,7 +237,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
                     Dscription: "",
                     UseBaseUn: "",
                     Quantity: 0,
-                    UomEntry: "",
+                    UoMEntry: "",
                     WhsCode: data.Filler,
                     SerialNum: "",
                   }])

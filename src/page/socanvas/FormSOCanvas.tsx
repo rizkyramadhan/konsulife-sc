@@ -1,4 +1,4 @@
-import { APIPost } from '@app/api';
+import { APIPost} from '@app/api';
 import BtnAdd from '@app/components/BtnAdd';
 import BtnSave from '@app/components/BtnSave';
 import SAPDropdown from '@app/components/SAPDropdown';
@@ -71,10 +71,10 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
     if (saving) return;
     setSaving(true);
     const Lines_IT = items.map(d => {
-      d.ShipDate = data.DocDate;
+      d.ShipDate = data.DocDueDate;
       d.OcrCode = global.session.user.area;
       d.OcrCode2 = global.session.user.branch;
-
+      
       delete d.LineNum;
       return d;
     });
@@ -136,10 +136,10 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
                 },
                 {
                   key: "CntctCode", label: "Contact Person", size: 7, component: (
-                    <SAPDropdown label="Contact Person" field="Custom" itemField={{ value: "CardCode", label: "Name" }}
+                    <SAPDropdown label="Contact Person" field="Custom" itemField={{ value: "CntctCode", label: "Name" }}
                       customQuery={{
                         Table: "OCPR",
-                        Fields: ["CardCode", "Name"],
+                        Fields: ["CntctCode", "Name"],
                         Condition: [{ field: "CardCode", cond: "=", value: data.CardCode }]
                       }} value={(data as any).CntctCode} setValue={(v) => { setData({ ...data, CntctCode: v }) }}
                       mustInit={false} refresh={qCP} setRefresh={setQCP} />)

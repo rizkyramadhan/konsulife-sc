@@ -14,6 +14,7 @@ export default ({ items, setItems, header }: any) => {
   const [iUoMEntry, setIUoMEntry] = useState<any>({});
   
   const getUoM = (idx: any, value: any) => {
+    console.log(idx,value);
     APISearch({
       CustomQuery: `GetUom,${value}`,
     }).then((res: any) => {
@@ -46,8 +47,9 @@ export default ({ items, setItems, header }: any) => {
       selection="detail"
       detailComponent={(item) => {
         const setValue = (val: any, key: string) => {
-          const idx = items.findIndex((x: any) => x.No === item.item.No);
+          const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
           items[idx][key] = val;
+          console.log(item,val,key,idx);
           setItems(items);
         };
         return (
@@ -116,23 +118,23 @@ export default ({ items, setItems, header }: any) => {
                     ]
                     }}
                     
-                    value={(item as any).item.ItemCode} setValue={async (v, l, r) => {
+                    value={(item as any).item.ItemCode} setValue={async (v, l) => {
                       const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
                       
                       items[idx]['ItemCode'] = v;
                       items[idx]["Dscription"] = l;
 
                       setItems([...items]);
-                      getUoM(idx, r.itemCode);
+                      getUoM(idx, v);
                     }} />)
                 },
                 {
                   key: 'UomEntry', size: 12, label: 'Uom', component: (
                     <UISelectField label="UoMCode" items={uoMEntry[(item as any).item.ItemCode] || []} value={(item as any).item.UoMEntry} setValue={(v, l) => {
-                      const idx = items.findIndex((x: any) => x.Key === item.pkval);
+                      const idx = items.findIndex((x: any) => x.LineNum === item.pkval);
                       items[idx]['UoMEntry'] = v;
                       items[idx]['UoMName'] = l;
-  
+                      console.log(items);
                       // jika uom entry yang dipilih merupakan default inv uom, maka set base un = Y
                       let itemCode = (item as any).item.ItemCode;
                       if (v === iUoMEntry[itemCode]) {

@@ -60,7 +60,7 @@ const BtnReturn = withRouter(({ history }: any) => {
   );
 });
 
-export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
+export default withRouter(observer(({ showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
   const [_data, _setData] = useState([]);
   const field = ["DocNum", "U_IDU_SO_INTNUM", "CardName", "CardCode", "DocDate", "DocDueDate"];
@@ -80,7 +80,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   useEffect(() => {
     let query: APISearchProps = {
       Table: "OWTR",
-      Fields: ["DocNum", "DocEntry", "CardName", "CardCode", "U_IDU_ITR_INTNUM", "DocDate"],
+      Fields: ["DocNum", "DocEntry", "CardName", "CardCode", "U_IDU_IT_INTNUM", "DocDate"],
       Condition: [
         {
           field: "DocStatus",
@@ -115,10 +115,9 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
         <UIList
           style={{ flex: 1 }}
           primaryKey="DocNum"
-          selection="single"
-          onSelect={(item) => { history.push('/it/form/' + item.DocEntry) }}
+          selection="detail"
           fields={{
-            U_IDU_ITR_INTNUM: {
+            U_IDU_IT_INTNUM: {
               table: {
                 header: 'Request No.'
               }

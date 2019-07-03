@@ -65,7 +65,7 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
 
   useEffect(() => {
     if (match.params.id) {
-      query("work_order", ["id", "number", "visite_date", "return_date", "area", "branch", "sopir", "sopir_sim", "sopir_nopol", "sales_id", "sales_name", "rute_id", "rute"], { where: { id: match.params.id } }).then((res) => {
+      query("work_order", ["id", "number", "visite_date", "return_date", "area", "branch", "sopir", "sopir_sim", "sopir_nopol", "sales_id", "sales_name", "status","rute_id", "rute"], { where: { id: match.params.id } }).then((res) => {
         setData(res);
         rawQuery(`{
           work_order_items(where: {work_order_id: {_eq: ${match.params.id}}}) {
@@ -106,7 +106,6 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
         data.area = global.getSession().user.area || "";
         let id = await createRecord("work_order", data);
         items.forEach(async (item: any) => {
-          delete item.id;
           let data = { ...item };
           data.work_order_id = id;
           await createRecord("work_order_items", data);
@@ -117,7 +116,6 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
         await deleteRecord("work_order_items", { work_order_id: match.params.id }, { primaryKey: "work_order_id" })
 
         items.forEach(async (item: any) => {
-          delete item.id;
           let data = { ...item };
           data.work_order_id = match.params.id;
           await createRecord("work_order_items", data);
