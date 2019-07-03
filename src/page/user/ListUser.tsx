@@ -1,5 +1,4 @@
 import BtnCreate from '@app/components/BtnCreate';
-import global from '@app/global';
 import rawQuery from '@app/libs/gql/data/rawQuery';
 import UIBody from '@app/libs/ui/UIBody';
 import UIContainer from '@app/libs/ui/UIContainer';
@@ -9,34 +8,12 @@ import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from "react";
 import { withRouter } from 'react-router';
 
-// const BtnCreate = withRouter(({ history }: any) => {
-//     return (
-//         <UIButton
-//             size="small"
-//             color="primary"
-//             onPress={() => {
-//                 history.push("/user/form");
-//             }}
-//             style={{
-//                 display: "flex",
-//                 flexDirection: "row",
-//                 justifyContent: "flex-end"
-//             }}
-//         >
-//             <IconAdd color="#fff" />
-//             {isSize(["md", "lg"]) && (
-//                 <UIText style={{ color: "#fff" }}>Create</UIText>
-//             )}
-//         </UIButton>
-//     );
-// });
-
 export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
     const [data, setData] = useState([]);
     useEffect(() => {
         const getUser = async () => {
             await rawQuery(`{
-                user(where: {branch: {_eq: "${global.session.user.branch}"}}) {
+                user{
                   bpgroup
                   fullname
                   id

@@ -32,6 +32,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
             'username',
             'transfer_account',
             'slp_id',
+            'warehouse_id',
             'sales_as_customer',
             'role',
             'password'
@@ -97,7 +98,7 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                     setSaving(false);
                 }} type={match.params.id ? "update" : "save"} />
             </UIHeader>
-            <UIBody>
+            <UIBody scroll={true}>
                 <UIJsonField
                     items={data}
                     field={[
@@ -123,14 +124,14 @@ export default withRouter(observer(({ match, showSidebar, sidebar }: any) => {
                                     key: "cash_account", size: 12, label: "Cash Account", component: (
                                         <SAPDropdown label="Cash Account" field="ChartOfAccount" value={(data as any).cash_account} setValue={(v) => { setData({ ...data, cash_account: v }) }} />)
                                 },
-                                // {
-                                //     key: "warehouse_id", size: 12, label: "Warehouse Code", component: (
-                                //         <SAPDropdown label="Warehouse Code" field="Custom" customQuery={{
-                                //             Table: "OWHS",
-                                //             Fields: ["WhsCode"],
-                                //             Page: 1
-                                //         }} value={(data as any).warehouse_id} setValue={(v) => { setData({ ...data, warehouse_id: v }) }} />)
-                                // },
+                                {
+                                    key: "warehouse_id", size: 12, label: "Warehouse Canvas", component: (
+                                        <SAPDropdown label="Warehouse Canvas" field="Custom" customQuery={{
+                                            Table: "OWHS",
+                                            Fields: ["WhsCode"],
+                                            Page: 1
+                                        }} value={(data as any).warehouse_id} setValue={(v) => { setData({ ...data, warehouse_id: v }) }} />)
+                                },
                                 // { key: "sap_id", size: 4, label: "SAP Code" },
                                 {
                                     key: "sales_as_customer", size: 12, label: "Sales As Customer", component: (
