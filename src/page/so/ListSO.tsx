@@ -15,6 +15,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
   const [_data, _setData] = useState([]);
   const field = ["DocNum", "DocEntry", "U_IDU_SO_INTNUM", "CardName", "CardCode", "DocDate", "DocDueDate"];
+  
   const funcSearch = (value: string) => {
     _setData([...(value ? data.filter((x: any) => {
       let res = false;
@@ -37,7 +38,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
     }
 
     let query: APISearchProps = {
-      Table: "ODRF",
+      Table: "ORDR",
       Fields: field,
       Condition: [{
         field: "DocStatus",
@@ -87,6 +88,11 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
             DocDate: {
               table: {
                 header: "Posting Date"
+              }
+            },
+            DocDueDate: {
+              table: {
+                header: "Delivery Date"
               }
             }
           }}

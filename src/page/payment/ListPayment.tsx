@@ -60,27 +60,10 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
       </UIHeader>
       <UIBody>
         <UISearch onSearch={funcSearch}></UISearch>
-        {/* <UIFilter
-          filed={[
-            { key: "CardCode", size: 3, label: "BP Code" },
-            { key: "DocDate", size: 3, type: 'date', label: "Posting Date" }
-          ]}
-          items={{ CardCode: "", CardName: "" }}
-          setValue={(value: any, key: any) => {
-            let filterField = [...filter];
-            let idx = filterField.findIndex(f => f.field === key);
-            if (idx === -1) {
-              if (filterField.length > 0) filterField.push({ cond: "AND" })
-              filterField.push({ field: key, cond: "=", value: value });
-            } else {
-              filterField[idx].value = value;
-            }
-            setFilter([...filterField]);
-            filterSearch(filterField);
-          }} /> */}
         <UIList
           style={{ flex: 1 }}
           primaryKey="DocEntry"
+          selection="detail"
           fields={{
             U_IDU_PAYNUM: {
               table: {

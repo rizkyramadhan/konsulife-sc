@@ -10,34 +10,6 @@ import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 
 let selectedItems: any[];
-// const BtnCopy = withRouter(({ history }: any) => {
-//   return (
-//     <UIButton
-//       size="small"
-//       color="success"
-//       onPress={() => {
-//         if (selectedItems !== undefined && selectedItems.length > 0) {
-//           let key = selectedItems.join("|");
-//           history.push("/ar-invoice-to/form/" + btoa(key));
-//         }
-//         else {
-//           alert("Please Select DO!");
-//         }
-
-//       }}
-//       style={{
-//         display: "flex",
-//         flexDirection: "row",
-//         justifyContent: "flex-end"
-//       }}
-//     >
-//       <IconCopy color="#fff" />
-//       {isSize(["md", "lg"]) && (
-//         <UIText style={{ color: "#fff" }}>Copy DO</UIText>
-//       )}
-//     </UIButton>
-//   );
-// });
 
 export default withRouter(observer(({ match, history, showSidebar, sidebar }: any) => {
   const [data, setData] = useState([]);
@@ -60,7 +32,7 @@ export default withRouter(observer(({ match, history, showSidebar, sidebar }: an
   useEffect(() => {
     let query: APISearchProps = {
       Table: "ODLN",
-      Fields: ["DocEntry", "CardName", "CardCode", "U_IDU_SO_INTNUM", "NumAtCard", "DocDate"],
+      Fields: ["DocEntry", "CardName", "CardCode", "U_IDU_SO_INTNUM","U_IDU_DO_INTNUM", "NumAtCard", "DocDate"],
       Condition: [{
         field: "DocStatus",
         cond: "=",
@@ -122,6 +94,11 @@ export default withRouter(observer(({ match, history, showSidebar, sidebar }: an
             U_IDU_SO_INTNUM: {
               table: {
                 header: 'SO No.'
+              }
+            },
+            U_IDU_DO_INTNUM:{
+              table:{
+                header: "DO No."
               }
             },
             NumAtCard: {

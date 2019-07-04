@@ -6,7 +6,7 @@ import UIContainer from '@app/libs/ui/UIContainer';
 import UIHeader from '@app/libs/ui/UIHeader';
 import UIJsonField from '@app/libs/ui/UIJsonField';
 import UIText from '@app/libs/ui/UIText';
-import { getLastNumbering, updateLastNumbering, lpad } from '@app/utils';
+import { /*getLastNumbering, updateLastNumbering,*/ lpad } from '@app/utils';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from "react";
 import { withRouter } from 'react-router';
@@ -35,6 +35,7 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
         "DocCur",
         "DocRate",
         "U_IDU_SO_INTNUM",
+        "U_IDU_DO_INTNUM",
         "GroupNum",
         "SlpCode",
         "CntctCode",
@@ -124,13 +125,13 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
   const save = async () => {
     setSaving(true);
     try {
-      let number: any = await getLastNumbering("INV", (item[0] as any).WhsCode);
-      (data as any)['U_IDU_SI_INTNUM'] = number.format;
+      //let number: any = await getLastNumbering("INV", (item[0] as any).WhsCode);
+      //(data as any)['U_IDU_SI_INTNUM'] = number.format;
       (data as any)['U_IDU_SI_TRANSCODE'] = "INV";
       await APIPost('ARInvoice', {
         ...data, Lines: item,
       });
-      updateLastNumbering(number.id, number.last_count + 1);
+      //updateLastNumbering(number.id, number.last_count + 1);
       history.push("/ar-invoice")
     }
     catch (e) {

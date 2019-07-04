@@ -13,7 +13,7 @@ const SessionUser = types.model({
   sales_as_customer: types.maybeNull(types.string),
   cash_account: types.maybeNull(types.string),
   transfer_account: types.maybeNull(types.string),
-  slp_code: types.maybeNull(types.string)
+  slp_id: types.maybeNull(types.string)
 });
 
 const Session = types.model({
@@ -76,7 +76,7 @@ const DefaultSession = {
     sales_as_customer: "",
     cash_account: "",
     transfer_account: "",
-    slp_code: ""
+    slp_id: ""
   }
 };
 

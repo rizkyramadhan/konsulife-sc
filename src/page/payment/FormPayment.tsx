@@ -31,9 +31,9 @@ const defData = {
   U_Remark: "",
   U_SONUM: "",
   U_IDU_PAYNUM: "",
-  U_USERID: global.session.user.id,
+  U_USERID: global.session.user.username,
   U_GENERATED: "W",
-  U_BRANCH: "",
+  U_BRANCH: global.session.user.branch,
   U_WONUM: ""
 
 }
@@ -49,9 +49,15 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
     try {
 
       let number: any = await getLastNumbering("TP", global.getSession().user.branch || '');
-      await APIPost('ARInvoice', { ...data, U_IDU_PAYNUM: number.format, U_IDU_PAY_TRANSCODE:"TP" });
+      await APIPost('IncomingPayment', { ...data, 
+        U_IDU_PAYNUM: number.format, 
+        U_IDU_PAY_TRANSCODE:"TP",
+        U_USERID: global.session.user.username,
+        U_GENERATED: "W",
+        U_BRANCH: global.session.user.branch,
+       });
       updateLastNumbering(number.id, number.last_count + 1);
-      history.push("/payment-receipt/")
+      history.goBack();
     }
     catch (e) {
       alert(e.Message);
@@ -80,11 +86,6 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
         field: "ObjType",
         cond: "=",
         value: 17
-      },
-      { cond: "AND" }, {
-        field: "U_IDU_ISCANVAS",
-        cond: "=",
-        value: "Y"
       }, ...cond]
     };
 

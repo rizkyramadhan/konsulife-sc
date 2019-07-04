@@ -6,7 +6,7 @@ import UIContainer from '@app/libs/ui/UIContainer';
 import UIHeader from '@app/libs/ui/UIHeader';
 import UIJsonField from '@app/libs/ui/UIJsonField';
 import UITabs from '@app/libs/ui/UITabs';
-import { getLastNumbering, updateLastNumbering, lpad } from '@app/utils';
+import { /*getLastNumbering, updateLastNumbering,*/ lpad } from '@app/utils';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from "react";
 import { withRouter } from 'react-router';
@@ -116,6 +116,11 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
         item.BaseType = "15";
         item.BaseLine = item.LineNum;
         item.BaseEntry = item.DocEntry;
+        item.Quantity = parseInt(item.Quantity);
+        item.PriceBefDi = parseFloat(item.PriceBefDi).toFixed(2);
+
+        delete item.LineNum;
+        delete item.DocEntry;
       });
       setItem(res);
     })
@@ -134,14 +139,14 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
         return res;
       });
 
-      let number: any = await getLastNumbering("INV", (item[0] as any).WhsCode);
-      (data as any)['U_IDU_SI_INTNUM'] = number.format;
+      //let number: any = await getLastNumbering("INV", (item[0] as any).WhsCode);
+      //(data as any)['U_IDU_SI_INTNUM'] = number.format;
       (data as any)['U_IDU_SI_TRANSCODE'] = "INV";
       await APIPost('ARInvoice', {
         ...data, Lines: Lines,
       });
-      updateLastNumbering(number.id, number.last_count + 1);
-      history.push("/ar-invoice-to")
+      //updateLastNumbering(number.id, number.last_count + 1);
+      history.goBack();
     }
     catch (e) {
       alert(e.Message);
@@ -185,18 +190,19 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
                   key: "U_IDU_SO_INTNUM",
                   type: "field",
                   label: "SO Number",
-                  size: 8
+                  size: 10
                 },
+                { type: "empty", size: 2 },
                 {
                   key: "U_IDU_DO_INTNUM",
                   type: "field",
                   label: "DO Number",
-                  size: 8
+                  size: 10
                 },
-                { type: "empty", size: 4 },
-                { key: "DocDate", size: 4, type: "date", label: "Posting Date", options: { pastDate: true } },
-                { key: "DocDueDate", size: 4, type: "date", label: "Delivery Date", options: { pastDate: true } },
-                { key: "U_IDU_FP", size: 8, label: "Faktur Pajak" },
+                { type: "empty", size: 2 },
+                { key: "DocDate", size: 5, type: "date", label: "Posting Date", options: { pastDate: true } },
+                { key: "DocDueDate", size: 5, type: "date", label: "Delivery Date", options: { pastDate: true } },
+                { key: "U_IDU_FP", size: 10, label: "Faktur Pajak" },
               ]
             },
             {

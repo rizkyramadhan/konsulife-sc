@@ -55,7 +55,7 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
         "Comments",
         "U_BRANCH",
         "U_USERID",
-        "U_GENERATED"
+        "U_GENERATED",
       ],
       Condition: [{
         field: "DocEntry",
@@ -117,6 +117,7 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
         item.BaseLine = item.LineNum;
         item.BaseEntry = item.DocEntry;
         item.Quantity = parseInt(item.OpenQty);
+
         delete item.ObjType;
         delete item.LineNum;
         delete item.DocEntry;
@@ -147,11 +148,11 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
         "Address2": data.Address2,
         "Address": data.Address,
         "Comments": data.Comments,
-        "U_IDU_CONTNUM": data.U_IDU_CONTNUM,
-        "U_IDU_NOSEAL": data.U_IDU_NOSEAL,
-        "U_IDU_NOPL": data.U_IDU_NOPL,
-        "U_IDU_NOPOL": data.U_IDU_NOPOL,
-        "U_IDU_DRIVER": data.U_IDU_DRIVER,
+        "U_IDU_CONTNUM": data.U_IDU_CONTNUM||"",
+        "U_IDU_NOSEAL": data.U_IDU_NOSEAL||"",
+        "U_IDU_NOPL": data.U_IDU_NOPL||"",
+        "U_IDU_NOPOL": data.U_IDU_NOPOL||"",
+        "U_IDU_DRIVER": data.U_IDU_DRIVER||"",
         "U_BRANCH": global.session.user.branch,
         "U_USERID": global.session.user.username,
         "U_GENERATED": "W"
@@ -167,6 +168,7 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
           "U_IDU_PARTNUM": d.U_IDU_PARTNUM,
           "UseBaseUn": d.UseBaseUn,
           "Quantity": d.Quantity,
+          "UomCode": d.UomCode,
           "UomEntry": d.UomEntry,
           "WhsCode": d.WhsCode,
           "ShipDate": d.ShipDate,
@@ -176,7 +178,7 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
           "DiscPrcnt": d.DiscPrcnt,
           "TaxCode": d.TaxCode
         }
-      })
+      });
 
       let number: any = await getLastNumbering("DO", l[0].WhsCode);
       (d as any)['U_IDU_DO_INTNUM'] = number.format;

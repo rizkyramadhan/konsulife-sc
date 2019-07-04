@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 interface SAPDropdownProps extends UIProps {
   value: string | number;
   setValue: (value: any, label?: any, row?: any) => any;
-  field: 'WarehouseCodeBranch' | 'SalesAsEmployee' | 'OcrCode' | 'OcrCode2' | 'Series' | 'State' | 'BPGroup' | 'Currency' | 'CustomerCode' | 'PaymentTerms' | 'ContactPerson' | 'ShipTo' | 'BillTo' | 'TaxCode' | 'ItemCodeCanvas' | 'ItemCodeAll' | 'UomCode' | 'WarehouseCodeCanvas' | 'WarehouseCodeAll' | 'VendorCode' | 'SAPSalesCode' | 'Area' | 'Branch' | 'ChartOfAccount' | 'ItemCodeCanvas' | 'Custom';
+  field: 'SAPSalesCodeUser'| 'WarehouseCodeBranch' | 'SalesAsEmployee' | 'OcrCode' | 'OcrCode2' | 'Series' | 'State' | 'BPGroup' | 'Currency' | 'CustomerCode' | 'PaymentTerms' | 'ContactPerson' | 'ShipTo' | 'BillTo' | 'TaxCode' | 'ItemCodeCanvas' | 'ItemCodeAll' | 'UomCode' | 'WarehouseCodeCanvas' | 'WarehouseCodeAll' | 'VendorCode' | 'SAPSalesCode' | 'Area' | 'Branch' | 'ChartOfAccount' | 'ItemCodeCanvas' | 'Custom';
   itemField?: {
     value: string,
     label: string

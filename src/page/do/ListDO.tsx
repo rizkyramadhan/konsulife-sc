@@ -48,6 +48,14 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
           field: "U_IDU_BRANCH",
           cond: "=",
           value: global.session.user.branch
+        },
+        {
+          cond: "AND"
+        },
+        {
+          field: "U_SALES",
+          cond: "=",
+          value: "N"
         }
       ]
     };

@@ -208,7 +208,15 @@ export const SAPFieldMap = {
       field: "validFor",
       cond: "=",
       value: "Y"
-    }]
+    },
+    {
+      cond: "AND"
+    },
+    {
+      field: "U_SALES",
+      cond: "=",
+      value: "N"
+    },]
   } as APISearchProps,
   DocumentRate: {
     Table: "ORTT",
@@ -423,11 +431,6 @@ export const SAPFieldMap = {
   SAPSalesCodeUser: {
     Table: "OSLP",
     Fields: ["SlpCode", "SlpName"],
-    Condition: [{
-      field: "SlpCode",
-      cond: "=",
-      value: ""
-    }]
   } as APISearchProps,
   PartNumber: {
     Table: "OITM",

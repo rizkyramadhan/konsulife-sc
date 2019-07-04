@@ -7,7 +7,7 @@ import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIJsonField from "@app/libs/ui/UIJsonField";
 import UITabs from '@app/libs/ui/UITabs';
-import { getLastNumbering, lpad, updateLastNumbering } from '@app/utils';
+import { /*getLastNumbering, updateLastNumbering,*/ lpad } from '@app/utils';
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
 import { withRouter } from 'react-router';
@@ -27,7 +27,7 @@ const header = {
   DocRate: "1",
   U_IDU_SO_INTNUM: "",
   GroupNum: "",
-  SlpCode: !!global.session.user.slp_code || "-1",
+  SlpCode: !!global.session.user.slp_id || "-1",
   CntctCode: "",
   Address2: "",
   Address: "",
@@ -59,14 +59,14 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
     });
 
     try {
-      let number: any = await getLastNumbering("SO", items[0].WhsCode);
-      (data as any).SlpCode = !!global.session.user.slp_code || "-1";
+      //let number: any = await getLastNumbering("SO", items[0].WhsCode);
+      (data as any).SlpCode = !!global.session.user.slp_id || "-1";
       (data as any).U_BRANCH = global.session.user.branch;
       (data as any).U_USERID = global.session.user.username;
       await APIPost('SalesOrder', {
-        ...data, U_IDU_SO_INTNUM: number.format, U_IDU_SO_TRANSCODE: "SO", Lines: [...Lines_IT],
+        ...data, /*U_IDU_SO_INTNUM: number.format,*/ U_IDU_SO_TRANSCODE: "SO", Lines: [...Lines_IT],
       })
-      updateLastNumbering(number.id, number.last_count + 1);
+      //updateLastNumbering(number.id, number.last_count + 1);
       history.goBack();
     }
     catch (e) {

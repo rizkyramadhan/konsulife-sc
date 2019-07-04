@@ -49,6 +49,14 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
           cond: "=",
           value: global.session.user.branch
         },
+        {
+          cond: "AND"
+        },
+        {
+          field: "U_SALES",
+          cond: "=",
+          value: "N"
+        }
       ],
       Limit: 20,
       Page: 1

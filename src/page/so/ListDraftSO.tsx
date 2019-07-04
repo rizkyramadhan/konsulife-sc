@@ -40,7 +40,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
       Condition: [{
         field: "DocStatus",
         cond: "=",
-        value: "D"
+        value: "O"
       }, { cond: "AND" }, { field: "ObjType", cond: "=", value: 17 }, ...cond]
     };
 
