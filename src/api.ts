@@ -1,5 +1,5 @@
 import Axios from "axios";
-import config from './config';
+import config from "./config";
 
 // const urlDev: string = "http://mock.rx.plansys.co";
 
@@ -39,38 +39,37 @@ export const APISearch = async (p: APISearchProps) => {
   if (!!p.Condition && p.Condition.length > 0) {
     p.Condition.forEach((c: any) => {
       let fieldArr = [];
-      let field = null; 
-      if(c.field !== undefined){
+      let field = null;
+      if (c.field !== undefined) {
         fieldArr = c.field.split(".");
-        if(fieldArr.length === 2)
-        {
+        if (fieldArr.length === 2) {
           field = `${fieldArr[0]}.[${fieldArr[1]}]`;
-        }
-        else
-        {
-          field = `[${fieldArr[0]}]`;
+        } else {
+          if (fieldArr[0].includes("CONCAT")) {
+            field = `${fieldArr[0]}`;
+          } else {
+            field = `[${fieldArr[0]}]`;
+          }
         }
       }
-      
 
       if (c.cond === "AND" || c.cond === "OR" || c.cond === "XOR") {
         cond += ` ${c.cond} `;
-      }
-
-      else if (c.cond === "IN") {
+      } else if (c.cond === "IN") {
         let value: any;
         if (Array.isArray(c.value)) {
-          value = c.value.map(function (val: any) {
-            return val !== null ? "'" + val + "'" : "NULL";
-          }).join(",");
-        }
-        else {
+          value = c.value
+            .map(function(val: any) {
+              return val !== null ? "'" + val + "'" : "NULL";
+            })
+            .join(",");
+        } else {
           value = c.value;
         }
         cond += `${field} ${c.cond} (${value})`;
-      }
-      else {
-        let val = typeof c.value == "number" ? parseInt(c.value) : `'${c.value}'`;
+      } else {
+        let val =
+          typeof c.value == "number" ? parseInt(c.value) : `'${c.value}'`;
         cond += `${field} ${c.cond} ${val}`;
       }
     });
@@ -85,12 +84,12 @@ export const APISearch = async (p: APISearchProps) => {
 
     Axios.post(url, JSON.stringify(params), {
       headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        "Content-Type": "application/json",
+        Accept: "application/json"
       }
     })
       .then((res: any) => {
-        if (typeof res.data == 'object' && !!res.data && !!res.data.ErrorCode) {
+        if (typeof res.data == "object" && !!res.data && !!res.data.ErrorCode) {
           reject();
         } else {
           // if (!cache || (Array.isArray(cache.data) && cache.data.length === 0)) {
@@ -104,7 +103,7 @@ export const APISearch = async (p: APISearchProps) => {
           //     data: res.data
           //   });
           // }
-          resolve(res.data)
+          resolve(res.data);
         }
       })
       .catch((err: any) => {
@@ -118,12 +117,12 @@ export const APIPost = (api: string, data: any) => {
   return new Promise((resolve, reject) => {
     Axios.post(config.wsSAP + api, JSON.stringify(data), {
       headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        "Content-Type": "application/json",
+        Accept: "application/json"
       }
     })
       .then((res: any) => {
-        if (typeof res.data == 'object' && !!res.data && !!res.data.ErrorCode) {
+        if (typeof res.data == "object" && !!res.data && !!res.data.ErrorCode) {
           reject(res.data);
         }
         resolve(res.data);
@@ -138,21 +137,25 @@ export const APIPost = (api: string, data: any) => {
 export const SAPFieldMap = {
   Series: {
     Table: "NNM1",
-    Fields: ['Series', 'SeriesName'],
-    Condition: [{
-      field: 'ObjectCode',
-      value: 2,
-      cond: '=',
-    }]
+    Fields: ["Series", "SeriesName"],
+    Condition: [
+      {
+        field: "ObjectCode",
+        value: 2,
+        cond: "="
+      }
+    ]
   } as APISearchProps,
   BPGroup: {
     Table: "OCRG",
-    Fields: ['GroupCode', 'GroupName'],
-    Condition: [{
-      field: 'GroupType',
-      value: 'C',
-      cond: '=',
-    }]
+    Fields: ["GroupCode", "GroupName"],
+    Condition: [
+      {
+        field: "GroupType",
+        value: "C",
+        cond: "="
+      }
+    ]
   } as APISearchProps,
   Currency: {
     Table: "OCRN",
@@ -161,196 +164,238 @@ export const SAPFieldMap = {
   Area: {
     Table: "OPRC",
     Fields: ["PrcCode", "PrcName"],
-    Condition: [{
-      field: "DimCode",
-      cond: "=",
-      value: 1
-    }]
+    Condition: [
+      {
+        field: "DimCode",
+        cond: "=",
+        value: 1
+      }
+    ]
   } as APISearchProps,
   Branch: {
     Table: "OPRC",
     Fields: ["PrcCode", "PrcName"],
-    Condition: [{
-      field: "DimCode",
-      cond: "=",
-      value: 2
-    }]
+    Condition: [
+      {
+        field: "DimCode",
+        cond: "=",
+        value: 2
+      }
+    ]
   } as APISearchProps,
   State: {
     Table: "OCST",
     Fields: ["Code", "Name"],
-    Condition: [{
-      field: "Country",
-      cond: "=",
-      value: "ID"
-    }]
+    Condition: [
+      {
+        field: "Country",
+        cond: "=",
+        value: "ID"
+      }
+    ]
   } as APISearchProps,
   CustomerCode: {
     Table: "OCRD",
-    Fields: ["CardCode", "CardName", "Currency", "GroupNum","CntctPrsn"],
-    Condition: [{
-      field: "CardType",
-      cond: "IN",
-      value: ["C", "L"]
-    },
-    {
-      cond: "AND"
-    },
-    {
-      field: "U_IDU_BRANCH",
-      cond: "=",
-      value: ""
-    },
-    {
-      cond: "AND"
-    },
-    {
-      field: "validFor",
-      cond: "=",
-      value: "Y"
-    },
-    {
-      cond: "AND"
-    },
-    {
-      field: "U_SALES",
-      cond: "=",
-      value: "N"
-    },]
+    Fields: [
+      "CardCode",
+      "CardName",
+      "Currency",
+      "GroupNum",
+      "CntctPrsn",
+      "Address",
+      "MailAddres"
+    ],
+    Condition: [
+      {
+        field: "CardType",
+        cond: "IN",
+        value: ["C", "L"]
+      },
+      {
+        cond: "AND"
+      },
+      {
+        field: "U_IDU_BRANCH",
+        cond: "=",
+        value: ""
+      },
+      {
+        cond: "AND"
+      },
+      {
+        field: "validFor",
+        cond: "=",
+        value: "Y"
+      },
+      {
+        cond: "AND"
+      },
+      {
+        field: "U_SALES",
+        cond: "=",
+        value: "N"
+      }
+    ]
   } as APISearchProps,
   DocumentRate: {
     Table: "ORTT",
-    Fields: ['Rate'],
+    Fields: ["Rate"],
     Condition: [
       {
-        field: 'Currency',
-        value: '',
-        cond: '='
+        field: "Currency",
+        value: "",
+        cond: "="
       },
       {
-        cond: 'AND'
+        cond: "AND"
       },
       {
-        field: 'RateDate',
-        value: '',
-        cond: '='
+        field: "RateDate",
+        value: "",
+        cond: "="
       }
     ]
   } as APISearchProps,
   PaymentTerms: {
     Table: "OCTG",
-    Fields: ["GroupNum", "PymntGroup"],
+    Fields: ["GroupNum", "PymntGroup"]
   } as APISearchProps,
   PaymentTermsCust: {
     Table: "OCRD",
     Fields: ["GroupNum"],
-    Condition: [{
-      field: "CardCode",
-      cond: "=",
-      value: ""
-    }]
+    Condition: [
+      {
+        field: "CardCode",
+        cond: "=",
+        value: ""
+      }
+    ]
   } as APISearchProps,
   ContactPerson: {
     Table: "OCPR",
     Fields: ["Name", "FirstName", "MiddleName", "LastName"],
-    Condition: [{
-      field: "CardCode",
-      cond: "=",
-      value: ""
-    }]
+    Condition: [
+      {
+        field: "CardCode",
+        cond: "=",
+        value: ""
+      }
+    ]
   } as APISearchProps,
   SalesAsEmployee: {
     Table: "OCRD",
     Fields: ["CardCode", "CardName"],
-    Condition: [{
-      field: "U_SALES",
-      cond: "=",
-      value: "Y"
-    },
-    {
-      cond: "AND"
-    },
-    {
-      field: "U_IDU_BRANCH",
-      cond: "=",
-      value: ""
-    },
-    {
-      cond: "AND"
-    },
-    {
-      field: "validFor",
-      cond: "=",
-      value: "Y"
-    }]
+    Condition: [
+      {
+        field: "U_SALES",
+        cond: "=",
+        value: "Y"
+      },
+      {
+        cond: "AND"
+      },
+      {
+        field: "U_IDU_BRANCH",
+        cond: "=",
+        value: ""
+      },
+      {
+        cond: "AND"
+      },
+      {
+        field: "validFor",
+        cond: "=",
+        value: "Y"
+      }
+    ]
   } as APISearchProps,
   ShipTo: {
     Table: "CRD1",
     Fields: ["Address", "Street", "City"],
-    Condition: [{
-      field: "CardCode",
-      cond: "=",
-      value: ""
-    },
-    {
-      cond: "AND"
-    },
-    {
-      field: "AdresType",
-      cond: "=",
-      value: "S"
-    }]
+    Condition: [
+      {
+        field: "CardCode",
+        cond: "=",
+        value: ""
+      },
+      {
+        cond: "AND"
+      },
+      {
+        field: "AdresType",
+        cond: "=",
+        value: "S"
+      }
+    ]
   } as APISearchProps,
   BillTo: {
     Table: "CRD1",
     Fields: ["Address", "Street", "City"],
-    Condition: [{
-      field: "CardCode",
-      cond: "=",
-      value: ""
-    }]
+    Condition: [
+      {
+        field: "CardCode",
+        cond: "=",
+        value: ""
+      }
+    ]
   } as APISearchProps,
   TaxCode: {
     Table: "OVTG",
     Fields: ["Code", "Name"],
-    Condition: [{
-      field: "Inactive",
-      cond: "=",
-      value: "N"
-    },
-    {
-      cond: "AND"
-    },
-    {
-      field: "Category",
-      cond: "=",
-      value: "Output Tax"
-    }]
+    Condition: [
+      {
+        field: "Inactive",
+        cond: "=",
+        value: "N"
+      },
+      {
+        cond: "AND"
+      },
+      {
+        field: "Category",
+        cond: "=",
+        value: "Output Tax"
+      }
+    ]
   } as APISearchProps,
   ItemCodeCanvas: {
     Table: "OITM",
     Fields: ["ItemCode", "ItemName"],
     CustomQuery: "ItemCodeCanvas",
-    Condition: [{
-      field: "U_BRANCH",
-      cond: "=",
-      value: ""
-    }]
+    Condition: [
+      {
+        field: "U_BRANCH",
+        cond: "=",
+        value: ""
+      }
+    ]
   } as APISearchProps,
   ItemCodeAll: {
     Table: "OITM",
-    Fields: ["ItemCode", "ItemName", "U_IDU_PARTNUM", "VatGourpSa", "SUoMEntry", "IUoMEntry", "CstGrpCode"],
-    Condition: [{
-      field: "frozenFor",
-      cond: "=",
-      value: "N"
-    }, {
-      cond: "AND"
-    }, {
-      field: "validFor",
-      cond: "=",
-      value: "Y"
-    }]
+    Fields: [
+      "ItemCode",
+      "ItemName",
+      "U_IDU_PARTNUM",
+      "VatGourpSa",
+      "SUoMEntry",
+      "IUoMEntry",
+      "CstGrpCode"
+    ],
+    Condition: [
+      {
+        field: "frozenFor",
+        cond: "=",
+        value: "N"
+      },
+      {
+        cond: "AND"
+      },
+      {
+        field: "validFor",
+        cond: "=",
+        value: "Y"
+      }
+    ]
   } as APISearchProps,
   UomCode: {
     Table: "OUOM",
@@ -359,23 +404,25 @@ export const SAPFieldMap = {
   WarehouseCodeCanvas: {
     Table: "OWHS",
     Fields: ["WhsCode"],
-    Condition: [{
-      field: "U_BRANCH",
-      cond: "=",
-      value: ""
-    },
-    {
-      cond: 'AND'
-    },
-    {
-      field: "U_IDU_WHSETYPE",
-      cond: "=",
-      value: "Canvassing"
-    }]
+    Condition: [
+      {
+        field: "U_BRANCH",
+        cond: "=",
+        value: ""
+      },
+      {
+        cond: "AND"
+      },
+      {
+        field: "U_IDU_WHSETYPE",
+        cond: "=",
+        value: "Canvassing"
+      }
+    ]
   } as APISearchProps,
   WarehouseCodeAll: {
     Table: "OWHS",
-    Fields: ["WhsCode"],
+    Fields: ["WhsCode"]
     // Condition: [{
     //   field: "U_BRANCH",
     //   cond: "=",
@@ -385,148 +432,225 @@ export const SAPFieldMap = {
   WarehouseCodeBranch: {
     Table: "OWHS",
     Fields: ["WhsCode"],
-    Condition: [{
-      field: "U_BRANCH",
-      cond: "=",
-      value: ""
-    }]
+    Condition: [
+      {
+        field: "U_BRANCH",
+        cond: "=",
+        value: ""
+      }
+    ]
   } as APISearchProps,
   OcrCode: {
     Table: "OPRC",
     Fields: ["PrcCode"],
-    Condition: [{
-      field: "DimCode",
-      cond: "=",
-      value: "1"
-    }]
+    Condition: [
+      {
+        field: "DimCode",
+        cond: "=",
+        value: "1"
+      }
+    ]
   } as APISearchProps,
   OcrCode2: {
     Table: "OPRC",
     Fields: ["PrcCode"],
-    Condition: [{
-      field: "DimCode",
-      cond: "=",
-      value: "2"
-    }]
+    Condition: [
+      {
+        field: "DimCode",
+        cond: "=",
+        value: "2"
+      }
+    ]
   } as APISearchProps,
   TaxCodeSO: {
     Table: "OITM",
     Fields: ["VatGourpSa"],
-    Condition: [{
-      field: "ItemCode",
-      cond: "=",
-      value: ""
-    }]
+    Condition: [
+      {
+        field: "ItemCode",
+        cond: "=",
+        value: ""
+      }
+    ]
   } as APISearchProps,
   SAPSalesCode: {
     Table: "OSLP",
     Fields: ["SlpCode", "SlpName"],
-    Condition:
-      [{
+    Condition: [
+      {
         field: "U_IDU_BRANCH",
         cond: "=",
         value: ""
-      }]
+      }
+    ]
   } as APISearchProps,
   SAPSalesCodeUser: {
     Table: "OSLP",
-    Fields: ["SlpCode", "SlpName"],
+    Fields: ["SlpCode", "SlpName"]
   } as APISearchProps,
   PartNumber: {
     Table: "OITM",
     Fields: ["U_IDU_PARTNUM"],
-    Condition: [{
-      field: "ItemCode",
-      cond: "=",
-      value: ""
-    }]
+    Condition: [
+      {
+        field: "ItemCode",
+        cond: "=",
+        value: ""
+      }
+    ]
   } as APISearchProps,
   VendorCode: {
     Table: "OCRD",
     Fields: ["CardCode", "CardName"],
-    Condition: [{
-      field: "CardType",
-      cond: "=",
-      value: "S"
-    }]
+    Condition: [
+      {
+        field: "CardType",
+        cond: "=",
+        value: "S"
+      }
+    ]
   } as APISearchProps,
   POHeader: {
     Table: "OPOR",
-    Fields: ["DocNum", "CardCode", "CardName", "U_IDU_PO_INTNUM", "U_IDU_SUP_SONUM", "U_BRANCH", "Comments"],
-    Condition: [{
-      field: "CardCode",
-      cond: "=",
-      value: ""
-    },
-    {
-      cond: "AND"
-    },
-    {
-      field: "DocStatus",
-      cond: "=",
-      value: "O"
-    }]
+    Fields: [
+      "DocNum",
+      "CardCode",
+      "CardName",
+      "U_IDU_PO_INTNUM",
+      "U_IDU_SUP_SONUM",
+      "U_BRANCH",
+      "Comments"
+    ],
+    Condition: [
+      {
+        field: "CardCode",
+        cond: "=",
+        value: ""
+      },
+      {
+        cond: "AND"
+      },
+      {
+        field: "DocStatus",
+        cond: "=",
+        value: "O"
+      }
+    ]
   } as APISearchProps,
   PODetail: {
     Table: "POR1",
-    Fields: ["LineNum", "DocEntry", "ItemCode", "ItemName", "U_IDU_PARTNUM", "WhsCode", "Quantity", "UnitMsr", "OpenCreQty"],
-    Condition: [{
-      field: "DocEntry",
-      cond: "=",
-      value: ""
-    }]
+    Fields: [
+      "LineNum",
+      "DocEntry",
+      "ItemCode",
+      "ItemName",
+      "U_IDU_PARTNUM",
+      "WhsCode",
+      "Quantity",
+      "UnitMsr",
+      "OpenCreQty"
+    ],
+    Condition: [
+      {
+        field: "DocEntry",
+        cond: "=",
+        value: ""
+      }
+    ]
   } as APISearchProps,
   SOHeader: {
     Table: "ORDR",
-    Fields: ["DocNum", "CardCode", "CardName", "U_IDU_SO_INTNUM", "U_BRANCH", "Comments"],
-    Condition: [{
-      field: "CardCode",
-      cond: "=",
-      value: ""
-    },
-    {
-      cond: "AND"
-    },
-    {
-      field: "DocStatus",
-      cond: "=",
-      value: "O"
-    }]
+    Fields: [
+      "DocNum",
+      "CardCode",
+      "CardName",
+      "U_IDU_SO_INTNUM",
+      "U_BRANCH",
+      "Comments"
+    ],
+    Condition: [
+      {
+        field: "CardCode",
+        cond: "=",
+        value: ""
+      },
+      {
+        cond: "AND"
+      },
+      {
+        field: "DocStatus",
+        cond: "=",
+        value: "O"
+      }
+    ]
   } as APISearchProps,
   SODetail: {
     Table: "RDR1",
-    Fields: ["LineNum", "DocEntry", "ItemCode", "ItemName", "U_IDU_PARTNUM", "WhsCode", "Quantity", "UnitMsr", "OpenCreQty"],
-    Condition: [{
-      field: "DocEntry",
-      cond: "=",
-      value: ""
-    }]
+    Fields: [
+      "LineNum",
+      "DocEntry",
+      "ItemCode",
+      "ItemName",
+      "U_IDU_PARTNUM",
+      "WhsCode",
+      "Quantity",
+      "UnitMsr",
+      "OpenCreQty"
+    ],
+    Condition: [
+      {
+        field: "DocEntry",
+        cond: "=",
+        value: ""
+      }
+    ]
   } as APISearchProps,
   DOHeader: {
     Table: "ODLN",
-    Fields: ["DocNum", "CardCode", "CardName", "U_IDU_DO_INTNUM", "U_BRANCH", "Comments"],
-    Condition: [{
-      field: "CardCode",
-      cond: "=",
-      value: ""
-    },
-    {
-      cond: "AND"
-    },
-    {
-      field: "DocStatus",
-      cond: "=",
-      value: "O"
-    }]
+    Fields: [
+      "DocNum",
+      "CardCode",
+      "CardName",
+      "U_IDU_DO_INTNUM",
+      "U_BRANCH",
+      "Comments"
+    ],
+    Condition: [
+      {
+        field: "CardCode",
+        cond: "=",
+        value: ""
+      },
+      {
+        cond: "AND"
+      },
+      {
+        field: "DocStatus",
+        cond: "=",
+        value: "O"
+      }
+    ]
   } as APISearchProps,
   DODetail: {
     Table: "DLN1",
-    Fields: ["LineNum", "DocEntry", "ItemCode", "ItemName", "U_IDU_PARTNUM", "WhsCode", "Quantity", "UnitMsr", "OpenCreQty"],
-    Condition: [{
-      field: "DocEntry",
-      cond: "=",
-      value: ""
-    }]
+    Fields: [
+      "LineNum",
+      "DocEntry",
+      "ItemCode",
+      "ItemName",
+      "U_IDU_PARTNUM",
+      "WhsCode",
+      "Quantity",
+      "UnitMsr",
+      "OpenCreQty"
+    ],
+    Condition: [
+      {
+        field: "DocEntry",
+        cond: "=",
+        value: ""
+      }
+    ]
   } as APISearchProps,
   UoMGroup: {
     Table: "OUGP",
@@ -534,37 +658,60 @@ export const SAPFieldMap = {
   } as APISearchProps,
   ITRHeader: {
     Table: "OWTQ",
-    Fields: ["DocNum", "CardCode", "CardName", "U_IDU_ITR_INTNUM", "Filler", "ToWhsCode", "U_BRANCH", "Comments"],
-    Condition: [{
-      field: "Filler",
-      cond: "=",
-      value: ""
-    },
-    {
-      cond: "AND"
-    },
-    {
-      field: "DocStatus",
-      cond: "=",
-      value: "O"
-    }]
+    Fields: [
+      "DocNum",
+      "CardCode",
+      "CardName",
+      "U_IDU_ITR_INTNUM",
+      "Filler",
+      "ToWhsCode",
+      "U_BRANCH",
+      "Comments"
+    ],
+    Condition: [
+      {
+        field: "Filler",
+        cond: "=",
+        value: ""
+      },
+      {
+        cond: "AND"
+      },
+      {
+        field: "DocStatus",
+        cond: "=",
+        value: "O"
+      }
+    ]
   } as APISearchProps,
   ITRDetail: {
     Table: "WTQ1",
-    Fields: ["ItemCode", "ItemName", "U_IDU_PARTNUM", "WhsCode", "Quantity", "UnitMsr", "OpenCreQty"],
-    Condition: [{
-      field: "DocEntry",
-      cond: "=",
-      value: ""
-    }]
+    Fields: [
+      "ItemCode",
+      "ItemName",
+      "U_IDU_PARTNUM",
+      "WhsCode",
+      "Quantity",
+      "UnitMsr",
+      "OpenCreQty"
+    ],
+    Condition: [
+      {
+        field: "DocEntry",
+        cond: "=",
+        value: ""
+      }
+    ]
   } as APISearchProps,
   ChartOfAccount: {
     Table: "OACT",
     Fields: ["AcctCode", "AcctName"],
-    Condition: [{
-      field: "Finanse",
-      cond: "=",
-      value: "Y"
-    }]
-  } as APISearchProps,
-}
+    Condition: [
+      {
+        field: "Finanse",
+        cond: "=",
+        value: "Y"
+      }
+    ]
+  } as APISearchProps
+};
