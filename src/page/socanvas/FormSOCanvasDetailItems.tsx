@@ -1,16 +1,16 @@
 import UIList from "@app/libs/ui/UIList";
 import React, { useState } from "react";
-import { View } from 'reactxp/dist/web/Animated';
-import { MainStyle } from '@app/config';
-import UIText from '@app/libs/ui/UIText';
-import { Button } from 'reactxp';
-import UISeparator from '@app/libs/ui/UISeparator';
-import UIJsonField from '@app/libs/ui/UIJsonField';
-import SAPDropdown from '@app/components/SAPDropdown';
-import UISelectField from '@app/libs/ui/UISelectField';
-import { APISearch } from '@app/api';
-import IconTrash from '@app/libs/ui/Icons/IconTrash';
-import global from '@app/global';
+import { View } from "reactxp/dist/web/Animated";
+import { MainStyle } from "@app/config";
+import UIText from "@app/libs/ui/UIText";
+import { Button } from "reactxp";
+import UISeparator from "@app/libs/ui/UISeparator";
+import UIJsonField from "@app/libs/ui/UIJsonField";
+import SAPDropdown from "@app/components/SAPDropdown";
+import UISelectField from "@app/libs/ui/UISelectField";
+import { APISearch } from "@app/api";
+import IconTrash from "@app/libs/ui/Icons/IconTrash";
+import global from "@app/global";
 
 export default ({ data, items, setItems }: any) => {
   const [uoMEntry, setUoMEntry] = useState<any>({});
@@ -19,15 +19,19 @@ export default ({ data, items, setItems }: any) => {
   const getPrice = (idx: any, value: any) => {
     APISearch({
       CustomQuery: "UnitPriceSO",
-      Condition: [{
-        field: "CardCode",
-        cond: "=",
-        value: data.CardCode
-      }, { cond: 'AND' }, {
-        field: "ItemCode",
-        cond: "=",
-        value: value
-      }]
+      Condition: [
+        {
+          field: "CardCode",
+          cond: "=",
+          value: data.CardCode
+        },
+        { cond: "AND" },
+        {
+          field: "ItemCode",
+          cond: "=",
+          value: value
+        }
+      ]
     }).then((res: any) => {
       if (Array.isArray(res) && res.length > 0) {
         items[idx]["PriceBefDi"] = parseInt(res[0]["Price"]);
@@ -38,7 +42,7 @@ export default ({ data, items, setItems }: any) => {
 
   const getUoM = (idx: any, value: any) => {
     APISearch({
-      CustomQuery: `GetUom,${value}`,
+      CustomQuery: `GetUom,${value}`
     }).then((res: any) => {
       // jika uom group entry = -1 maka set uom entry = manual
       // jika bukan maka set uom entry sesuai sales uom entry
@@ -54,11 +58,11 @@ export default ({ data, items, setItems }: any) => {
 
       // group list uom entry berdasarkan item code karena uom entry setiap item code berbeda
       uoMEntry[value] = res.Lines.map((d: any) => {
-        return { value: d.UomEntry, label: d.UomCode }
+        return { value: d.UomEntry, label: d.UomCode };
       });
       setUoMEntry({ ...uoMEntry });
-      
-      // group list sales uom berdasarkan item code karena sales uom setiap item berbeda 
+
+      // group list sales uom berdasarkan item code karena sales uom setiap item berbeda
       iUoMEntry[value] = res.IUoMEntry;
       setIUoMEntry({ ...iUoMEntry });
     });
@@ -116,7 +120,7 @@ export default ({ data, items, setItems }: any) => {
         }
       }}
       items={items}
-      detailComponent={(item) => (
+      detailComponent={item => (
         <View
           style={{
             borderWidth: 0,
@@ -148,7 +152,12 @@ export default ({ data, items, setItems }: any) => {
               <UIText>{item.pkval}</UIText>
             </View>
             <View style={{ justifyContent: "center", alignItems: "center" }}>
-              <Button onPress={() => { setItems([...items]); item.close(); }}>
+              <Button
+                onPress={() => {
+                  setItems([...items]);
+                  item.close();
+                }}
+              >
                 <UIText size="large">&times;</UIText>
               </Button>
             </View>
@@ -166,78 +175,120 @@ export default ({ data, items, setItems }: any) => {
             }}
             field={[
               {
-                key: 'ItemCode', size: 12, label: 'Item Code', component: (
-                  <SAPDropdown label="Item Code" field="Custom" customQuery={{
-                    CustomQuery: 'ItemCodeCanvas',
-                    Condition: [
-                    {
-                      field: "T1.WhsCode",
-                      cond: "=",
-                      value: global.getSession().user.warehouse_id
-                    },
-                    {
-                      cond:"AND"
-                    },
-                    {
-                      field:"T1.OnHand",
-                      cond:">",
-                      value:"0"
-                    }
-                  ]
-                  }}
-                  value={(item as any).item.ItemCode} setValue={async (v, l, r) => {
-                    const idx = items.findIndex((x: any) => x.Key === item.pkval);
-                    items[idx]['ItemCode'] = v;
-                    items[idx]["Dscription"] = l;
-                    items[idx]["U_IDU_PARTNUM"] = r.item.U_IDU_PARTNUM;
-                    items[idx]["TaxCode"] = r.item.VatGourpSa;
+                key: "ItemCode",
+                size: 12,
+                label: "Item Code",
+                component: (
+                  <SAPDropdown
+                    label="Item Code"
+                    field="Custom"
+                    searchRealtime={true}
+                    searchField="T2.ItemName"
+                    customQuery={{
+                      CustomQuery: "ItemCodeCanvas",
+                      Condition: [
+                        {
+                          field: "T1.WhsCode",
+                          cond: "=",
+                          value: global.getSession().user.warehouse_id
+                        },
+                        {
+                          cond: "AND"
+                        },
+                        {
+                          field: "T1.OnHand",
+                          cond: ">",
+                          value: "0"
+                        }
+                      ]
+                    }}
+                    value={(item as any).item.ItemCode}
+                    setValue={async (v, l, r) => {
+                      const idx = items.findIndex(
+                        (x: any) => x.Key === item.pkval
+                      );
+                      items[idx]["ItemCode"] = v;
+                      items[idx]["Dscription"] = l;
+                      items[idx]["U_IDU_PARTNUM"] = r.item.U_IDU_PARTNUM;
+                      items[idx]["TaxCode"] = r.item.VatGourpSa;
 
-                    setItems([...items]);
-                    getPrice(idx, v);
-                    getUoM(idx, v);
-                  }} />)
+                      setItems([...items]);
+                      getPrice(idx, v);
+                      getUoM(idx, v);
+                    }}
+                  />
+                )
               },
               {
-                key: 'UomEntry', size: 12, label: 'Uom', component: (
-                  <UISelectField label="UoMCode" items={uoMEntry[(item as any).item.ItemCode] || []} value={(item as any).item.UoMEntry} setValue={(v, l) => {
-                    const idx = items.findIndex((x: any) => x.Key === item.pkval);
-                    items[idx]['UoMEntry'] = v;
-                    items[idx]['UoMName'] = l;
+                key: "UomEntry",
+                size: 12,
+                label: "Uom",
+                component: (
+                  <UISelectField
+                    label="UoMCode"
+                    items={uoMEntry[(item as any).item.ItemCode] || []}
+                    value={(item as any).item.UoMEntry}
+                    setValue={(v, l) => {
+                      const idx = items.findIndex(
+                        (x: any) => x.Key === item.pkval
+                      );
+                      items[idx]["UoMEntry"] = v;
+                      items[idx]["UoMName"] = l;
 
-                    // jika uom entry yang dipilih merupakan default inv uom, maka set base un = Y
-                    let itemCode = (item as any).item.ItemCode;
-                    if (v === iUoMEntry[itemCode]) {
-                      items[idx]['UseBaseUn'] = 'Y';
-                    } else {
-                      items[idx]['UseBaseUn'] = 'N';
-                    }
-                    setItems([...items]);
-                  }} />)
+                      // jika uom entry yang dipilih merupakan default inv uom, maka set base un = Y
+                      let itemCode = (item as any).item.ItemCode;
+                      if (v === iUoMEntry[itemCode]) {
+                        items[idx]["UseBaseUn"] = "Y";
+                      } else {
+                        items[idx]["UseBaseUn"] = "N";
+                      }
+                      setItems([...items]);
+                    }}
+                  />
+                )
               },
-              { key: 'Quantity', size: 12, label: 'Quantity' },
-              { key: 'PriceBefDi', size: 12, label: 'Unit Price' },
-              { key: 'DiscPrcnt', size: 12, label: 'Disc Prcnt' },
+              { key: "Quantity", size: 12, label: "Quantity" },
+              { key: "PriceBefDi", size: 12, label: "Unit Price" },
+              { key: "DiscPrcnt", size: 12, label: "Disc Prcnt" },
               {
-                key: 'TaxCode', size: 12, label: 'Tax Code', component: (
-                  <SAPDropdown label="Tax Code" field="Custom" customQuery={{
-                    Table: "OVTG",
-                    Fields: ["Code", "Name"],
-                    Condition: [{ field: "Category", cond: "=", value: "O" }, { cond: "AND" }, { field: "Inactive", cond: "=", value: "N" }]
-                  }} value={(item as any).item.TaxCode} setValue={(v) => {
-                    const idx = items.findIndex((x: any) => x.Key === item.pkval);
-                    items[idx]['TaxCode'] = v;
-                    setItems([...items]);
-                  }} />)
-              },
+                key: "TaxCode",
+                size: 12,
+                label: "Tax Code",
+                component: (
+                  <SAPDropdown
+                    label="Tax Code"
+                    field="Custom"
+                    customQuery={{
+                      Table: "OVTG",
+                      Fields: ["Code", "Name"],
+                      Condition: [
+                        { field: "Category", cond: "=", value: "O" },
+                        { cond: "AND" },
+                        { field: "Inactive", cond: "=", value: "N" }
+                      ]
+                    }}
+                    value={(item as any).item.TaxCode}
+                    setValue={v => {
+                      const idx = items.findIndex(
+                        (x: any) => x.Key === item.pkval
+                      );
+                      items[idx]["TaxCode"] = v;
+                      setItems([...items]);
+                    }}
+                  />
+                )
+              }
             ]}
           />
           <View style={{ padding: 5, flexDirection: "row-reverse" }}>
-            <Button onPress={() => {
-              const idx = items.findIndex((x: any) => x.Key === item.pkval);
-              items.splice(idx, 1);
-              setItems([...items]);
-              item.close();
-            }}>
+            <Button
+              onPress={() => {
+                const idx = items.findIndex((x: any) => x.Key === item.pkval);
+                items.splice(idx, 1);
+                setItems([...items]);
+                item.close();
+              }}
+            >
               <IconTrash width={20} height={20} color="red" />
             </Button>
           </View>

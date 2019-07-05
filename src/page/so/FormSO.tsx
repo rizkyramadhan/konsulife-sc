@@ -26,8 +26,9 @@ const today = `${date.getFullYear()}-${lpad(
 
 const header = {
   CardCode: "",
-  CntctPrsn: "",
   CardName: "",
+  CntctCode: "",
+  CntctPrsn: "",
   NumAtCard: "",
   DocDate: today,
   DocDueDate: today,
@@ -35,7 +36,6 @@ const header = {
   DocRate: "1",
   GroupNum: "",
   SlpCode: "-1",
-  CntctCode: "",
   Address: "",
   AddressName: "",
   Address2: "",
@@ -79,9 +79,8 @@ export default withRouter(
         return d;
       });
 
-      let number: any;
+      let number: any = await getLastNumbering("SO", items[0].WhsCode);
       try {
-        number = await getLastNumbering("SO", items[0].WhsCode);
         await APIPost("SalesOrder", {
           ...data,
           U_IDU_SO_INTNUM: number.format,
