@@ -209,7 +209,7 @@ export default withRouter(
         if (e.Message.search("409") > -1) {
           updateLastNumbering(number.id, number.last_count + 1);
           alert(
-            "No DO sudah digunakan, simpan kembali untuk me-refresh No SO."
+            "No DO sudah digunakan, simpan kembali untuk me-refresh No DO."
           );
         } else {
           alert(e.Message);
