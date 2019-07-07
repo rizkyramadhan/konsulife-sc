@@ -140,7 +140,7 @@ export default withRouter(
 
     const save = async () => {
       if (saving) return;
-
+      if (selected.length === 0) return;
       setSaving(true);
 
       let number: any = await getLastNumbering(

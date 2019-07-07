@@ -69,6 +69,7 @@ export default withRouter(
 
     const save = async () => {
       if (saving) return;
+      if (items.length === 0) return;
       setSaving(true);
 
       const Lines_IT = items.map(d => {

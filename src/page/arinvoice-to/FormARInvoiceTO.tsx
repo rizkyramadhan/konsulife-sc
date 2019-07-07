@@ -137,7 +137,10 @@ export default withRouter(
     }, []);
 
     const save = async () => {
+      if (saving) return;
+      if (item.length === 0) return;
       setSaving(true);
+
       let Lines = item.map((val: any) => {
         let res = { ...val };
         delete res.PK;
