@@ -50,19 +50,154 @@ import ListUser from "./user/ListUser";
 import FormWO from './wo/FormWO';
 import ListDraftSO from './so/ListDraftSO';
 import ListWO from './wo/ListWO';
+import IconCaretDown from '@app/libs/ui/Icons/IconCaretDown';
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
 }
 
+const MenuItem = ({ item, history, active, path, setPath, setSide, sperator }: any) => {
+  const [expand, setExpand] = useState(false);
+  const [activePar, setActivePar] = useState(false);
+  const childActive = {
+    backgroundColor: "#e9f1ff"
+  };
+
+  useEffect(() => {
+    let idx = item.children && item.children.findIndex((x: any) => x.path == path);
+    if (idx > -1) {
+      setExpand(true);
+      setActivePar(true);
+    } else {
+      setExpand(false);
+      setActivePar(false);
+    };
+  }, [path])
+  if (item.children && item.children.length > 0) {
+    return (
+      <View>
+        <View style={{ padding: 0, ...(activePar ? active : {}) }}>
+          <UIButton
+            onPress={() => {
+              // history.replace(item.path);
+              // setPath(item.path);
+              setExpand(!expand);
+              if (Platform.getType() !== "web") {
+                setSide(false);
+              }
+            }}
+            animation={false}
+            fill="clear"
+            style={{
+              margin: 0,
+              width: "100%",
+              flexShrink: "none",
+              justifyContent: "flex-start",
+              paddingTop: 15,
+              paddingBottom: 15
+            }}
+          >
+            {item.icon && item.icon}
+            {item.title}
+            <View style={{
+              flex: 1,
+              justifyContent: "flex-end",
+              alignItems: "flex-end"
+            }}>
+              {item.children && item.children.length > 0 && <IconCaretDown width={20} height={20} />}
+            </View>
+          </UIButton>
+
+          <UISeparator
+            style={{
+              marginTop: 0,
+              marginBottom: 0,
+              borderColor: "#e8f1ff"
+            }}
+          />
+        </View>
+        {expand && <UISimpleList
+          style={{
+            paddingTop: 0,
+            paddingBottom: 0,
+            paddingLeft: 15,
+            flex: 1,
+            overflow: "auto",
+          }}
+          data={item.children}
+          renderItems={(child, opt) => {
+            if (child.roles.indexOf(global.session.user.role) > -1) return (
+              <MenuItem key={opt.index} item={child} history={history} path={path} setPath={setPath} setSide={setSide} active={childActive} sperator="#e2e2e2" />
+            );
+            else return;
+          }}
+        />}
+      </View>
+    )
+  } else {
+    return (
+      <View style={{ padding: 0, ...(path == item.path ? active : {}) }}>
+        <UIButton
+          onPress={() => {
+            history.replace(item.path);
+            setPath(item.path);
+            if (Platform.getType() !== "web") {
+              setSide(false);
+            }
+          }}
+          animation={false}
+          fill="clear"
+          style={{
+            margin: 0,
+            width: "100%",
+            flexShrink: "none",
+            justifyContent: "flex-start",
+            paddingTop: 15,
+            paddingBottom: 15
+          }}
+        >
+          {item.icon && item.icon}
+          {item.title}
+          <View style={{
+            flex: 1,
+            justifyContent: "flex-end",
+            alignItems: "flex-end"
+          }}>
+          </View>
+        </UIButton>
+
+        <UISeparator
+          style={{
+            marginTop: 0,
+            marginBottom: 0,
+            borderColor: sperator
+          }}
+        />
+      </View>
+    )
+  }
+}
+
 const Menu = withRouter(({ history, setSide }: MenuProps) => {
-  RouteState.setRootPaths(MenuList.map(item => item.path));
   const [path, setPath] = useState("");
   const active = {
     backgroundColor: "#cee0ff"
   };
   useEffect(() => {
-    setPath(history.location.pathname);
+    let routeList: any = [];
+    MenuList.map(item => {
+      if (item.children) {
+        item.children.map(child => {
+          routeList.push(child.path);
+        })
+      } else {
+        routeList.push(item.path);
+      }
+    })
+    RouteState.setRootPaths(routeList);
+
+    let path = history.location.pathname.split('/');
+    setPath(`/${path[1]}`);
   }, []);
   return (
     <UISimpleList
@@ -75,41 +210,7 @@ const Menu = withRouter(({ history, setSide }: MenuProps) => {
       data={MenuList}
       renderItems={(item, opt) => {
         if (item.roles.indexOf(global.session.user.role) > -1) return (
-          <View key={opt.index} style={{ padding: 0, ...(path == item.path ? active : {}) }}>
-            <UIButton
-              onPress={() => {
-                history.replace(item.path);
-                setPath(item.path);
-                if (Platform.getType() !== "web") {
-                  setSide(false);
-                }
-              }}
-              animation={false}
-              fill="clear"
-              style={{
-                margin: 0,
-                width: "100%",
-                flexShrink: "none",
-                justifyContent: "flex-start",
-                paddingTop: 15,
-                paddingBottom: 15
-              }}
-            >
-              {item.icon}
-              <UIText style={{ color: "#1D6EF7", paddingLeft: 15 }}>
-                {" "}
-                {item.title}
-              </UIText>
-            </UIButton>
-
-            <UISeparator
-              style={{
-                marginTop: 0,
-                marginBottom: 0,
-                borderColor: "#e8f1ff"
-              }}
-            />
-          </View>
+          <MenuItem key={opt.index} item={item} history={history} path={path} setPath={setPath} setSide={setSide} active={active} sperator="#e8f1ff" />
         );
         else return;
       }}
