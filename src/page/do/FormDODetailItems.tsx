@@ -1,11 +1,12 @@
 import UIList from "@app/libs/ui/UIList";
 import React from "react";
-import { MainStyle } from '@app/config';
-import UIText from '@app/libs/ui/UIText';
-import UISeparator from '@app/libs/ui/UISeparator';
-import UIJsonField from '@app/libs/ui/UIJsonField';
-import { View, Button } from 'reactxp';
-import SAPDropdown from '@app/components/SAPDropdown';
+import { MainStyle } from "@app/config";
+import UIText from "@app/libs/ui/UIText";
+import UISeparator from "@app/libs/ui/UISeparator";
+import UIJsonField from "@app/libs/ui/UIJsonField";
+import { View, Button } from "reactxp";
+import SAPDropdown from "@app/components/SAPDropdown";
+import global from "@app/global";
 
 export default ({ items, setItems, flag, setSelected }: any) => {
   return (
@@ -55,7 +56,7 @@ export default ({ items, setItems, flag, setSelected }: any) => {
         }
       }}
       items={items}
-      detailComponent={(item) => (
+      detailComponent={item => (
         <View
           style={{
             borderWidth: 0,
@@ -87,7 +88,11 @@ export default ({ items, setItems, flag, setSelected }: any) => {
               <UIText>{item.item.ItemCode}</UIText>
             </View>
             <View style={{ justifyContent: "center", alignItems: "center" }}>
-              <Button onPress={() => { item.close(); }}>
+              <Button
+                onPress={() => {
+                  item.close();
+                }}
+              >
                 <UIText size="large">&times;</UIText>
               </Button>
             </View>
@@ -105,17 +110,36 @@ export default ({ items, setItems, flag, setSelected }: any) => {
             }}
             field={[
               {
-                key: 'WhsCode', size: 12, label: "Warehouse", component: (
-                  <SAPDropdown label="Warehouse" field="WarehouseCodeAll" value={(item as any).item.WhsCode} setValue={(v) => {
-                    const idx = items.findIndex((x: any) => x.Key === item.pkval);
-                    items[idx]['WhsCode'] = v;
-                    setItems([...items]);
-                  }} />)
+                key: "WhsCode",
+                size: 12,
+                label: "Warehouse",
+                component: (
+                  <SAPDropdown
+                    label="Warehouse"
+                    field="WarehouseCodeBranch"
+                    where={[
+                      {
+                        field: "U_BRANCH",
+                        value: global.getSession().user.branch
+                      }
+                    ]}
+                    value={(item as any).item.WhsCode}
+                    setValue={v => {
+                      const idx = items.findIndex(
+                        (x: any) => x.Key === item.pkval
+                      );
+                      items[idx]["WhsCode"] = v;
+                      setItems([...items]);
+                    }}
+                  />
+                )
               },
               {
-                key: 'Quantity', size: 12, label: 'Quantity', type: "number"
+                key: "Quantity",
+                size: 12,
+                label: "Quantity",
+                type: "number"
               }
-
             ]}
           />
         </View>

@@ -105,7 +105,7 @@ export default withRouter(
           history.goBack();
         });
       } catch (e) {
-        if (e.Message.include("409")) {
+        if (e.Message.search("409") > -1) {
           updateLastNumbering(number.id, number.last_count + 1);
           alert(
             "No SOK sudah digunakan, simpan kembali untuk me-refresh No SO."
@@ -113,9 +113,10 @@ export default withRouter(
         } else {
           alert(e.Message);
         }
-        alert(e.Message);
+        
         console.error({
           ...data,
+          U_IDU_SO_INTNUM: number.format,
           Lines: [...Lines_IT]
         });
       } finally {

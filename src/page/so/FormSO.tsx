@@ -89,7 +89,7 @@ export default withRouter(
         updateLastNumbering(number.id, number.last_count + 1);
         history.goBack();
       } catch (e) {
-        if (e.Message.include("409")) {
+        if (e.Message.search("409") > -1) {
           updateLastNumbering(number.id, number.last_count + 1);
           alert(
             "No SO sudah digunakan, simpan kembali untuk me-refresh No SO."
@@ -100,6 +100,7 @@ export default withRouter(
 
         console.error({
           ...data,
+          U_IDU_SO_INTNUM: number.format,
           Lines: [...Lines_IT]
         });
       } finally {
