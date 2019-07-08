@@ -1,7 +1,7 @@
 import { APIPost, APISearch, APISearchProps } from "@app/api";
-import BtnSave from '@app/components/BtnSave';
-import global from '@app/global';
-import IconCheck from '@app/libs/ui/Icons/IconCheck';
+import BtnSave from "@app/components/BtnSave";
+import global from "@app/global";
+import IconCheck from "@app/libs/ui/Icons/IconCheck";
 import { isSize } from "@app/libs/ui/MediaQuery";
 import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
@@ -10,14 +10,21 @@ import UIHeader from "@app/libs/ui/UIHeader";
 import UIJsonField from "@app/libs/ui/UIJsonField";
 import UITabs from "@app/libs/ui/UITabs";
 import UIText from "@app/libs/ui/UIText";
-import { /*getLastNumbering, updateLastNumbering,*/ lpad } from '@app/utils';
+import {
+  /*getLastNumbering, updateLastNumbering,*/ lpad,
+  getLastNumbering,
+  updateLastNumbering
+} from "@app/utils";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 import FormPRDetailItems from "./FormPRDetailItems";
 
 const date = new Date();
-const today = `${date.getFullYear()}-${lpad((date.getMonth() + 1).toString(), 2)}-${lpad(date.getDate().toString(), 2)}`;
+const today = `${date.getFullYear()}-${lpad(
+  (date.getMonth() + 1).toString(),
+  2
+)}-${lpad(date.getDate().toString(), 2)}`;
 
 export default withRouter(
   observer(({ history, match, showSidebar, sidebar }: any) => {
@@ -64,7 +71,6 @@ export default withRouter(
           if (val.U_IDU_SUP_SONUM !== null && val.U_IDU_SUP_SONUM !== "") {
             soNum.push(val.U_IDU_SUP_SONUM);
           }
-
         });
 
         if (res.length > 0) {
@@ -76,7 +82,6 @@ export default withRouter(
           res[0].DocDate = today;
           setData({ ...res[0] });
         }
-
       });
 
       query = {
@@ -109,7 +114,8 @@ export default withRouter(
           },
           {
             cond: "AND"
-          }, {
+          },
+          {
             field: "LineStatus",
             cond: "=",
             value: "O"
@@ -128,25 +134,43 @@ export default withRouter(
           item.BaseEntry = item.DocEntry;
         });
         setItem(res);
-      })
-
+      });
     }, []);
 
     const save = async () => {
+      if (saving) return;
+      if (selected.length === 0) return;
+
+      let number: any = await getLastNumbering(
+        "LPB",
+        (selected[0] as any).WhsCode
+      );
       setSaving(true);
       try {
-        //let number: any = await getLastNumbering("LPB", (selected[0] as any).WhsCode);
         await APIPost("PurchaseReceipt", {
-          ...data, U_IDU_GRPO_TRANSCODE:"LPB" ,//U_IDU_GRPO_INTNUM: number.format,
+          ...data,
+          U_IDU_GRPO_TRANSCODE: "LPB",
+          U_IDU_GRPO_INTNUM: number.format,
           Lines: selected
         });
-        //updateLastNumbering(number.id, number.last_count + 1);
-        history.goBack()
+        
+        updateLastNumbering(number.id, number.last_count + 1);
+        history.goBack();
       } catch (e) {
-        setData({ ...data });
-        alert(e.Message);
+        if (e.Message.search("409") > -1) {
+          updateLastNumbering(number.id, number.last_count + 1);
+          alert(
+            "No PR sudah digunakan, simpan kembali untuk me-refresh No PR."
+          );
+        } else {
+          alert(e.Message);
+        }
+
         console.error({
-          ...data, Lines: selected,
+          ...data,
+          U_IDU_GRPO_TRANSCODE: "LPB",
+          U_IDU_GRPO_INTNUM: number.format,
+          Lines: selected
         });
       } finally {
         setSaving(false);
@@ -161,9 +185,12 @@ export default withRouter(
           sidebar={sidebar}
           center="Purchase Receipt Form"
         >
-          <BtnSave saving={saving} onPress={() => {
-            save();
-          }} />
+          <BtnSave
+            saving={saving}
+            onPress={() => {
+              save();
+            }}
+          />
         </UIHeader>
         <UIBody scroll={true}>
           <UIJsonField
@@ -221,15 +248,13 @@ export default withRouter(
                     size: 4,
                     type: "field",
                     label: "Document Currency"
-                  },
+                  }
                 ]
               },
               {
                 key: "optional",
                 label: "Optional",
-                value: [
-                  { key: "Comments", label: "Remark", size: 12 }
-                ]
+                value: [{ key: "Comments", label: "Remark", size: 12 }]
               }
             ]}
             setValue={(value: any, key: any) => {
@@ -247,7 +272,14 @@ export default withRouter(
             tabs={[
               {
                 label: "Detail Items",
-                content: <FormPRDetailItems items={item} setItems={setItem} flag={editable} setSelected={setSelected} />,
+                content: (
+                  <FormPRDetailItems
+                    items={item}
+                    setItems={setItem}
+                    flag={editable}
+                    setSelected={setSelected}
+                  />
+                ),
                 action: (
                   <UIButton
                     style={{
@@ -263,11 +295,7 @@ export default withRouter(
                       }
                     }}
                   >
-                    <IconCheck
-                      color="#fff"
-                      height={20}
-                      width={20}
-                    />
+                    <IconCheck color="#fff" height={20} width={20} />
                     {isSize(["md", "lg"]) && (
                       <UIText style={{ color: "#fff" }} size="small">
                         {!editable ? " Edit" : " Select"}

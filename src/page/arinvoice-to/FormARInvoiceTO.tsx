@@ -163,7 +163,7 @@ export default withRouter(
         if (e.Message.search("409") > -1) {
           updateLastNumbering(number.id, number.last_count + 1);
           alert(
-            "No INV sudah digunakan, simpan kembali untuk me-refresh No INV."
+            "No AR INV sudah digunakan, simpan kembali untuk me-refresh No AR INV."
           );
         } else {
           alert(e.Message);
