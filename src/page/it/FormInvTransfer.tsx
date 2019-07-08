@@ -8,7 +8,7 @@ import UIContainer from '@app/libs/ui/UIContainer';
 import UIHeader from '@app/libs/ui/UIHeader';
 import UIJsonField from '@app/libs/ui/UIJsonField';
 import UITabs from '@app/libs/ui/UITabs';
-import { /*getLastNumbering, updateLastNumbering,*/ lpad } from '@app/utils';
+import { getLastNumbering, updateLastNumbering, lpad } from '@app/utils';
 import { observer } from 'mobx-react-lite';
 import React, { useState, useEffect } from "react";
 import { withRouter } from 'react-router';
@@ -71,7 +71,7 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
   const save = async () => {
     setSaving(true);
     try {
-      //let number: any = await getLastNumbering("PGK-T", data.Filler);
+      let number: any = await getLastNumbering("PGK-T", data.Filler);
       let postItem: any[] = [];
       items.forEach((val: any) => {
         postItem.push({
@@ -86,14 +86,14 @@ export default withRouter(observer(({ history, showSidebar, sidebar }: any) => {
       });
       await APIPost('InventoryTransfer', {
         ...data,
-        //U_IDU_IT_INTNUM: number.format,
+        U_IDU_IT_INTNUM: number.format,
         U_IDU_IT_TRANSCODE:"PGK-T",
         SlpCode: global.session.user.slp_id !== "" && global.session.user.slp_id !== null ? global.session.user.slp_id : -1,
         U_BRANCH: global.session.user.branch,
         U_USERID: global.session.user.username,
         Lines: postItem,
       });
-      //updateLastNumbering(number.id, number.last_count + 1);
+      updateLastNumbering(number.id, number.last_count + 1);
       history.push("/it/");
     }
     catch (e) {

@@ -10,7 +10,7 @@ import UIHeader from "@app/libs/ui/UIHeader";
 import UIJsonField from "@app/libs/ui/UIJsonField";
 import UITabs from "@app/libs/ui/UITabs";
 import UIText from "@app/libs/ui/UIText";
-import { /*getLastNumbering, updateLastNumbering,*/ lpad } from '@app/utils';
+import { getLastNumbering, updateLastNumbering, lpad } from '@app/utils';
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
@@ -135,12 +135,12 @@ export default withRouter(
     const save = async () => {
       setSaving(true);
       try {
-        //let number: any = await getLastNumbering("LPB", (selected[0] as any).WhsCode);
+        let number: any = await getLastNumbering("LPB", (selected[0] as any).WhsCode);
         await APIPost("PurchaseReceipt", {
-          ...data, U_IDU_GRPO_TRANSCODE:"LPB" ,//U_IDU_GRPO_INTNUM: number.format,
+          ...data, U_IDU_GRPO_TRANSCODE:"LPB" , U_IDU_GRPO_INTNUM: number.format,
           Lines: selected
         });
-        //updateLastNumbering(number.id, number.last_count + 1);
+        updateLastNumbering(number.id, number.last_count + 1);
         history.goBack()
       } catch (e) {
         setData({ ...data });

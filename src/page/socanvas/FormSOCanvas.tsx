@@ -9,6 +9,7 @@ import UIHeader from "@app/libs/ui/UIHeader";
 import UIJsonField from "@app/libs/ui/UIJsonField";
 import UITabs from "@app/libs/ui/UITabs";
 import { lpad, getLastNumbering, updateLastNumbering } from "@app/utils";
+import _ from 'lodash';
 import { observer } from "mobx-react-lite";
 import React, { useState, useEffect } from "react";
 import FormSOCanvasDetailItems from "./FormSOCanvasDetailItems";
@@ -16,6 +17,8 @@ import { withRouter } from "react-router-dom";
 import rawQuery from "@app/libs/gql/data/rawQuery";
 import UISelectField from "@app/libs/ui/UISelectField";
 import { View } from "reactxp";
+import UITextField from '@app/libs/ui/UITextField';
+import UIField from '@app/libs/ui/UIField';
 
 const date = new Date();
 const today = `${date.getFullYear()}-${lpad(
@@ -40,6 +43,8 @@ const header = {
   Address2: "",
   Address2Name: "",
   Comments: "",
+  DiscPrcnt: "0",
+  Discount: "0",
   U_BRANCH: "",
   U_USERID: "",
   U_GENERATED: "W",
@@ -410,15 +415,16 @@ export default withRouter(
                             Dscription: "",
                             U_IDU_PARTNUM: "",
                             UseBaseUn: "N",
-                            Quantity: "0",
+                            Quantity: 0,
                             WhsCode: global.getSession().user.warehouse_id,
                             ShipDate: "",
                             OcrCode: "",
                             OcrCode2: "",
-                            PriceBefDi: "0",
-                            DiscPrcnt: "0",
+                            PriceBefDi: 0,
+                            DiscPrcnt: 0,
                             UoMEntry: "",
-                            TaxCode: ""
+                            TaxCode: "",
+                            TotalPrice: 0
                           }
                         ]);
                       }}
@@ -428,6 +434,107 @@ export default withRouter(
               ]}
             />
           </View>
+          <UIJsonField
+            items={data}
+            style={{ paddingTop: 20, paddingBottom: 100, borderWidth: 0, borderTopWidth: 1, borderColor: "#ccc" }}
+            field={[
+              { type: "empty", size: 6 },
+              {
+                key: "summary",
+                label: "Summary",
+                size: 6,
+                value: [
+                  {
+                    key: "TotalPrice", label: "Total", size: 12,
+                    component: 
+                    <UIField 
+                      label="Total" 
+                      fieldStyle={{ backgroundColor: "#ececeb" }}>
+                      {_.sumBy(items, "TotalPrice")}
+                    </UIField>
+                  },
+                  {
+                    key:"DiscPrcnt", size: 4, component:
+                    <UITextField 
+                      type="text" 
+                      label="Disc (%)"
+                      value={(data as any).DiscPrcnt} 
+                      onChangeText = {(v) => {
+                        if(isNaN(parseFloat(v))) v = "0";
+
+                        let total = _.sumBy(items, "TotalPrice");
+                        let disc = (total * parseFloat(v)/100).toFixed(2); 
+                        
+                        setData({ ...data,
+                          Discount:disc 
+                        });
+                      }}
+
+                      setValue={v => {  
+                        setData({ ...data, 
+                          DiscPrcnt: v,
+                        });
+                      }}
+                    />
+                  },
+                  {
+                    key:"Discount", size: 8, component:
+                    <UITextField 
+                      type="text" 
+                      label="Disc"
+                      value={(data as any).Discount}
+                      onChangeText = {(v) => {
+                        if(isNaN(parseFloat(v))) v = "0";
+
+                        let total = _.sumBy(items, "TotalPrice");
+                        let disc = (parseFloat(v)/total*100).toFixed(2); 
+                        
+                        setData({ ...data,
+                          DiscPrcnt:disc 
+                        });
+                      }}
+                      setValue={v => {
+                        setData({ ...data, 
+                          Discount: v,
+                        });
+                      }}
+                    />
+                  },
+                  {
+                    key: "Ppn", size: 12,
+                    component: 
+                    <UIField 
+                      label="PPN (10%)" 
+                      fieldStyle={{ backgroundColor: "#ececeb" }}>
+                      {(() => {
+                        let total = (_.sumBy(items, "TotalPrice") - parseFloat(data.Discount));
+                        let tax = (total*10/100).toFixed(2);
+                        return tax;
+                      })()}
+                    </UIField>
+                  },
+                  {
+                    key: "TotalAfterTax", size: 12,
+                    component: 
+                    <UIField 
+                      label="Total After Tax" 
+                      fieldStyle={{ backgroundColor: "#ececeb" }}>
+                      {(() => {
+                        let total = (_.sumBy(items, "TotalPrice") - parseFloat(data.Discount));
+                        let tax = total*10/100;
+                        let total_net = total + tax;
+                        return total_net;
+                      })()}
+                    </UIField>
+                  },
+                ]
+              }
+            ]}
+            setValue={(value: any, key: any) => {
+              (data as any)[key] = value;
+              setData({ ...data });
+            }}
+          />
         </UIBody>
       </UIContainer>
     );
