@@ -125,16 +125,16 @@ export default ({ data, items, setItems }: any) => {
         }
       }}
       items={items}
-      detailComponent={(item) => 
-        {
-          let modal = <View
+      detailComponent={item => {
+        let modal = (
+          <View
             style={{
               borderWidth: 0,
               borderLeftWidth: 1,
               borderColor: "#ececeb",
               backgroundColor: "#fff",
               flexBasis: 350,
-              overflow:"visible",
+              overflow: "visible"
             }}
           >
             <View
@@ -163,7 +163,7 @@ export default ({ data, items, setItems }: any) => {
                   onPress={() => {
                     setItems([...items]);
                     item.close();
-                    Modal.dismiss("detail"+item.pkval);
+                    Modal.dismiss("detail" + item.pkval);
                   }}
                 >
                   <UIText size="large">&times;</UIText>
@@ -176,14 +176,27 @@ export default ({ data, items, setItems }: any) => {
               setValue={(val: any, key: string) => {
                 const idx = items.findIndex((x: any) => x.Key === item.pkval);
                 items[idx][key] = val;
-                if(key === "Quantity" || key === "PriceBefDi" || key === "DiscPrcnt" )
-                {
-                  if(isNaN(parseFloat(items[idx]["Quantity"]))) items[idx]["Quantity"] = "0";
-                  if(isNaN(parseFloat(items[idx]["PriceBefDi"]))) items[idx]["PriceBefDi"] = "0";
-                  if(isNaN(parseFloat(items[idx]["DiscPrcnt"]))) items[idx]["DiscPrcnt"] = "0";
+                if (
+                  key === "Quantity" ||
+                  key === "PriceBefDi" ||
+                  key === "DiscPrcnt"
+                ) {
+                  if (isNaN(parseFloat(items[idx]["Quantity"])))
+                    items[idx]["Quantity"] = "0";
+                  if (isNaN(parseFloat(items[idx]["PriceBefDi"])))
+                    items[idx]["PriceBefDi"] = "0";
+                  if (isNaN(parseFloat(items[idx]["DiscPrcnt"])))
+                    items[idx]["DiscPrcnt"] = "0";
 
-                  let price:number = parseFloat(items[idx]["Quantity"]) * parseFloat(items[idx]["PriceBefDi"]);
-                  let disc:number = parseFloat((price * parseFloat(items[idx]["DiscPrcnt"])/100).toFixed(2));
+                  let price: number =
+                    parseFloat(items[idx]["Quantity"]) *
+                    parseFloat(items[idx]["PriceBefDi"]);
+                  let disc: number = parseFloat(
+                    (
+                      (price * parseFloat(items[idx]["DiscPrcnt"])) /
+                      100
+                    ).toFixed(2)
+                  );
 
                   items[idx]["TotalPrice"] = price - disc;
                 }
@@ -306,16 +319,16 @@ export default ({ data, items, setItems }: any) => {
                   items.splice(idx, 1);
                   setItems([...items]);
                   item.close();
-                  Modal.dismiss("detail"+item.pkval);
+                  Modal.dismiss("detail" + item.pkval);
                 }}
               >
                 <IconTrash width={20} height={20} color="red" />
               </Button>
             </View>
-          </View>;
-          Modal.show(modal,"detail"+item.pkval);
-        }
-      }
+          </View>
+        );
+        Modal.show(modal, "detail" + item.pkval);
+      }}
     />
   );
 };

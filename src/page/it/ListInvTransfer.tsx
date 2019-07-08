@@ -1,18 +1,18 @@
-import { APISearch, APISearchProps } from '@app/api';
+import { APISearch, APISearchProps } from "@app/api";
 import UIBody from "@app/libs/ui/UIBody";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
-import UISearch from '@app/libs/ui/UISearch';
+import UISearch from "@app/libs/ui/UISearch";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
-import global from '@app/global';
-import UIButton from '@app/libs/ui/UIButton';
-import UIText from '@app/libs/ui/UIText';
-import { isSize } from '@app/libs/ui/MediaQuery';
-import IconCheck from '@app/libs/ui/Icons/IconCheck';
-import IconLuggageCart from '@app/libs/ui/Icons/IconLuggageCart';
+import global from "@app/global";
+import UIButton from "@app/libs/ui/UIButton";
+import UIText from "@app/libs/ui/UIText";
+import { isSize } from "@app/libs/ui/MediaQuery";
+import IconCheck from "@app/libs/ui/Icons/IconCheck";
+import IconLuggageCart from "@app/libs/ui/Icons/IconLuggageCart";
 
 const BtnTransfer = withRouter(({ history }: any) => {
   return (
@@ -26,12 +26,15 @@ const BtnTransfer = withRouter(({ history }: any) => {
         display: "flex",
         flexDirection: "row",
         justifyContent: "flex-end",
-        height: 45,
+        height: 45
       }}
     >
       <IconLuggageCart color="#fff" width={20} height={20} />
       {isSize(["md", "lg"]) && (
-        <UIText style={{ color: "#fff" }} size="small"> Stock Transfer</UIText>
+        <UIText style={{ color: "#fff" }} size="small">
+          {" "}
+          Stock Transfer
+        </UIText>
       )}
     </UIButton>
   );
@@ -54,95 +57,124 @@ const BtnReturn = withRouter(({ history }: any) => {
     >
       <IconCheck color="#fff" width={20} height={20} />
       {isSize(["md", "lg"]) && (
-        <UIText style={{ color: "#fff" }} size="small">Stock Return</UIText>
+        <UIText style={{ color: "#fff" }} size="small">
+          Stock Return
+        </UIText>
       )}
     </UIButton>
   );
 });
 
-export default withRouter(observer(({ showSidebar, sidebar }: any) => {
-  const [data, setData] = useState([]);
-  const [_data, _setData] = useState([]);
-  const field = ["DocNum", "U_IDU_SO_INTNUM", "CardName", "CardCode", "DocDate", "DocDueDate"];
-  const funcSearch = (value: string) => {
-    _setData([...(value ? data.filter((x: any) => {
-      let res = false;
-      for (var i = 0; i < field.length; i++) {
-        if (x[field[i]] && x[field[i]].toLowerCase().includes(value.toLowerCase())) {
-          res = true;
-          break;
-        }
-      }
-      return res
-    }) : data)])
-  }
-
-  useEffect(() => {
-    let query: APISearchProps = {
-      Table: "OWTR",
-      Fields: ["DocNum", "DocEntry", "CardName", "CardCode", "U_IDU_IT_INTNUM", "DocDate"],
-      Condition: [
-        {
-          field: "DocStatus",
-          cond: "=",
-          value: "O"
-        },
-        {
-          cond: "AND"
-        },
-        {
-          field: "U_BRANCH",
-          cond: "=",
-          value: global.session.user.branch
-        }
-      ]
+export default withRouter(
+  observer(({ showSidebar, sidebar }: any) => {
+    const [data, setData] = useState([]);
+    const [_data, _setData] = useState([]);
+    const field = [
+      "DocNum",
+      "U_IDU_SO_INTNUM",
+      "CardName",
+      "CardCode",
+      "DocDate",
+      "DocDueDate"
+    ];
+    const funcSearch = (value: string) => {
+      _setData([
+        ...(value
+          ? data.filter((x: any) => {
+              let res = false;
+              for (var i = 0; i < field.length; i++) {
+                if (
+                  x[field[i]] &&
+                  x[field[i]].toLowerCase().includes(value.toLowerCase())
+                ) {
+                  res = true;
+                  break;
+                }
+              }
+              return res;
+            })
+          : data)
+      ]);
     };
 
-    APISearch(query).then((res: any) => {
-      _setData(res);
-      setData(res);
-    });
-  }, []);
+    useEffect(() => {
+      let query: APISearchProps = {
+        Table: "OWTR",
+        Fields: [
+          "DocNum",
+          "DocEntry",
+          "CardName",
+          "CardCode",
+          "U_IDU_IT_INTNUM",
+          "DocDate"
+        ],
+        Condition: [
+          {
+            field: "DocStatus",
+            cond: "=",
+            value: "O"
+          },
+          {
+            cond: "AND"
+          },
+          {
+            field: "U_BRANCH",
+            cond: "=",
+            value: global.session.user.branch
+          }
+        ]
+      };
 
-  return (
-    <UIContainer>
-      <UIHeader showSidebar={showSidebar} sidebar={sidebar} center={"Inventory Transfer"}>
-        <BtnTransfer></BtnTransfer>
-        <BtnReturn></BtnReturn>
-      </UIHeader>
-      <UIBody>
-        <UISearch onSearch={funcSearch}></UISearch>
-        <UIList
-          style={{ flex: 1 }}
-          primaryKey="DocNum"
-          selection="detail"
-          fields={{
-            U_IDU_IT_INTNUM: {
-              table: {
-                header: 'Request No.'
+      APISearch(query).then((res: any) => {
+        _setData(res);
+        setData(res);
+      });
+    }, []);
+
+    return (
+      <UIContainer>
+        <UIHeader
+          showSidebar={showSidebar}
+          sidebar={sidebar}
+          center={"Inventory Transfer"}
+        >
+          <BtnTransfer />
+          <BtnReturn />
+        </UIHeader>
+        <UIBody>
+          <UISearch onSearch={funcSearch} />
+          <UIList
+            style={{ flex: 1 }}
+            primaryKey="DocNum"
+            selection="detail"
+            fields={{
+              U_IDU_IT_INTNUM: {
+                table: {
+                  header: "Request No."
+                }
+              },
+              CardName: {
+                table: {
+                  header: "BP"
+                }
+              },
+              CardCode: {
+                table: {
+                  header: "Code"
+                }
+              },
+              DocDate: {
+                table: {
+                  header: "Posting Date"
+                }
               }
-            },
-            CardName: {
-              table: {
-                header: 'BP'
-              }
-            },
-            CardCode: {
-              table: {
-                header: 'Code'
-              }
-            },
-            DocDate: {
-              table: {
-                header: 'Posting Date'
-              }
-            }
-          }}
-          items={_data.map((item: any) => ({
-            ...item,
-          }))}
-        />
-      </UIBody>
-    </UIContainer>
-  );
-}));
+            }}
+            items={_data.map((item: any) => ({
+              ...item
+            }))}
+          />
+        </UIBody>
+      </UIContainer>
+    );
+  })
+);

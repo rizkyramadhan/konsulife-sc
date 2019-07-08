@@ -5,17 +5,17 @@ import SAPDropdown from "@app/components/SAPDropdown";
 import global from "@app/global";
 import UIBody from "@app/libs/ui/UIBody";
 import UIContainer from "@app/libs/ui/UIContainer";
-import UIField from '@app/libs/ui/UIField';
+import UIField from "@app/libs/ui/UIField";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIJsonField from "@app/libs/ui/UIJsonField";
 import UITabs from "@app/libs/ui/UITabs";
-import {getLastNumbering, lpad, updateLastNumbering} from "@app/utils";
-import _ from 'lodash';
+import { getLastNumbering, lpad, updateLastNumbering } from "@app/utils";
+import _ from "lodash";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 import FormSODetailItems from "./FormSODetailItems";
-import UITextField from '@app/libs/ui/UITextField';
+import UITextField from "@app/libs/ui/UITextField";
 
 const date = new Date();
 const today = `${date.getFullYear()}-${lpad(
@@ -400,7 +400,13 @@ export default withRouter(
           />
           <UIJsonField
             items={data}
-            style={{ paddingTop: 20, paddingBottom: 100, borderWidth: 0, borderTopWidth: 1, borderColor: "#ccc" }}
+            style={{
+              paddingTop: 20,
+              paddingBottom: 100,
+              borderWidth: 0,
+              borderTopWidth: 1,
+              borderColor: "#ccc"
+            }}
             field={[
               { type: "empty", size: 6 },
               {
@@ -409,88 +415,99 @@ export default withRouter(
                 size: 6,
                 value: [
                   {
-                    key: "TotalPrice", label: "Total", size: 12,
-                    component: 
-                    <UIField 
-                      label="Total" 
-                      fieldStyle={{ backgroundColor: "#ececeb" }}>
-                      {_.sumBy(items, "TotalPrice")}
-                    </UIField>
+                    key: "TotalPrice",
+                    label: "Total",
+                    size: 12,
+                    component: (
+                      <UIField
+                        label="Total"
+                        fieldStyle={{ backgroundColor: "#ececeb" }}
+                      >
+                        {_.sumBy(items, "TotalPrice")}
+                      </UIField>
+                    )
                   },
                   {
-                    key:"DiscPrcnt", size: 4, component:
-                    <UITextField 
-                      type="text" 
-                      label="Disc (%)"
-                      value={(data as any).DiscPrcnt} 
-                      onChangeText = {(v) => {
-                        if(isNaN(parseFloat(v))) v = "0";
+                    key: "DiscPrcnt",
+                    size: 4,
+                    component: (
+                      <UITextField
+                        type="text"
+                        label="Disc (%)"
+                        value={(data as any).DiscPrcnt}
+                        onChangeText={v => {
+                          if (isNaN(parseFloat(v))) v = "0";
 
-                        let total = _.sumBy(items, "TotalPrice");
-                        let disc = (total * parseFloat(v)/100).toFixed(2); 
-                        
-                        setData({ ...data,
-                          Discount:disc 
-                        });
-                      }}
+                          let total = _.sumBy(items, "TotalPrice");
+                          let disc = ((total * parseFloat(v)) / 100).toFixed(2);
 
-                      setValue={v => {  
-                        setData({ ...data, 
-                          DiscPrcnt: v,
-                        });
-                      }}
-                    />
+                          setData({ ...data, Discount: disc });
+                        }}
+                        setValue={v => {
+                          setData({ ...data, DiscPrcnt: v });
+                        }}
+                      />
+                    )
                   },
                   {
-                    key:"Discount", size: 8, component:
-                    <UITextField 
-                      type="text" 
-                      label="Disc"
-                      value={(data as any).Discount}
-                      onChangeText = {(v) => {
-                        if(isNaN(parseFloat(v))) v = "0";
+                    key: "Discount",
+                    size: 8,
+                    component: (
+                      <UITextField
+                        type="text"
+                        label="Disc"
+                        value={(data as any).Discount}
+                        onChangeText={v => {
+                          if (isNaN(parseFloat(v))) v = "0";
 
-                        let total = _.sumBy(items, "TotalPrice");
-                        let disc = (parseFloat(v)/total*100).toFixed(2); 
-                        
-                        setData({ ...data,
-                          DiscPrcnt:disc 
-                        });
-                      }}
-                      setValue={v => {
-                        setData({ ...data, 
-                          Discount: v,
-                        });
-                      }}
-                    />
+                          let total = _.sumBy(items, "TotalPrice");
+                          let disc = ((parseFloat(v) / total) * 100).toFixed(2);
+
+                          setData({ ...data, DiscPrcnt: disc });
+                        }}
+                        setValue={v => {
+                          setData({ ...data, Discount: v });
+                        }}
+                      />
+                    )
                   },
                   {
-                    key: "Ppn", size: 12,
-                    component: 
-                    <UIField 
-                      label="PPN (10%)" 
-                      fieldStyle={{ backgroundColor: "#ececeb" }}>
-                      {(() => {
-                        let total = (_.sumBy(items, "TotalPrice") - parseFloat(data.Discount));
-                        let tax = (total*10/100).toFixed(2);
-                        return tax;
-                      })()}
-                    </UIField>
+                    key: "Ppn",
+                    size: 12,
+                    component: (
+                      <UIField
+                        label="PPN (10%)"
+                        fieldStyle={{ backgroundColor: "#ececeb" }}
+                      >
+                        {(() => {
+                          let total =
+                            _.sumBy(items, "TotalPrice") -
+                            parseFloat(data.Discount);
+                          let tax = ((total * 10) / 100).toFixed(2);
+                          return tax;
+                        })()}
+                      </UIField>
+                    )
                   },
                   {
-                    key: "TotalAfterTax", size: 12,
-                    component: 
-                    <UIField 
-                      label="Total After Tax" 
-                      fieldStyle={{ backgroundColor: "#ececeb" }}>
-                      {(() => {
-                        let total = (_.sumBy(items, "TotalPrice") - parseFloat(data.Discount));
-                        let tax = total*10/100;
-                        let total_net = total + tax;
-                        return total_net;
-                      })()}
-                    </UIField>
-                  },
+                    key: "TotalAfterTax",
+                    size: 12,
+                    component: (
+                      <UIField
+                        label="Total After Tax"
+                        fieldStyle={{ backgroundColor: "#ececeb" }}
+                      >
+                        {(() => {
+                          let total =
+                            _.sumBy(items, "TotalPrice") -
+                            parseFloat(data.Discount);
+                          let tax = (total * 10) / 100;
+                          let total_net = total + tax;
+                          return total_net;
+                        })()}
+                      </UIField>
+                    )
+                  }
                 ]
               }
             ]}

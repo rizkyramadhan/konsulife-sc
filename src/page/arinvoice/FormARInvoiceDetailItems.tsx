@@ -45,7 +45,7 @@ export default ({ items }: any) => {
           table: {
             header: "Total"
           }
-        },
+        }
       }}
       items={items}
     />

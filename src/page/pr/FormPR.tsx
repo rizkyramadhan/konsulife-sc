@@ -149,7 +149,7 @@ export default withRouter(
           U_IDU_GRPO_INTNUM: number.format,
           Lines: selected
         });
-        
+
         updateLastNumbering(number.id, number.last_count + 1);
         history.goBack();
       } catch (e) {
