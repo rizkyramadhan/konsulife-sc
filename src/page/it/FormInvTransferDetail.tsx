@@ -1,22 +1,21 @@
 import UIList from "@app/libs/ui/UIList";
 import React, { useState } from "react";
-import { View, Button } from 'reactxp';
-import { MainStyle } from '@app/config';
-import UIText from '@app/libs/ui/UIText';
-import UIJsonField from '@app/libs/ui/UIJsonField';
-import UISeparator from '@app/libs/ui/UISeparator';
-import UISelectField from '@app/libs/ui/UISelectField';
-import SAPDropdown from '@app/components/SAPDropdown';
-import { APISearch } from '@app/api';
+import { View, Button } from "reactxp";
+import { MainStyle } from "@app/config";
+import UIText from "@app/libs/ui/UIText";
+import UIJsonField from "@app/libs/ui/UIJsonField";
+import UISeparator from "@app/libs/ui/UISeparator";
+import UISelectField from "@app/libs/ui/UISelectField";
+import SAPDropdown from "@app/components/SAPDropdown";
+import { APISearch } from "@app/api";
 
 export default ({ items, setItems, header }: any) => {
   const [uoMEntry, setUoMEntry] = useState<any>({});
   const [iUoMEntry, setIUoMEntry] = useState<any>({});
-  
+
   const getUoM = (idx: any, value: any) => {
-    console.log(idx,value);
     APISearch({
-      CustomQuery: `GetUom,${value}`,
+      CustomQuery: `GetUom,${value}`
     }).then((res: any) => {
       // jika uom group entry = -1 maka set uom entry = manual
       // jika bukan maka set uom entry sesuai sales uom entry
@@ -28,15 +27,16 @@ export default ({ items, setItems, header }: any) => {
         items[idx]["UoMEntry"] = res.IUoMEntry;
         items[idx]["UoMName"] = res.IUoMCode;
       }
+      console.log([...items]);
       setItems([...items]);
 
       // group list uom entry berdasarkan item code karena uom entry setiap item code berbeda
       uoMEntry[value] = res.Lines.map((d: any) => {
-        return { value: d.UomEntry, label: d.UomCode }
+        return { value: d.UomEntry, label: d.UomCode };
       });
       setUoMEntry({ ...uoMEntry });
-      
-      // group list sales uom berdasarkan item code karena sales uom setiap item berbeda 
+
+      // group list sales uom berdasarkan item code karena sales uom setiap item berbeda
       iUoMEntry[value] = res.IUoMEntry;
       setIUoMEntry({ ...iUoMEntry });
     });
@@ -45,11 +45,12 @@ export default ({ items, setItems, header }: any) => {
   return (
     <UIList
       selection="detail"
-      detailComponent={(item) => {
+      detailComponent={item => {
         const setValue = (val: any, key: string) => {
-          const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
+          const idx = items.findIndex(
+            (x: any) => x.LineNum === item.item.LineNum
+          );
           items[idx][key] = val;
-          console.log(item,val,key,idx);
           setItems(items);
         };
         return (
@@ -84,7 +85,12 @@ export default ({ items, setItems, header }: any) => {
                 <UIText>{item.pkval}</UIText>
               </View>
               <View style={{ justifyContent: "center", alignItems: "center" }}>
-                <Button onPress={() => { setItems([...items]); item.close(); }}>
+                <Button
+                  onPress={() => {
+                    setItems([...items]);
+                    item.close();
+                  }}
+                >
                   <UIText size="large">&times;</UIText>
                 </Button>
               </View>
@@ -98,60 +104,80 @@ export default ({ items, setItems, header }: any) => {
               }}
               field={[
                 {
-                  key: 'ItemCode', size: 12, label: 'Item Code', component: (
-                    <SAPDropdown label="Item Code" field="Custom" customQuery={{
-                      CustomQuery: 'ItemCodeCanvas',
-                      Condition: [
-                      {
-                        field: "T1.WhsCode",
-                        cond: "=",
-                        value: header.Filler
-                      },
-                      {
-                        cond:"AND"
-                      },
-                      {
-                        field:"T1.OnHand",
-                        cond:">",
-                        value:"0"
-                      }
-                    ]
-                    }}
-                    
-                    value={(item as any).item.ItemCode} setValue={async (v, l) => {
-                      const idx = items.findIndex((x: any) => x.LineNum === item.item.LineNum);
-                      
-                      items[idx]['ItemCode'] = v;
-                      items[idx]["Dscription"] = l;
+                  key: "ItemCode",
+                  size: 12,
+                  label: "Item Code",
+                  component: (
+                    <SAPDropdown
+                      label="Item Code"
+                      field="Custom"
+                      customQuery={{
+                        CustomQuery: "ItemCodeCanvas",
+                        Condition: [
+                          {
+                            field: "T1.WhsCode",
+                            cond: "=",
+                            value: header.Filler
+                          },
+                          {
+                            cond: "AND"
+                          },
+                          {
+                            field: "T1.OnHand",
+                            cond: ">",
+                            value: "0"
+                          }
+                        ]
+                      }}
+                      value={(item as any).item.ItemCode}
+                      setValue={async (v, l) => {
+                        const idx = items.findIndex(
+                          (x: any) => x.LineNum === item.item.LineNum
+                        );
 
-                      setItems([...items]);
-                      getUoM(idx, v);
-                    }} />)
+                        items[idx]["ItemCode"] = v;
+                        items[idx]["Dscription"] = l;
+
+                        setItems([...items]);
+                        getUoM(idx, v);
+                      }}
+                    />
+                  )
                 },
                 {
-                  key: 'UomEntry', size: 12, label: 'Uom', component: (
-                    <UISelectField label="UoMCode" items={uoMEntry[(item as any).item.ItemCode] || []} value={(item as any).item.UoMEntry} setValue={(v, l) => {
-                      const idx = items.findIndex((x: any) => x.LineNum === item.pkval);
-                      items[idx]['UoMEntry'] = v;
-                      items[idx]['UoMName'] = l;
-                      console.log(items);
-                      // jika uom entry yang dipilih merupakan default inv uom, maka set base un = Y
-                      let itemCode = (item as any).item.ItemCode;
-                      if (v === iUoMEntry[itemCode]) {
-                        items[idx]['UseBaseUn'] = 'Y';
-                      } else {
-                        items[idx]['UseBaseUn'] = 'N';
-                      }
-                      setItems([...items]);
-                    }} />)
+                  key: "UomEntry",
+                  size: 12,
+                  label: "Uom",
+                  component: (
+                    <UISelectField
+                      label="UoMCode"
+                      items={uoMEntry[(item as any).item.ItemCode] || []}
+                      value={(item as any).item.UoMEntry}
+                      setValue={(v, l) => {
+                        const idx = items.findIndex(
+                          (x: any) => x.LineNum === item.pkval
+                        );
+                        items[idx]["UoMEntry"] = v;
+                        items[idx]["UoMName"] = l;
+
+                        // jika uom entry yang dipilih merupakan default inv uom, maka set base un = Y
+                        let itemCode = (item as any).item.ItemCode;
+                        if (v === iUoMEntry[itemCode]) {
+                          items[idx]["UseBaseUn"] = "Y";
+                        } else {
+                          items[idx]["UseBaseUn"] = "N";
+                        }
+                        setItems([...items]);
+                      }}
+                    />
+                  )
                 },
-                { key: 'Quantity', size: 12, label: "Quantity" },
-                { key: 'SerialNum', size: 12, label: "Serial Number" },
+                { key: "Quantity", size: 12, label: "Quantity" },
+                { key: "SerialNum", size: 12, label: "Serial Number" }
               ]}
             />
-
           </View>
-        )
+        );
       }}
       primaryKey="LineNum"
       items={items}
@@ -190,8 +216,7 @@ export default ({ items, setItems, header }: any) => {
           table: {
             header: "Warehouse"
           }
-        },
-        
+        }
       }}
     />
   );
