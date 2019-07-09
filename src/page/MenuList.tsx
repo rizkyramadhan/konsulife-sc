@@ -13,10 +13,18 @@ import UIText from '@app/libs/ui/UIText';
 import React from "react";
 import IconInvoiceDollar from '@app/libs/ui/Icons/IconInvoiceDollar';
 import IconMoneyCheck from '@app/libs/ui/Icons/IconMoneyCheck';
+import IconHome from '@app/libs/ui/Icons/IconHome';
 
 // const roleList = ["sales_to", "admin", "branch", "inventory"];
 
 export default [
+    {
+        title: <UIText style={{ color: "#1D6EF7", paddingLeft: 15 }}> Home</UIText>,
+        subtitle: "Lorem Ipsum is simply dummy text.",
+        icon: <IconHome width={20} height={20} color="#1D6EF7" />,
+        path: "/home",
+        roles: ["sales_to", "sales_canvas", "branch", "admin"]
+    },
     {
         title: <UIText style={{ color: "#1D6EF7", paddingLeft: 15 }}> Setup</UIText>,
         subtitle: "Lorem Ipsum is simply dummy text.",

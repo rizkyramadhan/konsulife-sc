@@ -51,6 +51,7 @@ import FormWO from './wo/FormWO';
 import ListDraftSO from './so/ListDraftSO';
 import ListWO from './wo/ListWO';
 import IconCaretDown from '@app/libs/ui/Icons/IconCaretDown';
+import Home from './home/Home';
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
@@ -316,6 +317,7 @@ export default observer((_props: any) => {
             <SwitchRoute
               routes={{
                 "/": <MainMenu />,
+                "/home": <Home />,
                 "/rute": <ListRute />,
                 "/rute/form/:id?": <FormRute />,
                 "/wo": <ListWO />,
