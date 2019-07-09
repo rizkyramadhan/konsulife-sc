@@ -3,7 +3,7 @@ import config from './config';
 
 export const ReportPost = (type:string,data: any) => {
     return new Promise((resolve, reject) => {
-      Axios.post(config.wsBackend +  + type, JSON.stringify(data), {
+      Axios.post(config.wsBackend + "api/" + type, JSON.stringify(data), {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json"
