@@ -14,6 +14,8 @@ import { View } from "reactxp";
 import FormARInvoiceDetailTO from "./FormARInvoiceDetailTO";
 import UIField from "@app/libs/ui/UIField";
 import _ from "lodash";
+import BtnExport from '@app/components/BtnExport';
+import { ReportPost } from '@app/report';
 
 const date = new Date();
 const today = `${date.getFullYear()}-${lpad(
@@ -21,10 +23,37 @@ const today = `${date.getFullYear()}-${lpad(
   2
 )}-${lpad(date.getDate().toString(), 2)}`;
 
+const defaultData = {
+  CardCode:"",
+  CardName:"",
+  NumAtCard:"",
+  DocCur:"",
+  DocRate:"",
+  U_IDU_SO_INTNUM:"",
+  U_IDU_DO_INTNUM:"",
+  U_IDU_SI_INTNUM:"",
+  U_IDU_SI_TRANSCODE:"",
+  GroupNum:"",
+  SlpCode:"",
+  CntctCode:"",
+  Address2:"",
+  Address:"",
+  Comments:"",
+  DiscPrcnt:"",
+  DocDate:"",
+  DocDueDate:"",
+  U_BRANCH:"",
+  U_USERID:"",
+  U_GENERATED:"W",
+  U_WONUM:"",
+  U_IDU_FP:""
+};
+
 export default withRouter(
-  observer(({ history, match, showSidebar, sidebar }: any) => {
+  observer(({ /*history,*/ match, showSidebar, sidebar }: any) => {
     const [saving, setSaving] = useState(false);
-    const [data, setData] = useState<any[]>([]);
+    const [exporting, setExporting] = useState(false);
+    const [data, setData] = useState(defaultData);
     const [item, setItem] = useState([]);
 
     const param = atob(match.params.id).split("|");
@@ -137,6 +166,30 @@ export default withRouter(
       });
     }, []);
 
+    const exportReport = async () => {
+      if (exporting) return;
+      if (item.length === 0) return;
+      setExporting(true);
+
+      let Lines = item.map((val: any) => {
+        let res = { ...val };
+        delete res.PK;
+        delete res.LineNum;
+        delete res.DocEntry;
+        return res;
+      });
+
+      try {
+        await ReportPost("invoice",{...data,Lines: Lines});
+      } catch (e) {
+        alert(e.Message);
+
+        console.error({data});
+      } finally {
+        setExporting(false);
+      }
+    };
+
     const save = async () => {
       if (saving) return;
       if (item.length === 0) return;
@@ -161,8 +214,13 @@ export default withRouter(
           U_IDU_SI_TRANSCODE: "INV",
           Lines: Lines
         });
+
+        setData({...data,
+          U_IDU_SI_INTNUM: number.format,
+          U_IDU_SI_TRANSCODE: "INV"});
+
         updateLastNumbering(number.id, number.last_count + 1);
-        history.goBack();
+        //history.goBack();
       } catch (e) {
         if (e.Message.search("409") > -1) {
           updateLastNumbering(number.id, number.last_count + 1);
@@ -175,8 +233,6 @@ export default withRouter(
 
         console.error({
           ...data,
-          U_IDU_SI_INTNUM: number.format,
-          U_IDU_SI_TRANSCODE: "INV",
           Lines: Lines
         });
       } finally {
@@ -195,6 +251,12 @@ export default withRouter(
             saving={saving}
             onPress={() => {
               save();
+            }}
+          />
+          <BtnExport
+            exporting={exporting}
+            onPress={() => {
+              exportReport();
             }}
           />
         </UIHeader>
