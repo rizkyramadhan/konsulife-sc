@@ -42,7 +42,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
         });
 
         let query2: APISearchProps = {
-            Table: "ODRF",
+            Table: "ORDR",
             Fields: ['DocEntry'],
             Condition: [
                 {
@@ -60,7 +60,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
         });
 
         let query3: APISearchProps = {
-            Table: "OPDN",
+            Table: "ODRF",
             Fields: ['DocEntry'],
             Condition: [
                 {
@@ -107,7 +107,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
                                     {dataPOD}
                                 </UIText>
                                 <UIText style={{ fontSize: 14, color: '#6d6d6d' }}>
-                                    Outstanding Goods Receipt PO
+                                    Outstanding Goods Receipt PO (Draft)
                                 </UIText>
                             </UICardBody>
                         </UICard>
@@ -126,7 +126,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
                                     {dataSOD}
                                 </UIText>
                                 <UIText style={{ fontSize: 14, color: '#777' }}>
-                                    Outstanding Sales Order
+                                    Outstanding Sales Order (Draft)
                                 </UIText>
                             </UICardBody>
                         </UICard>
