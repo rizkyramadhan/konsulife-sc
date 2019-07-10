@@ -1,5 +1,4 @@
 import { APISearch, APISearchProps } from '@app/api';
-import BtnCreate from '@app/components/BtnCreate';
 import global from '@app/global';
 import UIBody from '@app/libs/ui/UIBody';
 import UICard, { UICardBody } from '@app/libs/ui/UICard';
@@ -87,7 +86,6 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
     return (
         <UIContainer>
             <UIHeader showSidebar={showSidebar} sidebar={sidebar} center="Home">
-                <BtnCreate path="/user/form" />
             </UIHeader>
             <UIBody>
                 <UIRow

@@ -72,7 +72,7 @@ const menuList = [
 ];
 
 const Menu = withRouter(({ history }: RouteComponentProps) => {
-    isSize(['md', 'lg']) && history.push('/so');
+    isSize(['md', 'lg']) && history.push('/home');
     const iconStyle: any = {
         flexShrink: 'none',
         overflow: 'visible'
