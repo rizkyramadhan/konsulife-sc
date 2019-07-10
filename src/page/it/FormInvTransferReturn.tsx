@@ -295,6 +295,14 @@ export default withRouter(
                               field: "U_BRANCH",
                               cond: "=",
                               value: global.getSession().user.branch
+                            },
+                            {
+                              cond: "AND"
+                            },
+                            {
+                              field: "U_IDU_WHSETYPE",
+                              cond: "=",
+                              value: "Canvassing"
                             }
                           ],
                           Page: 1
@@ -326,6 +334,14 @@ export default withRouter(
                               field: "U_BRANCH",
                               cond: "=",
                               value: global.getSession().user.branch
+                            },
+                            {
+                              cond: "AND"
+                            },
+                            {
+                              field: "U_IDU_WHSETYPE",
+                              cond: "<>",
+                              value: "Canvassing"
                             }
                           ],
                           Page: 1

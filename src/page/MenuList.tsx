@@ -102,18 +102,18 @@ export default [
         icon: <IconTruck width={20} height={20} color="#1D6EF7" />,
         roles: ["admin", "branch", "sales_canvas"],
         children: [{
-            title: <UIText style={{ color: "#676767", paddingLeft: 15 }}> Sales Order</UIText>,
-            subtitle: "Lorem Ipsum is simply dummy text.",
-            icon: <IconShoppingCart width={20} height={20} color="#676767" />,
-            path: "/so-canvas",
-            roles: ["admin", "branch", "sales_canvas"]
-        },
-        {
             title: <UIText style={{ color: "#676767", paddingLeft: 15 }}> Working Order</UIText>,
             subtitle: "Lorem Ipsum is simply dummy text.",
             icon: <IconLuggageCart width={20} height={20} color="#676767" />,
             path: "/wo",
             roles: ["admin", "branch"]
+        },
+        {
+            title: <UIText style={{ color: "#676767", paddingLeft: 15 }}> Sales Order</UIText>,
+            subtitle: "Lorem Ipsum is simply dummy text.",
+            icon: <IconShoppingCart width={20} height={20} color="#676767" />,
+            path: "/so-canvas",
+            roles: ["admin", "branch", "sales_canvas"]
         },
         {
             title: <UIText style={{ color: "#676767", paddingLeft: 15 }}> AR Invoice</UIText>,

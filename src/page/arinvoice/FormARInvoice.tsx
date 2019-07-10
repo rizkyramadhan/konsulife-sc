@@ -122,7 +122,8 @@ export default withRouter(
           "Price",
           "DiscPrcnt",
           "TaxCode",
-          "UomCode"
+          "UomCode",
+          "UnitMsr"
         ],
         Condition: [
           {

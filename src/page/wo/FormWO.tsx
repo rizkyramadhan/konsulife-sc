@@ -147,16 +147,15 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
               label: "General",
               sublabel: "Informasi Working Order",
               value: [
-                { key: "number", label: "WO Number", size: 8, type: "field" },
+                { key: "number", label: "WO Number", size: 12, type: "field" },
                 {
-                  key: "sales_id", size: 7, component: (<SAPDropdown label="Sales" field="SAPSalesCode"
+                  key: "sales_id", size: 12, component: (<SAPDropdown label="Sales" field="SAPSalesCode"
                     where={[{
                       field: "U_IDU_BRANCH",
                       value: global.getSession().user.branch
                     }]}
                     value={data.sales_id || ""} setValue={(v, l) => { setData({ ...data, sales_id: v, sales_name: l }) }} />)
                 },
-                { type: "empty" },
                 {
                   key: "rute", label: "Rute", size: 5, component: (<UISelectField label="Rute" items={rute as any} value={data.rute_id || ""} setValue={(v, l) => {
                     setData({ ...data, rute_id: v, rute: l })
@@ -174,8 +173,8 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
                   }} disable={match.params.id ? true : false} />)
                 },
                 { type: "empty" },
-                { key: "visite_date", label: "Visite Date", size: 6, type: "date" },
-                { key: "return_date", label: "Return Date", size: 6, type: "date" },
+                { key: "visite_date", label: "Start Date", size: 6, type: "date" },
+                { key: "return_date", label: "End Date", size: 6, type: "date" },
                 { key: "status", size: 6, component: (<UISelectField label="Status" items={[{ value: "pending", label: "Pending" }, { value: "open", label: "Open" }, { value: "close", label: "Close" }]} value={data.status || "pending"} setValue={(v) => { setData({ ...data, status: v }) }} />) },
               ]
             },
@@ -184,9 +183,9 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
               label: "Sopir",
               sublabel: "Informasi Sopir",
               value: [
-                { key: "sopir", label: "Sopir", size: 7 },
-                { key: "sopir_sim", label: "No SIM", size: 8 },
-                { key: "sopir_nopol", label: "Nopol", size: 5 },
+                { key: "sopir", label: "Sopir", size: 12 },
+                { key: "sopir_sim", label: "No SIM", size: 12 },
+                { key: "sopir_nopol", label: "Nopol", size: 12 },
               ]
             }
           ]}
