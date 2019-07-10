@@ -4,7 +4,7 @@ import UIList from "@app/libs/ui/UIList";
 import UISeparator from '@app/libs/ui/UISeparator';
 import UIText from '@app/libs/ui/UIText';
 import React from "react";
-import { Button, View } from 'reactxp/dist/web/ReactXP';
+import { Button, View, Modal } from 'reactxp/dist/web/ReactXP';
 import UIButton from '@app/libs/ui/UIButton';
 import IconRemove from '@app/libs/ui/Icons/IconRemove';
 import UIRow from '@app/libs/ui/UIRow';
@@ -34,14 +34,16 @@ export default ({ items, setItems }: any) => {
             }
           }
         }}
-        detailComponent={(item) => (
-          <View
+        detailComponent={(item) => 
+          {
+            let modal = <View
             style={{
               borderWidth: 0,
               borderLeftWidth: 1,
               borderColor: "#ececeb",
               backgroundColor: "#fff",
-              flexBasis: 350
+              flexBasis: 350,
+              overflow:"visible"
             }}
           >
             <View
@@ -66,7 +68,10 @@ export default ({ items, setItems }: any) => {
                 <UIText>{item.pkval}</UIText>
               </View>
               <View style={{ justifyContent: "center", alignItems: "center" }}>
-                <Button onPress={() => item.close()}>
+                <Button onPress={() =>{
+                  Modal.dismiss("detail_cp" + item.pkval);
+                  item.close();
+                }}>
                   <UIText size="large">&times;</UIText>
                 </Button>
               </View>
@@ -106,14 +111,18 @@ export default ({ items, setItems }: any) => {
                   const idx = items.findIndex((x: any) => x.Key === item.pkval);
                   items.splice(idx, 1);
                   setItems([...items]);
+                  Modal.dismiss("detail_cp" + item.pkval);
                   item.close();
                 }}
               >
                 <IconRemove color="#fff" height={18} width={18} />
               </UIButton>
             </UIRow>
-          </View>
-        )}
+          </View>;
+
+          Modal.show(modal, "detail_cp" + item.pkval);
+
+        }}
       />
     </View>
   );

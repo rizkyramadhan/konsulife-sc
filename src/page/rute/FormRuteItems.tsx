@@ -3,7 +3,7 @@ import React from "react";
 import { View } from 'reactxp/dist/web/Animated';
 import { MainStyle } from '@app/config';
 import UIText from '@app/libs/ui/UIText';
-import { Button } from 'reactxp';
+import { Button, Modal } from 'reactxp';
 import UISeparator from '@app/libs/ui/UISeparator';
 import UIJsonField from '@app/libs/ui/UIJsonField';
 import SAPDropdown from '@app/components/SAPDropdown';
@@ -25,13 +25,13 @@ interface IProps {
 }
 
 const DetailComponent = ({ item, items, setItems }: any) => {
-  return <View
+
+  let modal = <View 
     style={{
       borderWidth: 0,
       borderLeftWidth: 1,
       borderColor: "#ececeb",
       backgroundColor: "#fff",
-      flexBasis: 350
     }}
   >
     <View
@@ -56,7 +56,11 @@ const DetailComponent = ({ item, items, setItems }: any) => {
         <UIText>{item.pkval}</UIText>
       </View>
       <View style={{ justifyContent: "center", alignItems: "center" }}>
-        <Button onPress={() => { item.close(); }}>
+        <Button onPress={() => 
+            {
+              Modal.dismiss("detail" + item.pkval); 
+              item.close(); 
+            }}>
           <UIText size="large">&times;</UIText>
         </Button>
       </View>
@@ -115,12 +119,15 @@ const DetailComponent = ({ item, items, setItems }: any) => {
         const idx = items.findIndex((x: any) => x.id === item.pkval);
         items.splice(idx, 1);
         setItems([...items]);
+        Modal.dismiss("detail" + item.pkval);      
         item.close();
       }}>
         <IconTrash width={20} height={20} color="red" />
       </Button>
     </View>
-  </View>
+  </View>;
+
+  Modal.show(modal, "detail" + item.pkval);
 }
 
 export default ({ items, setItems }: IProps) => {
@@ -146,7 +153,7 @@ export default ({ items, setItems }: IProps) => {
         },
       }}
       items={items}
-      detailComponent={(item) => (<DetailComponent item={item as any} items={items} setItems={setItems} />)}
+      detailComponent={(item) =>{DetailComponent({item,items,setItems})}}
     />
   );
 };

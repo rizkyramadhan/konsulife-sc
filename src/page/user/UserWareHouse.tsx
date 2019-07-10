@@ -4,7 +4,7 @@ import UIList from '@app/libs/ui/UIList';
 import UISeparator from '@app/libs/ui/UISeparator';
 import UIText from '@app/libs/ui/UIText';
 import React from "react";
-import { Button, View } from 'reactxp';
+import { Button, View, Modal } from 'reactxp';
 import SAPDropdown from '@app/components/SAPDropdown';
 
 export default ({ items, setItems }: any) => {
@@ -21,75 +21,81 @@ export default ({ items, setItems }: any) => {
                 }
             }}
             items={items}
-            detailComponent={(item) => (
-                <View
-                    style={{
-                        borderWidth: 0,
-                        borderLeftWidth: 1,
-                        borderColor: "#ececeb",
-                        backgroundColor: "#fff",
-                        flexBasis: 350
-                    }}
-                >
-                    <View
+            detailComponent={(item) => 
+                {
+                    let modal = <View
                         style={{
-                            padding: 4,
-                            marginLeft: 0,
-                            marginRight: 0,
-                            paddingLeft: 0,
-                            flexDirection: "row",
-                            justifyContent: "space-around",
-                            backgroundColor: MainStyle.backgroundColor
+                            borderWidth: 0,
+                            borderLeftWidth: 1,
+                            borderColor: "#ececeb",
+                            backgroundColor: "#fff",
+                            flexBasis: 350
                         }}
                     >
                         <View
                             style={{
-                                alignItems: "flex-start",
-                                justifyContent: "center",
-                                flex: 1,
-                                paddingLeft: 10
+                                padding: 4,
+                                marginLeft: 0,
+                                marginRight: 0,
+                                paddingLeft: 0,
+                                flexDirection: "row",
+                                justifyContent: "space-around",
+                                backgroundColor: MainStyle.backgroundColor
                             }}
                         >
-                            <UIText>{item.pkval}</UIText>
+                            <View
+                                style={{
+                                    alignItems: "flex-start",
+                                    justifyContent: "center",
+                                    flex: 1,
+                                    paddingLeft: 10
+                                }}
+                            >
+                                <UIText>{item.pkval}</UIText>
+                            </View>
+                            <View style={{ justifyContent: "center", alignItems: "center" }}>
+                                <Button onPress={() => { 
+                                    setItems([...items]); 
+                                    item.close(); 
+                                    Modal.dismiss("detail"+item.pkval);}}>
+                                    <UIText size="large">&times;</UIText>
+                                </Button>
+                            </View>
                         </View>
-                        <View style={{ justifyContent: "center", alignItems: "center" }}>
-                            <Button onPress={() => { setItems([...items]); item.close(); }}>
-                                <UIText size="large">&times;</UIText>
-                            </Button>
-                        </View>
-                    </View>
-                    <UISeparator style={{ marginTop: 0, marginBottom: 0 }} />
-                    <UIJsonField
-                        items={item.item}
-                        setValue={(val: any, key: string) => {
-                            const idx = items.findIndex((x: any) => x.Key === item.pkval);
-                            items[idx][key] = val;
-                            setItems([...items]);
-                        }}
-                        style={{
-                            padding: 10
-                        }}
-                        field={[
-                            {
-                                key: "warehouse_code", size: 12, label: "Warehouse Code", component: (
-                                    <SAPDropdown label="Warehouse Code" field="Custom" customQuery={{
-                                        Table: "OWHS",
-                                        Fields: ["WhsCode"],
-                                        Page: 1
-                                    }} value={(item as any).item.warehouse_code} setValue={(v) => {
-                                        const idx = items.findIndex((x: any) => x.id === item.pkval);
-                                        items[idx]['warehouse_code'] = v;
-                                        if (!items[idx]['status']) {
-                                            items[idx]['status'] = 'update';
-                                        }
-                                        setItems([...items]);
-                                        console.log(items[idx]);
-                                    }} />)
-                            }
-                        ]}
-                    />
-                </View>
-            )}
+                        <UISeparator style={{ marginTop: 0, marginBottom: 0 }} />
+                        <UIJsonField
+                            items={item.item}
+                            setValue={(val: any, key: string) => {
+                                const idx = items.findIndex((x: any) => x.Key === item.pkval);
+                                items[idx][key] = val;
+                                setItems([...items]);
+                            }}
+                            style={{
+                                padding: 10
+                            }}
+                            field={[
+                                {
+                                    key: "warehouse_code", size: 12, label: "Warehouse Code", component: (
+                                        <SAPDropdown label="Warehouse Code" field="Custom" customQuery={{
+                                            Table: "OWHS",
+                                            Fields: ["WhsCode"],
+                                            Page: 1
+                                        }} value={(item as any).item.warehouse_code} setValue={(v) => {
+                                            const idx = items.findIndex((x: any) => x.id === item.pkval);
+                                            items[idx]['warehouse_code'] = v;
+                                            if (!items[idx]['status']) {
+                                                items[idx]['status'] = 'update';
+                                            }
+                                            setItems([...items]);
+                                        }} />)
+                                }
+                            ]}
+                        />
+                    </View>;
+
+                    Modal.show(modal, "detail"+item.pkval);
+                }
+            }
         />
     );
 }

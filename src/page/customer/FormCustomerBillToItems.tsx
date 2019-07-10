@@ -8,7 +8,7 @@ import UIRow from "@app/libs/ui/UIRow";
 import UISeparator from "@app/libs/ui/UISeparator";
 import UIText from "@app/libs/ui/UIText";
 import React from "react";
-import { Button, View } from "reactxp/dist/web/ReactXP";
+import { Button, View, Modal } from "reactxp/dist/web/ReactXP";
 
 export default ({ items, setItems }: any) => {
   return (
@@ -51,14 +51,15 @@ export default ({ items, setItems }: any) => {
             items[idx][key] = val;
             setItems([...items]);
           };
-          return (
+          let modal =  (
             <View
               style={{
                 borderWidth: 0,
                 borderLeftWidth: 1,
                 borderColor: "#ececeb",
                 backgroundColor: "#fff",
-                flexBasis: 350
+                flexBasis: 350,
+                overflow:"visible"
               }}
             >
               <View
@@ -86,7 +87,10 @@ export default ({ items, setItems }: any) => {
                   style={{ justifyContent: "center", alignItems: "center" }}
                 >
                   <Button
-                    onPress={() => item.close()}
+                    onPress={() => {
+                      Modal.dismiss("detail_billto"+item.pkval);
+                      item.close();
+                    }}
                   >
                     <UIText size="large">&times;</UIText>
                   </Button>
@@ -138,6 +142,7 @@ export default ({ items, setItems }: any) => {
                     );
                     items.splice(idx, 1);
                     setItems([...items]);
+                    Modal.dismiss("detail_billto"+item.pkval);
                     item.close();
                   }}
                 >
@@ -146,6 +151,7 @@ export default ({ items, setItems }: any) => {
               </UIRow>
             </View>
           );
+          Modal.show(modal,"detail_billto"+item.pkval);
         }}
       />
     </View>
