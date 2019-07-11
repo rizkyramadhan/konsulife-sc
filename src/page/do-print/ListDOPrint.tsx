@@ -1,5 +1,4 @@
 import { APISearch, APISearchProps } from "@app/api";
-import BtnCopy from "@app/components/BtnCopy";
 import UIBody from "@app/libs/ui/UIBody";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
@@ -7,20 +6,21 @@ import UIList from "@app/libs/ui/UIList";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
+import global from '@app/global';
+import BtnCreate from '@app/components/BtnCreate';
 
 export default withRouter(
-  observer(({ match, history, showSidebar, sidebar }: any) => {
+  observer(({ match,history,showSidebar, sidebar }: any) => {
     const [data, setData] = useState([]);
-    const [itemSelect, setItemSelect] = useState<any[]>([]);
 
     useEffect(() => {
       let query: APISearchProps = {
-        Table: "ORDR",
+        Table: "ODLN",
         Fields: [
           "DocEntry",
           "CardCode",
           "CardName",
-          "U_IDU_SO_INTNUM",
+          "U_IDU_DO_INTNUM",
           "DocDate"
         ],
         Condition: [
@@ -33,11 +33,10 @@ export default withRouter(
             cond: "AND"
           },
           {
-            field: "ObjType",
+            field: "U_BRANCH",
             cond: "=",
-            value: "17"
-          },
-          {
+            value: global.getSession().user.branch
+          },{
             cond: "AND"
           },
           {
@@ -58,39 +57,19 @@ export default withRouter(
         <UIHeader
           showSidebar={showSidebar}
           sidebar={sidebar}
-          center={`List SO of #${atob(match.params.CardCode)} - ${atob(
+          center={`List DO of #${atob(match.params.CardCode)} - ${atob(
             match.params.CardName
           )}`}
         >
-          <BtnCopy
-            onPress={() => {
-              if (itemSelect.length === 0) return;
-              history.push(
-                `/do/form/${match.params.CardCode}/${
-                  match.params.CardName
-                }/${btoa(JSON.stringify(itemSelect))}`
-              );
-            }}
-          />
+          <BtnCreate path={`/do/copySO/${match.params.CardCode}/${match.params.CardName}`} />
         </UIHeader>
         <UIBody scroll={true}>
           <UIList
             primaryKey="DocEntry"
             style={{ backgroundColor: "#fff" }}
-            selection="multi"
-            onSelect={item => {
-              const idx = itemSelect.findIndex(
-                (x: any) => x.DocEntry == item.DocEntry
-              );
-              if (idx >= 0) {
-                itemSelect.splice(idx, 1);
-              } else {
-                itemSelect.push({
-                  DocEntry: item.DocEntry,
-                  SONumber: item.U_IDU_SO_INTNUM
-                });
-              }
-              setItemSelect([...itemSelect]);
+            selection="single"
+            onSelect={(d) => {
+                history.push(`/do/view/${match.params.CardCode}/${match.params.CardName}/${d.DocEntry}`)
             }}
             fields={{
               CardCode: {

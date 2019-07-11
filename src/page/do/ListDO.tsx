@@ -81,8 +81,9 @@ export default withRouter(
         <UIHeader
           showSidebar={showSidebar}
           sidebar={sidebar}
-          center={"Delivery Order"}
-        />
+          center={"DO - Customer List"}
+        >
+        </UIHeader>  
         <UIBody>
           <UISearch onSearch={funcSearch} />
           <UIList
@@ -91,7 +92,7 @@ export default withRouter(
             selection="single"
             onSelect={item => {
               history.push(
-                `/do/copySO/${btoa(item.CardCode)}/${btoa(item.CardName)}`
+                `/do/open/${btoa(item.CardCode)}/${btoa(item.CardName)}`
               );
             }}
             fields={{

@@ -15,8 +15,6 @@ import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 import FormDODetailItems from "./FormDODetailItems";
-import { ReportPost } from '@app/report';
-import BtnExport from '@app/components/BtnExport';
 
 const date = new Date();
 const today = `${date.getFullYear()}-${lpad(
@@ -27,7 +25,6 @@ const today = `${date.getFullYear()}-${lpad(
 export default withRouter(
   observer(({ history, match, showSidebar, sidebar }: any) => {
     const [saving, setSaving] = useState(false);
-    const [exporting, setExporting] = useState(false);
     const [data, setData] = useState<any>({});
     const [items, setItems] = useState<any[]>([]);
     const [editable, setEdit] = useState(false);
@@ -141,44 +138,6 @@ export default withRouter(
       });
     }, []);
 
-    const exportReport = async () => {
-      if (exporting) return;
-      if (selected.length === 0) return;
-      setExporting(true);
-
-      const l = selected.map((d: any) => {
-        return {
-          BaseType: d.BaseType,
-          BaseEntry: d.BaseEntry,
-          BaseLine: d.BaseLine,
-          ItemCode: d.ItemCode,
-          Dscription: d.Dscription,
-          U_IDU_PARTNUM: d.U_IDU_PARTNUM,
-          UseBaseUn: d.UseBaseUn,
-          Quantity: d.Quantity,
-          UomCode: d.UomCode,
-          UomEntry: d.UomEntry,
-          WhsCode: d.WhsCode,
-          ShipDate: d.ShipDate,
-          OcrCode: d.OcrCode,
-          OcrCode2: d.OcrCode2,
-          PriceBefDi: d.PriceBefDi,
-          DiscPrcnt: d.DiscPrcnt,
-          TaxCode: d.TaxCode
-        };
-      });
-
-      try {
-        await ReportPost("do",{...data,Lines: l});
-      } catch (e) {
-        alert(e.Message);
-
-        console.error({data});
-      } finally {
-        setExporting(false);
-      }
-    };
-
     const save = async () => {
       if (saving) return;
       if (selected.length === 0) return;
@@ -282,12 +241,6 @@ export default withRouter(
               save();
             }}
             type={match.params.id ? "update" : "save"}
-          />
-          <BtnExport
-            exporting={exporting}
-            onPress={() => {
-              exportReport();
-            }}
           />
         </UIHeader>
         <UIBody scroll={true}>

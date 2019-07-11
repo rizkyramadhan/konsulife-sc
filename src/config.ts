@@ -23,4 +23,5 @@ export default {
   // wsSAP: "http://172.16.145.3:8087/MBGPService/Api/"
   wsSAP: "http://116.254.101.121:5000/MBGPWebService/Api/",
   wsBackend:"http://116.254.101.121:1000/",
+  //wsBackend:"http://localhost:44343/",
 };

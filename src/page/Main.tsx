@@ -52,6 +52,8 @@ import ListDraftSO from './so/ListDraftSO';
 import ListWO from './wo/ListWO';
 import IconCaretDown from '@app/libs/ui/Icons/IconCaretDown';
 import Home from './home/Home';
+import ListDOPrint from './do-print/ListDOPrint';
+import FormDOPrint from './do-print/FormDOPrint';
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
@@ -328,6 +330,8 @@ export default observer((_props: any) => {
                 "/so-canvas": <ListSOCanvas />,
                 "/so-canvas/form": <FormSOCanvas />,
                 "/do": <ListDO />,
+                "/do/open/:CardCode/:CardName/": <ListDOPrint />,
+                "/do/view/:CardCode/:CardName/:id": <FormDOPrint />,
                 "/do/copySO/:CardCode/:CardName": <ListDOCopySO />,
                 "/do/form/:CardCode/:CardName/:ItemSelect": <FormDO />,
                 "/it": <ListInvTransfer />,
