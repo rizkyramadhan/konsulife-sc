@@ -336,7 +336,7 @@ export default observer((_props: any) => {
                   borderLeftWidth: 6,
                   borderColor: '#2ece9d'
                 }}>
-                  <UIText size="extralarge">MASABARU GUNAPERSADA</UIText>
+                  <UIText size="large">MBGP - Sales App</UIText>
                 </View>
                 <UISeparator
                   style={{
