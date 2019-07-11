@@ -54,6 +54,8 @@ import IconCaretDown from '@app/libs/ui/Icons/IconCaretDown';
 import Home from './home/Home';
 import ListDOPrint from './do-print/ListDOPrint';
 import FormDOPrint from './do-print/FormDOPrint';
+import ListPRPrint from './pr-print/ListPRPrint';
+import FormPRPrint from './pr-print/FormPRPrint';
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
@@ -338,6 +340,8 @@ export default observer((_props: any) => {
                 "/it/form": <FormInvTransfer />,
                 "/it-ret/form": <FormInvTransferReturn />,
                 "/pr": <ListPRVendor />,
+                "/pr/open/:vendor": <ListPRPrint />,
+                "/pr/view/:vendor/:id": <FormPRPrint />,
                 "/pr/list/:id?": <ListPR />,
                 "/pr/form/:id?": <FormPR />,
                 "/payment-receipt": <ListPayment />,

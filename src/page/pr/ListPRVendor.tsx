@@ -70,7 +70,7 @@ export default withRouter(
         <UIHeader
           showSidebar={showSidebar}
           sidebar={sidebar}
-          center={"Purchase Receipt"}
+          center={"Purchase Receipt - Vendor List"}
           isLoading={loading}
         />
         <UIBody>
@@ -81,7 +81,7 @@ export default withRouter(
             selection="single"
             onSelect={item => {
               history.push(
-                "/pr/list/" + btoa(item.CardCode + "|" + item.CardName)
+                "/pr/open/" + btoa(item.CardCode + "|" + item.CardName)
               );
             }}
             fields={{

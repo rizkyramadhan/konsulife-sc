@@ -1,5 +1,4 @@
 import { APISearch, APISearchProps } from "@app/api";
-import BtnCopy from "@app/components/BtnCopy";
 import UIBody from "@app/libs/ui/UIBody";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
@@ -9,16 +8,13 @@ import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 import global from "@app/global";
-
-let selectedItems: any[];
+import BtnCreate from '@app/components/BtnCreate';
 
 export default withRouter(
   observer(({ history, match, showSidebar, sidebar }: any) => {
     const [data, setData] = useState([]);
-    const param = atob(match.params.id).split("|", 2);
+    const param = atob(match.params.vendor).split("|", 2);
     const [_data, _setData] = useState([]);
-    const [loading, setLoading] = useState(false);
-
     const field = [
       "DocNum",
       "DocEntry",
@@ -48,9 +44,8 @@ export default withRouter(
     };
 
     useEffect(() => {
-      setLoading(true);
       let query: APISearchProps = {
-        Table: "OPOR",
+        Table: "OPDN",
         Fields: field,
         Condition: [
           {
@@ -80,7 +75,6 @@ export default withRouter(
       APISearch(query).then((res: any) => {
         _setData(res);
         setData(res);
-        setLoading(false);
       });
     }, []);
 
@@ -89,29 +83,18 @@ export default withRouter(
         <UIHeader
           showSidebar={showSidebar}
           sidebar={sidebar}
-          center={"List Purchase Order " + param[1]}
-          isLoading={loading}
+          center={"List Purchase Receipt " + param[1]}
         >
-          <BtnCopy
-            onPress={() => {
-              if (selectedItems !== undefined && selectedItems.length > 0) {
-                let key = selectedItems.join("|");
-                history.push("/pr/form/" + btoa(key));
-              } else {
-                alert("Please Select PO!");
-              }
-            }}
-            label="Copy PO"
-          />
+          <BtnCreate path={"/pr/list/" + match.params.vendor} />
         </UIHeader>
         <UIBody>
           <UISearch onSearch={funcSearch} />
           <UIList
             style={{ flex: 1 }}
             primaryKey="DocEntry"
-            selection="multi"
-            onSelect={(_, selected) => {
-              selectedItems = selected;
+            selection="single"
+            onSelect={(d) => {
+                history.push(`/pr/view/${match.params.vendor}/${d.DocEntry}`)
             }}
             fields={{
               CardCode: {
