@@ -47,6 +47,12 @@ import FormSOCanvas from "./socanvas/FormSOCanvas";
 import ListSOCanvas from "./socanvas/ListSOCanvas";
 import FormUser from "./user/FormUser";
 import ListUser from "./user/ListUser";
+import ReportPO from "./report/ReportPO";
+import ReportSO from "./report/ReportSO";
+import ReportDO from "./report/ReportDO";
+import ReportAR from "./report/ReportAR";
+import ReportStock from "./report/ReportStock";
+import ReportInventory from "./report/ReportInventory";
 import FormWO from "./wo/FormWO";
 import ListDraftSO from "./so/ListDraftSO";
 import ListWO from "./wo/ListWO";
@@ -54,16 +60,12 @@ import IconCaretDown from "@app/libs/ui/Icons/IconCaretDown";
 import Home from "./home/Home";
 import ListDOPrint from "./do-print/ListDOPrint";
 import FormDOPrint from "./do-print/FormDOPrint";
+import ListPRPrint from "./pr-print/ListPRPrint";
+import FormPRPrint from "./pr-print/FormPRPrint";
 import ListARInvoiceTOPrint from "./arinvoice-to-print/ListARInvoiceTOPrint";
 import FormARInvoiceTOPrint from "./arinvoice-to-print/FormARInvoiceTOPrint";
 import ListARInvoicePrint from "./arinvoice-print/ListARInvoicePrint";
 import FormARInvoicePrint from "./arinvoice-print/FormARInvoicePrint";
-import ReportPO from "./report/ReportPO";
-import ReportSO from "./report/ReportSO";
-import ReportDO from "./report/ReportDO";
-import ReportAR from "./report/ReportAR";
-import ReportStock from "./report/ReportStock";
-import ReportInventory from "./report/ReportInventory";
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
@@ -438,6 +440,8 @@ export default observer((_props: any) => {
               "/it/form": <FormInvTransfer />,
               "/it-ret/form": <FormInvTransferReturn />,
               "/pr": <ListPRVendor />,
+              "/pr/open/:vendor": <ListPRPrint />,
+              "/pr/view/:vendor/:id": <FormPRPrint />,
               "/pr/list/:id?": <ListPR />,
               "/pr/form/:id?": <FormPR />,
               "/payment-receipt": <ListPayment />,
@@ -464,6 +468,7 @@ export default observer((_props: any) => {
               "/customer/form/:id?": <FormCustomer />,
               "/user": <ListUser />,
               "/user/form/:id?": <FormUser />,
+
               "/report/po": <ReportPO />,
               "/report/so": <ReportSO />,
               "/report/do": <ReportDO />,

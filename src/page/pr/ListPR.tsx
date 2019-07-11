@@ -88,9 +88,12 @@ export default withRouter(
 
     return (
       <UIContainer>
-        <UIHeader pattern={true} isLoading={loading} showSidebar={showSidebar} sidebar={sidebar} center={
-          <UIText size="large" style={{ color: '#fff' }}>{param[1]}</UIText>
-        }>
+        <UIHeader
+          showSidebar={showSidebar}
+          sidebar={sidebar}
+          center={"List Purchase Order " + param[1]}
+          isLoading={loading}
+        >
           <BtnCopy
             onPress={() => {
               if (selectedItems !== undefined && selectedItems.length > 0) {

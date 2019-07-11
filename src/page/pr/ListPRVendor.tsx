@@ -69,9 +69,12 @@ export default withRouter(
 
     return (
       <UIContainer>
-        <UIHeader pattern={true} isLoading={loading} showSidebar={showSidebar} sidebar={sidebar} center={
-          <UIText size="large" style={{ color: '#fff' }}>Purchase Receipt</UIText>
-        } />
+        <UIHeader
+          showSidebar={showSidebar}
+          sidebar={sidebar}
+          center={"Purchase Receipt - Vendor List"}
+          isLoading={loading}
+        />
         <UIBody>
           <UICard mode="clean" style={{ borderRadius: 4, flex: 1, backgroundColor: '#fff' }}>
             <UICardHeader style={{ backgroundColor: '#fff', flexDirection: 'row', alignItems: 'center' }}>

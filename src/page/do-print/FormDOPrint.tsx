@@ -116,15 +116,7 @@ export default withRouter(
       APISearch(query).then((res: any) => {
         const items = res.map((item: any) => {
           item.Key = btoa(item.DocEntry + "|" + item.LineNum);
-          item.BaseType = item.ObjType;
-          item.BaseLine = item.LineNum;
-          item.BaseEntry = item.DocEntry;
-          item.Quantity = parseInt(item.OpenQty);
 
-          delete item.ObjType;
-          delete item.LineNum;
-          delete item.DocEntry;
-          delete item.OpenQty;
           return item;
         });
         setItems([...items]);
@@ -157,7 +149,7 @@ export default withRouter(
           TaxCode: d.TaxCode
         };
       });
-      console.log(data);
+      
       try {
         await ReportPost("do",{...data,Lines: l});
       } catch (e) {
