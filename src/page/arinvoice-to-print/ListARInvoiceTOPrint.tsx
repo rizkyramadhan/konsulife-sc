@@ -1,5 +1,6 @@
 import { APISearch, APISearchProps } from "@app/api";
-import BtnCopy from "@app/components/BtnCopy";
+import BtnCreate from '@app/components/BtnCreate';
+import BtnExport from '@app/components/BtnExport';
 import UIBody from "@app/libs/ui/UIBody";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
@@ -9,15 +10,12 @@ import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 
-let selectedItems: any[];
-
 export default withRouter(
   observer(({ match, history, showSidebar, sidebar }: any) => {
     const [data, setData] = useState([]);
+    // const param = atob(match.params.id).split("|", 2);
     const [_data, _setData] = useState([]);
     const [field, setField] = useState<any[]>([]);
-    const [loading, setLoading] = useState(false);
-
     const funcSearch = (value: string) => {
       _setData([
         ...(value
@@ -39,9 +37,8 @@ export default withRouter(
     };
 
     useEffect(() => {
-      setLoading(true);
       let query: APISearchProps = {
-        Table: "ODLN",
+        Table: "OINV",
         Fields: [
           "DocEntry",
           "CardName",
@@ -64,15 +61,25 @@ export default withRouter(
             field: "CardCode",
             cond: "=",
             value: atob(match.params.CardCode)
+          },
+          { cond: 'AND' },
+          {
+            field: "U_IDU_ISCANVAS",
+            cond: "=",
+            value: "N"
           }
         ]
       };
 
       APISearch(query).then((res: any) => {
         setField(Object.keys(res[0]));
+        res.forEach((item: any) => {
+          item['Action'] = () => {
+            return (<BtnExport />)
+          }
+        });
         setData(res);
         _setData(res);
-        setLoading(false);
       });
     }, []);
 
@@ -81,29 +88,18 @@ export default withRouter(
         <UIHeader
           showSidebar={showSidebar}
           sidebar={sidebar}
-          isLoading={loading}
           center={"AR Invoice  " + atob(match.params.CardName)}
         >
-          <BtnCopy
-            label="Copy DO"
-            onPress={() => {
-              if (selectedItems !== undefined && selectedItems.length > 0) {
-                let key = selectedItems.join("|");
-                history.push("/ar-invoice-to/form/" + btoa(key));
-              } else {
-                alert("Please Select DO!");
-              }
-            }}
-          />
+          <BtnCreate path={`/ar-invoice-to/list/${match.params.CardCode}/${match.params.CardName}`} />
         </UIHeader>
         <UIBody>
           <UISearch onSearch={funcSearch} />
           <UIList
             primaryKey="DocEntry"
             style={{ backgroundColor: "#fff" }}
-            selection="multi"
-            onSelect={(_, selected) => {
-              selectedItems = selected;
+            selection="single"
+            onSelect={(d) => {
+              history.push(`/ar-invoice-to/view/${match.params.CardCode}/${match.params.CardName}/${d.DocEntry}`)
             }}
             fields={{
               CardName: {
@@ -135,6 +131,8 @@ export default withRouter(
                 table: {
                   header: "Posting Date"
                 }
+              },
+              Action: {
               }
             }}
             items={_data.map((item: any) => ({

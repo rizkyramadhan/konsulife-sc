@@ -6,9 +6,11 @@ import { observer } from "mobx-react-lite";
 import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
 import BtnCreate from "@app/components/BtnCreate";
-import rawQuery from "@app/libs/gql/data/rawQuery";
-import global from "@app/global";
-import UISearch from "@app/libs/ui/UISearch";
+import rawQuery from '@app/libs/gql/data/rawQuery';
+import global from '@app/global';
+import UISearch from '@app/libs/ui/UISearch';
+import UIText from '@app/libs/ui/UIText';
+import UICard, { UICardHeader } from '@app/libs/ui/UICard';
 
 interface IRute {
   id: number;
@@ -39,62 +41,66 @@ export default withRouter(
     }, []);
 
     const funcSearch = (value: string) => {
-      _setData([
-        ...(value
-          ? data.filter((x: any) => {
-              let res = false;
-              for (var i = 0; i < field.length; i++) {
-                if (
-                  x[field[i]] &&
-                  x[field[i]].toLowerCase().includes(value.toLowerCase())
-                ) {
-                  res = true;
-                  break;
-                }
-              }
-              return res;
-            })
-          : data)
-      ]);
-    };
+      _setData([...(value ? data.filter((x: any) => {
+        let res = false;
+        for (var i = 0; i < field.length; i++) {
+          if (x[field[i]] && x[field[i]].toLowerCase().includes(value.toLowerCase())) {
+            res = true;
+            break;
+          }
+        }
+        return res
+      }) : data)])
+    }
 
     return (
       <UIContainer>
-        <UIHeader
-          showSidebar={showSidebar}
-          sidebar={sidebar}
-          center={"Master Rute"}
-          isLoading={loading}
-        >
+        <UIHeader pattern={true} isLoading={loading} showSidebar={showSidebar} sidebar={sidebar} center={
+          <UIText size="large" style={{ color: '#fff' }}>Master Route</UIText>
+        }>
           <BtnCreate path="/rute/form" />
         </UIHeader>
         <UIBody scroll={true}>
-          <UISearch onSearch={funcSearch} />
-          <UIList
-            style={{ flex: 1 }}
-            primaryKey="id"
-            selection="single"
-            onSelect={d => {
-              history.push("/rute/form/" + d.id);
-            }}
-            fields={{
-              name: {
-                table: {
-                  header: "Nama"
+          <UICard mode="clean" style={{ borderRadius: 4, flex: 1, backgroundColor: '#fff' }}>
+            <UICardHeader style={{ backgroundColor: '#fff', flexDirection: 'row', alignItems: 'center' }}>
+              <UIText size="medium" style={{
+                flexShrink: 'none',
+                width: '100%'
+              }}>List Route</UIText>
+              <UISearch style={{
+                width: '100%',
+                maxWidth: 300
+              }}
+                fieldStyle={{
+                  borderWidth: 0,
+                  backgroundColor: '#f6f9fc'
+                }} onSearch={funcSearch}></UISearch>
+            </UICardHeader>
+            <UIList
+              style={{ flex: 1 }}
+              primaryKey="id"
+              selection="single"
+              onSelect={(d) => {
+                history.push('/rute/form/' + d.id)
+              }}
+              fields={{
+                name: {
+                  table: {
+                    header: "Nama"
+                  }
+                },
+                description: {
+                  table: {
+                    header: "Deskripsi"
+                  }
                 }
-              },
-              description: {
-                table: {
-                  header: "Deskripsi"
-                }
-              }
-            }}
-            items={_data.map((item: any) => ({
-              ...item
-            }))}
-          />
+              }}
+              items={_data.map((item: any) => ({
+                ...item,
+              }))}
+            />
+          </UICard>
         </UIBody>
       </UIContainer>
     );
-  })
-);
+  }));

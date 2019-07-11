@@ -14,7 +14,7 @@ let selectedItems: any[];
 export default withRouter(
   observer(({ history, match, showSidebar, sidebar }: any) => {
     const [data, setData] = useState([]);
-    const param = atob(match.params.id).split("|", 2);
+    // const param = atob(match.params.id).split("|", 2);
     const [_data, _setData] = useState([]);
     const [field, setField] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
@@ -23,18 +23,18 @@ export default withRouter(
       _setData([
         ...(value
           ? data.filter((x: any) => {
-              let res = false;
-              for (var i = 0; i < field.length; i++) {
-                if (
-                  x[field[i]] &&
-                  x[field[i]].toLowerCase().includes(value.toLowerCase())
-                ) {
-                  res = true;
-                  break;
-                }
+            let res = false;
+            for (var i = 0; i < field.length; i++) {
+              if (
+                x[field[i]] &&
+                x[field[i]].toLowerCase().includes(value.toLowerCase())
+              ) {
+                res = true;
+                break;
               }
-              return res;
-            })
+            }
+            return res;
+          })
           : data)
       ]);
     };
@@ -63,7 +63,7 @@ export default withRouter(
           {
             field: "CardCode",
             cond: "=",
-            value: param[0]
+            value: atob(match.params.CardCode)
           },
           {
             cond: "AND"
@@ -89,8 +89,8 @@ export default withRouter(
         <UIHeader
           showSidebar={showSidebar}
           sidebar={sidebar}
-          center={"AR Invoice  " + param[1]}
           isLoading={loading}
+          center={"AR Invoice  " + atob(match.params.CardName)}
         >
           <BtnCopy
             onPress={() => {

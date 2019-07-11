@@ -7,6 +7,8 @@ import UIList from "@app/libs/ui/UIList";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
+import UICard, { UICardHeader } from '@app/libs/ui/UICard';
+import UIText from '@app/libs/ui/UIText';
 
 export default withRouter(
   observer(({ match, history, showSidebar, sidebar }: any) => {
@@ -58,68 +60,73 @@ export default withRouter(
 
     return (
       <UIContainer>
-        <UIHeader
-          showSidebar={showSidebar}
-          sidebar={sidebar}
-          center={`List SO of #${atob(match.params.CardCode)} - ${atob(
+        <UIHeader pattern={true} isLoading={loading} showSidebar={showSidebar} sidebar={sidebar} center={
+          <UIText size="large" style={{ color: '#fff' }}>{`#${atob(match.params.CardCode)} - ${atob(
             match.params.CardName
-          )}`}
-          isLoading={loading}
-        >
+          )}`}</UIText>
+        }>
           <BtnCopy
             onPress={() => {
               if (itemSelect.length === 0) return;
               history.push(
                 `/do/form/${match.params.CardCode}/${
-                  match.params.CardName
+                match.params.CardName
                 }/${btoa(JSON.stringify(itemSelect))}`
               );
             }}
           />
         </UIHeader>
         <UIBody scroll={true}>
-          <UIList
-            primaryKey="DocEntry"
-            style={{ backgroundColor: "#fff" }}
-            selection="multi"
-            onSelect={item => {
-              const idx = itemSelect.findIndex(
-                (x: any) => x.DocEntry == item.DocEntry
-              );
-              if (idx >= 0) {
-                itemSelect.splice(idx, 1);
-              } else {
-                itemSelect.push({
-                  DocEntry: item.DocEntry,
-                  SONumber: item.U_IDU_SO_INTNUM
-                });
-              }
-              setItemSelect([...itemSelect]);
-            }}
-            fields={{
-              CardCode: {
-                table: {
-                  header: "Customer Code"
+          <UICard mode="clean" style={{ borderRadius: 4, flex: 1, backgroundColor: '#fff' }}>
+            <UICardHeader style={{ backgroundColor: '#fff', flexDirection: 'row', alignItems: 'center' }}>
+              <UIText size="medium" style={{
+                flexShrink: 'none',
+                width: '100%'
+              }}>List Sales Order</UIText>
+            </UICardHeader>
+            <UIList
+              primaryKey="DocEntry"
+              style={{ backgroundColor: "#fff" }}
+              selection="multi"
+              onSelect={item => {
+                const idx = itemSelect.findIndex(
+                  (x: any) => x.DocEntry == item.DocEntry
+                );
+                if (idx >= 0) {
+                  itemSelect.splice(idx, 1);
+                } else {
+                  itemSelect.push({
+                    DocEntry: item.DocEntry,
+                    SONumber: item.U_IDU_SO_INTNUM
+                  });
                 }
-              },
-              CardName: {
-                table: {
-                  header: "Customer Name"
+                setItemSelect([...itemSelect]);
+              }}
+              fields={{
+                CardCode: {
+                  table: {
+                    header: "Customer Code"
+                  }
+                },
+                CardName: {
+                  table: {
+                    header: "Customer Name"
+                  }
+                },
+                U_IDU_SO_INTNUM: {
+                  table: {
+                    header: "SO No."
+                  }
+                },
+                DocDate: {
+                  table: {
+                    header: "Posting Date"
+                  }
                 }
-              },
-              U_IDU_SO_INTNUM: {
-                table: {
-                  header: "SO No."
-                }
-              },
-              DocDate: {
-                table: {
-                  header: "Posting Date"
-                }
-              }
-            }}
-            items={data}
-          />
+              }}
+              items={data}
+            />
+          </UICard>
         </UIBody>
       </UIContainer>
     );

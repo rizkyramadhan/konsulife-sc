@@ -54,17 +54,19 @@ import IconCaretDown from '@app/libs/ui/Icons/IconCaretDown';
 import Home from './home/Home';
 import ListDOPrint from './do-print/ListDOPrint';
 import FormDOPrint from './do-print/FormDOPrint';
+import ListARInvoiceTOPrint from './arinvoice-to-print/ListARInvoiceTOPrint';
+import FormARInvoiceTOPrint from './arinvoice-to-print/FormARInvoiceTOPrint';
+import ListARInvoicePrint from './arinvoice-print/ListARInvoicePrint';
+import FormARInvoicePrint from './arinvoice-print/FormARInvoicePrint';
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
 }
 
-const MenuItem = ({ item, history, active, path, setPath, setSide, sperator }: any) => {
+const MenuItem = ({ item, history, path, setPath, setSide, child }: any) => {
   const [expand, setExpand] = useState(false);
   const [activePar, setActivePar] = useState(false);
-  const childActive = {
-    backgroundColor: "#e9f1ff"
-  };
+  const [hover, setHover] = useState(false);
 
   useEffect(() => {
     let idx = item.children && item.children.findIndex((x: any) => x.path == path);
@@ -79,7 +81,7 @@ const MenuItem = ({ item, history, active, path, setPath, setSide, sperator }: a
   if (item.children && item.children.length > 0) {
     return (
       <View>
-        <View style={{ padding: 0, ...(activePar ? active : {}) }}>
+        <View style={{ padding: 0, ...(activePar ? { backgroundColor: '#2ece896e' } : {}) }}>
           <UIButton
             onPress={() => {
               // history.replace(item.path);
@@ -88,6 +90,10 @@ const MenuItem = ({ item, history, active, path, setPath, setSide, sperator }: a
               if (Platform.getType() !== "web") {
                 setSide(false);
               }
+            }}
+            attr={{
+              onMouseOver: () => setHover(true),
+              onMouseLeave: () => setHover(false)
             }}
             animation={false}
             fill="clear"
@@ -101,36 +107,42 @@ const MenuItem = ({ item, history, active, path, setPath, setSide, sperator }: a
             }}
           >
             {item.icon && item.icon}
-            {item.title}
+            <View style={{ opacity: 0.7, ...(hover ? { opacity: 1 } : activePar ? { opacity: 1 } : {}) }}>
+              {item.title}
+            </View>
             <View style={{
               flex: 1,
               justifyContent: "flex-end",
-              alignItems: "flex-end"
+              alignItems: "flex-end",
+              opacity: 0.7
             }}>
               {item.children && item.children.length > 0 && <IconCaretDown width={20} height={20} />}
             </View>
           </UIButton>
 
-          <UISeparator
+          {/* <UISeparator
             style={{
               marginTop: 0,
               marginBottom: 0,
               borderColor: "#e8f1ff"
             }}
-          />
+          /> */}
         </View>
         {expand && <UISimpleList
           style={{
             paddingTop: 0,
             paddingBottom: 0,
-            paddingLeft: 15,
+            marginLeft: 25,
             flex: 1,
             overflow: "auto",
+            borderWidth: 0,
+            borderLeftWidth: 2,
+            borderColor: '#009688'
           }}
           data={item.children}
           renderItems={(child, opt) => {
             if (child.roles.indexOf(global.session.user.role) > -1) return (
-              <MenuItem key={opt.index} item={child} history={history} path={path} setPath={setPath} setSide={setSide} active={childActive} sperator="#e2e2e2" />
+              <MenuItem key={opt.index} item={child} history={history} path={path} setPath={setPath} setSide={setSide} sperator="#e2e2e2" child={true} />
             );
             else return;
           }}
@@ -139,7 +151,7 @@ const MenuItem = ({ item, history, active, path, setPath, setSide, sperator }: a
     )
   } else {
     return (
-      <View style={{ padding: 0, ...(path == item.path ? active : {}) }}>
+      <View style={{ padding: 0, ...(item.path == path ? { backgroundColor: '#d3f7e4' } : {}) }}>
         <UIButton
           onPress={() => {
             history.replace(item.path);
@@ -147,6 +159,10 @@ const MenuItem = ({ item, history, active, path, setPath, setSide, sperator }: a
             if (Platform.getType() !== "web") {
               setSide(false);
             }
+          }}
+          attr={{
+            onMouseOver: () => setHover(true),
+            onMouseLeave: () => setHover(false)
           }}
           animation={false}
           fill="clear"
@@ -156,11 +172,14 @@ const MenuItem = ({ item, history, active, path, setPath, setSide, sperator }: a
             flexShrink: "none",
             justifyContent: "flex-start",
             paddingTop: 15,
-            paddingBottom: 15
+            paddingBottom: 15,
+            ...(child ? { paddingTop: 8, paddingBottom: 8 } : {})
           }}
         >
           {item.icon && item.icon}
-          {item.title}
+          <View style={{ opacity: 0.7, ...(hover ? { opacity: 1 } : item.path == path ? { opacity: 1 } : {}) }}>
+            {item.title}
+          </View>
           <View style={{
             flex: 1,
             justifyContent: "flex-end",
@@ -169,13 +188,13 @@ const MenuItem = ({ item, history, active, path, setPath, setSide, sperator }: a
           </View>
         </UIButton>
 
-        <UISeparator
+        {/* <UISeparator
           style={{
             marginTop: 0,
             marginBottom: 0,
             borderColor: sperator
           }}
-        />
+        /> */}
       </View>
     )
   }
@@ -183,14 +202,13 @@ const MenuItem = ({ item, history, active, path, setPath, setSide, sperator }: a
 
 const Menu = withRouter(({ history, setSide }: MenuProps) => {
   const [path, setPath] = useState("");
-  const active = {
-    backgroundColor: "#cee0ff"
-  };
+  const [hover, setHover] = useState(false);
+
   useEffect(() => {
     let routeList: any = [];
-    MenuList.map(item => {
+    MenuList.map((item: any) => {
       if (item.children) {
-        item.children.map(child => {
+        item.children.map((child: any) => {
           routeList.push(child.path);
         })
       } else {
@@ -213,7 +231,7 @@ const Menu = withRouter(({ history, setSide }: MenuProps) => {
       data={MenuList}
       renderItems={(item, opt) => {
         if (item.roles.indexOf(global.session.user.role) > -1) return (
-          <MenuItem key={opt.index} item={item} history={history} path={path} setPath={setPath} setSide={setSide} active={active} sperator="#e8f1ff" />
+          <MenuItem key={opt.index} item={item} history={history} path={path} setPath={setPath} setSide={setSide} sperator="#e8f1ff" />
         );
         else return;
       }}
@@ -226,13 +244,17 @@ const Menu = withRouter(({ history, setSide }: MenuProps) => {
             history.replace("/login");
             setSide(false);
           }}
+          attr={{
+            onMouseOver: () => setHover(true),
+            onMouseLeave: () => setHover(false)
+          }}
           animation={false}
           fill="clear"
           style={{ width: "100%", justifyContent: "flex-start" }}
           color="#fff"
         >
-          <IconSignOut width={20} height={20} color="#1D6EF7" />
-          <UIText style={{ color: "#1D6EF7", paddingLeft: 15 }}> Logout</UIText>
+          <IconSignOut width={20} height={20} color="#f5365c" />
+          <UIText style={{ color: "#525f7f", paddingLeft: 15, ...(hover ? { opacity: 1 } : { opacity: 0.7 }) }}> Logout</UIText>
         </UIButton>
 
         <UISeparator
@@ -304,9 +326,19 @@ export default observer((_props: any) => {
                   alignSelf: "center"
                 }}
               /> */}
+                <View style={{
+                  margin: 15,
+                  marginLeft: 0,
+                  paddingLeft: 20,
+                  borderWidth: 0,
+                  borderLeftWidth: 6,
+                  borderColor: '#2ece9d'
+                }}>
+                  <UIText size="extralarge">MASABARU GUNAPERSADA</UIText>
+                </View>
                 <UISeparator
                   style={{
-                    opacity: 0.2,
+                    opacity: 0.4,
                     marginTop: 0,
                     marginBottom: 0
                   }}
@@ -344,11 +376,15 @@ export default observer((_props: any) => {
                 "/payment-receipt/form": <FormPayment />,
                 "/it/form/:id?": <FormInvTransfer />,
                 "/ar-invoice": <ListInvoiceCust />,
-                "/ar-invoice/list/:id?": <ListARInvoice />,
+                "/ar-invoice/list/:CardCode/:CardName/": <ListARInvoice />,
+                "/ar-invoice/open/:CardCode/:CardName/": <ListARInvoicePrint />,
                 "/ar-invoice/form/:id?": <FormARInvoice />,
+                "/ar-invoice/view/:CardCode/:CardName/:id?": <FormARInvoicePrint />,
                 "/ar-invoice-to": <ListInvoiceTOCust />,
-                "/ar-invoice-to/list/:id?": <ListARInvoiceTO />,
+                "/ar-invoice-to/open/:CardCode/:CardName/": <ListARInvoiceTOPrint />,
+                "/ar-invoice-to/list/:CardCode/:CardName/": <ListARInvoiceTO />,
                 "/ar-invoice-to/form/:id?": <FormARInvoiceTO />,
+                "/ar-invoice-to/view/:CardCode/:CardName/:id?": <FormARInvoiceTOPrint />,
                 "/customer": <ListCustomer />,
                 "/customer/draft": <ListDraftCustomer />,
                 "/customer/form/:id?": <FormCustomer />,
