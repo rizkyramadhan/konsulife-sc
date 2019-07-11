@@ -8,6 +8,8 @@ import { withRouter } from "react-router";
 import { APISearch, APISearchProps } from "@app/api";
 import UISearch from "@app/libs/ui/UISearch";
 import global from "@app/global";
+import UIText from '@app/libs/ui/UIText';
+import UICard, { UICardHeader } from '@app/libs/ui/UICard';
 
 export default withRouter(
   observer(({ history, showSidebar, sidebar }: any) => {
@@ -20,18 +22,18 @@ export default withRouter(
       _setData([
         ...(value
           ? data.filter((x: any) => {
-              let res = false;
-              for (var i = 0; i < field.length; i++) {
-                if (
-                  x[field[i]] &&
-                  x[field[i]].toLowerCase().includes(value.toLowerCase())
-                ) {
-                  res = true;
-                  break;
-                }
+            let res = false;
+            for (var i = 0; i < field.length; i++) {
+              if (
+                x[field[i]] &&
+                x[field[i]].toLowerCase().includes(value.toLowerCase())
+              ) {
+                res = true;
+                break;
               }
-              return res;
-            })
+            }
+            return res;
+          })
           : data)
       ]);
     };
@@ -82,37 +84,49 @@ export default withRouter(
 
     return (
       <UIContainer>
-        <UIHeader
-          showSidebar={showSidebar}
-          sidebar={sidebar}
-          center={"DO - Customer List"}
-          isLoading={loading}
-        />
+        <UIHeader pattern={true} isLoading={loading} showSidebar={showSidebar} sidebar={sidebar} center={
+          <UIText size="large" style={{ color: '#fff' }}>Delivery Order</UIText>
+        } />
         <UIBody>
-          <UISearch onSearch={funcSearch} />
-          <UIList
-            primaryKey="CardCode"
-            style={{ backgroundColor: "#fff" }}
-            selection="single"
-            onSelect={item => {
-              history.push(
-                `/do/open/${btoa(item.CardCode)}/${btoa(item.CardName)}`
-              );
-            }}
-            fields={{
-              CardCode: {
-                table: {
-                  header: "Customer Code"
+          <UICard mode="clean" style={{ borderRadius: 4, flex: 1, backgroundColor: '#fff' }}>
+            <UICardHeader style={{ backgroundColor: '#fff', flexDirection: 'row', alignItems: 'center' }}>
+              <UIText size="medium" style={{
+                flexShrink: 'none',
+                width: '100%'
+              }}>List Customer</UIText>
+              <UISearch style={{
+                width: '100%',
+                maxWidth: 300
+              }}
+                fieldStyle={{
+                  borderWidth: 0,
+                  backgroundColor: '#f6f9fc'
+                }} onSearch={funcSearch}></UISearch>
+            </UICardHeader>
+            <UIList
+              primaryKey="CardCode"
+              style={{ backgroundColor: "#fff" }}
+              selection="single"
+              onSelect={item => {
+                history.push(
+                  `/do/open/${btoa(item.CardCode)}/${btoa(item.CardName)}`
+                );
+              }}
+              fields={{
+                CardCode: {
+                  table: {
+                    header: "Customer Code"
+                  }
+                },
+                CardName: {
+                  table: {
+                    header: "Customer Name"
+                  }
                 }
-              },
-              CardName: {
-                table: {
-                  header: "Customer Name"
-                }
-              }
-            }}
-            items={_data}
-          />
+              }}
+              items={_data}
+            />
+          </UICard>
         </UIBody>
       </UIContainer>
     );

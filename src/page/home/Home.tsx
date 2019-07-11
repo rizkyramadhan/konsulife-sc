@@ -91,7 +91,9 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
     }, []);
     return (
         <UIContainer>
-            <UIHeader showSidebar={showSidebar} sidebar={sidebar} center="Home">
+            <UIHeader pattern={true} showSidebar={showSidebar} sidebar={sidebar} center={
+                <UIText size="large" style={{ color: '#fff' }}>Dashboard</UIText>
+            }>
             </UIHeader>
             <UIBody>
                 <UIRow
@@ -99,11 +101,12 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
                         width: "100%"
                     }}
                 >
-                    <UICol size={4} xs={12} sm={12}>
+                    <UICol size={4} xs={12} sm={12} style={{ alignItems: 'center' }}>
                         <UICard style={{
                             borderRadius: 10,
                             borderColor: '#cde0ff',
-                            backgroundColor: '#edf6ff'
+                            width: '100%',
+                            maxWidth: 250
                         }}>
                             <UICardBody style={{
                                 flex: 1,
@@ -118,11 +121,12 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
                             </UICardBody>
                         </UICard>
                     </UICol>
-                    <UICol size={4} xs={12} sm={12}>
+                    <UICol size={4} xs={12} sm={12} style={{ alignItems: 'center' }}>
                         <UICard style={{
                             borderRadius: 10,
                             borderColor: '#ffcdcd',
-                            backgroundColor: '#ffeded'
+                            width: '100%',
+                            maxWidth: 250
                         }}>
                             <UICardBody style={{
                                 flex: 1,
@@ -137,11 +141,12 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
                             </UICardBody>
                         </UICard>
                     </UICol>
-                    <UICol size={4} xs={12} sm={12}>
+                    <UICol size={4} xs={12} sm={12} style={{ alignItems: 'center' }}>
                         <UICard style={{
                             borderRadius: 10,
                             borderColor: '#a6d8a9',
-                            backgroundColor: '#def1df'
+                            width: '100%',
+                            maxWidth: 250
                         }}>
                             <UICardBody style={{
                                 flex: 1,

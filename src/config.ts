@@ -4,7 +4,8 @@ export const DEBUG = __DEV__;
 export const DEV = __DEV__;
 
 export const MainStyle: any = {
-  backgroundColor: "#f4f6fa",
+  textColor: "#525f7f",
+  backgroundColor: "#f8f9fe",
   color: "#1d6ef7",
   fieldTextColor: "#404040",
   fieldColor: "#a7a7a7",
@@ -13,7 +14,8 @@ export const MainStyle: any = {
   errorColor: "#dc3545",
   successColor: "#28a745",
   warningColor: "#ffc107",
-  backgroundSidebar: '#fff'
+  backgroundSidebar: '#fff',
+  pattern: require("@app/assets/images/pattern.png")
 };
 
 export default {
@@ -22,6 +24,6 @@ export default {
   hasura_admin_secret: "figure1234",
   // wsSAP: "http://172.16.145.3:8087/MBGPService/Api/"
   wsSAP: "http://116.254.101.121:5000/MBGPWebService/Api/",
-  wsBackend:"http://116.254.101.121:1000/",
+  wsBackend: "http://116.254.101.121:1000/",
   //wsBackend:"http://localhost:44343/",
 };

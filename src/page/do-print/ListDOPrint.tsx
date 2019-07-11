@@ -8,9 +8,11 @@ import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 import global from '@app/global';
 import BtnCreate from '@app/components/BtnCreate';
+import UIText from '@app/libs/ui/UIText';
+import UICard, { UICardHeader } from '@app/libs/ui/UICard';
 
 export default withRouter(
-  observer(({ match,history,showSidebar, sidebar }: any) => {
+  observer(({ match, history, showSidebar, sidebar }: any) => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -36,7 +38,7 @@ export default withRouter(
             field: "U_BRANCH",
             cond: "=",
             value: global.getSession().user.branch
-          },{
+          }, {
             cond: "AND"
           },
           {
@@ -54,47 +56,53 @@ export default withRouter(
 
     return (
       <UIContainer>
-        <UIHeader
-          showSidebar={showSidebar}
-          sidebar={sidebar}
-          center={`List DO of #${atob(match.params.CardCode)} - ${atob(
+        <UIHeader pattern={true} showSidebar={showSidebar} sidebar={sidebar} center={
+          <UIText size="large" style={{ color: '#fff' }}>{`#${atob(match.params.CardCode)} - ${atob(
             match.params.CardName
-          )}`}
-        >
+          )}`}</UIText>
+        }>
           <BtnCreate path={`/do/copySO/${match.params.CardCode}/${match.params.CardName}`} />
         </UIHeader>
         <UIBody scroll={true}>
-          <UIList
-            primaryKey="DocEntry"
-            style={{ backgroundColor: "#fff" }}
-            selection="single"
-            onSelect={(d) => {
+          <UICard mode="clean" style={{ borderRadius: 4, flex: 1, backgroundColor: '#fff' }}>
+            <UICardHeader style={{ backgroundColor: '#fff', flexDirection: 'row', alignItems: 'center' }}>
+              <UIText size="medium" style={{
+                flexShrink: 'none',
+                width: '100%'
+              }}>List Delivery Order</UIText>
+            </UICardHeader>
+            <UIList
+              primaryKey="DocEntry"
+              style={{ backgroundColor: "#fff" }}
+              selection="single"
+              onSelect={(d) => {
                 history.push(`/do/view/${match.params.CardCode}/${match.params.CardName}/${d.DocEntry}`)
-            }}
-            fields={{
-              CardCode: {
-                table: {
-                  header: "Customer Code"
+              }}
+              fields={{
+                CardCode: {
+                  table: {
+                    header: "Customer Code"
+                  }
+                },
+                CardName: {
+                  table: {
+                    header: "Customer Name"
+                  }
+                },
+                U_IDU_SO_INTNUM: {
+                  table: {
+                    header: "SO No."
+                  }
+                },
+                DocDate: {
+                  table: {
+                    header: "Posting Date"
+                  }
                 }
-              },
-              CardName: {
-                table: {
-                  header: "Customer Name"
-                }
-              },
-              U_IDU_SO_INTNUM: {
-                table: {
-                  header: "SO No."
-                }
-              },
-              DocDate: {
-                table: {
-                  header: "Posting Date"
-                }
-              }
-            }}
-            items={data}
-          />
+              }}
+              items={data}
+            />
+          </UICard>
         </UIBody>
       </UIContainer>
     );

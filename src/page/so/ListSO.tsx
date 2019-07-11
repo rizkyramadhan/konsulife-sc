@@ -10,6 +10,8 @@ import UISearch from "@app/libs/ui/UISearch";
 import BtnCreate from "@app/components/BtnCreate";
 import global from "@app/global";
 import BtnDraft from "@app/components/BtnDraft";
+import UICard, { UICardHeader } from '@app/libs/ui/UICard';
+import UIText from '@app/libs/ui/UIText';
 
 export default withRouter(
   observer(({ showSidebar, sidebar }: any) => {
@@ -30,18 +32,18 @@ export default withRouter(
       _setData([
         ...(value
           ? data.filter((x: any) => {
-              let res = false;
-              for (var i = 0; i < field.length; i++) {
-                if (
-                  x[field[i]] &&
-                  x[field[i]].toLowerCase().includes(value.toLowerCase())
-                ) {
-                  res = true;
-                  break;
-                }
+            let res = false;
+            for (var i = 0; i < field.length; i++) {
+              if (
+                x[field[i]] &&
+                x[field[i]].toLowerCase().includes(value.toLowerCase())
+              ) {
+                res = true;
+                break;
               }
-              return res;
-            })
+            }
+            return res;
+          })
           : data)
       ]);
     };
@@ -95,52 +97,63 @@ export default withRouter(
 
     return (
       <UIContainer>
-        <UIHeader
-          showSidebar={showSidebar}
-          sidebar={sidebar}
-          center={"SO Taking Order"}
-          isLoading={loading}
-        >
+        <UIHeader pattern={true} isLoading={loading} showSidebar={showSidebar} sidebar={sidebar} center={
+          <UIText size="large" style={{ color: '#fff' }}>SO Taking Order</UIText>
+        }>
           <BtnDraft path="/so/draft" />
           <BtnCreate path="/so/form" />
         </UIHeader>
         <UIBody>
-          <UISearch onSearch={funcSearch} />
-          <UIList
-            style={{ flex: 1 }}
-            primaryKey="DocEntry"
-            selection="detail"
-            fields={{
-              U_IDU_SO_INTNUM: {
-                table: {
-                  header: "No. SO"
+          <UICard mode="clean" style={{ borderRadius: 4, flex: 1, backgroundColor: '#fff' }}>
+            <UICardHeader style={{ backgroundColor: '#fff', flexDirection: 'row', alignItems: 'center' }}>
+              <UIText size="medium" style={{
+                flexShrink: 'none',
+                width: '100%'
+              }}>List SO Taking Order</UIText>
+              <UISearch style={{
+                width: '100%',
+                maxWidth: 300
+              }}
+                fieldStyle={{
+                  borderWidth: 0,
+                  backgroundColor: '#f6f9fc'
+                }} onSearch={funcSearch}></UISearch>
+            </UICardHeader>
+            <UIList
+              primaryKey="DocEntry"
+              selection="detail"
+              fields={{
+                U_IDU_SO_INTNUM: {
+                  table: {
+                    header: "No. SO"
+                  }
+                },
+                CardCode: {
+                  table: {
+                    header: "Customer Code"
+                  }
+                },
+                CardName: {
+                  table: {
+                    header: "Customer"
+                  }
+                },
+                DocDate: {
+                  table: {
+                    header: "Posting Date"
+                  }
+                },
+                DocDueDate: {
+                  table: {
+                    header: "Delivery Date"
+                  }
                 }
-              },
-              CardCode: {
-                table: {
-                  header: "Customer Code"
-                }
-              },
-              CardName: {
-                table: {
-                  header: "Customer"
-                }
-              },
-              DocDate: {
-                table: {
-                  header: "Posting Date"
-                }
-              },
-              DocDueDate: {
-                table: {
-                  header: "Delivery Date"
-                }
-              }
-            }}
-            items={_data.map((item: any) => ({
-              ...item
-            }))}
-          />
+              }}
+              items={_data.map((item: any) => ({
+                ...item
+              }))}
+            />
+          </UICard>
         </UIBody>
       </UIContainer>
     );

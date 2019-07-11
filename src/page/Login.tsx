@@ -22,6 +22,8 @@ const LoginForm = withRouter(({ history }: RouteComponentProps) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [hover, setHover] = useState(false);
+
   useEffect(() => {
     (async () => {
       const session = await getSession();
@@ -39,7 +41,9 @@ const LoginForm = withRouter(({ history }: RouteComponentProps) => {
       <UICard style={{
         maxWidth: 450,
         padding: 25,
-        backgroundColor: "#ffffffbd"
+        backgroundColor: "#f7fafc",
+        borderColor: '#fff',
+        borderRadius: 4
       }}>
         <UIText
           size="extralarge"
@@ -59,6 +63,10 @@ const LoginForm = withRouter(({ history }: RouteComponentProps) => {
           setValue={value => {
             setUsername(value);
           }}
+          fieldStyle={{
+            borderColor: '#e0e0e0',
+            backgroundColor: '#fff',
+          }}
         />
 
         <UITextField
@@ -67,6 +75,10 @@ const LoginForm = withRouter(({ history }: RouteComponentProps) => {
           value={password}
           setValue={value => {
             setPassword(value);
+          }}
+          fieldStyle={{
+            borderColor: '#e0e0e0',
+            backgroundColor: '#fff',
           }}
         />
         <UIRow style={{
@@ -89,6 +101,13 @@ const LoginForm = withRouter(({ history }: RouteComponentProps) => {
                     history.replace("/");
                     // global.setSidebar(isSize(['md', 'lg']));
                   }
+                }}
+                attr={{
+                  onMouseOver: () => setHover(true),
+                  onMouseLeave: () => setHover(false)
+                }}
+                style={{
+                  ...(hover ? { opacity: 1 } : { opacity: 0.8 })
                 }}
               >
                 <IconSignIn color="#fff" width={20} height={20} />

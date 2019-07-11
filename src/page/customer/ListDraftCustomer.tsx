@@ -5,9 +5,11 @@ import UIList from "@app/libs/ui/UIList";
 import { observer } from "mobx-react-lite";
 import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
-import { APISearch, APISearchProps } from "@app/api";
-import UISearch from "@app/libs/ui/UISearch";
-import global from "@app/global";
+import { APISearch, APISearchProps } from '@app/api';
+import UISearch from '@app/libs/ui/UISearch';
+import global from '@app/global';
+import UICard, { UICardHeader } from '@app/libs/ui/UICard';
+import UIText from '@app/libs/ui/UIText';
 
 export default withRouter(
   observer(({ showSidebar, sidebar }: any) => {
@@ -33,18 +35,18 @@ export default withRouter(
       _setData([
         ...(value
           ? data.filter((x: any) => {
-              let res = false;
-              for (var i = 0; i < field.length; i++) {
-                if (
-                  x[field[i]] &&
-                  x[field[i]].toLowerCase().includes(value.toLowerCase())
-                ) {
-                  res = true;
-                  break;
-                }
+            let res = false;
+            for (var i = 0; i < field.length; i++) {
+              if (
+                x[field[i]] &&
+                x[field[i]].toLowerCase().includes(value.toLowerCase())
+              ) {
+                res = true;
+                break;
               }
-              return res;
-            })
+            }
+            return res;
+          })
           : data)
       ]);
     };
@@ -86,41 +88,52 @@ export default withRouter(
 
     return (
       <UIContainer>
-        <UIHeader
-          showSidebar={showSidebar}
-          sidebar={sidebar}
-          center={"Customer Draft"}
-          isLoading={loading}
-        />
+        <UIHeader pattern={true} isLoading={loading} showSidebar={showSidebar} sidebar={sidebar} center={
+          <UIText size="large" style={{ color: '#fff' }}>Customer</UIText>
+        }></UIHeader>
         <UIBody>
-          <UISearch onSearch={funcSearch} />
-          <UIList
-            style={{ flex: 1 }}
-            primaryKey="CardCode"
-            selection="detail"
-            fields={{
-              CardCode: {
-                table: {
-                  header: "BP Code"
+          <UICard mode="clean" style={{ borderRadius: 4, flex: 1, backgroundColor: '#fff' }}>
+            <UICardHeader style={{ backgroundColor: '#fff', flexDirection: 'row', alignItems: 'center' }}>
+              <UIText size="medium" style={{
+                flexShrink: 'none',
+                width: '100%'
+              }}>List Customer Draft</UIText>
+              <UISearch style={{
+                width: '100%',
+                maxWidth: 300
+              }}
+                fieldStyle={{
+                  borderWidth: 0,
+                  backgroundColor: '#f6f9fc'
+                }} onSearch={funcSearch}></UISearch>
+            </UICardHeader>
+            <UIList
+              style={{ flex: 1 }}
+              primaryKey="CardCode"
+              selection="detail"
+              fields={{
+                CardCode: {
+                  table: {
+                    header: "BP Code"
+                  }
+                },
+                CardName: {
+                  table: {
+                    header: "BP Name"
+                  }
+                },
+                CardFName: {
+                  table: {
+                    header: "Foreign Name"
+                  }
                 }
-              },
-              CardName: {
-                table: {
-                  header: "BP Name"
-                }
-              },
-              CardFName: {
-                table: {
-                  header: "Foreign Name"
-                }
-              }
-            }}
-            items={_data.map((item: any) => ({
-              ...item
-            }))}
-          />
-        </UIBody>
-      </UIContainer>
+              }}
+              items={_data.map((item: any) => ({
+                ...item,
+              }))}
+            />
+          </UICard>
+        </UIBody >
+      </UIContainer >
     );
-  })
-);
+  }));

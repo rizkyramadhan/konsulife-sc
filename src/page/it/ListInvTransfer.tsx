@@ -13,6 +13,7 @@ import UIText from "@app/libs/ui/UIText";
 import { isSize } from "@app/libs/ui/MediaQuery";
 import IconCheck from "@app/libs/ui/Icons/IconCheck";
 import IconLuggageCart from "@app/libs/ui/Icons/IconLuggageCart";
+import UICard, { UICardHeader } from '@app/libs/ui/UICard';
 
 const BtnTransfer = withRouter(({ history }: any) => {
   return (
@@ -83,18 +84,18 @@ export default withRouter(
       _setData([
         ...(value
           ? data.filter((x: any) => {
-              let res = false;
-              for (var i = 0; i < field.length; i++) {
-                if (
-                  x[field[i]] &&
-                  x[field[i]].toLowerCase().includes(value.toLowerCase())
-                ) {
-                  res = true;
-                  break;
-                }
+            let res = false;
+            for (var i = 0; i < field.length; i++) {
+              if (
+                x[field[i]] &&
+                x[field[i]].toLowerCase().includes(value.toLowerCase())
+              ) {
+                res = true;
+                break;
               }
-              return res;
-            })
+            }
+            return res;
+          })
           : data)
       ]);
     };
@@ -137,47 +138,59 @@ export default withRouter(
 
     return (
       <UIContainer>
-        <UIHeader
-          showSidebar={showSidebar}
-          sidebar={sidebar}
-          center={"Inventory Transfer"}
-          isLoading={loading}
-        >
+        <UIHeader pattern={true} isLoading={loading} showSidebar={showSidebar} sidebar={sidebar} center={
+          <UIText size="large" style={{ color: '#fff' }}>Inventory Transfer</UIText>
+        }>
           <BtnTransfer />
           <BtnReturn />
         </UIHeader>
         <UIBody>
-          <UISearch onSearch={funcSearch} />
-          <UIList
-            style={{ flex: 1 }}
-            primaryKey="DocNum"
-            selection="detail"
-            fields={{
-              U_IDU_IT_INTNUM: {
-                table: {
-                  header: "Request No."
+          <UICard mode="clean" style={{ borderRadius: 4, flex: 1, backgroundColor: '#fff' }}>
+            <UICardHeader style={{ backgroundColor: '#fff', flexDirection: 'row', alignItems: 'center' }}>
+              <UIText size="medium" style={{
+                flexShrink: 'none',
+                width: '100%'
+              }}>List Inventory Transfer</UIText>
+              <UISearch style={{
+                width: '100%',
+                maxWidth: 300
+              }}
+                fieldStyle={{
+                  borderWidth: 0,
+                  backgroundColor: '#f6f9fc'
+                }} onSearch={funcSearch}></UISearch>
+            </UICardHeader>
+            <UIList
+              style={{ flex: 1 }}
+              primaryKey="DocNum"
+              selection="detail"
+              fields={{
+                U_IDU_IT_INTNUM: {
+                  table: {
+                    header: "Request No."
+                  }
+                },
+                CardName: {
+                  table: {
+                    header: "BP"
+                  }
+                },
+                CardCode: {
+                  table: {
+                    header: "Code"
+                  }
+                },
+                DocDate: {
+                  table: {
+                    header: "Posting Date"
+                  }
                 }
-              },
-              CardName: {
-                table: {
-                  header: "BP"
-                }
-              },
-              CardCode: {
-                table: {
-                  header: "Code"
-                }
-              },
-              DocDate: {
-                table: {
-                  header: "Posting Date"
-                }
-              }
-            }}
-            items={_data.map((item: any) => ({
-              ...item
-            }))}
-          />
+              }}
+              items={_data.map((item: any) => ({
+                ...item
+              }))}
+            />
+          </UICard>
         </UIBody>
       </UIContainer>
     );

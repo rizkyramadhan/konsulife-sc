@@ -20,18 +20,18 @@ export default withRouter(
       _setData([
         ...(value
           ? data.filter((x: any) => {
-              let res = false;
-              for (var i = 0; i < field.length; i++) {
-                if (
-                  x[field[i]] &&
-                  x[field[i]].toLowerCase().includes(value.toLowerCase())
-                ) {
-                  res = true;
-                  break;
-                }
+            let res = false;
+            for (var i = 0; i < field.length; i++) {
+              if (
+                x[field[i]] &&
+                x[field[i]].toLowerCase().includes(value.toLowerCase())
+              ) {
+                res = true;
+                break;
               }
-              return res;
-            })
+            }
+            return res;
+          })
           : data)
       ]);
     };
@@ -96,7 +96,7 @@ export default withRouter(
             selection="single"
             onSelect={item => {
               history.push(
-                "/ar-invoice/list/" + btoa(item.CardCode + "|" + item.CardName)
+                `/ar-invoice/open/${btoa(item.CardCode)}/${btoa(item.CardName)}`
               );
             }}
             fields={{
