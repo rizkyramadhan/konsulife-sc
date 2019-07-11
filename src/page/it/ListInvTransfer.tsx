@@ -69,6 +69,8 @@ export default withRouter(
   observer(({ showSidebar, sidebar }: any) => {
     const [data, setData] = useState([]);
     const [_data, _setData] = useState([]);
+    const [loading, setLoading] = useState(false);
+
     const field = [
       "DocNum",
       "U_IDU_SO_INTNUM",
@@ -98,6 +100,7 @@ export default withRouter(
     };
 
     useEffect(() => {
+      setLoading(true);
       let query: APISearchProps = {
         Table: "OWTR",
         Fields: [
@@ -128,6 +131,7 @@ export default withRouter(
       APISearch(query).then((res: any) => {
         _setData(res);
         setData(res);
+        setLoading(false);
       });
     }, []);
 
@@ -137,6 +141,7 @@ export default withRouter(
           showSidebar={showSidebar}
           sidebar={sidebar}
           center={"Inventory Transfer"}
+          isLoading={loading}
         >
           <BtnTransfer />
           <BtnReturn />

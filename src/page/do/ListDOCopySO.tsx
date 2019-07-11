@@ -12,8 +12,10 @@ export default withRouter(
   observer(({ match, history, showSidebar, sidebar }: any) => {
     const [data, setData] = useState([]);
     const [itemSelect, setItemSelect] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+      setLoading(true);
       let query: APISearchProps = {
         Table: "ORDR",
         Fields: [
@@ -50,6 +52,7 @@ export default withRouter(
 
       APISearch(query).then((res: any) => {
         setData(res);
+        setLoading(false);
       });
     }, []);
 
@@ -61,6 +64,7 @@ export default withRouter(
           center={`List SO of #${atob(match.params.CardCode)} - ${atob(
             match.params.CardName
           )}`}
+          isLoading={loading}
         >
           <BtnCopy
             onPress={() => {

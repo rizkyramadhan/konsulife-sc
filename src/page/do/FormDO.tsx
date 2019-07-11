@@ -29,8 +29,10 @@ export default withRouter(
     const [items, setItems] = useState<any[]>([]);
     const [editable, setEdit] = useState(false);
     const [selected, setSelected] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+      setLoading(true);
       const itemSelect = JSON.parse(atob(match.params.ItemSelect));
       const itemSelectDocEntry = itemSelect.map((d: any) => {
         return d.DocEntry;
@@ -135,6 +137,7 @@ export default withRouter(
           return item;
         });
         setItems([...items]);
+        setLoading(false);
       });
     }, []);
 
@@ -234,6 +237,7 @@ export default withRouter(
           center={`Form Delivery Order #${atob(match.params.CardCode)} - ${atob(
             match.params.CardName
           )}`}
+          isLoading={loading}
         >
           <BtnSave
             saving={saving}

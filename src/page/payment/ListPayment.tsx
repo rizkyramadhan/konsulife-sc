@@ -14,6 +14,8 @@ export default withRouter(
   observer(({ showSidebar, sidebar }: any) => {
     const [data, setData] = useState([]);
     const [_data, _setData] = useState([]);
+    const [loading, setLoading] = useState(false);
+
     const field = [
       "DocEntry",
       "DocDate",
@@ -57,6 +59,7 @@ export default withRouter(
     // }
 
     useEffect(() => {
+      setLoading(true);
       let query: APISearchProps = {
         Table: "ORCT",
         Fields: field,
@@ -72,6 +75,7 @@ export default withRouter(
       APISearch(query).then((res: any) => {
         setData(res);
         _setData(res);
+        setLoading(false);
       });
     }, []);
 
@@ -81,6 +85,7 @@ export default withRouter(
           showSidebar={showSidebar}
           sidebar={sidebar}
           center={"Payment Receipt"}
+          isLoading={loading}
         >
           <BtnCreate path="/payment-receipt/form" />
         </UIHeader>

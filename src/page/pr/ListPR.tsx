@@ -17,6 +17,8 @@ export default withRouter(
     const [data, setData] = useState([]);
     const param = atob(match.params.id).split("|", 2);
     const [_data, _setData] = useState([]);
+    const [loading, setLoading] = useState(false);
+
     const field = [
       "DocNum",
       "DocEntry",
@@ -46,6 +48,7 @@ export default withRouter(
     };
 
     useEffect(() => {
+      setLoading(true);
       let query: APISearchProps = {
         Table: "OPOR",
         Fields: field,
@@ -77,6 +80,7 @@ export default withRouter(
       APISearch(query).then((res: any) => {
         _setData(res);
         setData(res);
+        setLoading(false);
       });
     }, []);
 
@@ -86,6 +90,7 @@ export default withRouter(
           showSidebar={showSidebar}
           sidebar={sidebar}
           center={"Purchase Receipt " + param[1]}
+          isLoading={loading}
         >
           <BtnCopy
             onPress={() => {

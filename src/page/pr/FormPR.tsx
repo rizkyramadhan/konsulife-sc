@@ -29,8 +29,11 @@ export default withRouter(
     const [data, setData] = useState({});
     const [item, setItem] = useState([]);
     const [selected, setSelected] = useState([]);
+    const [loading, setLoading] = useState(false);
+
     const param = atob(match.params.id).split("|");
     useEffect(() => {
+      setLoading(true);
       let query: APISearchProps = {
         Table: "OPOR",
         Fields: [
@@ -57,6 +60,7 @@ export default withRouter(
           }
         ]
       };
+
       APISearch(query).then((res: any) => {
         let poNum: any[] = [];
         let soNum: any[] = [];
@@ -130,6 +134,7 @@ export default withRouter(
           item.BaseEntry = item.DocEntry;
         });
         setItem(res);
+        setLoading(false);
       });
     }, []);
 
@@ -180,6 +185,7 @@ export default withRouter(
           showSidebar={showSidebar}
           sidebar={sidebar}
           center="Purchase Receipt Form"
+          isLoading={loading}
         >
           <BtnSave
             saving={saving}

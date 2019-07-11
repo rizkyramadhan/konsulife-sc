@@ -15,6 +15,8 @@ export default withRouter(
   observer(({ showSidebar, sidebar }: any) => {
     const [data, setData] = useState([]);
     const [_data, _setData] = useState([]);
+    const [loading, setLoading] = useState(false);
+
     const field = [
       "DocNum",
       "DocEntry",
@@ -45,6 +47,7 @@ export default withRouter(
     };
 
     useEffect(() => {
+      setLoading(true);
       // jika yang membuka merupakan admin cabang, maka set kondisi branch sesuai branch admin cabang
       // jika yang membuka merupakan sales, maka set userid sesuai userid sales
       let cond: any[] = [];
@@ -86,6 +89,7 @@ export default withRouter(
       APISearch(query).then((res: any) => {
         setData(res);
         _setData(res);
+        setLoading(false);
       });
     }, []);
 
@@ -95,6 +99,7 @@ export default withRouter(
           showSidebar={showSidebar}
           sidebar={sidebar}
           center={"SO Taking Order"}
+          isLoading={loading}
         >
           <BtnDraft path="/so/draft" />
           <BtnCreate path="/so/form" />

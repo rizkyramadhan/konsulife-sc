@@ -14,6 +14,8 @@ export default withRouter(
   observer(({ showSidebar, sidebar }: any) => {
     const [data, setData] = useState([]);
     const [_data, _setData] = useState([]);
+    const [loading, setLoading] = useState(false);
+
     const field = [
       "DocNum",
       "U_IDU_SO_INTNUM",
@@ -43,6 +45,7 @@ export default withRouter(
     };
 
     useEffect(() => {
+      setLoading(true);
       let cond: any[] = [];
       if (global.getSession().role === "branch") {
         cond = [
@@ -92,6 +95,7 @@ export default withRouter(
       APISearch(query).then((res: any) => {
         setData(res);
         _setData(res);
+        setLoading(false);
       });
     }, []);
 
@@ -101,6 +105,7 @@ export default withRouter(
           showSidebar={showSidebar}
           sidebar={sidebar}
           center={"SO Canvasing"}
+          isLoading={loading}
         >
           <BtnCreate path="/so-canvas/form" />
         </UIHeader>

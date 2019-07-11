@@ -17,6 +17,8 @@ export default withRouter(
     const param = atob(match.params.id).split("|", 2);
     const [_data, _setData] = useState([]);
     const [field, setField] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
+
     const funcSearch = (value: string) => {
       _setData([
         ...(value
@@ -38,6 +40,7 @@ export default withRouter(
     };
 
     useEffect(() => {
+      setLoading(true);
       let query: APISearchProps = {
         Table: "ORDR",
         Fields: [
@@ -77,6 +80,7 @@ export default withRouter(
         setField(Object.keys(res[0]));
         _setData(res);
         setData(res);
+        setLoading(false);
       });
     }, []);
 
@@ -86,6 +90,7 @@ export default withRouter(
           showSidebar={showSidebar}
           sidebar={sidebar}
           center={"AR Invoice  " + param[1]}
+          isLoading={loading}
         >
           <BtnCopy
             onPress={() => {

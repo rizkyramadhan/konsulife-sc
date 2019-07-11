@@ -14,6 +14,8 @@ export default withRouter(
     const [data, setData] = useState([]);
     const [_data, _setData] = useState([]);
     const [field, setField] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
+
     const funcSearch = (value: string) => {
       _setData([
         ...(value
@@ -35,6 +37,7 @@ export default withRouter(
     };
 
     useEffect(() => {
+      setLoading(true);
       let query: APISearchProps = {
         Table: "OCRD",
         Fields: ["CardCode", "CardName"],
@@ -73,6 +76,7 @@ export default withRouter(
         setField(Object.keys(res[0]));
         setData(res);
         _setData(res);
+        setLoading(false);
       });
     }, []);
 
@@ -82,8 +86,8 @@ export default withRouter(
           showSidebar={showSidebar}
           sidebar={sidebar}
           center={"DO - Customer List"}
-        >
-        </UIHeader>  
+          isLoading={loading}
+        />
         <UIBody>
           <UISearch onSearch={funcSearch} />
           <UIList

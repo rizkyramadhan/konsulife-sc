@@ -14,8 +14,8 @@ import { View } from "reactxp";
 import FormARInvoiceDetailTO from "./FormARInvoiceDetailTO";
 import UIField from "@app/libs/ui/UIField";
 import _ from "lodash";
-import BtnExport from '@app/components/BtnExport';
-import { ReportPost } from '@app/report';
+import BtnExport from "@app/components/BtnExport";
+import { ReportPost } from "@app/report";
 
 const date = new Date();
 const today = `${date.getFullYear()}-${lpad(
@@ -24,29 +24,29 @@ const today = `${date.getFullYear()}-${lpad(
 )}-${lpad(date.getDate().toString(), 2)}`;
 
 const defaultData = {
-  CardCode:"",
-  CardName:"",
-  NumAtCard:"",
-  DocCur:"",
-  DocRate:"",
-  U_IDU_SO_INTNUM:"",
-  U_IDU_DO_INTNUM:"",
-  U_IDU_SI_INTNUM:"",
-  U_IDU_SI_TRANSCODE:"",
-  GroupNum:"",
-  SlpCode:"",
-  CntctCode:"",
-  Address2:"",
-  Address:"",
-  Comments:"",
-  DiscPrcnt:"",
-  DocDate:"",
-  DocDueDate:"",
-  U_BRANCH:"",
-  U_USERID:"",
-  U_GENERATED:"W",
-  U_WONUM:"",
-  U_IDU_FP:""
+  CardCode: "",
+  CardName: "",
+  NumAtCard: "",
+  DocCur: "",
+  DocRate: "",
+  U_IDU_SO_INTNUM: "",
+  U_IDU_DO_INTNUM: "",
+  U_IDU_SI_INTNUM: "",
+  U_IDU_SI_TRANSCODE: "",
+  GroupNum: "",
+  SlpCode: "",
+  CntctCode: "",
+  Address2: "",
+  Address: "",
+  Comments: "",
+  DiscPrcnt: "",
+  DocDate: "",
+  DocDueDate: "",
+  U_BRANCH: "",
+  U_USERID: "",
+  U_GENERATED: "W",
+  U_WONUM: "",
+  U_IDU_FP: ""
 };
 
 export default withRouter(
@@ -55,9 +55,11 @@ export default withRouter(
     const [exporting, setExporting] = useState(false);
     const [data, setData] = useState(defaultData);
     const [item, setItem] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const param = atob(match.params.id).split("|");
     useEffect(() => {
+      setLoading(true);
       let query: APISearchProps = {
         Table: "ODLN",
         Fields: [
@@ -163,6 +165,7 @@ export default withRouter(
           delete item.DocEntry;
         });
         setItem(res);
+        setLoading(false);
       });
     }, []);
 
@@ -180,11 +183,11 @@ export default withRouter(
       });
 
       try {
-        await ReportPost("invoice",{...data,Lines: Lines});
+        await ReportPost("invoice", { ...data, Lines: Lines });
       } catch (e) {
         alert(e.Message);
 
-        console.error({data});
+        console.error({ data });
       } finally {
         setExporting(false);
       }
@@ -215,9 +218,11 @@ export default withRouter(
           Lines: Lines
         });
 
-        setData({...data,
+        setData({
+          ...data,
           U_IDU_SI_INTNUM: number.format,
-          U_IDU_SI_TRANSCODE: "INV"});
+          U_IDU_SI_TRANSCODE: "INV"
+        });
 
         updateLastNumbering(number.id, number.last_count + 1);
         //history.goBack();
@@ -246,6 +251,7 @@ export default withRouter(
           showSidebar={showSidebar}
           sidebar={sidebar}
           center="Form AR Invoice"
+          isLoading={loading}
         >
           <BtnSave
             saving={saving}
