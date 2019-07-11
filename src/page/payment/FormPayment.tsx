@@ -29,7 +29,7 @@ const defData = {
   CashSum: "",
   TrsfrAcct: "",
   TrsfrSum: "",
-  TrsfrDate: "",
+  TrsfrDate: today,
   TrsfrRef: "",
   U_Remark: "",
   U_SONUM: "",
@@ -270,13 +270,19 @@ export default withRouter(
                     )
                   },
                   { key: "TrsfrSum", size: 12, label: "Transfer Amount" },
-                  { key: "TrsfrDate", size: 12, label: "Transfer Date" },
+                  { key: "TrsfrDate", size: 6, label: "Transfer Date", type:"date" },
                   { key: "TrsfrRef", size: 12, label: "Intended Purpose" }
                 ]
               }
             ]}
             setValue={(value: any, key: any) => {
+              if (key === "TrsfrDate") {
+                if (value > today) {
+                  value = today;
+                }
+              }
               (data as any)[key] = value;
+              setData({ ...data });
             }}
           />
         </UIBody>

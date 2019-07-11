@@ -224,7 +224,7 @@ export default withRouter(observer(({ history, match, showSidebar, sidebar }: an
                 fontWeight: 400
               }}
             >
-              Detail Items
+              Detail Customer
             </UIText>
           </View>
           <FormWOItems items={items} />

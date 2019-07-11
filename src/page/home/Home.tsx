@@ -51,7 +51,13 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
                     value: "O"
                 },
                 { cond: "AND" },
-                { field: "ObjType", cond: "=", value: 17 }
+                { field: "ObjType", cond: "=", value: 17 },
+                { cond: "AND" },
+                {
+                    field: "U_BRANCH",
+                    cond: "=",
+                    value: global.getSession().user.branch
+                }
             ]
         };
 
@@ -107,7 +113,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
                                     {dataPOD}
                                 </UIText>
                                 <UIText style={{ fontSize: 14, color: '#6d6d6d' }}>
-                                    Outstanding Goods Receipt PO (Draft)
+                                    Goods Receipt PO Draft (Open)
                                 </UIText>
                             </UICardBody>
                         </UICard>
@@ -126,7 +132,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
                                     {dataSOD}
                                 </UIText>
                                 <UIText style={{ fontSize: 14, color: '#777' }}>
-                                    Outstanding Sales Order (Draft)
+                                    Sales Order Draft (Open)
                                 </UIText>
                             </UICardBody>
                         </UICard>
@@ -145,7 +151,7 @@ export default withRouter(observer(({ showSidebar, sidebar }: any) => {
                                     {dataSO}
                                 </UIText>
                                 <UIText style={{ fontSize: 14, color: '#777' }}>
-                                    Outstanding SO
+                                    Sales Order (Open)
                                 </UIText>
                             </UICardBody>
                         </UICard>
