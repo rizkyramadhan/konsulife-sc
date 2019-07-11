@@ -8,11 +8,7 @@ import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIJsonField from "@app/libs/ui/UIJsonField";
 import UITabs from "@app/libs/ui/UITabs";
-import {
-  /*getLastNumbering, updateLastNumbering,*/ lpad,
-  getLastNumbering,
-  updateLastNumbering
-} from "@app/utils";
+import { lpad, getLastNumbering, updateLastNumbering } from "@app/utils";
 import { observer } from "mobx-react-lite";
 import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
@@ -50,7 +46,9 @@ const initData = {
   U_IDU_NOPL: "",
   U_IDU_NOPOL: "",
   U_IDU_DRIVER: "",
-  U_WONUM: ""
+  U_WONUM: "",
+  U_STOCK_TRANSNO: "",
+  U_STOCK_RETURN : ""
 };
 
 export default withRouter(
@@ -129,6 +127,7 @@ export default withRouter(
           ...data,
           U_IDU_IT_INTNUM: number.format,
           U_IDU_IT_TRANSCODE: "PGK-T",
+          U_STOCK_RETURN : "N",
           SlpCode:
             global.session.user.slp_id !== "" &&
             global.session.user.slp_id !== null
@@ -166,7 +165,7 @@ export default withRouter(
                 key: "vendor",
                 label: "Business Partner",
                 value: [
-                  { key: "CardCode", size: 8, type: "field", label: "BP Code" },
+                  { key: "CardCode", size: 12, type: "field", label: "BP Code" },
                   {
                     key: "CardCode",
                     label: "Business Partner",
@@ -245,7 +244,7 @@ export default withRouter(
                 value: [
                   {
                     key: "U_WONUM",
-                    size: 8,
+                    size: 12,
                     component: (
                       <UISelectField
                         label="WO Number"
@@ -259,22 +258,21 @@ export default withRouter(
                   },
                   {
                     key: "DocDate",
-                    size: 5,
+                    size: 6,
                     type: "date",
                     label: "Posting Date",
                     options: { pastDate: true }
                   },
                   {
                     key: "DocDueDate",
-                    size: 5,
+                    size: 6,
                     type: "date",
                     label: "Delivery Date",
                     options: { pastDate: true }
                   },
-                  { type: "empty", size: 2 },
                   {
                     key: "Filler",
-                    size: 5,
+                    size: 6,
                     type: "field",
                     label: "From Warehouse",
                     component: (
@@ -313,7 +311,7 @@ export default withRouter(
                   },
                   {
                     key: "ToWhsCode",
-                    size: 5,
+                    size: 6,
                     type: "field",
                     label: "To Warehouse",
                     component: (

@@ -60,6 +60,10 @@ import ListARInvoiceTOPrint from './arinvoice-to-print/ListARInvoiceTOPrint';
 import FormARInvoiceTOPrint from './arinvoice-to-print/FormARInvoiceTOPrint';
 import ListARInvoicePrint from './arinvoice-print/ListARInvoicePrint';
 import FormARInvoicePrint from './arinvoice-print/FormARInvoicePrint';
+import ListInvStockTransfer from './it-print/ListInvStockTransfer';
+import ListInvStockReturn from './it-print/ListInvStockReturn';
+import FormInvStockReturn from './it-print/FormInvStockReturn';
+import FormInvStockTransfer from './it-print/FormInvStockTransfer';
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
@@ -369,8 +373,12 @@ export default observer((_props: any) => {
                 "/do/copySO/:CardCode/:CardName": <ListDOCopySO />,
                 "/do/form/:CardCode/:CardName/:ItemSelect": <FormDO />,
                 "/it": <ListInvTransfer />,
-                "/it/form": <FormInvTransfer />,
+                "/it-tran": <ListInvStockTransfer />,
+                "/it-ret": <ListInvStockReturn />,
+                "/it-tran/form": <FormInvTransfer />,
+                "/it-tran/view/:id": <FormInvStockTransfer />,
                 "/it-ret/form": <FormInvTransferReturn />,
+                "/it-ret/view/:id": <FormInvStockReturn />,
                 "/pr": <ListPRVendor />,
                 "/pr/open/:vendor": <ListPRPrint />,
                 "/pr/view/:vendor/:id": <FormPRPrint />,

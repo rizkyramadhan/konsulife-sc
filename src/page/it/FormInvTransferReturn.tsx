@@ -1,4 +1,4 @@
-import { APIPost } from "@app/api";
+import { APIPost, APISearch, APISearchProps } from "@app/api";
 import BtnAdd from "@app/components/BtnAdd";
 import BtnSave from "@app/components/BtnSave";
 import SAPDropdown from "@app/components/SAPDropdown";
@@ -8,11 +8,7 @@ import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIJsonField from "@app/libs/ui/UIJsonField";
 import UITabs from "@app/libs/ui/UITabs";
-import {
-  /*getLastNumbering, updateLastNumbering,*/ lpad,
-  getLastNumbering,
-  updateLastNumbering
-} from "@app/utils";
+import { lpad, getLastNumbering, updateLastNumbering } from "@app/utils";
 import { observer } from "mobx-react-lite";
 import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
@@ -20,6 +16,7 @@ import { View } from "reactxp";
 import FormInvTransferDetail from "./FormInvTransferDetail";
 import rawQuery from "@app/libs/gql/data/rawQuery";
 import UISelectField from "@app/libs/ui/UISelectField";
+import UITagField from '@app/libs/ui/UITagField';
 
 const date = new Date();
 const today = `${date.getFullYear()}-${lpad(
@@ -51,7 +48,9 @@ const initData = {
   U_IDU_NOPL: "",
   U_IDU_NOPOL: "",
   U_IDU_DRIVER: "",
-  U_WONUM: ""
+  U_WONUM: "",
+  U_STOCK_TRANSNO: "",
+  U_STOCK_RETURN : ""
 };
 
 export default withRouter(
@@ -61,8 +60,55 @@ export default withRouter(
     const [WOList, setWOList] = useState<any[]>([]);
     const [qShip, setQShip] = useState(false);
     const [items, setItems] = useState<any[]>([]);
+    const [_items, _setItems] = useState<any[]>([]);
 
     useEffect(() => {
+      let query: APISearchProps = {
+        Table: "OWTR",
+        Fields: ["U_IDU_IT_INTNUM"],
+        Condition: [
+          {
+            field: "DocStatus",
+            cond: "=",
+            value: "O"
+          },
+          {
+            cond: "AND"
+          },
+          {
+            field: "U_BRANCH",
+            cond: "=",
+            value: global.session.user.branch
+          },
+          {
+            cond: "AND"
+          },
+          {
+            field: "U_IDU_IT_INTNUM",
+            cond: "LIKE",
+            value: "PGK-T%"
+          },
+          {
+            cond: "AND"
+          },
+          {
+            field: "U_STOCK_RETURN",
+            cond: "=",
+            value: "N"
+          }
+        ]
+      };
+
+      APISearch(query).then((res: any) => {
+        let items = res.map((item: any) => {
+          return {
+            value: item["U_IDU_IT_INTNUM"],
+            label: item["U_IDU_IT_INTNUM"]
+          };
+        });
+        _setItems([...items]);
+      });
+
       rawQuery(`{
       work_order (where: {status: {_eq: "open"}, branch: {_eq: "${
         global.getSession().user.branch
@@ -130,6 +176,7 @@ export default withRouter(
           ...data,
           U_IDU_IT_INTNUM: number.format,
           U_IDU_IT_TRANSCODE: "PGK-R",
+          U_STOCK_RETURN : "Y",
           SlpCode:
             global.session.user.slp_id !== "" &&
             global.session.user.slp_id !== null
@@ -169,7 +216,7 @@ export default withRouter(
                 value: [
                   {
                     key: "CardCode",
-                    size: 8,
+                    size: 12,
                     type: "field",
                     label: "Customer/Vendor Code"
                   },
@@ -251,7 +298,7 @@ export default withRouter(
                 value: [
                   {
                     key: "U_WONUM",
-                    size: 8,
+                    size: 12,
                     component: (
                       <UISelectField
                         label="WO Number"
@@ -265,22 +312,21 @@ export default withRouter(
                   },
                   {
                     key: "DocDate",
-                    size: 5,
+                    size: 6,
                     type: "date",
                     label: "Posting Date",
                     options: { pastDate: true }
                   },
                   {
                     key: "DocDueDate",
-                    size: 5,
+                    size: 6,
                     type: "date",
                     label: "Delivery Date",
                     options: { pastDate: true }
                   },
-                  { type: "empty", size: 2 },
                   {
                     key: "Filler",
-                    size: 5,
+                    size: 6,
                     type: "field",
                     label: "From Warehouse",
                     component: (
@@ -319,7 +365,7 @@ export default withRouter(
                   },
                   {
                     key: "ToWhsCode",
-                    size: 5,
+                    size: 6,
                     type: "field",
                     label: "To Warehouse",
                     component: (
@@ -352,7 +398,22 @@ export default withRouter(
                         }}
                       />
                     )
-                  }
+                  },
+                  {
+                    key: "U_STOCK_TRANSNO",
+                    size: 12,
+                    label: "Stock Transfer Number",
+                    component: (
+                      <UITagField
+                        label="Stock Transfer Number"
+                        items={_items}
+                        value={(data as any).U_STOCK_TRANSNO}
+                        setValue={(v: any) => {
+                          data.U_STOCK_TRANSNO = v.join(";");
+                        }}
+                      />
+                    )
+                  },
                 ]
               },
               {

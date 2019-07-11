@@ -16,8 +16,6 @@ import rawQuery from "@app/libs/gql/data/rawQuery";
 import UISelectField from "@app/libs/ui/UISelectField";
 import UIField from "@app/libs/ui/UIField";
 import _ from "lodash";
-import { ReportPost } from "@app/report";
-import BtnExport from "@app/components/BtnExport";
 
 const date = new Date();
 const today = `${date.getFullYear()}-${lpad(
@@ -52,9 +50,8 @@ const defaultData = {
 };
 
 export default withRouter(
-  observer(({ /*history,*/ match, showSidebar, sidebar }: any) => {
+  observer(({ history, match, showSidebar, sidebar }: any) => {
     const [saving, setSaving] = useState(false);
-    const [exporting, setExporting] = useState(false);
     const [data, setData] = useState(defaultData);
     const [WOList, setWOList] = useState<any[]>([]);
     const [item, setItem] = useState([]);
@@ -168,30 +165,6 @@ export default withRouter(
       });
     }, []);
 
-    const exportReport = async () => {
-      if (exporting) return;
-      if (item.length === 0) return;
-      setExporting(true);
-
-      let Lines = item.map((val: any) => {
-        let res = { ...val };
-        delete res.PK;
-        delete res.LineNum;
-        delete res.DocEntry;
-        return res;
-      });
-
-      try {
-        await ReportPost("invoice", { ...data, Lines: Lines });
-      } catch (e) {
-        alert(e.Message);
-
-        console.error({ data });
-      } finally {
-        setExporting(false);
-      }
-    };
-
     const save = async () => {
       if (saving) return;
       if (item.length === 0) return;
@@ -206,14 +179,8 @@ export default withRouter(
           Lines: item
         });
 
-        setData({
-          ...data,
-          U_IDU_SI_INTNUM: number.format,
-          U_IDU_SI_TRANSCODE: "INV"
-        });
-
         updateLastNumbering(number.id, number.last_count + 1);
-        //history.goBack();
+        history.goBack();
       } catch (e) {
         if (e.Message.search("409") > -1) {
           updateLastNumbering(number.id, number.last_count + 1);
@@ -247,12 +214,6 @@ export default withRouter(
             saving={saving}
             onPress={() => {
               save();
-            }}
-          />
-          <BtnExport
-            exporting={exporting}
-            onPress={() => {
-              exportReport();
             }}
           />
         </UIHeader>

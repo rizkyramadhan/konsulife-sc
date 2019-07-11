@@ -11,43 +11,16 @@ import global from "@app/global";
 import UIButton from "@app/libs/ui/UIButton";
 import UIText from "@app/libs/ui/UIText";
 import { isSize } from "@app/libs/ui/MediaQuery";
-import IconCheck from "@app/libs/ui/Icons/IconCheck";
-import IconLuggageCart from "@app/libs/ui/Icons/IconLuggageCart";
 import UICard, { UICardHeader } from '@app/libs/ui/UICard';
-
-const BtnTransfer = withRouter(({ history }: any) => {
-  return (
-    <UIButton
-      size="small"
-      color="primary"
-      onPress={() => {
-        history.push("/it-tran");
-      }}
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "flex-end",
-        height: 45
-      }}
-    >
-      <IconLuggageCart color="#fff" width={20} height={20} />
-      {isSize(["md", "lg"]) && (
-        <UIText style={{ color: "#fff" }} size="small">
-          {" "}
-          Stock Transfer
-        </UIText>
-      )}
-    </UIButton>
-  );
-});
+import IconAdd from '@app/libs/ui/Icons/IconAdd';
 
 const BtnReturn = withRouter(({ history }: any) => {
   return (
     <UIButton
       size="small"
-      color="success"
+      color="primary"
       onPress={() => {
-        history.push("/it-ret");
+        history.push("/it-ret/form");
       }}
       style={{
         display: "flex",
@@ -56,10 +29,10 @@ const BtnReturn = withRouter(({ history }: any) => {
         justifyContent: "flex-end"
       }}
     >
-      <IconCheck color="#fff" width={20} height={20} />
+      <IconAdd color="#fff" width={20} height={20} />
       {isSize(["md", "lg"]) && (
         <UIText style={{ color: "#fff" }} size="small">
-          Stock Return
+          Create Stock Return
         </UIText>
       )}
     </UIButton>
@@ -67,7 +40,7 @@ const BtnReturn = withRouter(({ history }: any) => {
 });
 
 export default withRouter(
-  observer(({ showSidebar, sidebar }: any) => {
+  observer(({ history, showSidebar, sidebar }: any) => {
     const [data, setData] = useState([]);
     const [_data, _setData] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -130,9 +103,9 @@ export default withRouter(
             cond: "AND"
           },
           {
-            field: "U_STOCK_RETURN",
-            cond: "=",
-            value: "N"
+            field: "U_IDU_IT_INTNUM",
+            cond: "LIKE",
+            value: "PGK-R%"
           }
         ]
       };
@@ -147,9 +120,8 @@ export default withRouter(
     return (
       <UIContainer>
         <UIHeader pattern={true} isLoading={loading} showSidebar={showSidebar} sidebar={sidebar} center={
-          <UIText size="large" style={{ color: '#fff' }}> Inventory Transfer</UIText>
+          <UIText size="large" style={{ color: '#fff' }}>Inventory Transfer</UIText>
         }>
-          <BtnTransfer />
           <BtnReturn />
         </UIHeader>
         <UIBody>
@@ -158,7 +130,7 @@ export default withRouter(
               <UIText size="medium" style={{
                 flexShrink: 'none',
                 width: '100%'
-              }}>Outstanding Stock Transfer</UIText>
+              }}>List Stock Return</UIText>
               <UISearch style={{
                 width: '100%',
                 maxWidth: 300
@@ -170,8 +142,11 @@ export default withRouter(
             </UICardHeader>
             <UIList
               style={{ flex: 1 }}
-              primaryKey="DocNum"
-              selection="detail"
+              primaryKey="DocEntry"
+              selection="single"
+              onSelect={(d) => {
+                history.push(`/it-ret/view/${d.DocEntry}`)
+              }}
               fields={{
                 U_IDU_IT_INTNUM: {
                   table: {
