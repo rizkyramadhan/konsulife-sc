@@ -91,6 +91,19 @@ export default withRouter(
         alert("Items is empty.");
         return false;
       }
+
+      let zeroPrice = false;
+      items.forEach((v: any) => {
+        console.log(v);
+        if (v.PriceBefDi === "" || v.PriceBefDi === "0" || v.PriceBefDi === 0) {
+          zeroPrice = true;
+        }
+      });
+
+      if (zeroPrice) {
+        alert("Price tidak boleh kosong.");
+        return false;
+      }
       return true;
     };
 
@@ -398,6 +411,8 @@ export default withRouter(
                 action: (
                   <BtnAdd
                     onPress={() => {
+                      if (data.CardCode === "")
+                        return alert("Anda belum memilih customer.");
                       setItems([
                         ...(items as any),
                         {
@@ -416,7 +431,7 @@ export default withRouter(
                           UomEntry: "",
                           TaxCode: "",
                           TotalPrice: 0,
-                          OnHand: 0,
+                          OnHand: 0
                         }
                       ]);
                     }}

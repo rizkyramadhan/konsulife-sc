@@ -111,6 +111,18 @@ export default withRouter(
         alert("Items is empty.");
         return false;
       }
+
+      let zeroPrice = false;
+      items.forEach((v: any) => {
+        if (v.PriceBefDi === "" || v.PriceBefDi === "") {
+          zeroPrice = true;
+        }
+      });
+
+      if (zeroPrice) {
+        alert("Price tidak boleh kosong.");
+        return false;
+      }
       return true;
     };
 
@@ -436,6 +448,8 @@ export default withRouter(
                   action: (
                     <BtnAdd
                       onPress={() => {
+                        if (data.CardCode === "")
+                          return alert("Anda belum memilih customer.");
                         setItems([
                           ...(items as any),
                           {
