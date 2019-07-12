@@ -180,6 +180,22 @@ export const SAPFieldMap = {
         field: "DimCode",
         cond: "=",
         value: 2
+      },
+      {
+        cond: "AND"
+      },
+      {
+        field: "Active",
+        cond: "=",
+        value: "Y"
+      },
+      {
+        cond: "AND"
+      },
+      {
+        field: "U_IDU_AREA",
+        cond: "=",
+        value: ""
       }
     ]
   } as APISearchProps,
@@ -711,14 +727,33 @@ export const SAPFieldMap = {
       }
     ]
   } as APISearchProps,
+  // ChartOfAccount: {
+  //   Table: "OACT",
+  //   Fields: ["AcctCode", "AcctName"],
+  //   Condition: [
+  //     {
+  //       field: "Finanse",
+  //       cond: "=",
+  //       value: "Y"
+  //     }
+  //   ]
+  // } as APISearchProps
   ChartOfAccount: {
-    Table: "OACT",
-    Fields: ["AcctCode", "AcctName"],
+    Table: "@IDU_ACCTCODE",
+    Fields: ["U_ACCTCODE", "U_ACCTNAME"],
     Condition: [
       {
-        field: "Finanse",
+        field: "U_TYPE",
         cond: "=",
-        value: "Y"
+        value: ""
+      },
+      {
+        cond: "AND"
+      },
+      {
+        field: "U_BRANCH",
+        cond: "=",
+        value: ""
       }
     ]
   } as APISearchProps

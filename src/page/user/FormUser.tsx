@@ -23,10 +23,19 @@ export default withRouter(
     const [itemsWhouse, setItemsWhouse] = useState([] as any);
     const [saving, setSaving] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [rBranch, setRBranch] = useState(false);
+    const [rCashAccount, setRCashAccount] = useState(false);
+    const [rWhsCanvas, setRWhsCanvas] = useState(false);
 
-    const get = async () => {
-      setLoading(true);
-      await query(
+    useEffect(() => {
+      if (!!match.params.id) {
+        setLoading(true);
+        getUser();
+      }
+    }, []);
+
+    const getUser = () => {
+      query(
         "user",
         [
           "area",
@@ -46,25 +55,27 @@ export default withRouter(
         { where: { id: match.params.id } }
       ).then(res => {
         res["password"] = "";
-        getWhouse(res.id);
         setData(res);
+        setRBranch(true);
+        setRCashAccount(true);
+        setRWhsCanvas(true);
+        getWhouse(res.id);
       });
     };
-    const getWhouse = async (id: any) => {
-      await rawQuery(`{
-            user_warehouse(where: {user_id: {_eq: "${id}"}}) {
-              user_id
-              warehouse_code
-              id
-            }
-          }`).then(res => {
+
+    const getWhouse = (id: any) => {
+      rawQuery(`{
+        user_warehouse(where: {user_id: {_eq: "${id}"}}) {
+          user_id
+          warehouse_code
+          id
+        }
+      }`).then(res => {
         setItemsWhouse(res.user_warehouse);
         setLoading(false);
       });
     };
-    useEffect(() => {
-      if (!!match.params.id) get();
-    }, []);
+
     return (
       <UIContainer>
         <UIHeader
@@ -138,7 +149,12 @@ export default withRouter(
                         field="Area"
                         value={(data as any).area}
                         setValue={v => {
-                          setData({ ...data, area: v });
+                          setData({
+                            ...data,
+                            area: v,
+                            branch: ""
+                          });
+                          setRBranch(true);
                         }}
                       />
                     )
@@ -151,6 +167,7 @@ export default withRouter(
                       <SAPDropdown
                         label="BP Group"
                         field="BPGroup"
+                        where={[{ field: "GroupName", value: data.area }]}
                         value={(data as any).bpgroup}
                         setValue={v => {
                           setData({ ...data, bpgroup: v });
@@ -166,10 +183,21 @@ export default withRouter(
                       <SAPDropdown
                         label="Branch"
                         field="Branch"
+                        where={[{ field: "U_IDU_AREA", value: data.area }]}
                         value={(data as any).branch}
                         setValue={v => {
-                          setData({ ...data, branch: v });
+                          setData({
+                            ...data,
+                            branch: v,
+                            cash_account: "",
+                            warehouse_id: ""
+                          });
+                          setRCashAccount(true);
+                          setRWhsCanvas(true);
                         }}
+                        mustInit={false}
+                        refresh={rBranch}
+                        setRefresh={(v: boolean) => setRBranch(v)}
                       />
                     )
                   },
@@ -181,10 +209,17 @@ export default withRouter(
                       <SAPDropdown
                         label="Cash Account"
                         field="ChartOfAccount"
+                        where={[
+                          { field: "U_BRANCH", value: data.branch },
+                          { field: "U_TYPE", value: "Cash" }
+                        ]}
                         value={(data as any).cash_account}
                         setValue={v => {
                           setData({ ...data, cash_account: v });
                         }}
+                        mustInit={false}
+                        refresh={rCashAccount}
+                        setRefresh={(v: boolean) => setRCashAccount(v)}
                       />
                     )
                   },
@@ -199,12 +234,18 @@ export default withRouter(
                         customQuery={{
                           Table: "OWHS",
                           Fields: ["WhsCode"],
+                          Condition: [
+                            { field: "U_BRANCH", cond: "=", value: data.branch }
+                          ],
                           Page: 1
                         }}
                         value={(data as any).warehouse_id}
                         setValue={v => {
                           setData({ ...data, warehouse_id: v });
                         }}
+                        mustInit={false}
+                        refresh={rWhsCanvas}
+                        setRefresh={(v: boolean) => setRWhsCanvas(v)}
                       />
                     )
                   },
@@ -289,6 +330,7 @@ export default withRouter(
                   <UserWareHouse
                     items={itemsWhouse}
                     setItems={setItemsWhouse}
+                    branch={data.branch}
                   />
                 ),
                 action: (
