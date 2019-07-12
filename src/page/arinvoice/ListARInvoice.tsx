@@ -54,6 +54,7 @@ export default withRouter(
           "NumAtCard",
           "DocDate"
         ],
+        Sort: "~DocDate",
         Condition: [
           {
             field: "DocStatus",
@@ -109,7 +110,7 @@ export default withRouter(
                 let key = selectedItems.join("|");
                 history.push("/ar-invoice/form/" + btoa(key));
               } else {
-                alert("Please Select SO!");
+                alert("Anda belum memilih SO.");
               }
             }}
             style={{

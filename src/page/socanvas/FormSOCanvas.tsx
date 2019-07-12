@@ -71,12 +71,12 @@ export default withRouter(
       setData({ ...data });
 
       rawQuery(`{
-      work_order (where: {status: {_eq: "open"}, sales_id: {_eq: "${
-        global.getSession().user.slp_id
-      }"}}) {
-        number
-      }
-    }`).then(res => {
+        work_order (where: {status: {_eq: "open"}, sales_id: {_eq: "${
+          global.getSession().user.slp_id
+        }"}}) {
+          number
+        }
+      }`).then(res => {
         let wo = res.work_order.map((v: any) => {
           return {
             value: v.number,

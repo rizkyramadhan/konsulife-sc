@@ -18,6 +18,8 @@ export default withRouter(
     // const param = atob(match.params.id).split("|", 2);
     const [_data, _setData] = useState([]);
     const [field, setField] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
+
     const funcSearch = (value: string) => {
       _setData([
         ...(value
@@ -39,6 +41,7 @@ export default withRouter(
     };
 
     useEffect(() => {
+      setLoading(true);
       let query: APISearchProps = {
         Table: "OINV",
         Fields: [
@@ -50,6 +53,7 @@ export default withRouter(
           "NumAtCard",
           "DocDate"
         ],
+        Sort: "~DocDate",
         Condition: [
           {
             field: "DocStatus",
@@ -80,6 +84,7 @@ export default withRouter(
         });
         setData(res);
         _setData(res);
+        setLoading(false);
       });
     }, []);
 
@@ -89,6 +94,7 @@ export default withRouter(
           pattern={true}
           showSidebar={showSidebar}
           sidebar={sidebar}
+          isLoading={loading}
           center={
             <UIText size="large" style={{ color: "#fff" }}>
               {atob(match.params.CardName)}
