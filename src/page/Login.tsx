@@ -168,7 +168,7 @@ export default () => {
         </UIRow>
         <View style={{ ...styleTitle, marginBottom: 0, marginTop: 30 }}>
           <UIText size="small" style={{ color: "#fff" }}>
-            &copy; MBGP 2019. Supported by IDU.
+            &copy; 2019 MBGP. Supported by IDU.
           </UIText>
         </View>
       </UIBody>
