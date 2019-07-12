@@ -8,6 +8,8 @@ import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 import global from "@app/global";
+import UICard, { UICardHeader } from '@app/libs/ui/UICard';
+import UIText from '@app/libs/ui/UIText';
 
 export default withRouter(
   observer(({ history, showSidebar, sidebar }: any) => {
@@ -83,38 +85,56 @@ export default withRouter(
     return (
       <UIContainer>
         <UIHeader
+          pattern={true}
           showSidebar={showSidebar}
           sidebar={sidebar}
-          center={"AR Invoice (Canvassing)"}
+          center={
+            <UIText size="large" style={{ color: '#fff' }}>AR Invoice (Canvassing)</UIText>
+          }
           isLoading={loading}
         />
         <UIBody>
-          <UISearch onSearch={funcSearch} />
-          <UIList
-            style={{ flex: 1 }}
-            primaryKey="CardCode"
-            selection="single"
-            onSelect={item => {
-              history.push(
-                `/ar-invoice/open/${btoa(item.CardCode)}/${btoa(item.CardName)}`
-              );
-            }}
-            fields={{
-              CardCode: {
-                table: {
-                  header: "Code"
+          <UICard mode="clean" style={{ borderRadius: 4, flex: 1, backgroundColor: '#fff' }}>
+            <UICardHeader style={{ backgroundColor: '#fff', flexDirection: 'row', alignItems: 'center' }}>
+              <UIText size="medium" style={{
+                flexShrink: 'none',
+                width: '100%'
+              }}>List Customer</UIText>
+              <UISearch style={{
+                width: '100%',
+                maxWidth: 300
+              }}
+                fieldStyle={{
+                  borderWidth: 0,
+                  backgroundColor: '#f6f9fc'
+                }} onSearch={funcSearch}></UISearch>
+            </UICardHeader>
+            <UIList
+              style={{ flex: 1 }}
+              primaryKey="CardCode"
+              selection="single"
+              onSelect={item => {
+                history.push(
+                  `/ar-invoice/open/${btoa(item.CardCode)}/${btoa(item.CardName)}`
+                );
+              }}
+              fields={{
+                CardCode: {
+                  table: {
+                    header: "Code"
+                  }
+                },
+                CardName: {
+                  table: {
+                    header: "Customer"
+                  }
                 }
-              },
-              CardName: {
-                table: {
-                  header: "Customer"
-                }
-              }
-            }}
-            items={_data.map((item: any) => ({
-              ...item
-            }))}
-          />
+              }}
+              items={_data.map((item: any) => ({
+                ...item
+              }))}
+            />
+          </UICard>
         </UIBody>
       </UIContainer>
     );

@@ -1,14 +1,16 @@
 import { APISearch, APISearchProps } from "@app/api";
 import BtnCreate from "@app/components/BtnCreate";
+import global from "@app/global";
 import UIBody from "@app/libs/ui/UIBody";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
-import UISearch from "@app/libs/ui/UISearch";
+import UIText from '@app/libs/ui/UIText';
 import { observer } from "mobx-react-lite";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
-import global from "@app/global";
+import UISearch from '@app/libs/ui/UISearch';
+import UICard, { UICardHeader } from '@app/libs/ui/UICard';
 
 export default withRouter(
   observer(({ showSidebar, sidebar }: any) => {
@@ -28,18 +30,18 @@ export default withRouter(
       _setData([
         ...(value
           ? data.filter((x: any) => {
-              let res = false;
-              for (var i = 0; i < field.length; i++) {
-                if (
-                  x[field[i]] &&
-                  x[field[i]].toLowerCase().includes(value.toLowerCase())
-                ) {
-                  res = true;
-                  break;
-                }
+            let res = false;
+            for (var i = 0; i < field.length; i++) {
+              if (
+                x[field[i]] &&
+                x[field[i]].toLowerCase().includes(value.toLowerCase())
+              ) {
+                res = true;
+                break;
               }
-              return res;
-            })
+            }
+            return res;
+          })
           : data)
       ]);
     };
@@ -102,47 +104,64 @@ export default withRouter(
     return (
       <UIContainer>
         <UIHeader
+          pattern={true}
           showSidebar={showSidebar}
           sidebar={sidebar}
-          center={"SO Canvasing"}
+          center={
+            <UIText size="large" style={{ color: '#fff' }}>SO Canvasing</UIText>
+          }
           isLoading={loading}
         >
           <BtnCreate path="/so-canvas/form" />
         </UIHeader>
         <UIBody>
-          <UISearch onSearch={funcSearch} />
-          <UIList
-            style={{ flex: 1 }}
-            primaryKey="DocNum"
-            selection="detail"
-            fields={{
-              U_IDU_SO_INTNUM: {
-                table: {
-                  header: "No. SO"
+          <UICard mode="clean" style={{ borderRadius: 4, flex: 1, backgroundColor: '#fff' }}>
+            <UICardHeader style={{ backgroundColor: '#fff', flexDirection: 'row', alignItems: 'center' }}>
+              <UIText size="medium" style={{
+                flexShrink: 'none',
+                width: '100%'
+              }}>List SO Canvasing</UIText>
+              <UISearch style={{
+                width: '100%',
+                maxWidth: 300
+              }}
+                fieldStyle={{
+                  borderWidth: 0,
+                  backgroundColor: '#f6f9fc'
+                }} onSearch={funcSearch}></UISearch>
+            </UICardHeader>
+            <UIList
+              style={{ flex: 1 }}
+              primaryKey="DocNum"
+              selection="detail"
+              fields={{
+                U_IDU_SO_INTNUM: {
+                  table: {
+                    header: "No. SO"
+                  }
+                },
+                CardCode: {
+                  table: {
+                    header: "Customer Code"
+                  }
+                },
+                CardName: {
+                  table: {
+                    header: "Customer"
+                  }
+                },
+                DocDate: {
+                  table: {
+                    header: "Posting Date"
+                  }
                 }
-              },
-              CardCode: {
-                table: {
-                  header: "Customer Code"
-                }
-              },
-              CardName: {
-                table: {
-                  header: "Customer"
-                }
-              },
-              DocDate: {
-                table: {
-                  header: "Posting Date"
-                }
-              }
-            }}
-            items={_data.map((item: any) => ({
-              ...item
-            }))}
-          />
+              }}
+              items={_data.map((item: any) => ({
+                ...item
+              }))}
+            />
+          </UICard>
         </UIBody>
       </UIContainer>
     );
-  })
-);
+  }));
