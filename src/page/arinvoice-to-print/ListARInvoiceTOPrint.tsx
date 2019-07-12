@@ -9,6 +9,8 @@ import UISearch from "@app/libs/ui/UISearch";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
+import UICard, { UICardHeader } from '@app/libs/ui/UICard';
+import UIText from '@app/libs/ui/UIText';
 
 export default withRouter(
   observer(({ match, history, showSidebar, sidebar }: any) => {
@@ -86,59 +88,77 @@ export default withRouter(
     return (
       <UIContainer>
         <UIHeader
+          pattern={true}
           showSidebar={showSidebar}
           sidebar={sidebar}
-          center={"AR Invoice  " + atob(match.params.CardName)}
+          center={
+            <UIText size="large" style={{ color: '#fff' }}>{atob(match.params.CardName)}</UIText>
+          }
         >
           <BtnCreate path={`/ar-invoice-to/list/${match.params.CardCode}/${match.params.CardName}`} />
         </UIHeader>
         <UIBody>
-          <UISearch onSearch={funcSearch} />
-          <UIList
-            primaryKey="DocEntry"
-            style={{ backgroundColor: "#fff" }}
-            selection="single"
-            onSelect={(d) => {
-              history.push(`/ar-invoice-to/view/${match.params.CardCode}/${match.params.CardName}/${d.DocEntry}`)
-            }}
-            fields={{
-              CardName: {
-                table: {
-                  header: "Customer"
+          <UICard mode="clean" style={{ borderRadius: 4, flex: 1, backgroundColor: '#fff' }}>
+            <UICardHeader style={{ backgroundColor: '#fff', flexDirection: 'row', alignItems: 'center' }}>
+              <UIText size="medium" style={{
+                flexShrink: 'none',
+                width: '100%'
+              }}>List AR Invoice</UIText>
+              <UISearch style={{
+                width: '100%',
+                maxWidth: 300
+              }}
+                fieldStyle={{
+                  borderWidth: 0,
+                  backgroundColor: '#f6f9fc'
+                }} onSearch={funcSearch}></UISearch>
+            </UICardHeader>
+            <UIList
+              primaryKey="DocEntry"
+              style={{ backgroundColor: "#fff" }}
+              selection="single"
+              onSelect={(d) => {
+                history.push(`/ar-invoice-to/view/${match.params.CardCode}/${match.params.CardName}/${d.DocEntry}`)
+              }}
+              fields={{
+                CardName: {
+                  table: {
+                    header: "Customer"
+                  }
+                },
+                CardCode: {
+                  table: {
+                    header: "Code"
+                  }
+                },
+                U_IDU_SO_INTNUM: {
+                  table: {
+                    header: "SO No."
+                  }
+                },
+                U_IDU_DO_INTNUM: {
+                  table: {
+                    header: "DO No."
+                  }
+                },
+                NumAtCard: {
+                  table: {
+                    header: "PO Cust."
+                  }
+                },
+                DocDate: {
+                  table: {
+                    header: "Posting Date"
+                  }
+                },
+                Action: {
                 }
-              },
-              CardCode: {
-                table: {
-                  header: "Code"
-                }
-              },
-              U_IDU_SO_INTNUM: {
-                table: {
-                  header: "SO No."
-                }
-              },
-              U_IDU_DO_INTNUM: {
-                table: {
-                  header: "DO No."
-                }
-              },
-              NumAtCard: {
-                table: {
-                  header: "PO Cust."
-                }
-              },
-              DocDate: {
-                table: {
-                  header: "Posting Date"
-                }
-              },
-              Action: {
-              }
-            }}
-            items={_data.map((item: any) => ({
-              ...item
-            }))}
-          />
+              }}
+              items={_data.map((item: any) => ({
+                ...item
+              }))}
+            />
+          </UICard>
         </UIBody>
       </UIContainer>
     );

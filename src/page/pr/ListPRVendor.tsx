@@ -70,9 +70,12 @@ export default withRouter(
     return (
       <UIContainer>
         <UIHeader
+          pattern={true}
           showSidebar={showSidebar}
           sidebar={sidebar}
-          center={"Purchase Receipt - Vendor List"}
+          center={
+            <UIText size="large" style={{ color: '#fff' }}>Purchase Receipt</UIText>
+          }
           isLoading={loading}
         />
         <UIBody>

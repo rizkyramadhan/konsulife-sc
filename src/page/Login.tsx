@@ -16,7 +16,7 @@ import { RouteComponentProps, withRouter } from "react-router";
 import { Alert, View, Image } from "reactxp";
 import IconSignIn from '@app/libs/ui/Icons/IconSignIn';
 
-const background = require("@app/assets/images/bg-login.jpg");
+const background = require("@app/assets/images/pattern.png");
 
 const LoginForm = withRouter(({ history }: RouteComponentProps) => {
   const [username, setUsername] = useState("");
@@ -47,11 +47,12 @@ const LoginForm = withRouter(({ history }: RouteComponentProps) => {
       }}>
         <UIText
           size="extralarge"
-          style={{ paddingTop: 50, textAlign: "center" }}
+          style={{ paddingTop: 20, textAlign: "center" }}
         >
-          Login Page
+          MBGP - Sales App
         </UIText>
         <UIText
+          size="small"
           style={{ paddingTop: 10, paddingBottom: 20, textAlign: "center" }}
         >
           Silakan login sesuai dengan user di {config.url}
@@ -129,8 +130,13 @@ export default () => {
   const style: any = {
     position: 'absolute',
     width: '100%',
-    height: '100%',
+    height: (window.innerHeight * 50 / 100),
   };
+  const styleTitle: any = {
+    display: 'flex',
+    marginBottom: 60,
+    alignItems: 'center'
+  }
   return (
     <UIContainer>
       <View style={style}>
@@ -138,12 +144,19 @@ export default () => {
       </View>
       <UIBody
         style={{
+          position: "static",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#00000061"
+          backgroundColor: '#172b4d'
         }}
       >
+        <View style={styleTitle}>
+          <UIText size="extralarge" style={{ color: "#fff" }}>Welcome!</UIText>
+          <UIText size="medium" style={{ color: "#fff" }}>
+            Use these awesome forms to login or create new account in your project for free.
+          </UIText>
+        </View>
         <UIRow
           style={{
             width: "100%"
@@ -153,6 +166,11 @@ export default () => {
           <LoginForm />
           <UICol size={4} xs={0} sm={0} />
         </UIRow>
+        <View style={{ ...styleTitle, marginBottom: 0, marginTop: 30 }}>
+          <UIText size="small" style={{ color: "#fff" }}>
+            &copy; MBGP 2019. Supported by IDU.
+          </UIText>
+        </View>
       </UIBody>
     </UIContainer>
   );

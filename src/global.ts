@@ -1,6 +1,7 @@
 import { types } from "mobx-state-tree";
 
 const SessionUser = types.model({
+  fullname: types.string,
   bpgroup: types.string,
   id: types.number,
   password: types.string,
@@ -64,6 +65,7 @@ const DefaultSession = {
   sid: "",
   uid: "",
   user: {
+    fullname: "",
     bpgroup: "",
     id: 0,
     password: "",

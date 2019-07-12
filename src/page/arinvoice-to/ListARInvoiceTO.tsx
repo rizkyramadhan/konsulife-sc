@@ -8,6 +8,8 @@ import UISearch from "@app/libs/ui/UISearch";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
+import UIText from '@app/libs/ui/UIText';
+import UICard, { UICardHeader } from '@app/libs/ui/UICard';
 
 let selectedItems: any[];
 
@@ -79,10 +81,13 @@ export default withRouter(
     return (
       <UIContainer>
         <UIHeader
+          pattern={true}
           showSidebar={showSidebar}
           sidebar={sidebar}
           isLoading={loading}
-          center={"AR Invoice  " + atob(match.params.CardName)}
+          center={
+            <UIText size="large" style={{ color: '#fff' }}>{atob(match.params.CardName)}</UIText>
+          }
         >
           <BtnCopy
             label="Copy DO"
@@ -97,50 +102,65 @@ export default withRouter(
           />
         </UIHeader>
         <UIBody>
-          <UISearch onSearch={funcSearch} />
-          <UIList
-            primaryKey="DocEntry"
-            style={{ backgroundColor: "#fff" }}
-            selection="multi"
-            onSelect={(_, selected) => {
-              selectedItems = selected;
-            }}
-            fields={{
-              CardName: {
-                table: {
-                  header: "Customer"
+          <UICard mode="clean" style={{ borderRadius: 4, flex: 1, backgroundColor: '#fff' }}>
+            <UICardHeader style={{ backgroundColor: '#fff', flexDirection: 'row', alignItems: 'center' }}>
+              <UIText size="medium" style={{
+                flexShrink: 'none',
+                width: '100%'
+              }}>List AR Invoice</UIText>
+              <UISearch style={{
+                width: '100%',
+                maxWidth: 300
+              }}
+                fieldStyle={{
+                  borderWidth: 0,
+                  backgroundColor: '#f6f9fc'
+                }} onSearch={funcSearch}></UISearch>
+            </UICardHeader>
+            <UIList
+              primaryKey="DocEntry"
+              style={{ backgroundColor: "#fff" }}
+              selection="multi"
+              onSelect={(_, selected) => {
+                selectedItems = selected;
+              }}
+              fields={{
+                CardName: {
+                  table: {
+                    header: "Customer"
+                  }
+                },
+                CardCode: {
+                  table: {
+                    header: "Code"
+                  }
+                },
+                U_IDU_SO_INTNUM: {
+                  table: {
+                    header: "SO No."
+                  }
+                },
+                U_IDU_DO_INTNUM: {
+                  table: {
+                    header: "DO No."
+                  }
+                },
+                NumAtCard: {
+                  table: {
+                    header: "PO Cust."
+                  }
+                },
+                DocDate: {
+                  table: {
+                    header: "Posting Date"
+                  }
                 }
-              },
-              CardCode: {
-                table: {
-                  header: "Code"
-                }
-              },
-              U_IDU_SO_INTNUM: {
-                table: {
-                  header: "SO No."
-                }
-              },
-              U_IDU_DO_INTNUM: {
-                table: {
-                  header: "DO No."
-                }
-              },
-              NumAtCard: {
-                table: {
-                  header: "PO Cust."
-                }
-              },
-              DocDate: {
-                table: {
-                  header: "Posting Date"
-                }
-              }
-            }}
-            items={_data.map((item: any) => ({
-              ...item
-            }))}
-          />
+              }}
+              items={_data.map((item: any) => ({
+                ...item
+              }))}
+            />
+          </UICard>
         </UIBody>
       </UIContainer>
     );

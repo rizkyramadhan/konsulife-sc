@@ -144,8 +144,7 @@ export default [
       {
         title: (
           <UIText style={{ color: "#525f7f", paddingLeft: 7, fontSize: 15 }}>
-            {" "}
-            Purchase Receipt
+            - Purchase Receipt
           </UIText>
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
@@ -155,8 +154,7 @@ export default [
       {
         title: (
           <UIText style={{ color: "#525f7f", paddingLeft: 7, fontSize: 15 }}>
-            {" "}
-            Inventory Transfer
+            - Inventory Transfer
           </UIText>
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
@@ -179,8 +177,7 @@ export default [
       {
         title: (
           <UIText style={{ color: "#525f7f", paddingLeft: 7, fontSize: 15 }}>
-            {" "}
-            Sales Order
+            - Sales Order
           </UIText>
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
@@ -190,8 +187,7 @@ export default [
       {
         title: (
           <UIText style={{ color: "#525f7f", paddingLeft: 7, fontSize: 15 }}>
-            {" "}
-            Delivery Order
+            - Delivery Order
           </UIText>
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
@@ -201,8 +197,7 @@ export default [
       {
         title: (
           <UIText style={{ color: "#525f7f", paddingLeft: 7, fontSize: 15 }}>
-            {" "}
-            AR Invoice
+            - AR Invoice
           </UIText>
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
@@ -225,8 +220,7 @@ export default [
       {
         title: (
           <UIText style={{ color: "#525f7f", paddingLeft: 7, fontSize: 15 }}>
-            {" "}
-            Working Order
+            - Working Order
           </UIText>
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
@@ -236,8 +230,7 @@ export default [
       {
         title: (
           <UIText style={{ color: "#525f7f", paddingLeft: 7, fontSize: 15 }}>
-            {" "}
-            Sales Order
+            - Sales Order
           </UIText>
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
@@ -247,8 +240,7 @@ export default [
       {
         title: (
           <UIText style={{ color: "#525f7f", paddingLeft: 7, fontSize: 15 }}>
-            {" "}
-            AR Invoice
+            - AR Invoice
           </UIText>
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
@@ -273,8 +265,7 @@ export default [
       {
         title: (
           <UIText style={{ color: "#525f7f", paddingLeft: 7, fontSize: 15 }}>
-            {" "}
-            Payment Receipt
+            - Payment Receipt
           </UIText>
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
