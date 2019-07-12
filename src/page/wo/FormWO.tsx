@@ -166,13 +166,13 @@ export default withRouter(
     const save = async () => {
       if (!validation()) return;
 
-      setSaving(true);
       try {
+        setSaving(true);
         if (!data.id) {
           if (!(await checkWO())) {
             return setSaving(false);
           }
-          
+
           let number: any = await getLastNumbering(
             "WO",
             global.getSession().user.branch || ""

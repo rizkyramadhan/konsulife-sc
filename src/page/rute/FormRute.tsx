@@ -84,17 +84,54 @@ export default withRouter(
       );
     };
 
-    const save = async () => {
-      setSaving(true);
-      try {
-        //  cek rute
-        // let checkRute = await rawQuery(`{
-        //   rute(where: {_and:{name: {_eq: "${data.name}"}, branch: {_eq: "${global.getSession().user.branch}"}}}) {
-        //     name
-        //   }
-        // }`);
-        // if (checkRute.rute.length > 0) return alert("Nama rute sudah digunakan!");
+    const validation = () => {
+      const err: any = [];
+      const required = {
+        name: "Name"
+      };
 
+      Object.keys(required).forEach((k: any) => {
+        if ((data as any)[k] === "" || !(data as any)[k])
+          err.push((required as any)[k]);
+      });
+
+      if (err.length > 0) {
+        alert(err.join(", ") + " is required.");
+        return false;
+      }
+      return validationCustomer();
+    };
+
+    const validationCustomer = () => {
+      if (items.length === 0) {
+        alert("Customer is empty, please add a customer.");
+        return false;
+      }
+      return true;
+    };
+
+    const checkRute = async () => {
+      let checkRute = await rawQuery(`{
+        rute(where: {id: {_neq: ${data.id || 0}}, branch: {_eq: "${
+        global.getSession().user.branch
+      }"}, name: {_eq: "${data.name}"}}) {
+          name
+        }
+      }`);
+
+      if (checkRute && checkRute.rute.length > 0) {
+        alert("Nama rute sudah digunakan!");
+        return false;
+      }
+      return true;
+    };
+
+    const save = async () => {
+      if (!validation()) return;
+
+      try {
+        setSaving(true);
+        if (!(await checkRute())) return;
         if (!data.id) {
           data.branch = global.getSession().user.branch || "";
           data.area = global.getSession().user.area || "";
