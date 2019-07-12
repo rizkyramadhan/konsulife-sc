@@ -37,7 +37,8 @@ const defData = {
   U_USERID: global.session.user.username,
   U_GENERATED: "W",
   U_BRANCH: global.session.user.branch,
-  U_WONUM: ""
+  U_WONUM: "",
+  Method: "cash"
 };
 
 export default withRouter(
@@ -47,9 +48,60 @@ export default withRouter(
     const [saving, setSaving] = useState(false);
     const [_items, _setItems] = useState<any[]>([]);
 
+    const validation = () => {
+      const err: any = [];
+      const required = {
+        CardCode: "BP Partner",
+        U_SONUM: "NO SO"
+      };
+
+      Object.keys(required).forEach((k: any) => {
+        if ((data as any)[k] === "" || !(data as any)[k])
+          err.push((required as any)[k]);
+      });
+
+      if (err.length > 0) {
+        alert(err.join(", ") + " is required.");
+        return false;
+      }
+      return validationPayment();
+    };
+
+    const validationPayment = () => {
+      const err: any = [];
+      let required = {};
+      if (data.Method === "cash") {
+        required = {
+          CashAcct: "Cash Account",
+          CashSum: "Cash Ammount"
+        };
+      } else {
+        required = {
+          TrsfrAcct: "Transfer Account",
+          TrsfrSum: "Transfer Ammount",
+          TrsfrDate: today,
+          TrsfrRef: "Transfer Ref"
+        };
+      }
+
+      Object.keys(required).forEach((k: any) => {
+        if ((data as any)[k] === "" || !(data as any)[k])
+          err.push((required as any)[k]);
+      });
+
+      if (err.length > 0) {
+        alert(err.join(", ") + " is required.");
+        return false;
+      }
+
+      return true;
+    };
+
     const save = async () => {
-      setSaving(true);
+      if (!validation()) return;
+
       try {
+        setSaving(true);
         let number: any = await getLastNumbering(
           "TP",
           global.getSession().user.branch || ""
@@ -69,6 +121,25 @@ export default withRouter(
       } finally {
         setSaving(false);
       }
+    };
+
+    const getWO = (bp_id: string) => {
+      setWOList([]);
+      rawQuery(`{
+        work_order (where: {status: {_eq: "open"}, bp_id: {_eq: "${bp_id}"}, branch: {_eq: "${
+        global.getSession().user.branch
+      }"}}) {
+          number
+        }
+      }`).then(res => {
+        let wo = res.work_order.map((v: any) => {
+          return {
+            value: v.number,
+            label: v.number
+          };
+        });
+        setWOList([...wo]);
+      });
     };
 
     useEffect(() => {
@@ -121,22 +192,6 @@ export default withRouter(
         });
         _setItems([...items]);
       });
-
-      rawQuery(`{
-      work_order (where: {status: {_eq: "open"}, branch: {_eq: "${
-        global.getSession().user.branch
-      }"}}) {
-        number
-      }
-    }`).then(res => {
-        let wo = res.work_order.map((v: any) => {
-          return {
-            value: v.number,
-            label: v.number
-          };
-        });
-        setWOList([...wo]);
-      });
     }, []);
 
     return (
@@ -162,20 +217,6 @@ export default withRouter(
                 label: "General",
                 value: [
                   {
-                    key: "DocDate",
-                    size: 6,
-                    label: "Posting Date",
-                    type: "date",
-                    options: { pastDate: true }
-                  },
-                  {
-                    key: "DocDueDate",
-                    size: 6,
-                    label: "Delivery Date",
-                    type: "date",
-                    options: { pastDate: true }
-                  },
-                  {
                     key: "CardCode",
                     label: "BP Partner",
                     size: 12,
@@ -191,7 +232,8 @@ export default withRouter(
                         ]}
                         value={(data as any).CardCode}
                         setValue={v => {
-                          setData({ ...data, CardCode: v });
+                          setData({ ...data, CardCode: v, U_WONUM: "" });
+                          getWO(v);
                         }}
                       />
                     )
@@ -212,6 +254,53 @@ export default withRouter(
                     )
                   },
                   {
+                    key: "Method",
+                    size: 12,
+                    label: "Method",
+                    component: (
+                      <UISelectField
+                        label="Method"
+                        items={[
+                          { label: "Cash", value: "cash" },
+                          { label: "Transfer", value: "transfer" }
+                        ]}
+                        value={(data as any).Method}
+                        setValue={v => {
+                          setData({
+                            ...data,
+                            Method: v,
+                            CashAcct: "",
+                            CashSum: "",
+                            TrsfrAcct: "",
+                            TrsfrSum: "",
+                            TrsfrDate: today,
+                            TrsfrRef: ""
+                          });
+                        }}
+                      />
+                    )
+                  }
+                ]
+              },
+              {
+                key: "date",
+                label: "",
+                value: [
+                  {
+                    key: "DocDate",
+                    size: 6,
+                    label: "Posting Date",
+                    type: "date",
+                    options: { pastDate: true }
+                  },
+                  {
+                    key: "DocDueDate",
+                    size: 6,
+                    label: "Delivery Date",
+                    type: "date",
+                    options: { pastDate: true }
+                  },
+                  {
                     key: "U_WONUM",
                     size: 12,
                     component: (
@@ -224,54 +313,8 @@ export default withRouter(
                         }}
                       />
                     )
-                  }
-                ]
-              },
-              {
-                key: "cash",
-                label: "Cash",
-                value: [
-                  {
-                    key: "CashAcct",
-                    size: 12,
-                    label: "Cash Account",
-                    component: (
-                      <SAPDropdown
-                        label="Cash Account"
-                        field="ChartOfAccount"
-                        value={(data as any).CashAcct}
-                        setValue={v => {
-                          setData({ ...data, CashAcct: v });
-                        }}
-                      />
-                    )
                   },
-                  { key: "CashSum", size: 12, label: "Cash Amount" },
                   { key: "U_Remark", size: 12, label: "Remarks" }
-                ]
-              },
-              {
-                key: "transfer",
-                label: "Bank Transfer",
-                value: [
-                  {
-                    key: "TrsfrAcct",
-                    size: 12,
-                    label: "Transfer Account",
-                    component: (
-                      <SAPDropdown
-                        label="Transfer Account"
-                        field="ChartOfAccount"
-                        value={(data as any).TrsfrAcct}
-                        setValue={v => {
-                          setData({ ...data, TrsfrAcct: v });
-                        }}
-                      />
-                    )
-                  },
-                  { key: "TrsfrSum", size: 12, label: "Transfer Amount" },
-                  { key: "TrsfrDate", size: 6, label: "Transfer Date", type:"date" },
-                  { key: "TrsfrRef", size: 12, label: "Ref Number" }
                 ]
               }
             ]}
@@ -285,6 +328,109 @@ export default withRouter(
               setData({ ...data });
             }}
           />
+
+          {data.Method === "cash" && (
+            <UIJsonField
+              items={data}
+              field={[
+                {
+                  key: "cash",
+                  label: "Cash",
+                  value: [
+                    {
+                      key: "CashAcct",
+                      size: 12,
+                      label: "Cash Account",
+                      component: (
+                        <SAPDropdown
+                          label="Cash Account"
+                          field="Custom"
+                          customQuery={{
+                            Table: "@IDU_ACCTCODE",
+                            Fields: ["U_ACCTCODE", "U_ACCTNAME"],
+                            Condition: [
+                              {
+                                field: "U_ACCTCODE",
+                                cond: "=",
+                                value: global.getSession().user.cash_account
+                              }
+                            ]
+                          }}
+                          value={(data as any).CashAcct}
+                          setValue={v => {
+                            setData({ ...data, CashAcct: v });
+                          }}
+                        />
+                      )
+                    },
+                    { key: "CashSum", size: 12, label: "Cash Amount" }
+                  ]
+                }
+              ]}
+              setValue={(value: any, key: any) => {
+                if (key === "TrsfrDate") {
+                  if (value > today) {
+                    value = today;
+                  }
+                }
+                (data as any)[key] = value;
+                setData({ ...data });
+              }}
+            />
+          )}
+
+          {data.Method === "transfer" && (
+            <UIJsonField
+              items={data}
+              field={[
+                {
+                  key: "transfer",
+                  label: "Bank Transfer",
+                  value: [
+                    {
+                      key: "TrsfrAcct",
+                      size: 12,
+                      label: "Transfer Account",
+                      component: (
+                        <SAPDropdown
+                          label="Transfer Account"
+                          field="ChartOfAccount"
+                          where={[
+                            {
+                              field: "U_BRANCH",
+                              value: global.getSession().user.branch
+                            },
+                            { field: "U_TYPE", value: "Bank" }
+                          ]}
+                          value={(data as any).TrsfrAcct}
+                          setValue={v => {
+                            setData({ ...data, TrsfrAcct: v });
+                          }}
+                        />
+                      )
+                    },
+                    { key: "TrsfrSum", size: 12, label: "Transfer Amount" },
+                    {
+                      key: "TrsfrDate",
+                      size: 6,
+                      label: "Transfer Date",
+                      type: "date"
+                    },
+                    { key: "TrsfrRef", size: 12, label: "Ref Number" }
+                  ]
+                }
+              ]}
+              setValue={(value: any, key: any) => {
+                if (key === "TrsfrDate") {
+                  if (value > today) {
+                    value = today;
+                  }
+                }
+                (data as any)[key] = value;
+                setData({ ...data });
+              }}
+            />
+          )}
         </UIBody>
       </UIContainer>
     );
