@@ -35,6 +35,7 @@ interface IWO {
   sopir?: string;
   sopir_sim?: string;
   sopir_nopol?: string;
+  bp_id?: string;
   sales_id?: string;
   sales_name?: string;
   rute_id?: number;
@@ -83,6 +84,7 @@ export default withRouter(
             "sopir",
             "sopir_sim",
             "sopir_nopol",
+            "bp_id",
             "sales_id",
             "sales_name",
             "status",
@@ -121,10 +123,56 @@ export default withRouter(
       });
     }, []);
 
+    const validation = () => {
+      const err: any = [];
+      const required = {
+        sales_id: "Sales",
+        rute_id: "Rute",
+        sopir: "Sopir",
+        sopir_sim: "No SIM",
+        sopir_nopol: "Nopol"
+      };
+
+      Object.keys(required).forEach((k: any) => {
+        if ((data as any)[k] === "" || !(data as any)[k])
+          err.push((required as any)[k]);
+      });
+
+      if (err.length > 0) {
+        alert(err.join(", ") + " is required.");
+        return false;
+      }
+      return true;
+    };
+
+    const checkWO = async () => {
+      const sales_id = data.sales_id || "";
+      let wo = await rawQuery(`{
+        work_order(where: {sales_id: {_eq: "${sales_id}"}, status: {_eq: "open"}}) {
+          id
+        }
+      }`);
+
+      if (wo && wo.work_order.length === 0) {
+        return true;
+      }
+
+      alert(
+        `Failed! Sales ${data.sales_name} masih memiliki WO yang sedang aktif.`
+      );
+      return false;
+    };
+
     const save = async () => {
+      if (!validation()) return;
+
       setSaving(true);
       try {
         if (!data.id) {
+          if (!(await checkWO())) {
+            return setSaving(false);
+          }
+          
           let number: any = await getLastNumbering(
             "WO",
             global.getSession().user.branch || ""
@@ -196,16 +244,43 @@ export default withRouter(
                     component: (
                       <SAPDropdown
                         label="Sales"
-                        field="SAPSalesCode"
-                        where={[
-                          {
-                            field: "U_IDU_BRANCH",
-                            value: global.getSession().user.branch
-                          }
-                        ]}
+                        field="Custom"
+                        customQuery={{
+                          Table: "OCRD",
+                          Fields: ["CardCode", "CardName", "SlpCode"],
+                          Condition: [
+                            {
+                              field: "U_IDU_BRANCH",
+                              cond: "=",
+                              value: global.getSession().user.branch
+                            },
+                            {
+                              cond: "AND"
+                            },
+                            {
+                              field: "U_SALES",
+                              cond: "=",
+                              value: "Y"
+                            },
+                            {
+                              cond: "AND"
+                            },
+                            {
+                              field: "validFor",
+                              cond: "=",
+                              value: "Y"
+                            }
+                          ]
+                        }}
+                        itemField={{ value: "SlpCode", label: "CardName" }}
                         value={data.sales_id || ""}
-                        setValue={(v, l) => {
-                          setData({ ...data, sales_id: v, sales_name: l });
+                        setValue={(v, l, r) => {
+                          setData({
+                            ...data,
+                            sales_id: v,
+                            sales_name: l,
+                            bp_id: r.item.CardCode
+                          });
                         }}
                       />
                     )
