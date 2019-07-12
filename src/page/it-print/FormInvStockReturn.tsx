@@ -11,9 +11,12 @@ import FormInvStockDetails from "./FormInvStockDetails";
 import { decodeSAPDateToFormal } from '@app/utils/Helper';
 import { APISearchProps, APISearch } from '@app/api';
 import rawQuery from '@app/libs/gql/data/rawQuery';
+import BtnExport from '@app/components/BtnExport';
+import { ReportPost } from '@app/report';
 
 export default withRouter(
   observer(({ match, showSidebar, sidebar }: any) => {
+    const [exporting, setExporting] = useState(false);
     const [data, setData] = useState<any>({});
     const [items, setItems] = useState<any[]>([]);
     useEffect(() => {
@@ -90,7 +93,7 @@ export default withRouter(
             };
 
             APISearch(query).then((res: any) => {
-              setData({...data, SalesName:res[0]["SlpName"]});
+              setData({...data, SalesName:res[0]["SlpName"], RuteName:""});
             });
 
 
@@ -99,13 +102,8 @@ export default withRouter(
                 rute
               }
             }`).then(res => {
-                let wo = res.work_order.map((v: any) => {
-                  return {
-                    value: v.number,
-                    label: v.number
-                  };
-                });
-              });
+                console.log(res);
+            });
         });
   
         query = {
@@ -146,6 +144,36 @@ export default withRouter(
         });
       }, []);
 
+      const exportReport = async () => {
+        if (exporting) return;
+        if (items.length === 0) return;
+        setExporting(true);
+  
+        let postItem: any[] = [];
+          items.forEach((val: any) => {
+            postItem.push({
+              ItemCode: val.ItemCode,
+              Dscription: val.Dscription,
+              UseBaseUn: val.UseBaseUn,
+              Quantity: val.Quantity,
+              UoMEntry: val.UoMEntry,
+              unitMsr:val.unitMsr,
+              WhsCode: val.WhsCode,
+              SerialNum: val.SerialNum
+            });
+          });
+        
+        try {
+          await ReportPost("stockReturn",{...data,Lines: postItem});
+        } catch (e) {
+          alert(e.Message);
+  
+          console.error({data});
+        } finally {
+          setExporting(false);
+        }
+      };
+
     return (
       <UIContainer>
         <UIHeader
@@ -154,6 +182,12 @@ export default withRouter(
           sidebar={sidebar}
           center="Stock Return View"
         >
+          <BtnExport
+            exporting={exporting}
+            onPress={() => {
+              exportReport();
+            }}
+          />
         </UIHeader>
         <UIBody scroll={true}>
           <UIJsonField

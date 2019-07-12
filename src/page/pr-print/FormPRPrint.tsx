@@ -9,10 +9,13 @@ import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 import FormPRPrintDetail from "./FormPRPrintDetail";
 import { decodeSAPDateToFormal } from '@app/utils/Helper';
+import BtnExport from '@app/components/BtnExport';
+import { ReportPost } from '@app/report';
 
 
 export default withRouter(
   observer(({  match, showSidebar, sidebar }: any) => {
+    const [exporting, setExporting] = useState(false);
     const [data, setData] = useState<any>({});
     const [item, setItem] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -74,7 +77,8 @@ export default withRouter(
           };
     
           APISearch(query).then((cit: any) => {
-                setData({...data, City:cit[0]["PrcName"]});
+              setData({...data, City:cit[0]["PrcName"]});
+              console.log(data);
           });
       });
 
@@ -126,6 +130,36 @@ export default withRouter(
       });
     }, []);
 
+    const exportReport = async () => {
+      if (exporting) return;
+      if (item.length === 0) return;
+      setExporting(true);
+
+      let postItem: any[] = [];
+        item.forEach((val: any) => {
+          postItem.push({
+            ItemCode: val.ItemCode,
+            Dscription: val.Dscription,
+            UseBaseUn: val.UseBaseUn,
+            Quantity: val.Quantity,
+            UoMEntry: val.UoMEntry,
+            unitMsr:val.unitMsr,
+            WhsCode: val.WhsCode,
+            SerialNum: val.SerialNum
+          });
+        });
+      
+      try {
+        await ReportPost("stockReturn",{...data,Lines: postItem});
+      } catch (e) {
+        alert(e.Message);
+
+        console.error({data});
+      } finally {
+        setExporting(false);
+      }
+    };
+    
     return (
       <UIContainer>
         <UIHeader
@@ -135,6 +169,12 @@ export default withRouter(
           center="Purchase Receipt View"
           isLoading={loading}
         >
+          <BtnExport
+            exporting={exporting}
+            onPress={() => {
+              exportReport();
+            }}
+          />
         </UIHeader>
         <UIBody scroll={true}>
           <UIJsonField
