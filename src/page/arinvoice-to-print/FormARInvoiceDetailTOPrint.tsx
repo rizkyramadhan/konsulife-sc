@@ -26,9 +26,9 @@ export default ({ items }: any) => {
             header: "Warehouse"
           }
         },
-        UomCode: {
+        unitMsr: {
           table: {
-            header: "Inventory UoM"
+            header: "UoM"
           }
         },
         Quantity: {

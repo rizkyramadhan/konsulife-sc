@@ -40,6 +40,8 @@ export default withRouter(
           "U_IDU_SUP_SONUM",
           "U_IDU_DO_INTNUM",
           "U_IDU_GRPO_INTNUM",
+          "U_IDU_NOPOL",
+          "U_IDU_DRIVER",
           "U_BRANCH",
           "U_USERID",
           "U_GENERATED",

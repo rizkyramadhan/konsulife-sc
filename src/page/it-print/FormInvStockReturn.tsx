@@ -10,6 +10,7 @@ import { View } from "reactxp";
 import FormInvStockDetails from "./FormInvStockDetails";
 import { decodeSAPDateToFormal } from '@app/utils/Helper';
 import { APISearchProps, APISearch } from '@app/api';
+import rawQuery from '@app/libs/gql/data/rawQuery';
 
 export default withRouter(
   observer(({ match, showSidebar, sidebar }: any) => {
@@ -75,6 +76,36 @@ export default withRouter(
             APISearch(query).then((res: any) => {
                   setData({...data, City:res[0]["PrcName"]});
             });
+
+            query = {
+              Table: "OSLP",
+              Fields: ["SlpCode", "SlpName"],
+              Condition: [
+                {
+                  field: "SlpCode",
+                  cond: "=",
+                  value: data.SlpCode
+                }
+              ]
+            };
+
+            APISearch(query).then((res: any) => {
+              setData({...data, SalesName:res[0]["SlpName"]});
+            });
+
+
+            rawQuery(`{
+              work_order (where: {number: {_eq: "${data.U_WONUM}"}}}) {
+                rute
+              }
+            }`).then(res => {
+                let wo = res.work_order.map((v: any) => {
+                  return {
+                    value: v.number,
+                    label: v.number
+                  };
+                });
+              });
         });
   
         query = {
