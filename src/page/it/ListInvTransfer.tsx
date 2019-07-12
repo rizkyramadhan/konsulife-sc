@@ -14,6 +14,7 @@ import { isSize } from "@app/libs/ui/MediaQuery";
 import IconCheck from "@app/libs/ui/Icons/IconCheck";
 import IconLuggageCart from "@app/libs/ui/Icons/IconLuggageCart";
 import UICard, { UICardHeader } from "@app/libs/ui/UICard";
+import { decodeSAPDateToFormal } from "@app/utils/Helper";
 
 const BtnTransfer = withRouter(({ history }: any) => {
   return (
@@ -143,6 +144,10 @@ export default withRouter(
       };
 
       APISearch(query).then((res: any) => {
+        res.forEach((row: any) => {
+          row.DocDate = decodeSAPDateToFormal(row.DocDate);
+          row.DocDueDate = decodeSAPDateToFormal(row.DocDueDate);
+        });
         _setData(res);
         setData(res);
         setLoading(false);
