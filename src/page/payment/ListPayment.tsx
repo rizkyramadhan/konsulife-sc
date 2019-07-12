@@ -9,6 +9,8 @@ import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 import global from "@app/global";
+import UIText from '@app/libs/ui/UIText';
+import UICard, { UICardHeader } from '@app/libs/ui/UICard';
 
 export default withRouter(
   observer(({ showSidebar, sidebar }: any) => {
@@ -29,18 +31,18 @@ export default withRouter(
       _setData([
         ...(value
           ? data.filter((x: any) => {
-              let res = false;
-              for (var i = 0; i < field.length; i++) {
-                if (
-                  x[field[i]] &&
-                  x[field[i]].toLowerCase().includes(value.toLowerCase())
-                ) {
-                  res = true;
-                  break;
-                }
+            let res = false;
+            for (var i = 0; i < field.length; i++) {
+              if (
+                x[field[i]] &&
+                x[field[i]].toLowerCase().includes(value.toLowerCase())
+              ) {
+                res = true;
+                break;
               }
-              return res;
-            })
+            }
+            return res;
+          })
           : data)
       ]);
     };
@@ -82,50 +84,68 @@ export default withRouter(
     return (
       <UIContainer>
         <UIHeader
+          pattern={true}
           showSidebar={showSidebar}
           sidebar={sidebar}
-          center={"Payment Receipt"}
+          center={
+            <UIText size="large" style={{ color: '#fff' }}>Payment Receipt</UIText>
+          }
           isLoading={loading}
         >
           <BtnCreate path="/payment-receipt/form" />
         </UIHeader>
         <UIBody>
-          <UISearch onSearch={funcSearch} />
-          <UIList
-            style={{ flex: 1 }}
-            primaryKey="DocEntry"
-            selection="detail"
-            fields={{
-              U_IDU_PAYNUM: {
-                table: {
-                  header: "No. PR"
+          <UICard mode="clean" style={{ borderRadius: 4, flex: 1, backgroundColor: '#fff' }}>
+            <UICardHeader style={{ backgroundColor: '#fff', flexDirection: 'row', alignItems: 'center' }}>
+              <UIText size="medium" style={{
+                flexShrink: 'none',
+                width: '100%'
+              }}>List Payment Receipt</UIText>
+              <UISearch style={{
+                width: '100%',
+                maxWidth: 300
+              }}
+                fieldStyle={{
+                  borderWidth: 0,
+                  backgroundColor: '#f6f9fc'
+                }} onSearch={funcSearch}></UISearch>
+            </UICardHeader>
+            <UIList
+              style={{ flex: 1 }}
+              primaryKey="DocEntry"
+              selection="detail"
+              fields={{
+                U_IDU_PAYNUM: {
+                  table: {
+                    header: "No. PR"
+                  }
+                },
+                U_WONUM: {
+                  table: {
+                    header: "No. WO"
+                  }
+                },
+                CardName: {
+                  table: {
+                    header: "Customer/Vendor"
+                  }
+                },
+                U_IDU_ITR_INTNUM: {
+                  table: {
+                    header: "Request No."
+                  }
+                },
+                DocDate: {
+                  table: {
+                    header: "Posting Date"
+                  }
                 }
-              },
-              U_WONUM: {
-                table: {
-                  header: "No. WO"
-                }
-              },
-              CardName: {
-                table: {
-                  header: "Customer/Vendor"
-                }
-              },
-              U_IDU_ITR_INTNUM: {
-                table: {
-                  header: "Request No."
-                }
-              },
-              DocDate: {
-                table: {
-                  header: "Posting Date"
-                }
-              }
-            }}
-            items={_data.map((item: any) => ({
-              ...item
-            }))}
-          />
+              }}
+              items={_data.map((item: any) => ({
+                ...item
+              }))}
+            />
+          </UICard>
         </UIBody>
       </UIContainer>
     );

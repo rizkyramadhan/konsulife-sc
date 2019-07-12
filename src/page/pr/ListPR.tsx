@@ -89,9 +89,12 @@ export default withRouter(
     return (
       <UIContainer>
         <UIHeader
+          pattern={true}
           showSidebar={showSidebar}
           sidebar={sidebar}
-          center={"List Purchase Order " + param[1]}
+          center={
+            <UIText size="large" style={{ color: '#fff' }}>{param[1]}</UIText>
+          }
           isLoading={loading}
         >
           <BtnCopy
@@ -112,7 +115,7 @@ export default withRouter(
               <UIText size="medium" style={{
                 flexShrink: 'none',
                 width: '100%'
-              }}>List Purchase Receipt</UIText>
+              }}>List Purchase Order</UIText>
               <UISearch style={{
                 width: '100%',
                 maxWidth: 300

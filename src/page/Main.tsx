@@ -227,8 +227,8 @@ const MenuItem = ({ item, history, path, setPath, setSide, child }: any) => {
               ...(hover
                 ? { opacity: 1 }
                 : item.path == path
-                ? { opacity: 1 }
-                : {})
+                  ? { opacity: 1 }
+                  : {})
             }}
           >
             {item.title}
@@ -375,18 +375,18 @@ export default observer((_props: any) => {
       {!global.session.uid ? (
         <Login />
       ) : (
-        <UISidebar
-          style={{ width: 300, background: "#fff" }}
-          visible={global.sidebar}
-          setVisible={global.setSidebar}
-          sidebar={
-            // <UIGradient
-            //   style={{ flex: 1 }}
-            //   angle={30}
-            //   colors={["#7F53AC", "#647DEE"]}
-            // >
-            <View style={{ flex: 1 }}>
-              {/* <Image
+          <UISidebar
+            style={{ width: 300, background: "#fff" }}
+            visible={global.sidebar}
+            setVisible={global.setSidebar}
+            sidebar={
+              // <UIGradient
+              //   style={{ flex: 1 }}
+              //   angle={30}
+              //   colors={["#7F53AC", "#647DEE"]}
+              // >
+              <View style={{ flex: 1 }}>
+                {/* <Image
                 source={require("@app/libs/sample/imgs/logo.png")}
                 resizeMode="contain"
                 style={{
@@ -398,33 +398,34 @@ export default observer((_props: any) => {
                   alignSelf: "center"
                 }}
               /> */}
-              <View
-                style={{
-                  margin: 15,
-                  marginLeft: 0,
-                  paddingLeft: 20,
-                  borderWidth: 0,
-                  borderLeftWidth: 6,
-                  borderColor: "#2ece9d"
-                }}
-              >
-                <UIText size="large">MBGP - Sales App</UIText>
+                <View
+                  style={{
+                    margin: 15,
+                    marginLeft: 0,
+                    paddingLeft: 20,
+                    borderWidth: 0,
+                    borderLeftWidth: 6,
+                    borderColor: "#2ece9d"
+                  }}
+                >
+                  <UIText size="large">MBGP - Sales App</UIText>
+                  <UIText size="medium">{global.session.user.fullname}</UIText>
+                </View>
+                <UISeparator
+                  style={{
+                    opacity: 0.4,
+                    marginTop: 0,
+                    marginBottom: 0
+                  }}
+                />
+                <Menu setSide={global.setSidebar} />
               </View>
-              <UISeparator
-                style={{
-                  opacity: 0.4,
-                  marginTop: 0,
-                  marginBottom: 0
-                }}
-              />
-              <Menu setSide={global.setSidebar} />
-            </View>
-            // </UIGradient>
-          }
-        >
-          <SwitchRoute
-            routes={{
-              "/": <MainMenu />,
+              // </UIGradient>
+            }
+          >
+            <SwitchRoute
+              routes={{
+                "/": <MainMenu />,
                 "/home": <Home />,
                 "/rute": <ListRute />,
                 "/rute/form/:id?": <FormRute />,
@@ -476,10 +477,10 @@ export default observer((_props: any) => {
                 "/report/ar-invoice": <ReportAR />,
                 "/report/stock": <ReportStock />,
                 "/report/inventory": <ReportInventory />
-            }}
-          />
-        </UISidebar>
-      )}
+              }}
+            />
+          </UISidebar>
+        )}
     </Router>
   );
 });

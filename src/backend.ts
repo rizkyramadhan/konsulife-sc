@@ -29,6 +29,7 @@ export default {
     "sales_as_customer",
     "cash_account",
     "transfer_account",
-    "slp_id"
+    "slp_id",
+    "fullname"
   ]
 };
