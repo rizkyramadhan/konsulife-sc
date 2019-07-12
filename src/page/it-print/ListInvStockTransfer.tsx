@@ -11,33 +11,33 @@ import global from "@app/global";
 import UIButton from "@app/libs/ui/UIButton";
 import UIText from "@app/libs/ui/UIText";
 import { isSize } from "@app/libs/ui/MediaQuery";
-import UICard, { UICardHeader } from '@app/libs/ui/UICard';
-import IconAdd from '@app/libs/ui/Icons/IconAdd';
+import UICard, { UICardHeader } from "@app/libs/ui/UICard";
+import IconAdd from "@app/libs/ui/Icons/IconAdd";
 
 const BtnTransfer = withRouter(({ history }: any) => {
-    return (
-      <UIButton
-        size="small"
-        color="primary"
-        onPress={() => {
-          history.push("/it-tran/form");
-        }}
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "flex-end",
-          height: 45
-        }}
-      >
-        <IconAdd color="#fff" width={20} height={20} />
-        {isSize(["md", "lg"]) && (
-          <UIText style={{ color: "#fff" }} size="small">
-            Create Stock Transfer
-          </UIText>
-        )}
-      </UIButton>
-    );
-  });
+  return (
+    <UIButton
+      size="small"
+      color="primary"
+      onPress={() => {
+        history.push("/it-tran/form");
+      }}
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "flex-end",
+        height: 45
+      }}
+    >
+      <IconAdd color="#fff" width={20} height={20} />
+      {isSize(["md", "lg"]) && (
+        <UIText style={{ color: "#fff" }} size="small">
+          Create Stock Transfer
+        </UIText>
+      )}
+    </UIButton>
+  );
+});
 
 export default withRouter(
   observer(({ history, showSidebar, sidebar }: any) => {
@@ -46,29 +46,32 @@ export default withRouter(
     const [loading, setLoading] = useState(false);
 
     const field = [
+      "DocEntry",
       "DocNum",
-      "U_IDU_SO_INTNUM",
+      "U_IDU_IT_INTNUM",
       "CardName",
       "CardCode",
       "DocDate",
-      "DocDueDate"
+      "DocDueDate",
+      "Filler",
+      "ToWhsCode"
     ];
     const funcSearch = (value: string) => {
       _setData([
         ...(value
           ? data.filter((x: any) => {
-            let res = false;
-            for (var i = 0; i < field.length; i++) {
-              if (
-                x[field[i]] &&
-                x[field[i]].toLowerCase().includes(value.toLowerCase())
-              ) {
-                res = true;
-                break;
+              let res = false;
+              for (var i = 0; i < field.length; i++) {
+                if (
+                  x[field[i]] &&
+                  x[field[i]].toLowerCase().includes(value.toLowerCase())
+                ) {
+                  res = true;
+                  break;
+                }
               }
-            }
-            return res;
-          })
+              return res;
+            })
           : data)
       ]);
     };
@@ -77,14 +80,8 @@ export default withRouter(
       setLoading(true);
       let query: APISearchProps = {
         Table: "OWTR",
-        Fields: [
-          "DocNum",
-          "DocEntry",
-          "CardName",
-          "CardCode",
-          "U_IDU_IT_INTNUM",
-          "DocDate"
-        ],
+        Fields: field,
+        Sort: "~DocDate",
         Condition: [
           {
             field: "DocStatus",
@@ -106,6 +103,22 @@ export default withRouter(
             field: "U_IDU_IT_INTNUM",
             cond: "LIKE",
             value: "PGK-T%"
+          },
+          {
+            cond: "AND"
+          },
+          {
+            field: "CANCELED",
+            cond: "=",
+            value: "N"
+          },
+          {
+            cond: "AND"
+          },
+          {
+            field: "U_STOCK_RETURN",
+            cond: "=",
+            value: "N"
           }
         ]
       };
@@ -119,33 +132,58 @@ export default withRouter(
 
     return (
       <UIContainer>
-        <UIHeader pattern={true} isLoading={loading} showSidebar={showSidebar} sidebar={sidebar} center={
-          <UIText size="large" style={{ color: '#fff' }}>Inventory Transfer</UIText>
-        }>
+        <UIHeader
+          pattern={true}
+          isLoading={loading}
+          showSidebar={showSidebar}
+          sidebar={sidebar}
+          center={
+            <UIText size="large" style={{ color: "#fff" }}>
+              Inventory Transfer
+            </UIText>
+          }
+        >
           <BtnTransfer />
         </UIHeader>
         <UIBody>
-          <UICard mode="clean" style={{ borderRadius: 4, flex: 1, backgroundColor: '#fff' }}>
-            <UICardHeader style={{ backgroundColor: '#fff', flexDirection: 'row', alignItems: 'center' }}>
-              <UIText size="medium" style={{
-                flexShrink: 'none',
-                width: '100%'
-              }}>List Stock Transfer</UIText>
-              <UISearch style={{
-                width: '100%',
-                maxWidth: 300
+          <UICard
+            mode="clean"
+            style={{ borderRadius: 4, flex: 1, backgroundColor: "#fff" }}
+          >
+            <UICardHeader
+              style={{
+                backgroundColor: "#fff",
+                flexDirection: "row",
+                alignItems: "center"
               }}
+            >
+              <UIText
+                size="medium"
+                style={{
+                  flexShrink: "none",
+                  width: "100%"
+                }}
+              >
+                List Stock Transfer
+              </UIText>
+              <UISearch
+                style={{
+                  width: "100%",
+                  maxWidth: 300
+                }}
                 fieldStyle={{
                   borderWidth: 0,
-                  backgroundColor: '#f6f9fc'
-                }} onSearch={funcSearch}></UISearch>
+                  backgroundColor: "#f6f9fc"
+                }}
+                onSearch={funcSearch}
+              />
             </UICardHeader>
             <UIList
               style={{ flex: 1 }}
-              primaryKey="DocNum"
+              primaryKey="DocEntry"
               selection="single"
-              onSelect={(d) => {
-                history.push(`/it-tran/view/${d.DocEntry}`)
+              onSelect={d => {
+                history.push(`/it-tran/view/${d.DocEntry}`);
               }}
               fields={{
                 U_IDU_IT_INTNUM: {
@@ -155,17 +193,22 @@ export default withRouter(
                 },
                 CardName: {
                   table: {
-                    header: "BP"
-                  }
-                },
-                CardCode: {
-                  table: {
-                    header: "Code"
+                    header: "Sales"
                   }
                 },
                 DocDate: {
                   table: {
                     header: "Posting Date"
+                  }
+                },
+                Filler: {
+                  table: {
+                    header: "From"
+                  }
+                },
+                ToWhsCode: {
+                  table: {
+                    header: "To"
                   }
                 }
               }}

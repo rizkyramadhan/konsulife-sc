@@ -132,7 +132,7 @@ export default withRouter(
                 },
                 Commited: {
                   table: {
-                    header: "COmmited"
+                    header: "Commited"
                   }
                 },
                 Available: {

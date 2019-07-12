@@ -213,7 +213,7 @@ export default withRouter(
                   },
                   {
                     key: "U_WONUM",
-                    size: 8,
+                    size: 12,
                     component: (
                       <UISelectField
                         label="WO Number"
@@ -271,7 +271,7 @@ export default withRouter(
                   },
                   { key: "TrsfrSum", size: 12, label: "Transfer Amount" },
                   { key: "TrsfrDate", size: 6, label: "Transfer Date", type:"date" },
-                  { key: "TrsfrRef", size: 12, label: "Intended Purpose" }
+                  { key: "TrsfrRef", size: 12, label: "Ref Number" }
                 ]
               }
             ]}
