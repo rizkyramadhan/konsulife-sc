@@ -8,18 +8,19 @@ import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 import FormDOPrintDetail from "./FormDOPrintDetail";
-import { ReportPost } from '@app/report';
-import BtnExport from '@app/components/BtnExport';
-import { decodeSAPDateToFormal } from '@app/utils/Helper';
+import { ReportPost } from "@app/report";
+import BtnExport from "@app/components/BtnExport";
+import { decodeSAPDateToFormal } from "@app/utils/Helper";
 
 export default withRouter(
   observer(({ match, showSidebar, sidebar }: any) => {
     const [exporting, setExporting] = useState(false);
     const [data, setData] = useState<any>({});
     const [items, setItems] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-
+      setLoading(true);
       // SELECT FIRST SO
       let query: APISearchProps = {
         Table: "ODLN",
@@ -59,25 +60,25 @@ export default withRouter(
       APISearch(query).then((res: any) => {
         const data = res[0];
         res[0]["DocDate"] = decodeSAPDateToFormal(res[0]["DocDate"]);
-        res[0]["DocDueDate"] = decodeSAPDateToFormal(res[0]["DocDueDate"]); 
+        res[0]["DocDueDate"] = decodeSAPDateToFormal(res[0]["DocDueDate"]);
 
         setData(data);
 
         query = {
-            Table: "OPRC",
-            Fields: ["PrcCode", "PrcName"],
-            Condition: [
-              {
-                field: "PrcCode",
-                cond: "=",
-                value: data.U_BRANCH
-              }
-            ]
-          };
-    
-          APISearch(query).then((res: any) => {
-                setData({...data, City:res[0]["PrcName"]});
-          });
+          Table: "OPRC",
+          Fields: ["PrcCode", "PrcName"],
+          Condition: [
+            {
+              field: "PrcCode",
+              cond: "=",
+              value: data.U_BRANCH
+            }
+          ]
+        };
+
+        APISearch(query).then((res: any) => {
+          setData({ ...data, City: res[0]["PrcName"] });
+        });
       });
 
       // SELECT LIST SO OPEN
@@ -120,6 +121,7 @@ export default withRouter(
           return item;
         });
         setItems([...items]);
+        setLoading(false);
       });
     }, []);
 
@@ -147,16 +149,16 @@ export default withRouter(
           PriceBefDi: d.PriceBefDi,
           DiscPrcnt: d.DiscPrcnt,
           TaxCode: d.TaxCode,
-          unitMsr: d.unitMsr,
+          unitMsr: d.unitMsr
         };
       });
-      
+
       try {
-        await ReportPost("do",{...data,Lines: l});
+        await ReportPost("do", { ...data, Lines: l });
       } catch (e) {
         alert(e.Message);
 
-        console.error({data});
+        console.error({ data });
       } finally {
         setExporting(false);
       }
@@ -167,6 +169,7 @@ export default withRouter(
         <UIHeader
           showSidebar={showSidebar}
           sidebar={sidebar}
+          isLoading={loading}
           center={`View Delivery Order #${atob(match.params.CardCode)} - ${atob(
             match.params.CardName
           )}`}
@@ -199,11 +202,36 @@ export default withRouter(
                     label: "Card Name",
                     size: 8
                   },
-                  { key: "U_IDU_CONTNUM", label: "No. Container", size: 4, type: "field" },
-                  { key: "U_IDU_NOSEAL", label: "No. Seal", size: 4, type: "field" },
-                  { key: "U_IDU_NOPL", label: "No. PL", size: 4, type: "field" },
-                  { key: "U_IDU_NOPOL", label: "Nopol", size: 4, type: "field" },
-                  { key: "U_IDU_DRIVER", label: "Driver", size: 8, type: "field" }
+                  {
+                    key: "U_IDU_CONTNUM",
+                    label: "No. Container",
+                    size: 4,
+                    type: "field"
+                  },
+                  {
+                    key: "U_IDU_NOSEAL",
+                    label: "No. Seal",
+                    size: 4,
+                    type: "field"
+                  },
+                  {
+                    key: "U_IDU_NOPL",
+                    label: "No. PL",
+                    size: 4,
+                    type: "field"
+                  },
+                  {
+                    key: "U_IDU_NOPOL",
+                    label: "Nopol",
+                    size: 4,
+                    type: "field"
+                  },
+                  {
+                    key: "U_IDU_DRIVER",
+                    label: "Driver",
+                    size: 8,
+                    type: "field"
+                  }
                 ]
               },
               {
@@ -211,30 +239,31 @@ export default withRouter(
                 label: "General",
                 sublabel: "Informasi SO/DO",
                 value: [
-                {
+                  {
                     key: "U_IDU_DO_INTNUM",
                     type: "field",
                     label: "DO Number",
                     size: 12
-                }, 
-                {
+                  },
+                  {
                     key: "U_IDU_SO_INTNUM",
                     type: "field",
                     label: "SO Number",
                     size: 12
-                },
-                {
+                  },
+                  {
                     key: "DocDate",
                     size: 6,
                     label: "Posting Date",
                     type: "field"
-                },
-                {
+                  },
+                  {
                     key: "DocDueDate",
                     size: 6,
                     label: "Delivery Date",
                     type: "field"
-                }]
+                  }
+                ]
               },
               {
                 key: "optional",
@@ -244,7 +273,7 @@ export default withRouter(
                     key: "Comments",
                     label: "Remark",
                     size: 12,
-                    type:"field"
+                    type: "field"
                   }
                 ]
               }
@@ -259,11 +288,7 @@ export default withRouter(
             tabs={[
               {
                 label: "Detail Items",
-                content: (
-                  <FormDOPrintDetail
-                    items={items}
-                  />
-                )
+                content: <FormDOPrintDetail items={items} />
               }
             ]}
           />

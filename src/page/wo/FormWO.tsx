@@ -18,6 +18,7 @@ import updateRecord from "@app/libs/gql/data/updateRecord";
 import deleteRecord from "@app/libs/gql/data/deleteRecord";
 import global from "@app/global";
 import { getLastNumbering, updateLastNumbering, lpad } from "@app/utils";
+import { APISearch } from "@app/api";
 
 const date = new Date();
 const today = `${date.getFullYear()}-${lpad(
@@ -145,6 +146,36 @@ export default withRouter(
       return true;
     };
 
+    const validationCloseWO = async () => {
+      if (data.status !== "close") return true;
+
+      const res = await APISearch({
+        Fields: ["U_WONUM"],
+        Table: "ORDR",
+        Condition: [
+          {
+            field: "U_WONUM",
+            cond: "=",
+            value: data.number
+          },
+          { cond: "AND" },
+          {
+            field: "DocStatus",
+            cond: "=",
+            value: "O"
+          }
+        ]
+      });
+
+      if (Array.isArray(res) && res.length > 0) {
+        if (res[0]["U_WONUM"] !== "") {
+          alert("Failed! Terdapat Sales Order yang masih open.");
+          return false;
+        }
+      }
+      return true;
+    };
+
     const checkWO = async () => {
       const sales_id = data.sales_id || "";
       let wo = await rawQuery(`{
@@ -189,6 +220,7 @@ export default withRouter(
           });
           updateLastNumbering(number.id, number.last_count + 1);
         } else {
+          if (!(await validationCloseWO())) return;
           await updateRecord("work_order", data);
           await deleteRecord(
             "work_order_items",

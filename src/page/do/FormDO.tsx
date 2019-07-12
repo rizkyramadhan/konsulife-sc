@@ -143,7 +143,7 @@ export default withRouter(
 
     const save = async () => {
       if (saving) return;
-      if (selected.length === 0) return;
+      if (selected.length === 0) return alert("Anda belum memilih items.");
       setSaving(true);
 
       let number: any = await getLastNumbering(

@@ -15,8 +15,10 @@ import { decodeSAPDateToFormal } from "@app/utils/Helper";
 export default withRouter(
   observer(({ match, history, showSidebar, sidebar }: any) => {
     const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+      setLoading(true);
       let query: APISearchProps = {
         Table: "ODLN",
         Fields: [
@@ -26,6 +28,7 @@ export default withRouter(
           "U_IDU_DO_INTNUM",
           "DocDate"
         ],
+        Sort: "~DocDate",
         Condition: [
           {
             field: "DocStatus",
@@ -56,6 +59,7 @@ export default withRouter(
           row.DocDate = decodeSAPDateToFormal(row.DocDate);
         });
         setData(res);
+        setLoading(false);
       });
     }, []);
 
@@ -65,6 +69,7 @@ export default withRouter(
           pattern={true}
           showSidebar={showSidebar}
           sidebar={sidebar}
+          isLoading={loading}
           center={
             <UIText size="large" style={{ color: "#fff" }}>{`#${atob(
               match.params.CardCode

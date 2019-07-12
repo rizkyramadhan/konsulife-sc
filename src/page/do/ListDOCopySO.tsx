@@ -28,6 +28,7 @@ export default withRouter(
           "U_IDU_SO_INTNUM",
           "DocDate"
         ],
+        Sort: "~DocDate",
         Condition: [
           {
             field: "DocStatus",
@@ -77,7 +78,8 @@ export default withRouter(
         >
           <BtnCopy
             onPress={() => {
-              if (itemSelect.length === 0) return;
+              if (itemSelect.length === 0)
+                return alert("Anda belum memilih SO.");
               history.push(
                 `/do/form/${match.params.CardCode}/${
                   match.params.CardName

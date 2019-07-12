@@ -75,6 +75,7 @@ export default withRouter(
       let query: APISearchProps = {
         Table: "ODRF",
         Fields: field,
+        Sort: "~DocDate",
         Condition: [
           {
             field: "DocStatus",
