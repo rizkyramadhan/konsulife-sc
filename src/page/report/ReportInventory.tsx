@@ -38,6 +38,13 @@ export default withRouter(
       };
 
       APISearch(query).then((res: any) => {
+        res.forEach((row: any) => {
+          row.InStock = row.InStock.split(".")[0];
+          row.Commited = row.Commited.split(".")[0];
+          row.Available = row.Available.split(".")[0];
+          row.Invoiced = row.Invoiced.split(".")[0];
+          row.OnHand = row.OnHand.split(".")[0];
+        });
         setData(res);
         _setData(res);
         setLoading(false);
