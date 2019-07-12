@@ -127,6 +127,7 @@ export default withRouter(
     };
 
     const save = async () => {
+      if (saving) return;
       if (!validation()) return;
 
       try {

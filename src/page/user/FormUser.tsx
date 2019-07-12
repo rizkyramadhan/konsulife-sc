@@ -87,6 +87,7 @@ export default withRouter(
           <BtnSave
             saving={saving}
             onPress={async () => {
+              if (saving) return;
               setSaving(true);
               let record: any = {
                 ...data,
