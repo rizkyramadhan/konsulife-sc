@@ -180,7 +180,7 @@ export default withRouter(
           isBack={true}
           showSidebar={showSidebar}
           sidebar={sidebar}
-          center="Stock Return View"
+          center="Stock Transfer View"
         >
           <BtnExport
             exporting={exporting}

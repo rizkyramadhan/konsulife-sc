@@ -146,7 +146,8 @@ export default withRouter(
           OcrCode2: d.OcrCode2,
           PriceBefDi: d.PriceBefDi,
           DiscPrcnt: d.DiscPrcnt,
-          TaxCode: d.TaxCode
+          TaxCode: d.TaxCode,
+          unitMsr: d.unitMsr,
         };
       });
       
