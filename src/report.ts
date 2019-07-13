@@ -1,24 +1,20 @@
 import Axios from 'axios';
 import config from './config';
+import {saveAs} from 'file-saver';
 
 export const ReportPost = (type:string,data: any) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((reject) => {
       Axios.post(config.wsBackend + "api/" + type, JSON.stringify(data), {
         headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json"
-        }
-      }).then((res: any) => {
-          if (typeof res.data == "object" && !!res.data && !!res.data.ErrorCode) {
-            reject(res.data);
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            responseType : 'arraybuffer',
           }
-          console.log(res);
-          resolve(res.data);
-          window.open(config.wsBackend + res.data);
-        })
-        .catch((err: any) => {
-          console.error(err);
-          reject(err);
+        }).then((response) => {
+          let blob = new Blob([response.data], {type: "application/pdf;charset=utf-8"});
+          saveAs(blob,"tes.pdf");
+        }).catch((error) => {
+          console.log(error);
         });
     });
   };
