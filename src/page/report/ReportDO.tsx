@@ -10,6 +10,7 @@ import UIText from "@app/libs/ui/UIText";
 import UICard, { UICardHeader } from "@app/libs/ui/UICard";
 import { APISearch, APISearchProps } from "@app/api";
 import global from "@app/global";
+import { decodeSAPDateToFormal } from "@app/utils/Helper";
 
 interface IRute {
   id: number;
@@ -46,6 +47,9 @@ export default withRouter(
       };
 
       APISearch(query).then((res: any) => {
+        res.forEach((row: any) => {
+          row.DocDate = decodeSAPDateToFormal(row.DocDate);
+        });
         setData(res);
         _setData(res);
         setLoading(false);

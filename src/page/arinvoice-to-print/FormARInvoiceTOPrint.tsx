@@ -1,19 +1,19 @@
 import { APISearch, APISearchProps } from "@app/api";
-import BtnExport from '@app/components/BtnExport';
+import BtnExport from "@app/components/BtnExport";
 import UIBody from "@app/libs/ui/UIBody";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIField from "@app/libs/ui/UIField";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIJsonField from "@app/libs/ui/UIJsonField";
 import UITabs from "@app/libs/ui/UITabs";
-import { ReportPost } from '@app/report';
-import { decodeSAPDateToFormal } from '@app/utils/Helper';
+import { ReportPost } from "@app/report";
+import { decodeSAPDateToFormal } from "@app/utils/Helper";
 import _ from "lodash";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 import { View } from "reactxp";
-import FormARInvoiceDetailTOPrint from './FormARInvoiceDetailTOPrint';
+import FormARInvoiceDetailTOPrint from "./FormARInvoiceDetailTOPrint";
 
 
 const defaultData = {
@@ -47,8 +47,10 @@ export default withRouter(
     const [exporting, setExporting] = useState(false);
     const [data, setData] = useState(defaultData);
     const [item, setItem] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+      setLoading(true);
       let query: APISearchProps = {
         Table: "OINV",
         Fields: [
@@ -135,6 +137,7 @@ export default withRouter(
           delete item.DocEntry;
         });
         setItem(res);
+        setLoading(false);
       });
     }, []);
 
@@ -168,6 +171,7 @@ export default withRouter(
           showSidebar={showSidebar}
           sidebar={sidebar}
           center="Form AR Invoice"
+          isLoading={loading}
         >
           <BtnExport
             exporting={exporting}
@@ -239,7 +243,12 @@ export default withRouter(
                     label: "Delivery Date",
                     options: { pastDate: true }
                   },
-                  { key: "U_IDU_FP", size: 10, type: 'field', label: "Faktur Pajak" }
+                  {
+                    key: "U_IDU_FP",
+                    size: 10,
+                    type: "field",
+                    label: "Faktur Pajak"
+                  }
                 ]
               },
               {
@@ -266,7 +275,10 @@ export default withRouter(
                 {
                   label: "Detail items",
                   content: () => (
-                    <FormARInvoiceDetailTOPrint items={item} setItems={setItem} />
+                    <FormARInvoiceDetailTOPrint
+                      items={item}
+                      setItems={setItem}
+                    />
                   )
                 }
               ]}

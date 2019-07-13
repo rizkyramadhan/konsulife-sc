@@ -48,7 +48,7 @@ const initData = {
   U_IDU_DRIVER: "",
   U_WONUM: "",
   U_STOCK_TRANSNO: "",
-  U_STOCK_RETURN : ""
+  U_STOCK_RETURN : "N"
 };
 
 export default withRouter(
@@ -172,7 +172,7 @@ export default withRouter(
                     size: 12,
                     component: (
                       <SAPDropdown
-                        label="Business Partner"
+                        label="Sales Name"
                         field="SalesAsEmployee"
                         where={[
                           {

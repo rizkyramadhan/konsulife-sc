@@ -16,7 +16,7 @@ import { View } from "reactxp";
 import FormInvTransferDetail from "./FormInvTransferDetail";
 import rawQuery from "@app/libs/gql/data/rawQuery";
 import UISelectField from "@app/libs/ui/UISelectField";
-import UITagField from '@app/libs/ui/UITagField';
+import UITagField from "@app/libs/ui/UITagField";
 
 const date = new Date();
 const today = `${date.getFullYear()}-${lpad(
@@ -50,7 +50,7 @@ const initData = {
   U_IDU_DRIVER: "",
   U_WONUM: "",
   U_STOCK_TRANSNO: "",
-  U_STOCK_RETURN : ""
+  U_STOCK_RETURN: "Y"
 };
 
 export default withRouter(
@@ -176,7 +176,7 @@ export default withRouter(
           ...data,
           U_IDU_IT_INTNUM: number.format,
           U_IDU_IT_TRANSCODE: "PGK-R",
-          U_STOCK_RETURN : "Y",
+          U_STOCK_RETURN: "Y",
           SlpCode:
             global.session.user.slp_id !== "" &&
             global.session.user.slp_id !== null
@@ -218,7 +218,7 @@ export default withRouter(
                     key: "CardCode",
                     size: 12,
                     type: "field",
-                    label: "Customer/Vendor Code"
+                    label: "BP Code"
                   },
                   {
                     key: "CardCode",
@@ -226,8 +226,8 @@ export default withRouter(
                     size: 12,
                     component: (
                       <SAPDropdown
-                        label="Customer"
-                        field="CustomerCode"
+                        label="Sales Name"
+                        field="SalesAsEmployee"
                         where={[
                           {
                             field: "U_IDU_BRANCH",
@@ -413,7 +413,7 @@ export default withRouter(
                         }}
                       />
                     )
-                  },
+                  }
                 ]
               },
               {

@@ -16,8 +16,8 @@ export default ({ data, items, setItems }: any) => {
   const [uoMEntry, setUoMEntry] = useState<any>({});
   const [iUoMEntry, setIUoMEntry] = useState<any>({});
 
-  const getPrice = (idx: any, value: any) => {
-    APISearch({
+  const getPrice = async (idx: any, value: any) => {
+    const res = await APISearch({
       CustomQuery: "UnitPriceSO",
       Condition: [
         {
@@ -32,40 +32,64 @@ export default ({ data, items, setItems }: any) => {
           value: value
         }
       ]
-    }).then((res: any) => {
-      if (Array.isArray(res) && res.length > 0) {
-        items[idx]["PriceBefDi"] = parseInt(res[0]["Price"]);
-        setItems([...items]);
-      }
     });
+
+    if (Array.isArray(res) && res.length > 0) {
+      items[idx]["PriceBefDi"] = parseInt(res[0]["Price"]);
+      setItems([...items]);
+    }
   };
 
-  const getUoM = (idx: any, value: any) => {
-    APISearch({
-      CustomQuery: `GetUom,${value}`
-    }).then((res: any) => {
-      // jika uom group entry = -1 maka set uom entry = manual
-      // jika bukan maka set uom entry sesuai sales uom entry
-      items[idx]["UseBaseUn"] = "N";
-      if (res.UgpEntry == -1) {
-        items[idx]["UoMEntry"] = -1;
-        items[idx]["UoMName"] = "Manual";
-      } else {
-        items[idx]["UoMEntry"] = res.SUoMEntry;
-        items[idx]["UoMName"] = res.SUoMCode;
-      }
-      setItems([...items]);
-
-      // group list uom entry berdasarkan item code karena uom entry setiap item code berbeda
-      uoMEntry[value] = res.Lines.map((d: any) => {
-        return { value: d.UomEntry, label: d.UomCode };
-      });
-      setUoMEntry({ ...uoMEntry });
-
-      // group list sales uom berdasarkan item code karena sales uom setiap item berbeda
-      iUoMEntry[value] = res.IUoMEntry;
-      setIUoMEntry({ ...iUoMEntry });
+  const getStockInWhs = async (idx: any, itemCode: string) => {
+    const res = await APISearch({
+      Table: "OITW",
+      Fields: ["OnHand"],
+      Condition: [
+        {
+          field: "ItemCode",
+          cond: "=",
+          value: itemCode
+        },
+        { cond: "AND" },
+        {
+          field: "WhsCode",
+          cond: "=",
+          value: global.getSession().user.warehouse_id
+        }
+      ]
     });
+
+    if (Array.isArray(res) && res.length > 0) {
+      items[idx]["OnHand"] = parseInt(res[0]["OnHand"]);
+      setItems([...items]);
+    }
+  };
+
+  const getUoM = async (idx: any, value: any) => {
+    const res: any = await APISearch({
+      CustomQuery: `GetUom,${value}`
+    });
+    // jika uom group entry = -1 maka set uom entry = manual
+    // jika bukan maka set uom entry sesuai sales uom entry
+    items[idx]["UseBaseUn"] = "N";
+    if (res.UgpEntry == -1) {
+      items[idx]["UoMEntry"] = -1;
+      items[idx]["UoMName"] = "Manual";
+    } else {
+      items[idx]["UoMEntry"] = res.SUoMEntry;
+      items[idx]["UoMName"] = res.SUoMCode;
+    }
+    setItems([...items]);
+
+    // group list uom entry berdasarkan item code karena uom entry setiap item code berbeda
+    uoMEntry[value] = res.Lines.map((d: any) => {
+      return { value: d.UomEntry, label: d.UomCode };
+    });
+    setUoMEntry({ ...uoMEntry });
+
+    // group list sales uom berdasarkan item code karena sales uom setiap item berbeda
+    iUoMEntry[value] = res.IUoMEntry;
+    setIUoMEntry({ ...iUoMEntry });
   };
 
   return (
@@ -101,6 +125,11 @@ export default ({ data, items, setItems }: any) => {
         Quantity: {
           table: {
             header: "Quantity"
+          }
+        },
+        OnHand: {
+          table: {
+            header: "Qty In Whs"
           }
         },
         WhsCode: {
@@ -245,8 +274,9 @@ export default ({ data, items, setItems }: any) => {
                         items[idx]["TaxCode"] = r.item.VatGourpSa;
 
                         setItems([...items]);
-                        getPrice(idx, v);
-                        getUoM(idx, v);
+                        await getUoM(idx, v);
+                        await getStockInWhs(idx, v);
+                        await getPrice(idx, v);
                       }}
                     />
                   )
@@ -280,6 +310,7 @@ export default ({ data, items, setItems }: any) => {
                   )
                 },
                 { key: "Quantity", size: 12, label: "Quantity" },
+                { key: "OnHand", size: 12, label: "Qty In Whs", type: "field" },
                 { key: "PriceBefDi", size: 12, label: "Unit Price" },
                 { key: "DiscPrcnt", size: 12, label: "Disc Prcnt" },
                 {

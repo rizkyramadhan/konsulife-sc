@@ -71,12 +71,12 @@ export default withRouter(
       setData({ ...data });
 
       rawQuery(`{
-      work_order (where: {status: {_eq: "open"}, branch: {_eq: "${
-        global.getSession().user.branch
-      }"}}) {
-        number
-      }
-    }`).then(res => {
+        work_order (where: {status: {_eq: "open"}, sales_id: {_eq: "${
+          global.getSession().user.slp_id
+        }"}}) {
+          number
+        }
+      }`).then(res => {
         let wo = res.work_order.map((v: any) => {
           return {
             value: v.number,
@@ -87,11 +87,50 @@ export default withRouter(
       });
     }, []);
 
+    const validation = () => {
+      const err: any = [];
+      const required = {
+        CardCode: "Customer",
+        U_WONUM: "WO Number"
+      };
+
+      Object.keys(required).forEach((k: any) => {
+        if ((data as any)[k] === "" || !(data as any)[k])
+          err.push((required as any)[k]);
+      });
+
+      if (err.length > 0) {
+        alert(err.join(", ") + " is required.");
+        return false;
+      }
+      return validationItems();
+    };
+
+    const validationItems = () => {
+      if (items.length === 0) {
+        alert("Items is empty.");
+        return false;
+      }
+
+      let zeroPrice = false;
+      items.forEach((v: any) => {
+        if (v.PriceBefDi === "" || v.PriceBefDi === "") {
+          zeroPrice = true;
+        }
+      });
+
+      if (zeroPrice) {
+        alert("Price tidak boleh kosong.");
+        return false;
+      }
+      return true;
+    };
+
     const save = async () => {
       if (saving) return;
-      if (items.length === 0) return;
-      setSaving(true);
+      if (!validation()) return;
 
+      setSaving(true);
       const Lines_IT = items.map(d => {
         d.ShipDate = data.DocDueDate;
         d.OcrCode = global.session.user.area;
@@ -409,6 +448,8 @@ export default withRouter(
                   action: (
                     <BtnAdd
                       onPress={() => {
+                        if (data.CardCode === "")
+                          return alert("Anda belum memilih customer.");
                         setItems([
                           ...(items as any),
                           {
@@ -426,7 +467,8 @@ export default withRouter(
                             DiscPrcnt: 0,
                             UoMEntry: "",
                             TaxCode: "",
-                            TotalPrice: 0
+                            TotalPrice: 0,
+                            OnHand: 0
                           }
                         ]);
                       }}

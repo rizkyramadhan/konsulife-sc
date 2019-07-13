@@ -68,11 +68,50 @@ export default withRouter(
       setData({ ...data });
     }, []);
 
+    const validation = () => {
+      const err: any = [];
+      const required = {
+        CardCode: "Customer"
+      };
+
+      Object.keys(required).forEach((k: any) => {
+        if ((data as any)[k] === "" || !(data as any)[k])
+          err.push((required as any)[k]);
+      });
+
+      if (err.length > 0) {
+        alert(err.join(", ") + " is required.");
+        return false;
+      }
+      return validationItems();
+    };
+
+    const validationItems = () => {
+      if (items.length === 0) {
+        alert("Items is empty.");
+        return false;
+      }
+
+      let zeroPrice = false;
+      items.forEach((v: any) => {
+        console.log(v);
+        if (v.PriceBefDi === "" || v.PriceBefDi === "0" || v.PriceBefDi === 0) {
+          zeroPrice = true;
+        }
+      });
+
+      if (zeroPrice) {
+        alert("Price tidak boleh kosong.");
+        return false;
+      }
+      return true;
+    };
+
     const save = async () => {
       if (saving) return;
-      if (items.length === 0) return;
-      setSaving(true);
+      if (!validation()) return;
 
+      setSaving(true);
       const Lines_IT = items.map(d => {
         d.OcrCode = global.session.user.area;
         d.OcrCode2 = global.session.user.branch;
@@ -372,6 +411,8 @@ export default withRouter(
                 action: (
                   <BtnAdd
                     onPress={() => {
+                      if (data.CardCode === "")
+                        return alert("Anda belum memilih customer.");
                       setItems([
                         ...(items as any),
                         {
@@ -389,7 +430,8 @@ export default withRouter(
                           DiscPrcnt: 0,
                           UomEntry: "",
                           TaxCode: "",
-                          TotalPrice: 0
+                          TotalPrice: 0,
+                          OnHand: 0
                         }
                       ]);
                     }}

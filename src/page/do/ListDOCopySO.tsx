@@ -7,8 +7,9 @@ import UIList from "@app/libs/ui/UIList";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
-import UICard, { UICardHeader } from '@app/libs/ui/UICard';
-import UIText from '@app/libs/ui/UIText';
+import UICard, { UICardHeader } from "@app/libs/ui/UICard";
+import UIText from "@app/libs/ui/UIText";
+import { decodeSAPDateToFormal } from "@app/utils/Helper";
 
 export default withRouter(
   observer(({ match, history, showSidebar, sidebar }: any) => {
@@ -27,6 +28,7 @@ export default withRouter(
           "U_IDU_SO_INTNUM",
           "DocDate"
         ],
+        Sort: "~DocDate",
         Condition: [
           {
             field: "DocStatus",
@@ -53,6 +55,9 @@ export default withRouter(
       };
 
       APISearch(query).then((res: any) => {
+        res.forEach((row: any) => {
+          row.DocDate = decodeSAPDateToFormal(row.DocDate);
+        });
         setData(res);
         setLoading(false);
       });
@@ -60,29 +65,50 @@ export default withRouter(
 
     return (
       <UIContainer>
-        <UIHeader pattern={true} isLoading={loading} showSidebar={showSidebar} sidebar={sidebar} center={
-          <UIText size="large" style={{ color: '#fff' }}>{`#${atob(match.params.CardCode)} - ${atob(
-            match.params.CardName
-          )}`}</UIText>
-        }>
+        <UIHeader
+          pattern={true}
+          isLoading={loading}
+          showSidebar={showSidebar}
+          sidebar={sidebar}
+          center={
+            <UIText size="large" style={{ color: "#fff" }}>{`#${atob(
+              match.params.CardCode
+            )} - ${atob(match.params.CardName)}`}</UIText>
+          }
+        >
           <BtnCopy
             onPress={() => {
-              if (itemSelect.length === 0) return;
+              if (itemSelect.length === 0)
+                return alert("Anda belum memilih SO.");
               history.push(
                 `/do/form/${match.params.CardCode}/${
-                match.params.CardName
+                  match.params.CardName
                 }/${btoa(JSON.stringify(itemSelect))}`
               );
             }}
           />
         </UIHeader>
         <UIBody scroll={true}>
-          <UICard mode="clean" style={{ borderRadius: 4, flex: 1, backgroundColor: '#fff' }}>
-            <UICardHeader style={{ backgroundColor: '#fff', flexDirection: 'row', alignItems: 'center' }}>
-              <UIText size="medium" style={{
-                flexShrink: 'none',
-                width: '100%'
-              }}>List Sales Order</UIText>
+          <UICard
+            mode="clean"
+            style={{ borderRadius: 4, flex: 1, backgroundColor: "#fff" }}
+          >
+            <UICardHeader
+              style={{
+                backgroundColor: "#fff",
+                flexDirection: "row",
+                alignItems: "center"
+              }}
+            >
+              <UIText
+                size="medium"
+                style={{
+                  flexShrink: "none",
+                  width: "100%"
+                }}
+              >
+                List Sales Order
+              </UIText>
             </UICardHeader>
             <UIList
               primaryKey="DocEntry"

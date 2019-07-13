@@ -18,6 +18,7 @@ import updateRecord from "@app/libs/gql/data/updateRecord";
 import deleteRecord from "@app/libs/gql/data/deleteRecord";
 import global from "@app/global";
 import { getLastNumbering, updateLastNumbering, lpad } from "@app/utils";
+import { APISearch } from "@app/api";
 
 const date = new Date();
 const today = `${date.getFullYear()}-${lpad(
@@ -35,6 +36,7 @@ interface IWO {
   sopir?: string;
   sopir_sim?: string;
   sopir_nopol?: string;
+  bp_id?: string;
   sales_id?: string;
   sales_name?: string;
   rute_id?: number;
@@ -83,6 +85,7 @@ export default withRouter(
             "sopir",
             "sopir_sim",
             "sopir_nopol",
+            "bp_id",
             "sales_id",
             "sales_name",
             "status",
@@ -121,10 +124,87 @@ export default withRouter(
       });
     }, []);
 
+    const validation = () => {
+      const err: any = [];
+      const required = {
+        sales_id: "Sales",
+        rute_id: "Rute",
+        sopir: "Sopir",
+        sopir_sim: "No SIM",
+        sopir_nopol: "Nopol"
+      };
+
+      Object.keys(required).forEach((k: any) => {
+        if ((data as any)[k] === "" || !(data as any)[k])
+          err.push((required as any)[k]);
+      });
+
+      if (err.length > 0) {
+        alert(err.join(", ") + " is required.");
+        return false;
+      }
+      return true;
+    };
+
+    const validationCloseWO = async () => {
+      if (data.status !== "close") return true;
+
+      const res = await APISearch({
+        Fields: ["U_WONUM"],
+        Table: "ORDR",
+        Condition: [
+          {
+            field: "U_WONUM",
+            cond: "=",
+            value: data.number
+          },
+          { cond: "AND" },
+          {
+            field: "DocStatus",
+            cond: "=",
+            value: "O"
+          }
+        ]
+      });
+
+      if (Array.isArray(res) && res.length > 0) {
+        if (res[0]["U_WONUM"] !== "") {
+          alert("Failed! Terdapat Sales Order yang masih open.");
+          return false;
+        }
+      }
+      return true;
+    };
+
+    const checkWO = async () => {
+      const sales_id = data.sales_id || "";
+      let wo = await rawQuery(`{
+        work_order(where: {sales_id: {_eq: "${sales_id}"}, status: {_eq: "open"}}) {
+          id
+        }
+      }`);
+
+      if (wo && wo.work_order.length === 0) {
+        return true;
+      }
+
+      alert(
+        `Failed! Sales ${data.sales_name} masih memiliki WO yang sedang aktif.`
+      );
+      return false;
+    };
+
     const save = async () => {
-      setSaving(true);
+      if (saving) return;
+      if (!validation()) return;
+
       try {
+        setSaving(true);
         if (!data.id) {
+          if (!(await checkWO())) {
+            return setSaving(false);
+          }
+
           let number: any = await getLastNumbering(
             "WO",
             global.getSession().user.branch || ""
@@ -140,6 +220,7 @@ export default withRouter(
           });
           updateLastNumbering(number.id, number.last_count + 1);
         } else {
+          if (!(await validationCloseWO())) return;
           await updateRecord("work_order", data);
           await deleteRecord(
             "work_order_items",
@@ -196,16 +277,43 @@ export default withRouter(
                     component: (
                       <SAPDropdown
                         label="Sales"
-                        field="SAPSalesCode"
-                        where={[
-                          {
-                            field: "U_IDU_BRANCH",
-                            value: global.getSession().user.branch
-                          }
-                        ]}
+                        field="Custom"
+                        customQuery={{
+                          Table: "OCRD",
+                          Fields: ["CardCode", "CardName", "SlpCode"],
+                          Condition: [
+                            {
+                              field: "U_IDU_BRANCH",
+                              cond: "=",
+                              value: global.getSession().user.branch
+                            },
+                            {
+                              cond: "AND"
+                            },
+                            {
+                              field: "U_SALES",
+                              cond: "=",
+                              value: "Y"
+                            },
+                            {
+                              cond: "AND"
+                            },
+                            {
+                              field: "validFor",
+                              cond: "=",
+                              value: "Y"
+                            }
+                          ]
+                        }}
+                        itemField={{ value: "SlpCode", label: "CardName" }}
                         value={data.sales_id || ""}
-                        setValue={(v, l) => {
-                          setData({ ...data, sales_id: v, sales_name: l });
+                        setValue={(v, l, r) => {
+                          setData({
+                            ...data,
+                            sales_id: v,
+                            sales_name: l,
+                            bp_id: r.item.CardCode
+                          });
                         }}
                       />
                     )

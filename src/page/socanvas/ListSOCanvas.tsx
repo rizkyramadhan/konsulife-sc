@@ -5,12 +5,13 @@ import UIBody from "@app/libs/ui/UIBody";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
-import UIText from '@app/libs/ui/UIText';
+import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
 import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
-import UISearch from '@app/libs/ui/UISearch';
-import UICard, { UICardHeader } from '@app/libs/ui/UICard';
+import UISearch from "@app/libs/ui/UISearch";
+import UICard, { UICardHeader } from "@app/libs/ui/UICard";
+import { decodeSAPDateToFormal } from "@app/utils/Helper";
 
 export default withRouter(
   observer(({ showSidebar, sidebar }: any) => {
@@ -30,18 +31,18 @@ export default withRouter(
       _setData([
         ...(value
           ? data.filter((x: any) => {
-            let res = false;
-            for (var i = 0; i < field.length; i++) {
-              if (
-                x[field[i]] &&
-                x[field[i]].toLowerCase().includes(value.toLowerCase())
-              ) {
-                res = true;
-                break;
+              let res = false;
+              for (var i = 0; i < field.length; i++) {
+                if (
+                  x[field[i]] &&
+                  x[field[i]].toLowerCase().includes(value.toLowerCase())
+                ) {
+                  res = true;
+                  break;
+                }
               }
-            }
-            return res;
-          })
+              return res;
+            })
           : data)
       ]);
     };
@@ -72,6 +73,7 @@ export default withRouter(
       let query: APISearchProps = {
         Table: "ORDR",
         Fields: field,
+        Sort: "~DocDate",
         Condition: [
           {
             field: "DocStatus",
@@ -95,6 +97,10 @@ export default withRouter(
       };
 
       APISearch(query).then((res: any) => {
+        res.forEach((row: any) => {
+          row.DocDate = decodeSAPDateToFormal(row.DocDate);
+          row.DocDueDate = decodeSAPDateToFormal(row.DocDueDate);
+        });
         setData(res);
         _setData(res);
         setLoading(false);
@@ -108,27 +114,46 @@ export default withRouter(
           showSidebar={showSidebar}
           sidebar={sidebar}
           center={
-            <UIText size="large" style={{ color: '#fff' }}>SO Canvasing</UIText>
+            <UIText size="large" style={{ color: "#fff" }}>
+              SO Canvasing
+            </UIText>
           }
           isLoading={loading}
         >
           <BtnCreate path="/so-canvas/form" />
         </UIHeader>
         <UIBody>
-          <UICard mode="clean" style={{ borderRadius: 4, flex: 1, backgroundColor: '#fff' }}>
-            <UICardHeader style={{ backgroundColor: '#fff', flexDirection: 'row', alignItems: 'center' }}>
-              <UIText size="medium" style={{
-                flexShrink: 'none',
-                width: '100%'
-              }}>List SO Canvasing</UIText>
-              <UISearch style={{
-                width: '100%',
-                maxWidth: 300
+          <UICard
+            mode="clean"
+            style={{ borderRadius: 4, flex: 1, backgroundColor: "#fff" }}
+          >
+            <UICardHeader
+              style={{
+                backgroundColor: "#fff",
+                flexDirection: "row",
+                alignItems: "center"
               }}
+            >
+              <UIText
+                size="medium"
+                style={{
+                  flexShrink: "none",
+                  width: "100%"
+                }}
+              >
+                List SO Canvasing
+              </UIText>
+              <UISearch
+                style={{
+                  width: "100%",
+                  maxWidth: 300
+                }}
                 fieldStyle={{
                   borderWidth: 0,
-                  backgroundColor: '#f6f9fc'
-                }} onSearch={funcSearch}></UISearch>
+                  backgroundColor: "#f6f9fc"
+                }}
+                onSearch={funcSearch}
+              />
             </UICardHeader>
             <UIList
               style={{ flex: 1 }}
@@ -164,4 +189,5 @@ export default withRouter(
         </UIBody>
       </UIContainer>
     );
-  }));
+  })
+);

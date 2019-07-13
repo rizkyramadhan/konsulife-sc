@@ -8,171 +8,174 @@ import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
 import { View } from "reactxp";
 import FormInvStockDetails from "./FormInvStockDetails";
-import { decodeSAPDateToFormal } from '@app/utils/Helper';
-import { APISearchProps, APISearch } from '@app/api';
-import rawQuery from '@app/libs/gql/data/rawQuery';
-import BtnExport from '@app/components/BtnExport';
-import { ReportPost } from '@app/report';
+import { decodeSAPDateToFormal } from "@app/utils/Helper";
+import { APISearchProps, APISearch } from "@app/api";
+import rawQuery from "@app/libs/gql/data/rawQuery";
+import BtnExport from "@app/components/BtnExport";
+import { ReportPost } from "@app/report";
 
 export default withRouter(
   observer(({ match, showSidebar, sidebar }: any) => {
     const [exporting, setExporting] = useState(false);
     const [data, setData] = useState<any>({});
     const [items, setItems] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
+
     useEffect(() => {
-        let query: APISearchProps = {
-          Table: "OWTR",
-          Fields: [
-            "DocDate",
-            "DocDueDate",
-            "DocNum",
-            "DocEntry",
-            "CardName",
-            "CardCode",
-            "Address",
-            "Filler",
-            "ToWhsCode",
-            "Comments",
-            "SlpCode",
-            "U_BRANCH",
-            "U_USERID",
-            "U_GENERATED",
-            "U_IDU_ITR_INTNUM",
-            "U_IDU_IT_INTNUM",
-            "U_IDU_CONTNUM",
-            "U_IDU_NOSEAL",
-            "U_IDU_NOPL",
-            "U_IDU_NOPOL",
-            "U_IDU_DRIVER",
-            "U_WONUM",
-            "U_STOCK_RETURN",
-            "U_STOCK_TRANSNO"
-          ],
+      setLoading(true);
+      let query: APISearchProps = {
+        Table: "OWTR",
+        Fields: [
+          "DocDate",
+          "DocDueDate",
+          "DocNum",
+          "DocEntry",
+          "CardName",
+          "CardCode",
+          "Address",
+          "Filler",
+          "ToWhsCode",
+          "Comments",
+          "SlpCode",
+          "U_BRANCH",
+          "U_USERID",
+          "U_GENERATED",
+          "U_IDU_ITR_INTNUM",
+          "U_IDU_IT_INTNUM",
+          "U_IDU_CONTNUM",
+          "U_IDU_NOSEAL",
+          "U_IDU_NOPL",
+          "U_IDU_NOPOL",
+          "U_IDU_DRIVER",
+          "U_WONUM",
+          "U_STOCK_RETURN",
+          "U_STOCK_TRANSNO"
+        ],
+        Condition: [
+          {
+            field: "DocEntry",
+            cond: "=",
+            value: match.params.id
+          }
+        ]
+      };
+
+      APISearch(query).then((res: any) => {
+        const data = res[0];
+        res[0]["DocDate"] = decodeSAPDateToFormal(res[0]["DocDate"]);
+        res[0]["DocDueDate"] = decodeSAPDateToFormal(res[0]["DocDueDate"]);
+
+        setData(data);
+
+        query = {
+          Table: "OPRC",
+          Fields: ["PrcCode", "PrcName"],
           Condition: [
             {
-              field: "DocEntry",
+              field: "PrcCode",
               cond: "=",
-              value: match.params.id
+              value: data.U_BRANCH
             }
           ]
         };
-  
+
         APISearch(query).then((res: any) => {
-          const data = res[0];
-          res[0]["DocDate"] = decodeSAPDateToFormal(res[0]["DocDate"]);
-          res[0]["DocDueDate"] = decodeSAPDateToFormal(res[0]["DocDueDate"]); 
-  
-          setData(data);
-  
-          query = {
-              Table: "OPRC",
-              Fields: ["PrcCode", "PrcName"],
-              Condition: [
-                {
-                  field: "PrcCode",
-                  cond: "=",
-                  value: data.U_BRANCH
-                }
-              ]
-            };
-      
-            APISearch(query).then((res: any) => {
-                  setData({...data, City:res[0]["PrcName"]});
-            });
+          setData({ ...data, City: res[0]["PrcName"] });
+        });
 
-            query = {
-              Table: "OSLP",
-              Fields: ["SlpCode", "SlpName"],
-              Condition: [
-                {
-                  field: "SlpCode",
-                  cond: "=",
-                  value: data.SlpCode
-                }
-              ]
-            };
+        query = {
+          Table: "OSLP",
+          Fields: ["SlpCode", "SlpName"],
+          Condition: [
+            {
+              field: "SlpCode",
+              cond: "=",
+              value: data.SlpCode
+            }
+          ]
+        };
 
-            APISearch(query).then((res: any) => {
-              setData({...data, SalesName:res[0]["SlpName"], RuteName:""});
-            });
+        APISearch(query).then((res: any) => {
+          setData({ ...data, SalesName: res[0]["SlpName"], RuteName: "" });
+          setLoading(true);
+        });
 
-
-            rawQuery(`{
+        rawQuery(`{
               work_order (where: {number: {_eq: "${data.U_WONUM}"}}}) {
                 rute
               }
             }`).then(res => {
-                console.log(res);
-            });
+          console.log(res);
         });
-  
-        query = {
-          Table: "WTR1",
-          Fields: [
-            "DocEntry",
-            "LineNum",
-            "ObjType",
-            "ItemCode",
-            "Dscription",
-            "U_IDU_PARTNUM",
-            "UseBaseUn",
-            "Quantity",
-            "UomEntry",
-            "UomCode",
-            "unitMsr",
-            "WhsCode",
-            "ShipDate",
-            "OcrCode",
-            "OcrCode2",
-          ],
-          Condition: [
-            {
-              field: "DocEntry",
-              cond: "=",
-              value: match.params.id
-            }
-          ]
-        };
-  
-        APISearch(query).then((res: any) => {
-          const items = res.map((item: any) => {
-            item.Key = btoa(item.DocEntry + "|" + item.LineNum);
-  
-            return item;
-          });
-          setItems([...items]);
-        });
-      }, []);
+      });
 
-      const exportReport = async () => {
-        if (exporting) return;
-        if (items.length === 0) return;
-        setExporting(true);
-  
-        let postItem: any[] = [];
-          items.forEach((val: any) => {
-            postItem.push({
-              ItemCode: val.ItemCode,
-              Dscription: val.Dscription,
-              UseBaseUn: val.UseBaseUn,
-              Quantity: val.Quantity,
-              UoMEntry: val.UoMEntry,
-              unitMsr:val.unitMsr,
-              WhsCode: val.WhsCode,
-              SerialNum: val.SerialNum
-            });
-          });
-        
-        try {
-          await ReportPost("stockTransfer",{...data,Lines: postItem});
-        } catch (e) {
-          alert(e.Message);
-  
-          console.error({data});
-        } finally {
-          setExporting(false);
-        }
+      query = {
+        Table: "WTR1",
+        Fields: [
+          "DocEntry",
+          "LineNum",
+          "ObjType",
+          "ItemCode",
+          "Dscription",
+          "U_IDU_PARTNUM",
+          "UseBaseUn",
+          "Quantity",
+          "UomEntry",
+          "UomCode",
+          "unitMsr",
+          "WhsCode",
+          "ShipDate",
+          "OcrCode",
+          "OcrCode2"
+        ],
+        Condition: [
+          {
+            field: "DocEntry",
+            cond: "=",
+            value: match.params.id
+          }
+        ]
       };
+
+      APISearch(query).then((res: any) => {
+        const items = res.map((item: any) => {
+          item.Key = btoa(item.DocEntry + "|" + item.LineNum);
+
+          return item;
+        });
+        setItems([...items]);
+      });
+    }, []);
+
+    const exportReport = async () => {
+      if (exporting) return;
+      if (items.length === 0) return;
+      setExporting(true);
+
+      let postItem: any[] = [];
+      items.forEach((val: any) => {
+        postItem.push({
+          ItemCode: val.ItemCode,
+          Dscription: val.Dscription,
+          UseBaseUn: val.UseBaseUn,
+          Quantity: val.Quantity,
+          UoMEntry: val.UoMEntry,
+          unitMsr: val.unitMsr,
+          WhsCode: val.WhsCode,
+          SerialNum: val.SerialNum
+        });
+      });
+
+      try {
+        await ReportPost("stockTransfer", { ...data, Lines: postItem });
+      } catch (e) {
+        alert(e.Message);
+
+        console.error({ data });
+      } finally {
+        setExporting(false);
+      }
+    };
 
     return (
       <UIContainer>
@@ -180,7 +183,8 @@ export default withRouter(
           isBack={true}
           showSidebar={showSidebar}
           sidebar={sidebar}
-          center="Stock Transfer View"
+          center="Stock Transver View"
+          isLoading={loading}
         >
           <BtnExport
             exporting={exporting}
@@ -221,52 +225,78 @@ export default withRouter(
                 key: "general",
                 label: "General",
                 value: [
-                {
+                  {
                     key: "U_IDU_IT_INTNUM",
                     size: 12,
                     label: "IT Number",
                     type: "field"
-                },
-                {
+                  },
+                  {
                     key: "U_WONUM",
                     size: 12,
                     label: "WO Number",
                     type: "field"
-                },
-                {
+                  },
+                  {
                     key: "DocDate",
                     size: 6,
                     type: "field",
-                    label: "Posting Date",
-                },
-                {
+                    label: "Posting Date"
+                  },
+                  {
                     key: "DocDueDate",
                     size: 6,
                     type: "field",
-                    label: "Delivery Date",
-                },
-                {
+                    label: "Delivery Date"
+                  },
+                  {
                     key: "Filler",
                     size: 6,
                     type: "field",
-                    label: "From Warehouse",
-                },
-                {
+                    label: "From Warehouse"
+                  },
+                  {
                     key: "ToWhsCode",
                     size: 6,
                     type: "field",
-                    label: "To Warehouse",
-                }]
+                    label: "To Warehouse"
+                  }
+                ]
               },
               {
                 key: "info",
                 label: "Shipment",
                 value: [
-                  { key: "U_IDU_CONTNUM", size: 6, label: "No. Container", type:"field" },
-                  { key: "U_IDU_NOSEAL", size: 6, label: "No. Seal", type:"field" },
-                  { key: "U_IDU_NOPL", size: 6, label: "No. PL", type:"field" },
-                  { key: "U_IDU_NOPOL", size: 6, label: "Nopol", type:"field" },
-                  { key: "U_IDU_DRIVER", size: 12, label: "Driver", type:"field" }
+                  {
+                    key: "U_IDU_CONTNUM",
+                    size: 6,
+                    label: "No. Container",
+                    type: "field"
+                  },
+                  {
+                    key: "U_IDU_NOSEAL",
+                    size: 6,
+                    label: "No. Seal",
+                    type: "field"
+                  },
+                  {
+                    key: "U_IDU_NOPL",
+                    size: 6,
+                    label: "No. PL",
+                    type: "field"
+                  },
+                  {
+                    key: "U_IDU_NOPOL",
+                    size: 6,
+                    label: "Nopol",
+                    type: "field"
+                  },
+                  {
+                    key: "U_IDU_DRIVER",
+                    size: 12,
+                    label: "Driver",
+                    type: "field"
+                  }
                 ]
               }
             ]}
@@ -281,11 +311,7 @@ export default withRouter(
               tabs={[
                 {
                   label: "Detail items",
-                  content: () => (
-                    <FormInvStockDetails
-                      items={items}
-                    />
-                  )
+                  content: () => <FormInvStockDetails items={items} />
                 }
               ]}
             />
