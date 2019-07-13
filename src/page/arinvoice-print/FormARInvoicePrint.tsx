@@ -64,6 +64,7 @@ export default withRouter(
           "DocRate",
           "U_IDU_SO_INTNUM",
           "U_IDU_DO_INTNUM",
+          "U_IDU_SI_INTNUM",
           "GroupNum",
           "SlpCode",
           "CntctCode",
@@ -85,32 +86,8 @@ export default withRouter(
       };
 
       APISearch(query).then((res: any) => {
-        // let poNum: any[] = [];
-        // let soNum: any[] = [];
-        // let doNum: any[] = [];
-        // res.forEach((val: any) => {
-        //   if (val.NumAtCard !== null && val.NumAtCard !== "") {
-        //     poNum.push(val.NumAtCard);
-        //   }
-        //   if (val.U_IDU_SO_INTNUM !== null && val.U_IDU_SO_INTNUM !== "") {
-        //     soNum.push(val.U_IDU_SO_INTNUM);
-        //   }
-        //   if (val.U_IDU_DO_INTNUM !== null && val.U_IDU_DO_INTNUM !== "") {
-        //     doNum.push(val.U_IDU_DO_INTNUM);
-        //   }
-        // });
-
         res[0].DocDate = decodeSAPDateToFormal(res[0].DocDate);
         res[0].DocDueDate = decodeSAPDateToFormal(res[0].DocDueDate);
-        // res[0].NumAtCard = poNum.join(";");
-        // res[0].U_IDU_SO_INTNUM = soNum.join(";");
-        // res[0].U_IDU_DO_INTNUM = doNum.join(";");
-
-        // res[0].U_BRANCH = global.session.user.branch;
-        // res[0].U_USERID = global.session.user.username;
-        // res[0].U_GENERATED = "W";
-        // res[0].U_WONUM = "";
-        // res[0].U_IDU_FP = "";
 
         if (res.length > 0) setData(res[0]);
       });
@@ -229,42 +206,6 @@ export default withRouter(
                 ]
               },
               {
-                key: "general",
-                label: "General",
-                sublabel: "Informasi SO/DO",
-                value: [
-                  {
-                    key: "U_IDU_SO_INTNUM",
-                    type: "field",
-                    label: "SO Number",
-                    size: 10
-                  },
-                  { type: "empty", size: 2 },
-                  {
-                    key: "U_IDU_DO_INTNUM",
-                    type: "field",
-                    label: "DO Number",
-                    size: 10
-                  },
-                  { type: "empty", size: 2 },
-                  {
-                    key: "DocDate",
-                    size: 5,
-                    type: "field",
-                    label: "Posting Date",
-                    options: { pastDate: true }
-                  },
-                  {
-                    key: "DocDueDate",
-                    size: 5,
-                    type: "field",
-                    label: "Delivery Date",
-                    options: { pastDate: true }
-                  },
-                  { key: "U_IDU_FP", size: 10, type: 'field', label: "Faktur Pajak" }
-                ]
-              },
-              {
                 key: "optional",
                 label: "Optional",
                 value: [
@@ -274,6 +215,44 @@ export default withRouter(
                     type: "field",
                     size: 12
                   }
+                ]
+              },
+              {
+                key: "general",
+                label: "General",
+                sublabel: "Informasi SO/DO",
+                value: [
+                  {
+                    key: "U_IDU_SI_INTNUM",
+                    type: "field",
+                    label: "SO Number",
+                    size: 12
+                  },
+                  {
+                    key: "U_IDU_SO_INTNUM",
+                    type: "field",
+                    label: "SO Number",
+                    size: 12
+                  },
+                  {
+                    key: "U_IDU_DO_INTNUM",
+                    type: "field",
+                    label: "DO Number",
+                    size: 12
+                  },
+                  {
+                    key: "DocDate",
+                    size: 6,
+                    type: "field",
+                    label: "Posting Date",
+                  },
+                  {
+                    key: "DocDueDate",
+                    size: 6,
+                    type: "field",
+                    label: "Delivery Date",
+                  },
+                  { key: "U_IDU_FP", size: 12, type: 'field', label: "Faktur Pajak" }
                 ]
               }
             ]}

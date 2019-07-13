@@ -15,11 +15,6 @@ import { withRouter } from "react-router";
 import { View } from "reactxp";
 import FormARInvoiceDetailTOPrint from './FormARInvoiceDetailTOPrint';
 
-// const date = new Date();
-// const today = `${date.getFullYear()}-${lpad(
-//   (date.getMonth() + 1).toString(),
-//   2
-// )}-${lpad(date.getDate().toString(), 2)}`;
 
 const defaultData = {
   CardCode: "",
@@ -64,6 +59,7 @@ export default withRouter(
           "DocRate",
           "U_IDU_SO_INTNUM",
           "U_IDU_DO_INTNUM",
+          "U_IDU_SI_INTNUM",
           "GroupNum",
           "SlpCode",
           "CntctCode",
@@ -85,32 +81,8 @@ export default withRouter(
       };
 
       APISearch(query).then((res: any) => {
-        // let poNum: any[] = [];
-        // let soNum: any[] = [];
-        // let doNum: any[] = [];
-        // res.forEach((val: any) => {
-        //   if (val.NumAtCard !== null && val.NumAtCard !== "") {
-        //     poNum.push(val.NumAtCard);
-        //   }
-        //   if (val.U_IDU_SO_INTNUM !== null && val.U_IDU_SO_INTNUM !== "") {
-        //     soNum.push(val.U_IDU_SO_INTNUM);
-        //   }
-        //   if (val.U_IDU_DO_INTNUM !== null && val.U_IDU_DO_INTNUM !== "") {
-        //     doNum.push(val.U_IDU_DO_INTNUM);
-        //   }
-        // });
-
         res[0].DocDate = decodeSAPDateToFormal(res[0].DocDate);
         res[0].DocDueDate = decodeSAPDateToFormal(res[0].DocDueDate);
-        // res[0].NumAtCard = poNum.join(";");
-        // res[0].U_IDU_SO_INTNUM = soNum.join(";");
-        // res[0].U_IDU_DO_INTNUM = doNum.join(";");
-
-        // res[0].U_BRANCH = global.session.user.branch;
-        // res[0].U_USERID = global.session.user.username;
-        // res[0].U_GENERATED = "W";
-        // res[0].U_WONUM = "";
-        // res[0].U_IDU_FP = "";
 
         if (res.length > 0) setData(res[0]);
       });
@@ -233,6 +205,12 @@ export default withRouter(
                 label: "General",
                 sublabel: "Informasi SO/DO",
                 value: [
+                  {
+                    key: "U_IDU_SI_INTNUM",
+                    type: "field",
+                    label: "SO Number",
+                    size: 10
+                  },
                   {
                     key: "U_IDU_SO_INTNUM",
                     type: "field",
