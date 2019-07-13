@@ -75,7 +75,7 @@ export default [
           </UIText>
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
-        path: "/report/inventory",
+        path: "/report-inventory",
         roles: ["admin", "branch"]
       },
       {
@@ -85,7 +85,7 @@ export default [
           </UIText>
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
-        path: "/report/stock",
+        path: "/report-stock",
         roles: ["admin", "branch"]
       },
       {
@@ -95,7 +95,7 @@ export default [
           </UIText>
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
-        path: "/report/po",
+        path: "/report-po",
         roles: ["admin", "branch"]
       },
       {
@@ -105,7 +105,7 @@ export default [
           </UIText>
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
-        path: "/report/so",
+        path: "/report-so",
         roles: ["admin", "branch"]
       },
       {
@@ -115,7 +115,7 @@ export default [
           </UIText>
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
-        path: "/report/do",
+        path: "/report-do",
         roles: ["admin", "branch"]
       },
       {
@@ -125,7 +125,7 @@ export default [
           </UIText>
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
-        path: "/report/ar-invoice",
+        path: "/report-ar-invoice",
         roles: ["admin", "branch"]
       }
     ]

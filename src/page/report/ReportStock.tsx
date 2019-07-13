@@ -1,14 +1,16 @@
+import { APISearch, APISearchProps } from "@app/api";
+import global from "@app/global";
 import UIBody from "@app/libs/ui/UIBody";
+import UICard, { UICardHeader } from "@app/libs/ui/UICard";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
-import { observer } from "mobx-react-lite";
-import React, { useState, useEffect } from "react";
-import { withRouter } from "react-router";
 import UISearch from "@app/libs/ui/UISearch";
 import UIText from "@app/libs/ui/UIText";
-import UICard, { UICardHeader } from "@app/libs/ui/UICard";
-import { APISearch, APISearchProps } from "@app/api";
+import { observer } from "mobx-react-lite";
+import React, { useEffect, useState } from "react";
+import { withRouter } from "react-router";
+import SAPDropdown from "@app/components/SAPDropdown";
 
 interface IRute {
   id: number;
@@ -20,6 +22,9 @@ export default withRouter(
   observer(({ showSidebar, sidebar }: any) => {
     const [data, setData]: any = useState<IRute[]>([]);
     const [_data, _setData]: any = useState<IRute[]>([]);
+    const [warehouse, setWarehouse]: any = useState(
+      global.session.user.warehouse_id
+    );
     const [loading, setLoading] = useState(false);
     const field = [
       "ItemNo",
@@ -33,7 +38,7 @@ export default withRouter(
     useEffect(() => {
       setLoading(true);
       let query: APISearchProps = {
-        CustomQuery: `GetStockWarehouse,TIM-001`
+        CustomQuery: `GetStockWarehouse,${warehouse}`
       };
 
       APISearch(query).then((res: any) => {
@@ -47,7 +52,7 @@ export default withRouter(
         _setData(res);
         setLoading(false);
       });
-    }, []);
+    }, [warehouse]);
 
     const funcSearch = (value: string) => {
       _setData([
@@ -78,7 +83,7 @@ export default withRouter(
           sidebar={sidebar}
           center={
             <UIText size="large" style={{ color: "#fff" }}>
-              Report Stock by Warehouse
+              Report Stock
             </UIText>
           }
         />
@@ -101,7 +106,7 @@ export default withRouter(
                   width: "100%"
                 }}
               >
-                List Stock #TIM-001
+                List Stock #{warehouse}
               </UIText>
               <UISearch
                 style={{
@@ -115,6 +120,21 @@ export default withRouter(
                 onSearch={funcSearch}
               />
             </UICardHeader>
+            {global.session.user.role == "admin" && (
+              <UICardHeader>
+                <SAPDropdown
+                  field="WarehouseCodeBranch"
+                  value={warehouse}
+                  setValue={setWarehouse}
+                  where={[
+                    {
+                      field: "U_BRANCH",
+                      value: global.session.user.branch
+                    }
+                  ]}
+                />
+              </UICardHeader>
+            )}
             <UIList
               style={{ flex: 1 }}
               primaryKey="ItemNo"
