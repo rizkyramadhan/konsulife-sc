@@ -9,8 +9,8 @@ import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 import global from "@app/global";
-import UIText from '@app/libs/ui/UIText';
-import UICard, { UICardHeader } from '@app/libs/ui/UICard';
+import UIText from "@app/libs/ui/UIText";
+import UICard, { UICardHeader } from "@app/libs/ui/UICard";
 
 let selectedItems: any[];
 
@@ -33,18 +33,18 @@ export default withRouter(
       _setData([
         ...(value
           ? data.filter((x: any) => {
-            let res = false;
-            for (var i = 0; i < field.length; i++) {
-              if (
-                x[field[i]] &&
-                x[field[i]].toLowerCase().includes(value.toLowerCase())
-              ) {
-                res = true;
-                break;
+              let res = false;
+              for (var i = 0; i < field.length; i++) {
+                if (
+                  x[field[i]] &&
+                  x[field[i]].toLowerCase().includes(value.toLowerCase())
+                ) {
+                  res = true;
+                  break;
+                }
               }
-            }
-            return res;
-          })
+              return res;
+            })
           : data)
       ]);
     };
@@ -93,7 +93,9 @@ export default withRouter(
           showSidebar={showSidebar}
           sidebar={sidebar}
           center={
-            <UIText size="large" style={{ color: '#fff' }}>{param[1]}</UIText>
+            <UIText size="large" style={{ color: "#fff" }}>
+              {param[1]}
+            </UIText>
           }
           isLoading={loading}
         >
@@ -103,27 +105,44 @@ export default withRouter(
                 let key = selectedItems.join("|");
                 history.push("/pr/form/" + btoa(key));
               } else {
-                alert("Please Select PO!");
+                alert("Anda belum memilih PO.");
               }
             }}
             label="Copy PO"
           />
         </UIHeader>
         <UIBody>
-          <UICard mode="clean" style={{ borderRadius: 4, flex: 1, backgroundColor: '#fff' }}>
-            <UICardHeader style={{ backgroundColor: '#fff', flexDirection: 'row', alignItems: 'center' }}>
-              <UIText size="medium" style={{
-                flexShrink: 'none',
-                width: '100%'
-              }}>List Purchase Order</UIText>
-              <UISearch style={{
-                width: '100%',
-                maxWidth: 300
+          <UICard
+            mode="clean"
+            style={{ borderRadius: 4, flex: 1, backgroundColor: "#fff" }}
+          >
+            <UICardHeader
+              style={{
+                backgroundColor: "#fff",
+                flexDirection: "row",
+                alignItems: "center"
               }}
+            >
+              <UIText
+                size="medium"
+                style={{
+                  flexShrink: "none",
+                  width: "100%"
+                }}
+              >
+                List Purchase Order
+              </UIText>
+              <UISearch
+                style={{
+                  width: "100%",
+                  maxWidth: 300
+                }}
                 fieldStyle={{
                   borderWidth: 0,
-                  backgroundColor: '#f6f9fc'
-                }} onSearch={funcSearch}></UISearch>
+                  backgroundColor: "#f6f9fc"
+                }}
+                onSearch={funcSearch}
+              />
             </UICardHeader>
             <UIList
               style={{ flex: 1 }}

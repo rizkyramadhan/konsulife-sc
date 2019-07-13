@@ -14,33 +14,57 @@ export default ({ items, setItems, header }: any) => {
   const [uoMEntry, setUoMEntry] = useState<any>({});
   const [iUoMEntry, setIUoMEntry] = useState<any>({});
 
-  const getUoM = (idx: any, value: any) => {
-    APISearch({
-      CustomQuery: `GetUom,${value}`
-    }).then((res: any) => {
-      // jika uom group entry = -1 maka set uom entry = manual
-      // jika bukan maka set uom entry sesuai sales uom entry
-      items[idx]["UseBaseUn"] = "N";
-      if (res.UgpEntry == -1) {
-        items[idx]["UoMEntry"] = -1;
-        items[idx]["UoMName"] = "Manual";
-      } else {
-        items[idx]["UoMEntry"] = res.IUoMEntry;
-        items[idx]["UoMName"] = res.IUoMCode;
-      }
-      console.log([...items]);
-      setItems([...items]);
-
-      // group list uom entry berdasarkan item code karena uom entry setiap item code berbeda
-      uoMEntry[value] = res.Lines.map((d: any) => {
-        return { value: d.UomEntry, label: d.UomCode };
-      });
-      setUoMEntry({ ...uoMEntry });
-
-      // group list sales uom berdasarkan item code karena sales uom setiap item berbeda
-      iUoMEntry[value] = res.IUoMEntry;
-      setIUoMEntry({ ...iUoMEntry });
+  const getStockInWhs = async (idx: any, itemCode: string, whsCode: string) => {
+    const res = await APISearch({
+      Table: "OITW",
+      Fields: ["OnHand"],
+      Condition: [
+        {
+          field: "ItemCode",
+          cond: "=",
+          value: itemCode
+        },
+        { cond: "AND" },
+        {
+          field: "WhsCode",
+          cond: "=",
+          value: whsCode
+        }
+      ]
     });
+
+    if (Array.isArray(res) && res.length > 0) {
+      items[idx]["OnHand"] = parseInt(res[0]["OnHand"]);
+      setItems([...items]);
+    }
+  };
+
+  const getUoM = async (idx: any, value: any) => {
+    const res: any = await APISearch({
+      CustomQuery: `GetUom,${value}`
+    });
+
+    // jika uom group entry = -1 maka set uom entry = manual
+    // jika bukan maka set uom entry sesuai sales uom entry
+    items[idx]["UseBaseUn"] = "N";
+    if (res.UgpEntry == -1) {
+      items[idx]["UoMEntry"] = -1;
+      items[idx]["UoMName"] = "Manual";
+    } else {
+      items[idx]["UoMEntry"] = res.IUoMEntry;
+      items[idx]["UoMName"] = res.IUoMCode;
+    }
+    setItems([...items]);
+
+    // group list uom entry berdasarkan item code karena uom entry setiap item code berbeda
+    uoMEntry[value] = res.Lines.map((d: any) => {
+      return { value: d.UomEntry, label: d.UomCode };
+    });
+    setUoMEntry({ ...uoMEntry });
+
+    // group list sales uom berdasarkan item code karena sales uom setiap item berbeda
+    iUoMEntry[value] = res.IUoMEntry;
+    setIUoMEntry({ ...iUoMEntry });
   };
 
   const DetailComponent = (item: DetailComponentProps) => {
@@ -138,7 +162,8 @@ export default ({ items, setItems, header }: any) => {
                     items[idx]["Dscription"] = l;
 
                     setItems([...items]);
-                    getUoM(idx, v);
+                    await getUoM(idx, v);
+                    await getStockInWhs(idx, v, header.Filler);
                   }}
                 />
               )
@@ -172,6 +197,7 @@ export default ({ items, setItems, header }: any) => {
               )
             },
             { key: "Quantity", size: 12, label: "Quantity" },
+            { key: "OnHand", size: 12, label: "Qty In Whs", type: "field" },
             { key: "SerialNum", size: 12, label: "Serial Number" }
           ]}
         />
@@ -226,6 +252,11 @@ export default ({ items, setItems, header }: any) => {
         Quantity: {
           table: {
             header: "Quantity"
+          }
+        },
+        OnHand: {
+          table: {
+            header: "Qty In Whs"
           }
         },
         SerialNum: {

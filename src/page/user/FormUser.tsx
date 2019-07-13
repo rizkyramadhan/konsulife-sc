@@ -142,7 +142,7 @@ export default withRouter(
                   { key: "fullname", label: "Full Name", size: 12 },
                   {
                     key: "area",
-                    size: 8,
+                    size: 12,
                     label: "Area",
                     component: (
                       <SAPDropdown
@@ -309,11 +309,11 @@ export default withRouter(
                       />
                     )
                   },
-                  { key: "username", size: 10, label: "Username" },
+                  { key: "username", size: 12, label: "Username" },
                   {
                     key: "password",
                     type: "password",
-                    size: 10,
+                    size: 12,
                     label: "Password"
                   }
                 ]

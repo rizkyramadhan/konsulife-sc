@@ -4,7 +4,9 @@ import React from "react";
 export default ({ items }: any) => {
   return (
     <UIList
-      primaryKey="BaseLine"
+      selection="none"
+      primaryKey="LineNum"
+      items={items}
       fields={{
         ItemCode: {
           table: {
@@ -16,19 +18,14 @@ export default ({ items }: any) => {
             header: "Item Name"
           }
         },
-        U_IDU_PARTNUM: {
-          table: {
-            header: "Part Number"
-          }
-        },
-        WhsCode: {
-          table: {
-            header: "Warehouse"
-          }
-        },
-        UomCode: {
+        UseBaseUn: {
           table: {
             header: "Inventory UoM"
+          }
+        },
+        UoMName: {
+          table: {
+            header: "UoM Name"
           }
         },
         Quantity: {
@@ -36,18 +33,17 @@ export default ({ items }: any) => {
             header: "Quantity"
           }
         },
-        PriceBefDi: {
+        SerialNum: {
           table: {
-            header: "Unit Price"
+            header: "Serial Number"
           }
         },
-        LineTotal: {
+        WhsCode: {
           table: {
-            header: "Total"
+            header: "Warehouse"
           }
         }
       }}
-      items={items}
     />
   );
 };

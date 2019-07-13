@@ -71,6 +71,7 @@ import ListInvStockReturn from "./it-print/ListInvStockReturn";
 import FormInvStockReturn from "./it-print/FormInvStockReturn";
 import FormInvStockTransfer from "./it-print/FormInvStockTransfer";
 import IconUser from "@app/libs/ui/Icons/IconUser";
+import ReportInventoryByWO from "./report/ReportInventoryByWO";
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
@@ -487,12 +488,13 @@ export default observer((_props: any) => {
               "/customer/form/:id?": <FormCustomer />,
               "/user": <ListUser />,
               "/user/form/:id?": <FormUser />,
-              "/report/po": <ReportPO />,
-              "/report/so": <ReportSO />,
-              "/report/do": <ReportDO />,
-              "/report/ar-invoice": <ReportAR />,
-              "/report/stock": <ReportStock />,
-              "/report/inventory": <ReportInventory />
+              "/report-po": <ReportPO />,
+              "/report-so": <ReportSO />,
+              "/report-do": <ReportDO />,
+              "/report-ar-invoice": <ReportAR />,
+              "/report-stock": <ReportStock />,
+              "/report-inventory": <ReportInventory />,
+              "/report-inventory/open/:id": <ReportInventoryByWO />
             }}
           />
         </UISidebar>

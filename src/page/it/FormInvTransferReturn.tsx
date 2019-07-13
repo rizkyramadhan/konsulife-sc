@@ -1,5 +1,4 @@
 import { APIPost, APISearch, APISearchProps } from "@app/api";
-import BtnAdd from "@app/components/BtnAdd";
 import BtnSave from "@app/components/BtnSave";
 import SAPDropdown from "@app/components/SAPDropdown";
 import global from "@app/global";
@@ -10,13 +9,14 @@ import UIJsonField from "@app/libs/ui/UIJsonField";
 import UITabs from "@app/libs/ui/UITabs";
 import { lpad, getLastNumbering, updateLastNumbering } from "@app/utils";
 import { observer } from "mobx-react-lite";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { withRouter } from "react-router";
 import { View } from "reactxp";
-import FormInvTransferDetail from "./FormInvTransferDetail";
 import rawQuery from "@app/libs/gql/data/rawQuery";
 import UISelectField from "@app/libs/ui/UISelectField";
 import UITagField from "@app/libs/ui/UITagField";
+import FormInvTransferReturnDetail from "./FormInvTransferReturnDetail";
+import UILoading from "@app/libs/ui/UILoading";
 
 const date = new Date();
 const today = `${date.getFullYear()}-${lpad(
@@ -61,8 +61,10 @@ export default withRouter(
     const [qShip, setQShip] = useState(false);
     const [items, setItems] = useState<any[]>([]);
     const [_items, _setItems] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
+    const getStockTransfer = async (wonum: string) => {
+      _setItems([]);
       let query: APISearchProps = {
         Table: "OWTR",
         Fields: ["U_IDU_IT_INTNUM"],
@@ -71,14 +73,6 @@ export default withRouter(
             field: "DocStatus",
             cond: "=",
             value: "O"
-          },
-          {
-            cond: "AND"
-          },
-          {
-            field: "U_BRANCH",
-            cond: "=",
-            value: global.session.user.branch
           },
           {
             cond: "AND"
@@ -95,27 +89,35 @@ export default withRouter(
             field: "U_STOCK_RETURN",
             cond: "=",
             value: "N"
+          },
+          {
+            cond: "AND"
+          },
+          {
+            field: "U_WONUM",
+            cond: "=",
+            value: wonum
           }
         ]
       };
 
-      APISearch(query).then((res: any) => {
-        let items = res.map((item: any) => {
-          return {
-            value: item["U_IDU_IT_INTNUM"],
-            label: item["U_IDU_IT_INTNUM"]
-          };
-        });
-        _setItems([...items]);
+      const res: any = await APISearch(query);
+      const items = res.map((item: any) => {
+        return {
+          value: item["U_IDU_IT_INTNUM"],
+          label: item["U_IDU_IT_INTNUM"]
+        };
       });
+      _setItems([...items]);
+    };
 
+    const getWO = async (bp_id: string) => {
+      setWOList([]);
       rawQuery(`{
-      work_order (where: {status: {_eq: "open"}, branch: {_eq: "${
-        global.getSession().user.branch
-      }"}}) {
-        number
-      }
-    }`).then(res => {
+        work_order (where: {status: {_eq: "open"}, bp_id: {_eq: "${bp_id}"}}) {
+          number
+        }
+      }`).then(res => {
         let wo = res.work_order.map((v: any) => {
           return {
             value: v.number,
@@ -124,44 +126,142 @@ export default withRouter(
         });
         setWOList([...wo]);
       });
-    }, []);
+    };
+
+    const getUom = async (items: any, i: any) => {
+      setLoading(true);
+      const uom: any = await APISearch({
+        CustomQuery: `GetUom,${items[i].ItemCode}`
+      });
+      // jika uom group entry = -1 maka set uom entry = manual
+      // jika bukan maka set uom entry sesuai sales uom entry
+      items[i].UseBaseUn = "N";
+      if (uom.UgpEntry == -1) {
+        items[i].UoMEntry = -1;
+        items[i].UoMName = "Manual";
+      } else {
+        items[i].UoMEntry = uom.IUoMEntry;
+        items[i].UoMName = uom.IUoMCode;
+      }
+      setItems([...items]);
+      setLoading(false);
+    };
+
+    const getItems = async (wo_num: string) => {
+      setLoading(true);
+      setItems([]);
+      const res: any = await APISearch({ CustomQuery: `GetStockWO,${wo_num}` });
+      const key = new Date().valueOf();
+      const items: any = [];
+      res.forEach((item: any, idx: any) => {
+        if (parseInt(item["OnHand"]) > 0) {
+          items.push({
+            LineNum: key + idx,
+            ItemCode: item["ItemCode"],
+            Dscription: item["ItemName"],
+            UseBaseUn: "",
+            UoMEntry: -1,
+            UoMName: "",
+            Quantity: parseInt(item["OnHand"]),
+            WhsCode: data.Filler,
+            SerialNum: ""
+          });
+        }
+      });
+
+      if (items.length === 0) {
+        setLoading(false);
+      }
+
+      items.forEach(async (_v: any, i: any) => {
+        await getUom(items, i);
+      });
+    };
+
+    const checkWOClose = async () => {
+      const res: any = await APISearch({
+        Table: "ORDR",
+        Fields: ["U_WONUM"],
+        Condition: [
+          {
+            field: "DocStatus",
+            cond: "=",
+            value: "O"
+          },
+          {
+            cond: "AND"
+          },
+          {
+            field: "U_WONUM",
+            cond: "=",
+            value: data.U_WONUM
+          }
+        ]
+      });
+
+      if (res[0]["U_WONUM"] !== "") {
+        alert("Failed. Masih terdapat SO yang masih open.");
+        return false;
+      }
+
+      return true;
+    };
+
+    const validation = () => {
+      const err: any = [];
+      const required = {
+        CardCode: "Sales",
+        U_WONUM: "WO Number",
+        Filler: "From Warehouse",
+        ToWhsCode: "To Warehouse",
+        U_STOCK_TRANSNO: "Stock Transfer Number"
+      };
+
+      Object.keys(required).forEach((k: any) => {
+        if ((data as any)[k] === "" || !(data as any)[k])
+          err.push((required as any)[k]);
+      });
+
+      if (err.length > 0) {
+        alert(err.join(", ") + " is required.");
+        return false;
+      }
+      return validationItems();
+    };
+
+    const validationItems = () => {
+      if (items.length === 0) {
+        alert("Items is empty.");
+        return false;
+      }
+      return true;
+    };
 
     const save = async () => {
       if (saving) return;
-      if (items.length === 0) return;
+      if (!validation()) return;
       setSaving(true);
 
       let number: any = await getLastNumbering("PGK-R", data.Filler);
-      let postItem: any[] = [];
-      items.forEach((val: any) => {
-        postItem.push({
-          ItemCode: val.ItemCode,
-          Dscription: val.Dscription,
-          UseBaseUn: val.UseBaseUn,
-          Quantity: val.Quantity,
-          UoMEntry: val.UoMEntry,
-          WhsCode: val.WhsCode,
-          SerialNum: val.SerialNum
-        });
-      });
-
       try {
-        await APIPost("InventoryTransfer", {
-          ...data,
-          U_IDU_IT_TRANSCODE: "PGK-R",
-          U_IDU_IT_INTNUM: number.format,
-          SlpCode:
-            global.session.user.slp_id !== "" &&
-            global.session.user.slp_id !== null
-              ? global.session.user.slp_id
-              : -1,
-          U_BRANCH: global.session.user.branch,
-          U_USERID: global.session.user.username,
-          Lines: postItem
-        });
+        if (checkWOClose()) {
+          await APIPost("InventoryTransfer", {
+            ...data,
+            U_IDU_IT_TRANSCODE: "PGK-R",
+            U_IDU_IT_INTNUM: number.format,
+            SlpCode:
+              global.session.user.slp_id !== "" &&
+              global.session.user.slp_id !== null
+                ? global.session.user.slp_id
+                : -1,
+            U_BRANCH: global.session.user.branch,
+            U_USERID: global.session.user.username,
+            Lines: items
+          });
 
-        updateLastNumbering(number.id, number.last_count + 1);
-        history.goBack();
+          updateLastNumbering(number.id, number.last_count + 1);
+          history.goBack();
+        }
       } catch (e) {
         if (e.Message.search("409") > -1) {
           updateLastNumbering(number.id, number.last_count + 1);
@@ -184,7 +284,7 @@ export default withRouter(
               : -1,
           U_BRANCH: global.session.user.branch,
           U_USERID: global.session.user.username,
-          Lines: postItem
+          Lines: items
         });
       } finally {
         setSaving(false);
@@ -235,14 +335,16 @@ export default withRouter(
                           }
                         ]}
                         value={(data as any).CardCode}
-                        setValue={(v, l, r) => {
+                        setValue={async (v, l, r) => {
                           setData({
                             ...data,
                             CardCode: v,
                             CardName: l,
-                            AddressName: r.item.MailAddres
+                            AddressName: r.item.MailAddres,
+                            U_WONUM: ""
                           });
                           setQShip(true);
+                          await getWO(v);
                         }}
                       />
                     )
@@ -304,8 +406,10 @@ export default withRouter(
                         label="WO Number"
                         items={WOList}
                         value={data.U_WONUM}
-                        setValue={v => {
-                          setData({ ...data, U_WONUM: v });
+                        setValue={async v => {
+                          setData({ ...data, U_WONUM: v, U_STOCK_TRANSNO: "" });
+                          await getStockTransfer(v);
+                          await getItems(v);
                         }}
                       />
                     )
@@ -359,6 +463,7 @@ export default withRouter(
                           items.forEach((val: any) => {
                             val.WhsCode = v;
                           });
+                          setItems([...items]);
                         }}
                       />
                     )
@@ -440,32 +545,33 @@ export default withRouter(
                 {
                   label: "Detail items",
                   content: () => (
-                    <FormInvTransferDetail
+                    <FormInvTransferReturnDetail
                       items={items}
                       setItems={setItems}
                       header={data}
                     />
                   ),
                   action: (
-                    <BtnAdd
-                      onPress={() => {
-                        setItems([
-                          ...(items as any),
-                          {
-                            LineNum: Math.floor(
-                              Math.random() * Math.floor(999)
-                            ),
-                            ItemCode: "",
-                            Dscription: "",
-                            UseBaseUn: "",
-                            Quantity: 1,
-                            UomEntry: "",
-                            WhsCode: data.Filler,
-                            SerialNum: ""
-                          }
-                        ]);
-                      }}
-                    />
+                    <View>{loading && <UILoading size="small" />}</View>
+                    // <BtnAdd
+                    //   onPress={() => {
+                    //     setItems([
+                    //       ...(items as any),
+                    //       {
+                    //         LineNum: Math.floor(
+                    //           Math.random() * Math.floor(999)
+                    //         ),
+                    //         ItemCode: "",
+                    //         Dscription: "",
+                    //         UseBaseUn: "",
+                    //         Quantity: 1,
+                    //         UomEntry: "",
+                    //         WhsCode: data.Filler,
+                    //         SerialNum: ""
+                    //       }
+                    //     ]);
+                    //   }}
+                    // />
                   )
                 }
               ]}

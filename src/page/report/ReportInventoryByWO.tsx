@@ -1,65 +1,52 @@
-import BtnCreate from "@app/components/BtnCreate";
-import rawQuery from "@app/libs/gql/data/rawQuery";
 import UIBody from "@app/libs/ui/UIBody";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
 import { observer } from "mobx-react-lite";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router";
-import global from "@app/global";
 import UISearch from "@app/libs/ui/UISearch";
-import UICard, { UICardHeader } from "@app/libs/ui/UICard";
 import UIText from "@app/libs/ui/UIText";
+import UICard, { UICardHeader } from "@app/libs/ui/UICard";
+import { APISearch, APISearchProps } from "@app/api";
 
-interface IWO {
+interface IRute {
   id: number;
-  number: string;
-  return_date: string;
-  sales_details: string;
-  sales_id: string;
-  sales_name: string;
-  visite_date: string;
-  sopir: string;
-  sopir_nopol: string;
-  status: string;
+  name: string;
+  description: string;
 }
 
 export default withRouter(
-  observer(({ history, showSidebar, sidebar }: any) => {
-    const [data, setData]: any = useState<IWO[]>([]);
-    const [_data, _setData]: any = useState<IWO[]>([]);
-    const field = [
-      "number",
-      "return_date",
-      "sales_name",
-      "visite_date",
-      "status",
-      "sopir",
-      "sopir_nopol"
-    ];
+  observer(({ match, showSidebar, sidebar }: any) => {
+    const [data, setData]: any = useState<IRute[]>([]);
+    const [_data, _setData]: any = useState<IRute[]>([]);
     const [loading, setLoading] = useState(false);
+    const field = [
+      "ItemCode",
+      "ItemName",
+      "InStock",
+      "Commited",
+      "Available",
+      "Invoiced",
+      "OnHand"
+    ];
 
     useEffect(() => {
       setLoading(true);
-      rawQuery(`{
-      work_order (where: {branch: {_eq: "${
-        global.getSession().user.branch
-      }"}, status: {_in: ["pending", "open"]}}) {
-        id
-        number
-        return_date
-        sales_details
-        sales_id
-        sales_name
-        visite_date
-        sopir
-        sopir_nopol
-        status
-      }
-    }`).then(res => {
-        setData([...res.work_order]);
-        _setData([...res.work_order]);
+      let query: APISearchProps = {
+        CustomQuery: `GetStockWO,${atob(match.params.id)}`
+      };
+
+      APISearch(query).then((res: any) => {
+        res.forEach((row: any) => {
+          row.InStock = row.InStock.split(".")[0];
+          row.Commited = row.Commited.split(".")[0];
+          row.Available = row.Available.split(".")[0];
+          row.Invoiced = row.Invoiced.split(".")[0];
+          row.OnHand = row.OnHand.split(".")[0];
+        });
+        setData(res);
+        _setData(res);
         setLoading(false);
       });
     }, []);
@@ -88,17 +75,15 @@ export default withRouter(
       <UIContainer>
         <UIHeader
           pattern={true}
+          isLoading={loading}
           showSidebar={showSidebar}
           sidebar={sidebar}
           center={
             <UIText size="large" style={{ color: "#fff" }}>
-              Report Inventory
+              #{atob(match.params.id)}
             </UIText>
           }
-          isLoading={loading}
-        >
-          <BtnCreate path="/wo/form" />
-        </UIHeader>
+        />
         <UIBody scroll={true}>
           <UICard
             mode="clean"
@@ -118,7 +103,7 @@ export default withRouter(
                   width: "100%"
                 }}
               >
-                List Working Order
+                List Inventory
               </UIText>
               <UISearch
                 style={{
@@ -134,40 +119,42 @@ export default withRouter(
             </UICardHeader>
             <UIList
               style={{ flex: 1 }}
-              primaryKey="id"
-              selection="single"
-              onSelect={d => {
-                history.push(`/report-inventory/open/${btoa(d.number)}`);
-              }}
+              primaryKey="ItemCode"
+              selection="none"
               fields={{
-                number: {
+                ItemCode: {
                   table: {
-                    header: "No. WO"
+                    header: "Code"
                   }
                 },
-                sales_name: {
+                ItemName: {
                   table: {
-                    header: "Sales"
+                    header: "Item Name"
                   }
                 },
-                sopir: {
+                InStock: {
                   table: {
-                    header: "Sopir"
+                    header: "In Stock"
                   }
                 },
-                sopir_nopol: {
+                Commited: {
                   table: {
-                    header: "Nopol"
+                    header: "Commited"
                   }
                 },
-                status: {
+                Available: {
                   table: {
-                    header: "Status"
+                    header: "Available"
                   }
                 },
-                visite_date: {
+                Invoiced: {
                   table: {
-                    header: "Visite"
+                    header: "Invoiced"
+                  }
+                },
+                OnHand: {
+                  table: {
+                    header: "On Hand"
                   }
                 }
               }}
