@@ -25,7 +25,9 @@ export default withRouter(
       "CardName",
       "CardCode",
       "DocDate",
-      "DocDueDate"
+      "DocDueDate",
+      "U_WONUM",
+      "NumAtCard"
     ];
     const funcSearch = (value: string) => {
       _setData([
@@ -150,14 +152,9 @@ export default withRouter(
               primaryKey="DocEntry"
               selection="detail"
               fields={{
-                U_IDU_SO_INTNUM: {
-                  table: {
-                    header: "No. SO"
-                  }
-                },
                 CardCode: {
                   table: {
-                    header: "Customer Code"
+                    header: "Code"
                   }
                 },
                 CardName: {
@@ -168,6 +165,16 @@ export default withRouter(
                 DocDate: {
                   table: {
                     header: "Posting Date"
+                  }
+                },
+                DocDueDate: {
+                  table: {
+                    header: "Delivery Date"
+                  }
+                },
+                U_IDU_SO_INTNUM: {
+                  table: {
+                    header: "No. SO"
                   }
                 }
               }}

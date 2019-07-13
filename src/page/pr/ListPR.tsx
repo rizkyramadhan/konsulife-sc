@@ -27,7 +27,8 @@ export default withRouter(
       "CardName",
       "CardCode",
       "U_IDU_PO_INTNUM",
-      "U_IDU_SUP_SONUM"
+      "U_IDU_SUP_SONUM",
+      "U_IDU_DO_INTNUM"
     ];
     const funcSearch = (value: string) => {
       _setData([
@@ -159,12 +160,17 @@ export default withRouter(
                 },
                 CardName: {
                   table: {
-                    header: "Customer/Vendor"
+                    header: "Vendor"
                   }
                 },
-                U_IDU_PO_INTNUM: {
+                DueDate: {
                   table: {
-                    header: "No. PO"
+                    header: "Posting Date"
+                  }
+                },
+                U_IDU_DO_INTNUM: {
+                  table: {
+                    header: "No. DO"
                   }
                 },
                 U_IDU_SUP_SONUM: {

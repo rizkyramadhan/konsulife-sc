@@ -25,6 +25,7 @@ export default withRouter(
           "DocEntry",
           "CardCode",
           "CardName",
+          "U_IDU_SO_INTNUM",
           "U_IDU_DO_INTNUM",
           "DocDate"
         ],
@@ -118,22 +119,27 @@ export default withRouter(
               fields={{
                 CardCode: {
                   table: {
-                    header: "Customer Code"
+                    header: "Code"
                   }
                 },
                 CardName: {
                   table: {
-                    header: "Customer Name"
-                  }
-                },
-                U_IDU_SO_INTNUM: {
-                  table: {
-                    header: "SO No."
+                    header: "Customer"
                   }
                 },
                 DocDate: {
                   table: {
                     header: "Posting Date"
+                  }
+                },
+                U_IDU_SO_INTNUM: {
+                  table: {
+                    header: "No. SO"
+                  }
+                },
+                U_IDU_DO_INTNUM: {
+                  table: {
+                    header: "No. DO"
                   }
                 }
               }}

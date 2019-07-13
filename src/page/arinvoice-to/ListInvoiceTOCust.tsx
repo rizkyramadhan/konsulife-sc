@@ -8,8 +8,8 @@ import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 import global from "@app/global";
-import UIText from '@app/libs/ui/UIText';
-import UICard, { UICardHeader } from '@app/libs/ui/UICard';
+import UIText from "@app/libs/ui/UIText";
+import UICard, { UICardHeader } from "@app/libs/ui/UICard";
 
 export default withRouter(
   observer(({ history, showSidebar, sidebar }: any) => {
@@ -22,18 +22,18 @@ export default withRouter(
       _setData([
         ...(value
           ? data.filter((x: any) => {
-            let res = false;
-            for (var i = 0; i < field.length; i++) {
-              if (
-                x[field[i]] &&
-                x[field[i]].toLowerCase().includes(value.toLowerCase())
-              ) {
-                res = true;
-                break;
+              let res = false;
+              for (var i = 0; i < field.length; i++) {
+                if (
+                  x[field[i]] &&
+                  x[field[i]].toLowerCase().includes(value.toLowerCase())
+                ) {
+                  res = true;
+                  break;
+                }
               }
-            }
-            return res;
-          })
+              return res;
+            })
           : data)
       ]);
     };
@@ -42,7 +42,22 @@ export default withRouter(
       setLoading(true);
       let query: APISearchProps = {
         Table: "OCRD",
-        Fields: ["CardCode", "CardName"],
+        Fields: [
+          "CardName",
+          "CardFName",
+          "CardCode",
+          "CardType",
+          "GroupCode",
+          "LicTradNum",
+          "AddID",
+          "SlpCode",
+          "Phone1",
+          "Phone2",
+          "U_IDU_AREA",
+          "U_IDU_BRANCH",
+          "E_Mail",
+          "MailAddres"
+        ],
         Condition: [
           {
             field: "CardType",
@@ -91,25 +106,44 @@ export default withRouter(
           showSidebar={showSidebar}
           sidebar={sidebar}
           center={
-            <UIText size="large" style={{ color: '#fff' }}>AR Invoice (Taking Order)</UIText>
+            <UIText size="large" style={{ color: "#fff" }}>
+              AR Invoice (Taking Order)
+            </UIText>
           }
           isLoading={loading}
         />
         <UIBody>
-          <UICard mode="clean" style={{ borderRadius: 4, flex: 1, backgroundColor: '#fff' }}>
-            <UICardHeader style={{ backgroundColor: '#fff', flexDirection: 'row', alignItems: 'center' }}>
-              <UIText size="medium" style={{
-                flexShrink: 'none',
-                width: '100%'
-              }}>List Customer</UIText>
-              <UISearch style={{
-                width: '100%',
-                maxWidth: 300
+          <UICard
+            mode="clean"
+            style={{ borderRadius: 4, flex: 1, backgroundColor: "#fff" }}
+          >
+            <UICardHeader
+              style={{
+                backgroundColor: "#fff",
+                flexDirection: "row",
+                alignItems: "center"
               }}
+            >
+              <UIText
+                size="medium"
+                style={{
+                  flexShrink: "none",
+                  width: "100%"
+                }}
+              >
+                List Customer
+              </UIText>
+              <UISearch
+                style={{
+                  width: "100%",
+                  maxWidth: 300
+                }}
                 fieldStyle={{
                   borderWidth: 0,
-                  backgroundColor: '#f6f9fc'
-                }} onSearch={funcSearch}></UISearch>
+                  backgroundColor: "#f6f9fc"
+                }}
+                onSearch={funcSearch}
+              />
             </UICardHeader>
             <UIList
               style={{ flex: 1 }}
@@ -117,7 +151,9 @@ export default withRouter(
               selection="single"
               onSelect={item => {
                 history.push(
-                  `/ar-invoice-to/open/${btoa(item.CardCode)}/${btoa(item.CardName)}`
+                  `/ar-invoice-to/open/${btoa(item.CardCode)}/${btoa(
+                    item.CardName
+                  )}`
                 );
               }}
               fields={{
@@ -128,7 +164,32 @@ export default withRouter(
                 },
                 CardName: {
                   table: {
-                    header: "Customer"
+                    header: "Name"
+                  }
+                },
+                AddID: {
+                  table: {
+                    header: "NIK"
+                  }
+                },
+                LicTradNum: {
+                  table: {
+                    header: "NPWP"
+                  }
+                },
+                Phone1: {
+                  table: {
+                    header: "Tlpn"
+                  }
+                },
+                E_Mail: {
+                  table: {
+                    header: "Email"
+                  }
+                },
+                MailAddres: {
+                  table: {
+                    header: "Address"
                   }
                 }
               }}

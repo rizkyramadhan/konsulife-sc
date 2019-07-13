@@ -8,9 +8,9 @@ import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 import global from "@app/global";
-import BtnCreate from '@app/components/BtnCreate';
-import UICard, { UICardHeader } from '@app/libs/ui/UICard';
-import UIText from '@app/libs/ui/UIText';
+import BtnCreate from "@app/components/BtnCreate";
+import UICard, { UICardHeader } from "@app/libs/ui/UICard";
+import UIText from "@app/libs/ui/UIText";
 
 export default withRouter(
   observer(({ history, match, showSidebar, sidebar }: any) => {
@@ -91,62 +91,81 @@ export default withRouter(
           showSidebar={showSidebar}
           sidebar={sidebar}
           center={
-            <UIText size="large" style={{ color: '#fff' }}>{param[1]}</UIText>
+            <UIText size="large" style={{ color: "#fff" }}>
+              {param[1]}
+            </UIText>
           }
           isLoading={loading}
         >
           <BtnCreate path={"/pr/list/" + match.params.vendor} />
         </UIHeader>
         <UIBody>
-        <UICard mode="clean" style={{ borderRadius: 4, flex: 1, backgroundColor: '#fff' }}>
-            <UICardHeader style={{ backgroundColor: '#fff', flexDirection: 'row', alignItems: 'center' }}>
-              <UIText size="medium" style={{
-                flexShrink: 'none',
-                width: '100%'
-              }}>List Purchase Receipt</UIText>
-              <UISearch style={{
-                width: '100%',
-                maxWidth: 300
+          <UICard
+            mode="clean"
+            style={{ borderRadius: 4, flex: 1, backgroundColor: "#fff" }}
+          >
+            <UICardHeader
+              style={{
+                backgroundColor: "#fff",
+                flexDirection: "row",
+                alignItems: "center"
               }}
+            >
+              <UIText
+                size="medium"
+                style={{
+                  flexShrink: "none",
+                  width: "100%"
+                }}
+              >
+                List Purchase Receipt
+              </UIText>
+              <UISearch
+                style={{
+                  width: "100%",
+                  maxWidth: 300
+                }}
                 fieldStyle={{
                   borderWidth: 0,
-                  backgroundColor: '#f6f9fc'
-                }} onSearch={funcSearch}></UISearch>
+                  backgroundColor: "#f6f9fc"
+                }}
+                onSearch={funcSearch}
+              />
             </UICardHeader>
             <UIList
-            style={{ flex: 1 }}
-            primaryKey="DocEntry"
-            selection="single"
-            onSelect={(d) => {
-                history.push(`/pr/view/${match.params.vendor}/${d.DocEntry}`)
-            }}
-            fields={{
-              CardCode: {
-                table: {
-                  header: "Code"
+              style={{ flex: 1 }}
+              primaryKey="DocEntry"
+              selection="single"
+              onSelect={d => {
+                history.push(`/pr/view/${match.params.vendor}/${d.DocEntry}`);
+              }}
+              fields={{
+                CardCode: {
+                  table: {
+                    header: "Code"
+                  }
+                },
+                CardName: {
+                  table: {
+                    header: "Customer/Vendor"
+                  }
+                },
+                U_IDU_PO_INTNUM: {
+                  table: {
+                    header: "No. PO"
+                  }
+                },
+                U_IDU_SUP_SONUM: {
+                  table: {
+                    header: "No. SO Supplier"
+                  }
                 }
-              },
-              CardName: {
-                table: {
-                  header: "Customer/Vendor"
-                }
-              },
-              U_IDU_PO_INTNUM: {
-                table: {
-                  header: "No. PO"
-                }
-              },
-              U_IDU_SUP_SONUM: {
-                table: {
-                  header: "No. SO Supplier"
-                }
-              }
-            }}
-            items={_data.map((item: any) => ({
-              ...item
-            }))}
-          />
-          </UICard>  
+              }}
+              items={_data.map((item: any) => ({
+                ...item
+              }))}
+            />
+          </UICard>
         </UIBody>
       </UIContainer>
     );
