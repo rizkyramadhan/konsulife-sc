@@ -170,7 +170,7 @@ export default withRouter(
 
     const save = async () => {
       if (saving) return;
-      if (!data.CardName || data.CardName === "" || !data.AddID || data.AddID === "") return alert("Field Nama dana KTP wajib diisi");
+      if (!data.CardName || data.CardName === "" || !data.AddID || data.AddID === "") return alert("Field Nama dan KTP wajib diisi");
 
       setSaving(true);
       const Lines_CP = itemCP.map(d => {
@@ -275,13 +275,13 @@ export default withRouter(
                 label: "Customer",
                 sublabel: "Informasi Customer",
                 value: [
-                  { key: "LicTradNum", size: 8, label: "NPWP" },
-                  { key: "AddID", size: 8, label: "No KTP" },
+                  { key: "LicTradNum", size: 12, label: "NPWP" },
+                  { key: "AddID", size: 12, label: "No KTP" },
                   { key: "Phone1", size: 6, label: "Telephone 1" },
                   { key: "Phone2", size: 6, label: "Telephone 2" },
                   { key: "Fax", size: 6, label: "Fax Number" },
                   { key: "Cellular", size: 6, label: "Mobile Phone" },
-                  { key: "E_Mail", size: 7, label: "E-Mail" },
+                  { key: "E_Mail", size: 12, label: "E-Mail" },
                 ]
               },
               {
@@ -305,7 +305,7 @@ export default withRouter(
                   },
                   {
                     key: "GroupNum",
-                    size: 5,
+                    size: 6,
                     component: (
                       <SAPDropdown
                         label="Payment Terms Code"
@@ -319,7 +319,7 @@ export default withRouter(
                   },
                   {
                     key: "SeriesName",
-                    size: 7,
+                    size: 6,
                     label: "Series",
                     type: "field"
                     // component: (
