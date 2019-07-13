@@ -117,6 +117,7 @@ export default withRouter(
           "OcrCode",
           "OcrCode2",
           "Price",
+          "PriceBefDi",
           "DiscPrcnt",
           "TaxCode",
           "UomCode",
@@ -137,9 +138,9 @@ export default withRouter(
           item.BaseLine = item.LineNum;
           item.BaseEntry = item.DocEntry;
           item.Quantity = parseInt(item.Quantity);
-          item.Price = parseFloat(item.Price).toFixed(2);
+          item.PriceBefDi = parseInt(item.PriceBefDi);
 
-          item.LineTotal = item.Quantity * item.Price;
+          item.LineTotal = item.Quantity * item.PriceBefDi;
 
           delete item.LineNum;
           delete item.DocEntry;

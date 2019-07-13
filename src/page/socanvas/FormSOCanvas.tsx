@@ -114,7 +114,7 @@ export default withRouter(
 
       let zeroPrice = false;
       items.forEach((v: any) => {
-        if (v.PriceBefDi === "" || v.PriceBefDi === "") {
+        if (v.PriceBefDi === "" || v.PriceBefDi === "0" || v.PriceBefDi === 0) {
           zeroPrice = true;
         }
       });

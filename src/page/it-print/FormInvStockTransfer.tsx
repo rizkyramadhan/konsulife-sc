@@ -10,7 +10,6 @@ import { View } from "reactxp";
 import FormInvStockDetails from "./FormInvStockDetails";
 import { decodeSAPDateToFormal } from "@app/utils/Helper";
 import { APISearchProps, APISearch } from "@app/api";
-import rawQuery from "@app/libs/gql/data/rawQuery";
 import BtnExport from "@app/components/BtnExport";
 import { ReportPost } from "@app/report";
 
@@ -97,16 +96,15 @@ export default withRouter(
 
         APISearch(query).then((res: any) => {
           setData({ ...data, SalesName: res[0]["SlpName"], RuteName: "" });
-          setLoading(true);
         });
 
-        rawQuery(`{
-              work_order (where: {number: {_eq: "${data.U_WONUM}"}}}) {
-                rute
-              }
-            }`).then(res => {
-          console.log(res);
-        });
+        // rawQuery(`{
+        //     work_order (where: {number: {_eq: "${data.U_WONUM}"}}}) {
+        //       rute
+        //     }
+        //   }`).then(res => {
+        //   console.log(res);
+        // });
       });
 
       query = {
@@ -140,10 +138,10 @@ export default withRouter(
       APISearch(query).then((res: any) => {
         const items = res.map((item: any) => {
           item.Key = btoa(item.DocEntry + "|" + item.LineNum);
-
           return item;
         });
         setItems([...items]);
+        setLoading(false);
       });
     }, []);
 

@@ -10,7 +10,7 @@ import UIJsonField from "@app/libs/ui/UIJsonField";
 import UITabs from "@app/libs/ui/UITabs";
 import { lpad, getLastNumbering, updateLastNumbering } from "@app/utils";
 import { observer } from "mobx-react-lite";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { withRouter } from "react-router";
 import { View } from "reactxp";
 import FormInvTransferDetail from "./FormInvTransferDetail";
@@ -48,7 +48,7 @@ const initData = {
   U_IDU_DRIVER: "",
   U_WONUM: "",
   U_STOCK_TRANSNO: "",
-  U_STOCK_RETURN : "N"
+  U_STOCK_RETURN: "N"
 };
 
 export default withRouter(
@@ -59,14 +59,12 @@ export default withRouter(
     const [qShip, setQShip] = useState(false);
     const [items, setItems] = useState<any[]>([]);
 
-    useEffect(() => {
+    const getWO = (bp_id: string) => {
       rawQuery(`{
-      work_order (where: {status: {_eq: "open"}, branch: {_eq: "${
-        global.getSession().user.branch
-      }"}}) {
-        number
-      }
-    }`).then(res => {
+        work_order (where: {status: {_eq: "open"}, bp_id: {_eq: "${bp_id}"}}) {
+          number
+        }
+      }`).then(res => {
         let wo = res.work_order.map((v: any) => {
           return {
             value: v.number,
@@ -75,11 +73,38 @@ export default withRouter(
         });
         setWOList([...wo]);
       });
-    }, []);
+    };
+
+    const validation = () => {
+      const err: any = [];
+      const required = {
+        CardCode: "Sales",
+        U_WONUM: "WO Number"
+      };
+
+      Object.keys(required).forEach((k: any) => {
+        if ((data as any)[k] === "" || !(data as any)[k])
+          err.push((required as any)[k]);
+      });
+
+      if (err.length > 0) {
+        alert(err.join(", ") + " is required.");
+        return false;
+      }
+      return validationItems();
+    };
+
+    const validationItems = () => {
+      if (items.length === 0) {
+        alert("Items is empty.");
+        return false;
+      }
+      return true;
+    };
 
     const save = async () => {
       if (saving) return;
-      if (items.length === 0) return;
+      if (!validation()) return;
       setSaving(true);
 
       let number: any = await getLastNumbering("PGK-T", data.Filler);
@@ -127,7 +152,7 @@ export default withRouter(
           ...data,
           U_IDU_IT_INTNUM: number.format,
           U_IDU_IT_TRANSCODE: "PGK-T",
-          U_STOCK_RETURN : "N",
+          U_STOCK_RETURN: "N",
           SlpCode:
             global.session.user.slp_id !== "" &&
             global.session.user.slp_id !== null
@@ -165,7 +190,12 @@ export default withRouter(
                 key: "vendor",
                 label: "Business Partner",
                 value: [
-                  { key: "CardCode", size: 12, type: "field", label: "BP Code" },
+                  {
+                    key: "CardCode",
+                    size: 12,
+                    type: "field",
+                    label: "BP Code"
+                  },
                   {
                     key: "CardCode",
                     label: "Business Partner",
@@ -186,9 +216,11 @@ export default withRouter(
                             ...data,
                             CardCode: v,
                             CardName: l,
-                            AddressName: r.item.MailAddres
+                            AddressName: r.item.MailAddres,
+                            U_WONUM: ""
                           });
                           setQShip(true);
+                          getWO(v);
                         }}
                       />
                     )
@@ -380,6 +412,10 @@ export default withRouter(
                   action: (
                     <BtnAdd
                       onPress={() => {
+                        if (data.CardCode === "")
+                          return alert("Anda belum memilih sales.");
+                        if (data.Filler === "" || data.ToWhsCode === "")
+                          return alert("Anda belum memilih warehouse.");
                         setItems([
                           ...(items as any),
                           {
@@ -390,6 +426,7 @@ export default withRouter(
                             Dscription: "",
                             UseBaseUn: "",
                             Quantity: 1,
+                            OhHand: "",
                             UoMEntry: "",
                             WhsCode: data.Filler,
                             SerialNum: ""
