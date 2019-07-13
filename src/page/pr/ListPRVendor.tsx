@@ -100,7 +100,7 @@ export default withRouter(
               selection="single"
               onSelect={item => {
                 history.push(
-                  "/pr/list/" + btoa(item.CardCode + "|" + item.CardName)
+                  "/pr/open/" + btoa(item.CardCode + "|" + item.CardName)
                 );
               }}
               fields={{

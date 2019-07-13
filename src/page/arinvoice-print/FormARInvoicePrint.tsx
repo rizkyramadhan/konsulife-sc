@@ -88,10 +88,27 @@ export default withRouter(
       };
 
       APISearch(query).then((res: any) => {
+        const data = res[0];
         res[0].DocDate = decodeSAPDateToFormal(res[0].DocDate);
         res[0].DocDueDate = decodeSAPDateToFormal(res[0].DocDueDate);
 
-        if (res.length > 0) setData(res[0]);
+        setData(data);
+
+        query = {
+          Table: "OCTG",
+          Fields: ["GroupNum", "PymntGroup"],
+          Condition: [
+            {
+              field: "GroupNum",
+              cond: "=",
+              value: data.GroupNum
+            }
+          ]
+        };
+
+        APISearch(query).then((res: any) => {
+          setData({ ...data, GroupNum: res[0]["PymntGroup"] });
+        });
       });
 
       // -----------------------------

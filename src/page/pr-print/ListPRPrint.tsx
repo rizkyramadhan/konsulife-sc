@@ -9,12 +9,16 @@ import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 import global from "@app/global";
 import BtnCreate from '@app/components/BtnCreate';
+import UICard, { UICardHeader } from '@app/libs/ui/UICard';
+import UIText from '@app/libs/ui/UIText';
 
 export default withRouter(
   observer(({ history, match, showSidebar, sidebar }: any) => {
     const [data, setData] = useState([]);
     const param = atob(match.params.vendor).split("|", 2);
     const [_data, _setData] = useState([]);
+    const [loading, setLoading] = useState(false);
+
     const field = [
       "DocNum",
       "DocEntry",
@@ -44,6 +48,7 @@ export default withRouter(
     };
 
     useEffect(() => {
+      setLoading(true);
       let query: APISearchProps = {
         Table: "OPDN",
         Fields: field,
@@ -75,21 +80,40 @@ export default withRouter(
       APISearch(query).then((res: any) => {
         _setData(res);
         setData(res);
+        setLoading(false);
       });
     }, []);
 
     return (
       <UIContainer>
         <UIHeader
+          pattern={true}
           showSidebar={showSidebar}
           sidebar={sidebar}
-          center={"List Purchase Receipt " + param[1]}
+          center={
+            <UIText size="large" style={{ color: '#fff' }}>{param[1]}</UIText>
+          }
+          isLoading={loading}
         >
           <BtnCreate path={"/pr/list/" + match.params.vendor} />
         </UIHeader>
         <UIBody>
-          <UISearch onSearch={funcSearch} />
-          <UIList
+        <UICard mode="clean" style={{ borderRadius: 4, flex: 1, backgroundColor: '#fff' }}>
+            <UICardHeader style={{ backgroundColor: '#fff', flexDirection: 'row', alignItems: 'center' }}>
+              <UIText size="medium" style={{
+                flexShrink: 'none',
+                width: '100%'
+              }}>List Purchase Receipt</UIText>
+              <UISearch style={{
+                width: '100%',
+                maxWidth: 300
+              }}
+                fieldStyle={{
+                  borderWidth: 0,
+                  backgroundColor: '#f6f9fc'
+                }} onSearch={funcSearch}></UISearch>
+            </UICardHeader>
+            <UIList
             style={{ flex: 1 }}
             primaryKey="DocEntry"
             selection="single"
@@ -122,6 +146,7 @@ export default withRouter(
               ...item
             }))}
           />
+          </UICard>  
         </UIBody>
       </UIContainer>
     );

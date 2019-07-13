@@ -73,37 +73,30 @@ export default withRouter(
             {
               field: "PrcCode",
               cond: "=",
-              value: data.U_BRANCH
+              value: res[0]["U_BRANCH"]
             }
           ]
         };
-
-        APISearch(query).then((res: any) => {
-          setData({ ...data, City: res[0]["PrcName"] });
-        });
-
-        query = {
-          Table: "OSLP",
-          Fields: ["SlpCode", "SlpName"],
-          Condition: [
-            {
-              field: "SlpCode",
-              cond: "=",
-              value: data.SlpCode
-            }
-          ]
-        };
-
-        APISearch(query).then((res: any) => {
-          setData({ ...data, SalesName: res[0]["SlpName"], RuteName: "" });
-        });
-
-        rawQuery(`{
-              work_order (where: {number: {_eq: "${data.U_WONUM}"}}}) {
-                rute
-              }
-            }`).then(res => {
-          console.log(res);
+  
+        APISearch(query).then((cit: any) => {
+            query = {
+              Table: "OSLP",
+              Fields: ["SlpCode", "SlpName"],
+              Condition: [
+                {
+                  field: "SlpCode",
+                  cond: "=",
+                  value:  res[0]["SlpCode"]
+                }
+              ]
+            };
+    
+            APISearch(query).then((sel: any) => {
+              rawQuery(`{ work_order (where: {number: {_eq: "${data.U_WONUM}"}}) {rute}}`)
+              .then(wo => {
+                setData({ ...data, City:cit[0]["PrcName"],SlpCode: sel[0]["SlpName"],RuteName: wo.work_order[0]["rute"] });
+              });
+            });
         });
       });
 

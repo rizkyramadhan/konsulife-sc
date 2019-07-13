@@ -45,6 +45,7 @@ export default withRouter(
           "U_IDU_GRPO_INTNUM",
           "U_IDU_NOPOL",
           "U_IDU_DRIVER",
+          "U_IDU_CONTNUM",
           "U_BRANCH",
           "U_USERID",
           "U_GENERATED",
@@ -78,7 +79,6 @@ export default withRouter(
     
           APISearch(query).then((cit: any) => {
               setData({...data, City:cit[0]["PrcName"]});
-              console.log(data);
           });
       });
 
@@ -150,7 +150,7 @@ export default withRouter(
         });
       
       try {
-        await ReportPost("stockReturn",{...data,Lines: postItem});
+        await ReportPost("goodReceipt",{...data,Lines: postItem});
       } catch (e) {
         alert(e.Message);
 
