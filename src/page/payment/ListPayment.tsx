@@ -65,16 +65,20 @@ export default withRouter(
 
     useEffect(() => {
       setLoading(true);
-      let query: APISearchProps = {
-        Table: "ORCT",
-        Fields: field,
-        Condition: [
+      let cond: any = [];
+      if (global.session.role != "admin") {
+        cond = [
           {
             field: "U_BRANCH",
             cond: "=",
             value: global.getSession().user.branch
           }
-        ]
+        ];
+      }
+      let query: APISearchProps = {
+        Table: "ORCT",
+        Fields: field,
+        Condition: cond
       };
 
       APISearch(query).then((res: any) => {

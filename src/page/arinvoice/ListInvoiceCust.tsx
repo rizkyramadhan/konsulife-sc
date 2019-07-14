@@ -55,6 +55,19 @@ export default withRouter(
 
     useEffect(() => {
       setLoading(true);
+      let cond: any = [];
+      if (global.session.role != "admin") {
+        cond = [
+          {
+            cond: "AND"
+          },
+          {
+            field: "U_IDU_BRANCH",
+            cond: "=",
+            value: global.getSession().user.branch
+          }
+        ];
+      }
       let query: APISearchProps = {
         Table: "OCRD",
         Fields: field,
@@ -70,12 +83,6 @@ export default withRouter(
             cond: "=",
             value: "Y"
           },
-          { cond: "AND" },
-          {
-            field: "U_IDU_BRANCH",
-            cond: "=",
-            value: global.session.user.branch
-          },
           {
             cond: "AND"
           },
@@ -83,7 +90,8 @@ export default withRouter(
             field: "U_SALES",
             cond: "=",
             value: "N"
-          }
+          },
+          ...cond
         ]
         // Limit: 1000,
         // Page: 1

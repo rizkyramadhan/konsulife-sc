@@ -42,10 +42,12 @@ export default withRouter(
 
     useEffect(() => {
       setLoading(true);
+      let cond: any = "";
+      if (global.session.role != "admin") {
+        cond = `branch: {_eq: "${global.getSession().user.branch}"}, `;
+      }
       rawQuery(`{
-      work_order (where: {branch: {_eq: "${
-        global.getSession().user.branch
-      }"}, status: {_in: ["pending", "open"]}}) {
+      work_order (where: {${cond}status: {_in: ["pending", "open"]}}) {
         id
         number
         return_date
@@ -99,7 +101,7 @@ export default withRouter(
         >
           <BtnCreate path="/wo/form" />
         </UIHeader>
-        <UIBody scroll={true}>
+        <UIBody>
           <UICard
             mode="clean"
             style={{ borderRadius: 4, flex: 1, backgroundColor: "#fff" }}

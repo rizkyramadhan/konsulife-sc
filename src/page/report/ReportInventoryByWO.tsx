@@ -120,7 +120,7 @@ export default withRouter(
             <UIList
               style={{ flex: 1 }}
               primaryKey="ItemCode"
-              selection="none"
+              selection="detail"
               fields={{
                 ItemCode: {
                   table: {

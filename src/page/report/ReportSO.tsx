@@ -126,7 +126,7 @@ export default withRouter(
             <UIList
               style={{ flex: 1 }}
               primaryKey="DocNum"
-              selection="none"
+              selection="detail"
               fields={{
                 CardCode: {
                   table: {

@@ -19,6 +19,19 @@ export default withRouter(
 
     useEffect(() => {
       setLoading(true);
+      let cond: any = [];
+      if (global.session.role != "admin") {
+        cond = [
+          {
+            cond: "AND"
+          },
+          {
+            field: "U_BRANCH",
+            cond: "=",
+            value: global.getSession().user.branch
+          }
+        ];
+      }
       let query: APISearchProps = {
         Table: "ODLN",
         Fields: [
@@ -40,18 +53,11 @@ export default withRouter(
             cond: "AND"
           },
           {
-            field: "U_BRANCH",
-            cond: "=",
-            value: global.getSession().user.branch
-          },
-          {
-            cond: "AND"
-          },
-          {
             field: "CardCode",
             cond: "=",
             value: atob(match.params.CardCode)
-          }
+          },
+          ...cond
         ]
       };
 

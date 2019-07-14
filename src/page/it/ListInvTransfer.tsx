@@ -22,7 +22,7 @@ const BtnTransfer = withRouter(({ history }: any) => {
       size="small"
       color="primary"
       onPress={() => {
-        history.push("/it-tran");
+        history.push("/it/it-tran");
       }}
       style={{
         display: "flex",
@@ -48,7 +48,7 @@ const BtnReturn = withRouter(({ history }: any) => {
       size="small"
       color="success"
       onPress={() => {
-        history.push("/it-ret");
+        history.push("/it/it-ret");
       }}
       style={{
         display: "flex",
@@ -107,6 +107,19 @@ export default withRouter(
 
     useEffect(() => {
       setLoading(true);
+      let cond: any = [];
+      if (global.session.role != "admin") {
+        cond = [
+          {
+            cond: "AND"
+          },
+          {
+            field: "U_BRANCH",
+            cond: "=",
+            value: global.getSession().user.branch
+          }
+        ];
+      }
       let query: APISearchProps = {
         Table: "OWTR",
         Fields: field,
@@ -116,14 +129,6 @@ export default withRouter(
             field: "DocStatus",
             cond: "=",
             value: "O"
-          },
-          {
-            cond: "AND"
-          },
-          {
-            field: "U_BRANCH",
-            cond: "=",
-            value: global.session.user.branch
           },
           {
             cond: "AND"
@@ -140,7 +145,8 @@ export default withRouter(
             field: "CANCELED",
             cond: "=",
             value: "N"
-          }
+          },
+          ...cond
         ]
       };
 

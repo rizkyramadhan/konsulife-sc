@@ -123,22 +123,16 @@ export default withRouter(
             {global.session.user.role == "admin" && (
               <UICardHeader>
                 <SAPDropdown
-                  field="WarehouseCodeBranch"
+                  field="WarehouseCodeAll"
                   value={warehouse}
                   setValue={setWarehouse}
-                  where={[
-                    {
-                      field: "U_BRANCH",
-                      value: global.session.user.branch
-                    }
-                  ]}
                 />
               </UICardHeader>
             )}
             <UIList
               style={{ flex: 1 }}
               primaryKey="ItemNo"
-              selection="none"
+              selection="detail"
               fields={{
                 ItemNo: {
                   table: {

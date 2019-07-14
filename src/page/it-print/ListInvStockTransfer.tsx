@@ -20,7 +20,7 @@ const BtnTransfer = withRouter(({ history }: any) => {
       size="small"
       color="primary"
       onPress={() => {
-        history.push("/it-tran/form");
+        history.push("/it/it-tran/form");
       }}
       style={{
         display: "flex",
@@ -79,6 +79,19 @@ export default withRouter(
 
     useEffect(() => {
       setLoading(true);
+      let cond: any = [];
+      if (global.session.role != "admin") {
+        cond = [
+          {
+            cond: "AND"
+          },
+          {
+            field: "U_BRANCH",
+            cond: "=",
+            value: global.getSession().user.branch
+          }
+        ];
+      }
       let query: APISearchProps = {
         Table: "OWTR",
         Fields: field,
@@ -88,14 +101,6 @@ export default withRouter(
             field: "DocStatus",
             cond: "=",
             value: "O"
-          },
-          {
-            cond: "AND"
-          },
-          {
-            field: "U_BRANCH",
-            cond: "=",
-            value: global.session.user.branch
           },
           {
             cond: "AND"
@@ -120,7 +125,8 @@ export default withRouter(
             field: "U_STOCK_RETURN",
             cond: "=",
             value: "N"
-          }
+          },
+          ...cond
         ]
       };
 
@@ -184,7 +190,7 @@ export default withRouter(
               primaryKey="DocEntry"
               selection="single"
               onSelect={d => {
-                history.push(`/it-tran/view/${d.DocEntry}`);
+                history.push(`/it/it-tran/view/${d.DocEntry}`);
               }}
               fields={{
                 CardCode: {
