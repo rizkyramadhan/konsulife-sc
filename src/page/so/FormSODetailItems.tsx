@@ -263,7 +263,7 @@ export default ({ data, items, setItems }: any) => {
             },
             { key: "Quantity", size: 12, label: "Quantity" },
             { key: "OnHand", size: 12, label: "Qty In Whs", type: "field" },
-            { key: "PriceBefDi", size: 12, label: "Unit Price" },
+            { key: "PriceBefDi", size: 12, label: "Unit Price", type:"field" },
             { key: "DiscPrcnt", size: 12, label: "Disc Prcnt" },
             {
               key: "TaxCode",

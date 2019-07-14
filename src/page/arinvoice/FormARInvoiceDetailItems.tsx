@@ -4,7 +4,7 @@ import React from "react";
 export default ({ items }: any) => {
   return (
     <UIList
-      primaryKey="BaseLine"
+      primaryKey="PK"
       fields={{
         ItemCode: {
           table: {
