@@ -51,7 +51,10 @@ export default withRouter(
           "U_IDU_SO_INTNUM",
           "U_IDU_DO_INTNUM",
           "NumAtCard",
-          "DocDate"
+          "DocDate",
+          "U_IDU_SI_INTNUM",
+          "U_IDU_FP",
+          "U_WONUM"
         ],
         Sort: "~DocDate",
         Condition: [
@@ -152,34 +155,49 @@ export default withRouter(
                 );
               }}
               fields={{
-                CardName: {
-                  table: {
-                    header: "Customer"
-                  }
-                },
                 CardCode: {
                   table: {
                     header: "Code"
                   }
                 },
-                U_IDU_SO_INTNUM: {
+                CardName: {
                   table: {
-                    header: "SO No."
+                    header: "Customer"
+                  }
+                },
+                U_IDU_SI_INTNUM: {
+                  table: {
+                    header: "No. Invoice"
                   }
                 },
                 U_IDU_DO_INTNUM: {
                   table: {
-                    header: "DO No."
+                    header: "No. DO"
                   }
                 },
-                NumAtCard: {
+                U_IDU_SO_INTNUM: {
                   table: {
-                    header: "PO Cust."
+                    header: "No. SO"
                   }
                 },
                 DocDate: {
                   table: {
                     header: "Posting Date"
+                  }
+                },
+                DocDueDate: {
+                  table: {
+                    header: "Due Date"
+                  }
+                },
+                U_IDU_FP: {
+                  table: {
+                    header: "Faktur Pajak"
+                  }
+                },
+                U_WONUM: {
+                  table: {
+                    header: "No. WO"
                   }
                 }
               }}

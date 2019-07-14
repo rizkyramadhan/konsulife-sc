@@ -31,7 +31,9 @@ export default withRouter(
       "Phone1",
       "Phone2",
       "U_IDU_AREA",
-      "U_IDU_BRANCH"
+      "U_IDU_BRANCH",
+      "E_Mail",
+      "MailAddres"
     ];
     const funcSearch = (value: string) => {
       _setData([
@@ -55,6 +57,19 @@ export default withRouter(
 
     useEffect(() => {
       setLoading(true);
+      let cond: any = [];
+      if (global.session.role != "admin") {
+        cond = [
+          {
+            cond: "AND"
+          },
+          {
+            field: "U_IDU_BRANCH",
+            cond: "=",
+            value: global.getSession().user.branch
+          }
+        ];
+      }
       let query: APISearchProps = {
         Table: "OCRD",
         Fields: field,
@@ -72,12 +87,7 @@ export default withRouter(
             cond: "=",
             value: "Y"
           },
-          { cond: "AND" },
-          {
-            field: "U_IDU_BRANCH",
-            cond: "=",
-            value: global.session.user.branch
-          }
+          ...cond
         ]
       };
 
@@ -144,17 +154,38 @@ export default withRouter(
               fields={{
                 CardCode: {
                   table: {
-                    header: "BP Code"
+                    header: "Code",
+                    width: 600
                   }
                 },
                 CardName: {
                   table: {
-                    header: "BP Name"
+                    header: "Name"
                   }
                 },
-                CardFName: {
+                AddID: {
                   table: {
-                    header: "Foreign Name"
+                    header: "NIK"
+                  }
+                },
+                LicTradNum: {
+                  table: {
+                    header: "NPWP"
+                  }
+                },
+                Phone1: {
+                  table: {
+                    header: "Tlpn"
+                  }
+                },
+                E_Mail: {
+                  table: {
+                    header: "Email"
+                  }
+                },
+                MailAddres: {
+                  table: {
+                    header: "Address"
                   }
                 }
               }}

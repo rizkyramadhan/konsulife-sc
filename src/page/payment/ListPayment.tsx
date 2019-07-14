@@ -26,7 +26,9 @@ export default withRouter(
       "CardCode",
       "CardName",
       "U_IDU_PAYNUM",
-      "U_WONUM"
+      "U_WONUM",
+      "U_SONUM",
+      "U_REMARK"
     ];
     const funcSearch = (value: string) => {
       _setData([
@@ -63,16 +65,20 @@ export default withRouter(
 
     useEffect(() => {
       setLoading(true);
-      let query: APISearchProps = {
-        Table: "ORCT",
-        Fields: field,
-        Condition: [
+      let cond: any = [];
+      if (global.session.role != "admin") {
+        cond = [
           {
             field: "U_BRANCH",
             cond: "=",
             value: global.getSession().user.branch
           }
-        ]
+        ];
+      }
+      let query: APISearchProps = {
+        Table: "ORCT",
+        Fields: field,
+        Condition: cond
       };
 
       APISearch(query).then((res: any) => {
@@ -139,29 +145,34 @@ export default withRouter(
               primaryKey="DocEntry"
               selection="detail"
               fields={{
-                U_IDU_PAYNUM: {
+                CardCode: {
                   table: {
-                    header: "No. PR"
-                  }
-                },
-                U_WONUM: {
-                  table: {
-                    header: "No. WO"
+                    header: "Code"
                   }
                 },
                 CardName: {
                   table: {
-                    header: "Customer/Vendor"
-                  }
-                },
-                U_IDU_ITR_INTNUM: {
-                  table: {
-                    header: "Request No."
+                    header: "Sales"
                   }
                 },
                 DocDate: {
                   table: {
                     header: "Posting Date"
+                  }
+                },
+                U_IDU_PAYNUM: {
+                  table: {
+                    header: "No. Payment"
+                  }
+                },
+                U_SONUM: {
+                  table: {
+                    header: "No. SO"
+                  }
+                },
+                U_REMARK: {
+                  table: {
+                    header: "Remarks"
                   }
                 }
               }}

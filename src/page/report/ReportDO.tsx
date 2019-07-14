@@ -34,16 +34,20 @@ export default withRouter(
 
     useEffect(() => {
       setLoading(true);
-      let query: APISearchProps = {
-        Table: "ODLN",
-        Fields: field,
-        Condition: [
+      let cond: any = [];
+      if (global.session.role != "admin") {
+        cond = [
           {
             field: "U_BRANCH",
             cond: "=",
             value: global.getSession().user.branch
           }
-        ]
+        ];
+      }
+      let query: APISearchProps = {
+        Table: "ODLN",
+        Fields: field,
+        Condition: cond
       };
 
       APISearch(query).then((res: any) => {
@@ -89,7 +93,7 @@ export default withRouter(
             </UIText>
           }
         />
-        <UIBody scroll={true}>
+        <UIBody>
           <UICard
             mode="clean"
             style={{ borderRadius: 4, flex: 1, backgroundColor: "#fff" }}
@@ -125,7 +129,7 @@ export default withRouter(
             <UIList
               style={{ flex: 1 }}
               primaryKey="DocEntry"
-              selection="none"
+              selection="detail"
               fields={{
                 CardCode: {
                   table: {

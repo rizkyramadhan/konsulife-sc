@@ -9,8 +9,8 @@ import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 import global from "@app/global";
 import UISearch from "@app/libs/ui/UISearch";
-import UICard, { UICardHeader } from '@app/libs/ui/UICard';
-import UIText from '@app/libs/ui/UIText';
+import UICard, { UICardHeader } from "@app/libs/ui/UICard";
+import UIText from "@app/libs/ui/UIText";
 
 interface IWO {
   id: number;
@@ -42,10 +42,12 @@ export default withRouter(
 
     useEffect(() => {
       setLoading(true);
+      let cond: any = "";
+      if (global.session.role != "admin") {
+        cond = `branch: {_eq: "${global.getSession().user.branch}"}, `;
+      }
       rawQuery(`{
-      work_order (where: {branch: {_eq: "${
-        global.getSession().user.branch
-        }"}, status: {_in: ["pending", "open"]}}) {
+      work_order (where: {${cond}status: {_in: ["pending", "open"]}}) {
         id
         number
         return_date
@@ -58,28 +60,28 @@ export default withRouter(
         status
       }
     }`).then(res => {
-          setData([...res.work_order]);
-          _setData([...res.work_order]);
-          setLoading(false);
-        });
+        setData([...res.work_order]);
+        _setData([...res.work_order]);
+        setLoading(false);
+      });
     }, []);
 
     const funcSearch = (value: string) => {
       _setData([
         ...(value
           ? data.filter((x: any) => {
-            let res = false;
-            for (var i = 0; i < field.length; i++) {
-              if (
-                x[field[i]] &&
-                x[field[i]].toLowerCase().includes(value.toLowerCase())
-              ) {
-                res = true;
-                break;
+              let res = false;
+              for (var i = 0; i < field.length; i++) {
+                if (
+                  x[field[i]] &&
+                  x[field[i]].toLowerCase().includes(value.toLowerCase())
+                ) {
+                  res = true;
+                  break;
+                }
               }
-            }
-            return res;
-          })
+              return res;
+            })
           : data)
       ]);
     };
@@ -91,27 +93,46 @@ export default withRouter(
           showSidebar={showSidebar}
           sidebar={sidebar}
           center={
-            <UIText size="large" style={{ color: '#fff' }}>Working Order</UIText>
+            <UIText size="large" style={{ color: "#fff" }}>
+              Working Order
+            </UIText>
           }
           isLoading={loading}
         >
           <BtnCreate path="/wo/form" />
         </UIHeader>
         <UIBody scroll={true}>
-          <UICard mode="clean" style={{ borderRadius: 4, flex: 1, backgroundColor: '#fff' }}>
-            <UICardHeader style={{ backgroundColor: '#fff', flexDirection: 'row', alignItems: 'center' }}>
-              <UIText size="medium" style={{
-                flexShrink: 'none',
-                width: '100%'
-              }}>List AR Invoice</UIText>
-              <UISearch style={{
-                width: '100%',
-                maxWidth: 300
+          <UICard
+            mode="clean"
+            style={{ borderRadius: 4, flex: 1, backgroundColor: "#fff" }}
+          >
+            <UICardHeader
+              style={{
+                backgroundColor: "#fff",
+                flexDirection: "row",
+                alignItems: "center"
               }}
+            >
+              <UIText
+                size="medium"
+                style={{
+                  flexShrink: "none",
+                  width: "100%"
+                }}
+              >
+                List AR Invoice
+              </UIText>
+              <UISearch
+                style={{
+                  width: "100%",
+                  maxWidth: 300
+                }}
                 fieldStyle={{
                   borderWidth: 0,
-                  backgroundColor: '#f6f9fc'
-                }} onSearch={funcSearch}></UISearch>
+                  backgroundColor: "#f6f9fc"
+                }}
+                onSearch={funcSearch}
+              />
             </UICardHeader>
             <UIList
               style={{ flex: 1 }}

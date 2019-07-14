@@ -8,41 +8,68 @@ import { withRouter } from "react-router";
 import { APISearch, APISearchProps } from "@app/api";
 import UISearch from "@app/libs/ui/UISearch";
 import global from "@app/global";
-import UIText from '@app/libs/ui/UIText';
-import UICard, { UICardHeader } from '@app/libs/ui/UICard';
+import UIText from "@app/libs/ui/UIText";
+import UICard, { UICardHeader } from "@app/libs/ui/UICard";
 
 export default withRouter(
   observer(({ history, showSidebar, sidebar }: any) => {
     const [data, setData] = useState([]);
     const [_data, _setData] = useState([]);
-    const [field, setField] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
 
     const funcSearch = (value: string) => {
       _setData([
         ...(value
           ? data.filter((x: any) => {
-            let res = false;
-            for (var i = 0; i < field.length; i++) {
-              if (
-                x[field[i]] &&
-                x[field[i]].toLowerCase().includes(value.toLowerCase())
-              ) {
-                res = true;
-                break;
+              let res = false;
+              for (var i = 0; i < field.length; i++) {
+                if (
+                  x[field[i]] &&
+                  x[field[i]].toLowerCase().includes(value.toLowerCase())
+                ) {
+                  res = true;
+                  break;
+                }
               }
-            }
-            return res;
-          })
+              return res;
+            })
           : data)
       ]);
     };
-
+    const field = [
+      "CardName",
+      "CardFName",
+      "CardCode",
+      "CardType",
+      "GroupCode",
+      "LicTradNum",
+      "AddID",
+      "SlpCode",
+      "Phone1",
+      "Phone2",
+      "U_IDU_AREA",
+      "U_IDU_BRANCH",
+      "E_Mail",
+      "MailAddres"
+    ];
     useEffect(() => {
       setLoading(true);
+      let cond: any = [];
+      if (global.session.role != "admin") {
+        cond = [
+          {
+            cond: "AND"
+          },
+          {
+            field: "U_IDU_BRANCH",
+            cond: "=",
+            value: global.getSession().user.branch
+          }
+        ];
+      }
       let query: APISearchProps = {
         Table: "OCRD",
-        Fields: ["CardCode", "CardName"],
+        Fields: field,
         Condition: [
           {
             field: "CardType",
@@ -59,23 +86,15 @@ export default withRouter(
             cond: "AND"
           },
           {
-            field: "U_IDU_BRANCH",
-            cond: "=",
-            value: global.session.user.branch
-          },
-          {
-            cond: "AND"
-          },
-          {
             field: "U_SALES",
             cond: "=",
             value: "N"
-          }
+          },
+          ...cond
         ]
       };
 
       APISearch(query).then((res: any) => {
-        setField(Object.keys(res[0]));
         setData(res);
         _setData(res);
         setLoading(false);
@@ -84,24 +103,49 @@ export default withRouter(
 
     return (
       <UIContainer>
-        <UIHeader pattern={true} isLoading={loading} showSidebar={showSidebar} sidebar={sidebar} center={
-          <UIText size="large" style={{ color: '#fff' }}>Delivery Order</UIText>
-        } />
+        <UIHeader
+          pattern={true}
+          isLoading={loading}
+          showSidebar={showSidebar}
+          sidebar={sidebar}
+          center={
+            <UIText size="large" style={{ color: "#fff" }}>
+              Delivery Order
+            </UIText>
+          }
+        />
         <UIBody>
-          <UICard mode="clean" style={{ borderRadius: 4, flex: 1, backgroundColor: '#fff' }}>
-            <UICardHeader style={{ backgroundColor: '#fff', flexDirection: 'row', alignItems: 'center' }}>
-              <UIText size="medium" style={{
-                flexShrink: 'none',
-                width: '100%'
-              }}>List Customer</UIText>
-              <UISearch style={{
-                width: '100%',
-                maxWidth: 300
+          <UICard
+            mode="clean"
+            style={{ borderRadius: 4, flex: 1, backgroundColor: "#fff" }}
+          >
+            <UICardHeader
+              style={{
+                backgroundColor: "#fff",
+                flexDirection: "row",
+                alignItems: "center"
               }}
+            >
+              <UIText
+                size="medium"
+                style={{
+                  flexShrink: "none",
+                  width: "100%"
+                }}
+              >
+                List Customer
+              </UIText>
+              <UISearch
+                style={{
+                  width: "100%",
+                  maxWidth: 300
+                }}
                 fieldStyle={{
                   borderWidth: 0,
-                  backgroundColor: '#f6f9fc'
-                }} onSearch={funcSearch}></UISearch>
+                  backgroundColor: "#f6f9fc"
+                }}
+                onSearch={funcSearch}
+              />
             </UICardHeader>
             <UIList
               primaryKey="CardCode"
@@ -115,12 +159,37 @@ export default withRouter(
               fields={{
                 CardCode: {
                   table: {
-                    header: "Customer Code"
+                    header: "Code"
                   }
                 },
                 CardName: {
                   table: {
-                    header: "Customer Name"
+                    header: "Name"
+                  }
+                },
+                AddID: {
+                  table: {
+                    header: "NIK"
+                  }
+                },
+                LicTradNum: {
+                  table: {
+                    header: "NPWP"
+                  }
+                },
+                Phone1: {
+                  table: {
+                    header: "Tlpn"
+                  }
+                },
+                E_Mail: {
+                  table: {
+                    header: "Email"
+                  }
+                },
+                MailAddres: {
+                  table: {
+                    header: "Address"
                   }
                 }
               }}

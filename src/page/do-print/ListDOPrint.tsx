@@ -19,12 +19,26 @@ export default withRouter(
 
     useEffect(() => {
       setLoading(true);
+      let cond: any = [];
+      if (global.session.role != "admin") {
+        cond = [
+          {
+            cond: "AND"
+          },
+          {
+            field: "U_BRANCH",
+            cond: "=",
+            value: global.getSession().user.branch
+          }
+        ];
+      }
       let query: APISearchProps = {
         Table: "ODLN",
         Fields: [
           "DocEntry",
           "CardCode",
           "CardName",
+          "U_IDU_SO_INTNUM",
           "U_IDU_DO_INTNUM",
           "DocDate"
         ],
@@ -39,18 +53,11 @@ export default withRouter(
             cond: "AND"
           },
           {
-            field: "U_BRANCH",
-            cond: "=",
-            value: global.getSession().user.branch
-          },
-          {
-            cond: "AND"
-          },
-          {
             field: "CardCode",
             cond: "=",
             value: atob(match.params.CardCode)
-          }
+          },
+          ...cond
         ]
       };
 
@@ -118,22 +125,27 @@ export default withRouter(
               fields={{
                 CardCode: {
                   table: {
-                    header: "Customer Code"
+                    header: "Code"
                   }
                 },
                 CardName: {
                   table: {
-                    header: "Customer Name"
-                  }
-                },
-                U_IDU_SO_INTNUM: {
-                  table: {
-                    header: "SO No."
+                    header: "Customer"
                   }
                 },
                 DocDate: {
                   table: {
                     header: "Posting Date"
+                  }
+                },
+                U_IDU_SO_INTNUM: {
+                  table: {
+                    header: "No. SO"
+                  }
+                },
+                U_IDU_DO_INTNUM: {
+                  table: {
+                    header: "No. DO"
                   }
                 }
               }}
