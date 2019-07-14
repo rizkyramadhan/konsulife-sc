@@ -219,7 +219,8 @@ export const SAPFieldMap = {
       "GroupNum",
       "CntctPrsn",
       "Address",
-      "MailAddres"
+      "MailAddres",
+      "PriceMode"
     ],
     Condition: [
       {
