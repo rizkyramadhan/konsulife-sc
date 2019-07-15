@@ -48,7 +48,8 @@ const header = {
   U_IDU_ISCANVAS: "N",
   U_WONUM: "",
   U_IDU_SO_TRANSCODE: "SO",
-  U_IDU_SO_INTNUM: ""
+  U_IDU_SO_INTNUM: "",
+  PriceMode: ""
 };
 
 export default withRouter(
@@ -94,8 +95,8 @@ export default withRouter(
 
       let zeroPrice = false;
       items.forEach((v: any) => {
-        console.log(v);
-        if (v.PriceBefDi === "" || v.PriceBefDi === "0" || v.PriceBefDi === 0) {
+        // if (v.PriceBefDi === "" || v.PriceBefDi === "0" || v.PriceBefDi === 0) {
+        if (v.Price === "" || v.Price === "0" || v.Price === 0) {
           zeroPrice = true;
         }
       });
@@ -202,7 +203,8 @@ export default withRouter(
                             CntctCode: "",
                             CntctPrsn: r.item.CntctPrsn,
                             AddressName: r.item.Address,
-                            Address2Name: r.item.MailAddres
+                            Address2Name: r.item.MailAddres,
+                            PriceMode: r.item.PriceMode
                           });
                           setQCP(true);
                           setQBill(true);
@@ -426,7 +428,8 @@ export default withRouter(
                           ShipDate: "",
                           OcrCode: "",
                           OcrCode2: "",
-                          PriceBefDi: 0,
+                          // PriceBefDi: 0,
+                          Price: 0,
                           DiscPrcnt: 0,
                           UomEntry: "",
                           TaxCode: "",

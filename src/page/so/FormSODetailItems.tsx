@@ -18,30 +18,18 @@ export default ({ data, items, setItems }: any) => {
 
   const getPrice = async (idx: any, value: any) => {
     const res = await APISearch({
-      CustomQuery: "UnitPriceSO",
-      Condition: [
-        {
-          field: "CardCode",
-          cond: "=",
-          value: data.CardCode
-        },
-        { cond: "AND" },
-        {
-          field: "ItemCode",
-          cond: "=",
-          value: value
-        }
-      ]
+      CustomQuery: `UnitPriceSO,${value},${data.CardCode}`
     });
 
     if (Array.isArray(res) && res.length > 0) {
-      items[idx]["PriceBefDi"] = parseInt(res[0]["Price"]);
+      items[idx]["Price"] = parseInt(res[0]["Price"]);
+      setTotalPrice(idx);
       setItems([...items]);
     }
   };
 
   const getStockInWhs = async (idx: any, itemCode: string, whsCode: string) => {
-    if (itemCode === "" || whsCode === "") return
+    if (itemCode === "" || whsCode === "") return;
     const res = await APISearch({
       Table: "OITW",
       Fields: ["OnHand"],
@@ -65,6 +53,24 @@ export default ({ data, items, setItems }: any) => {
       setItems([...items]);
     }
   };
+
+  const setTotalPrice = (idx:any) => {
+    if (isNaN(parseFloat(items[idx]["Quantity"])))
+      items[idx]["Quantity"] = "0";
+    if (isNaN(parseFloat(items[idx]["Price"])))
+      items[idx]["Price"] = "0";
+    if (isNaN(parseFloat(items[idx]["DiscPrcnt"])))
+      items[idx]["DiscPrcnt"] = "0";
+
+    let price: number =
+      parseFloat(items[idx]["Quantity"]) *
+      parseFloat(items[idx]["Price"]);
+    let disc: number = parseFloat(
+      ((price * parseFloat(items[idx]["DiscPrcnt"])) / 100).toFixed(2)
+    );
+
+    items[idx]["TotalPrice"] = price - disc;
+  }
 
   const getUoM = async (idx: any, value: any) => {
     const res: any = await APISearch({
@@ -146,24 +152,10 @@ export default ({ data, items, setItems }: any) => {
             items[idx][key] = val;
             if (
               key === "Quantity" ||
-              key === "PriceBefDi" ||
+              key === "Price" ||
               key === "DiscPrcnt"
             ) {
-              if (isNaN(parseFloat(items[idx]["Quantity"])))
-                items[idx]["Quantity"] = "0";
-              if (isNaN(parseFloat(items[idx]["PriceBefDi"])))
-                items[idx]["PriceBefDi"] = "0";
-              if (isNaN(parseFloat(items[idx]["DiscPrcnt"])))
-                items[idx]["DiscPrcnt"] = "0";
-
-              let price: number =
-                parseFloat(items[idx]["Quantity"]) *
-                parseFloat(items[idx]["PriceBefDi"]);
-              let disc: number = parseFloat(
-                ((price * parseFloat(items[idx]["DiscPrcnt"])) / 100).toFixed(2)
-              );
-
-              items[idx]["TotalPrice"] = price - disc;
+              setTotalPrice(idx);
             }
             setItems([...items]);
           }}
@@ -263,7 +255,8 @@ export default ({ data, items, setItems }: any) => {
             },
             { key: "Quantity", size: 12, label: "Quantity" },
             { key: "OnHand", size: 12, label: "Qty In Whs", type: "field" },
-            { key: "PriceBefDi", size: 12, label: "Unit Price", type:"field" },
+            // { key: "PriceBefDi", size: 12, label: "Unit Price" },
+            { key: "Price", size: 12, label: "Unit Price", type: "field" },
             { key: "DiscPrcnt", size: 12, label: "Disc Prcnt" },
             {
               key: "TaxCode",
@@ -359,7 +352,12 @@ export default ({ data, items, setItems }: any) => {
             header: "Warehouse"
           }
         },
-        PriceBefDi: {
+        // PriceBefDi: {
+        //   table: {
+        //     header: "Unit Price"
+        //   }
+        // },
+        Price: {
           table: {
             header: "Unit Price"
           }

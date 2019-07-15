@@ -26,7 +26,7 @@ export default withRouter(
     const [rBranch, setRBranch] = useState(false);
     const [rCashAccount, setRCashAccount] = useState(false);
     const [rWhsCanvas, setRWhsCanvas] = useState(false);
-    const [rSalesCust, setRSalesCust] = useState(false);
+    const [rSalesAsCust, setRSalesAsCust] = useState(false);
 
     useEffect(() => {
       if (!!match.params.id) {
@@ -60,7 +60,7 @@ export default withRouter(
         setRBranch(true);
         setRCashAccount(true);
         setRWhsCanvas(true);
-        setRSalesCust(true);
+        setRSalesAsCust(true);
         getWhouse(res.id);
       });
     };
@@ -197,7 +197,7 @@ export default withRouter(
                           });
                           setRCashAccount(true);
                           setRWhsCanvas(true);
-                          setRSalesCust(true);
+                          setRSalesAsCust(true);
                         }}
                         mustInit={false}
                         refresh={rBranch}
@@ -253,7 +253,6 @@ export default withRouter(
                       />
                     )
                   },
-                  // { key: "sap_id", size: 4, label: "SAP Code" },
                   {
                     key: "sales_as_customer",
                     size: 12,
@@ -262,16 +261,16 @@ export default withRouter(
                       <SAPDropdown
                         label="Sales As Customer"
                         field="SalesAsEmployee"
-                        where={[
-                          { field: "U_IDU_BRANCH", value: data.branch }
-                        ]}
                         value={(data as any).sales_as_customer}
                         setValue={v => {
                           setData({ ...data, sales_as_customer: v });
                         }}
+                        where={[
+                          { field: "U_IDU_BRANCH", value: data.branch },
+                        ]}
                         mustInit={false}
-                        refresh={rSalesCust}
-                        setRefresh={(v: boolean) => setRSalesCust(v)}
+                        refresh={rSalesAsCust}
+                        setRefresh={(v: boolean) => setRSalesAsCust(v)}
                       />
                     )
                   },
