@@ -73,6 +73,9 @@ export default withRouter(
           "Address2",
           "Address",
           "Comments",
+          "DocTotal",
+          "VatSum",
+          "DiscSum",
           "DiscPrcnt",
           "DocDate",
           "U_IDU_FP",
@@ -88,11 +91,15 @@ export default withRouter(
       };
 
       APISearch(query).then((res: any) => {
-        const data = res[0];
-        res[0].U_IDU_DO_INTNUM = res[0].U_IDU_SO_INTNUM;
+        res[0].DiscPrcnt = parseFloat(res[0].DiscPrcnt).toFixed(2);
+        res[0].DiscSum = parseFloat(res[0].DiscSum).toFixed(2);
+        res[0].VatSum = parseFloat(res[0].VatSum).toFixed(2);
+        res[0].DocTotal = parseFloat(res[0].DocTotal).toFixed(2);
+        
         res[0].DocDate = decodeSAPDateToFormal(res[0].DocDate);
         res[0].DocDueDate = decodeSAPDateToFormal(res[0].DocDueDate);
 
+        const data = res[0];
         setData(data);
 
         query = {

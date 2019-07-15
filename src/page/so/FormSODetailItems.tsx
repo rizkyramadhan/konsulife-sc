@@ -22,7 +22,15 @@ export default ({ data, items, setItems }: any) => {
     });
 
     if (Array.isArray(res) && res.length > 0) {
-      items[idx]["Price"] = parseInt(res[0]["Price"]);
+      let price = parseFloat(res[0]["Price"]);
+      if(isNaN(price)) price = 0;
+
+      if(data.PriceMode === "G" && items[idx]["TaxCode"] === "S1")
+      {
+        price = price * 100/110;
+      }
+      
+      items[idx]["Price"] = price.toFixed(2);
       setTotalPrice(idx);
       setItems([...items]);
     }
@@ -255,7 +263,6 @@ export default ({ data, items, setItems }: any) => {
             },
             { key: "Quantity", size: 12, label: "Quantity" },
             { key: "OnHand", size: 12, label: "Qty In Whs", type: "field" },
-            // { key: "PriceBefDi", size: 12, label: "Unit Price" },
             { key: "Price", size: 12, label: "Unit Price", type: "field" },
             { key: "DiscPrcnt", size: 12, label: "Disc Prcnt" },
             {
@@ -352,11 +359,6 @@ export default ({ data, items, setItems }: any) => {
             header: "Warehouse"
           }
         },
-        // PriceBefDi: {
-        //   table: {
-        //     header: "Unit Price"
-        //   }
-        // },
         Price: {
           table: {
             header: "Unit Price"

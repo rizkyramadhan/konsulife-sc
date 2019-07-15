@@ -197,7 +197,7 @@ export default withRouter(
                 value: [
                   {
                     key: "CardCode",
-                    size: 8,
+                    size: 12,
                     type: "field",
                     label: "Customer/Vendor Code"
                   },
@@ -239,7 +239,7 @@ export default withRouter(
                   {
                     key: "CntctCode",
                     label: "Contact Person",
-                    size: 7,
+                    size: 12,
                     component: (
                       <SAPDropdown
                         label="Contact Person"
@@ -274,7 +274,7 @@ export default withRouter(
                       />
                     )
                   },
-                  { key: "NumAtCard", label: "PO Customer No", size: 8 }
+                  { key: "NumAtCard", label: "PO Customer No", size: 12 }
                 ]
               },
               {
@@ -365,7 +365,7 @@ export default withRouter(
                   {
                     key: "GroupNum",
                     label: "Payment Method",
-                    size: 8,
+                    size: 12,
                     component: (
                       <SAPDropdown
                         label="Payment Method"
@@ -386,7 +386,7 @@ export default withRouter(
                 value: [
                   {
                     key: "U_WONUM",
-                    size: 8,
+                    size: 12,
                     component: (
                       <UISelectField
                         label="WO Number"

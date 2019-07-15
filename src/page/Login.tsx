@@ -1,4 +1,3 @@
-import config from "@app/backend";
 import global from "@app/global";
 import getSession from "@app/libs/gql/session/getSession";
 import login from "@app/libs/gql/session/login";
@@ -51,12 +50,7 @@ const LoginForm = withRouter(({ history }: RouteComponentProps) => {
         >
           MBGP - Sales App
         </UIText>
-        <UIText
-          size="small"
-          style={{ paddingTop: 10, paddingBottom: 20, textAlign: "center" }}
-        >
-          Silakan login sesuai dengan user di {config.url}
-        </UIText>
+
         <UITextField
           label="Username"
           type="text"
@@ -153,9 +147,6 @@ export default () => {
       >
         <View style={styleTitle}>
           <UIText size="extralarge" style={{ color: "#fff" }}>Welcome!</UIText>
-          <UIText size="medium" style={{ color: "#fff" }}>
-            Use these awesome forms to login or create new account in your project for free.
-          </UIText>
         </View>
         <UIRow
           style={{
