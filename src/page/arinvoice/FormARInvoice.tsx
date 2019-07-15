@@ -134,6 +134,7 @@ export default withRouter(
 
       APISearch(query).then((res: any) => {
         res.forEach((item: any) => {
+          item.PK = btoa(item.LineNum + "|" + item.DocEntry);
           item.BaseType = "17";
           item.BaseLine = item.LineNum;
           item.BaseEntry = item.DocEntry;

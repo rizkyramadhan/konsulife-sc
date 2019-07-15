@@ -89,6 +89,7 @@ export default withRouter(
 
       APISearch(query).then((res: any) => {
         const data = res[0];
+        res[0].U_IDU_DO_INTNUM = res[0].U_IDU_SO_INTNUM;
         res[0].DocDate = decodeSAPDateToFormal(res[0].DocDate);
         res[0].DocDueDate = decodeSAPDateToFormal(res[0].DocDueDate);
 

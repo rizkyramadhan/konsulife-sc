@@ -26,6 +26,7 @@ export default withRouter(
     const [rBranch, setRBranch] = useState(false);
     const [rCashAccount, setRCashAccount] = useState(false);
     const [rWhsCanvas, setRWhsCanvas] = useState(false);
+    const [rSalesAsCust, setRSalesAsCust] = useState(false);
 
     useEffect(() => {
       if (!!match.params.id) {
@@ -59,6 +60,7 @@ export default withRouter(
         setRBranch(true);
         setRCashAccount(true);
         setRWhsCanvas(true);
+        setRSalesAsCust(true);
         getWhouse(res.id);
       });
     };
@@ -195,6 +197,7 @@ export default withRouter(
                           });
                           setRCashAccount(true);
                           setRWhsCanvas(true);
+                          setRSalesAsCust(true);
                         }}
                         mustInit={false}
                         refresh={rBranch}
@@ -250,7 +253,6 @@ export default withRouter(
                       />
                     )
                   },
-                  // { key: "sap_id", size: 4, label: "SAP Code" },
                   {
                     key: "sales_as_customer",
                     size: 12,
@@ -263,6 +265,12 @@ export default withRouter(
                         setValue={v => {
                           setData({ ...data, sales_as_customer: v });
                         }}
+                        where={[
+                          { field: "U_IDU_BRANCH", value: data.branch },
+                        ]}
+                        mustInit={false}
+                        refresh={rSalesAsCust}
+                        setRefresh={(v: boolean) => setRSalesAsCust(v)}
                       />
                     )
                   },
