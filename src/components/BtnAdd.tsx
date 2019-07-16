@@ -10,7 +10,7 @@ export default ({ onPress, style }: any) => {
         size="small"
         onPress={onPress}
         style={{
-            flexShrink: "none",
+            flexShrink: 0,
             marginRight: 0,
             ...style
         }}

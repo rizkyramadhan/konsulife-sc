@@ -11,6 +11,8 @@ import global from "@app/global";
 import UISearch from "@app/libs/ui/UISearch";
 import UICard, { UICardHeader } from "@app/libs/ui/UICard";
 import UIText from "@app/libs/ui/UIText";
+import UIRow from "@app/libs/ui/UIRow";
+import UICol from "@app/libs/ui/UICol";
 
 interface IWO {
   id: number;
@@ -98,9 +100,7 @@ export default withRouter(
             </UIText>
           }
           isLoading={loading}
-        >
-          <BtnCreate path="/wo/form" />
-        </UIHeader>
+        />
         <UIBody>
           <UICard
             mode="clean"
@@ -108,31 +108,42 @@ export default withRouter(
           >
             <UICardHeader
               style={{
-                backgroundColor: "#fff",
                 flexDirection: "row",
                 alignItems: "center"
               }}
             >
-              <UIText
-                size="medium"
-                style={{
-                  flexShrink: "none",
-                  width: "100%"
-                }}
-              >
-                List Working Order
-              </UIText>
-              <UISearch
-                style={{
-                  width: "100%",
-                  maxWidth: 300
-                }}
-                fieldStyle={{
-                  borderWidth: 0,
-                  backgroundColor: "#f6f9fc"
-                }}
-                onSearch={funcSearch}
-              />
+              <UIRow style={{ flex: 1 }}>
+                <UICol
+                  size={6}
+                  xs={12}
+                  sm={12}
+                  md={6}
+                  lg={6}
+                  style={{ justifyContent: "center", height: 35 }}
+                >
+                  <UIText size="medium">List Working Order</UIText>
+                </UICol>
+                <UICol
+                  size={6}
+                  xs={12}
+                  sm={12}
+                  md={6}
+                  lg={6}
+                  style={{ justifyContent: "center", alignItems: "flex-end" }}
+                >
+                  <UISearch
+                    style={{
+                      width: "100%",
+                      maxWidth: 300
+                    }}
+                    fieldStyle={{
+                      borderWidth: 0,
+                      backgroundColor: "#f6f9fc"
+                    }}
+                    onSearch={funcSearch}
+                  />
+                </UICol>
+              </UIRow>
             </UICardHeader>
             <UIList
               style={{ flex: 1 }}

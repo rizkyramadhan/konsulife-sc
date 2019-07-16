@@ -21,7 +21,7 @@ export default [
     ),
     subtitle: "Lorem Ipsum is simply dummy text.",
     icon: <IconHome width={20} height={20} color="#1D6EF7" />,
-    path: "/home",
+    path: "/",
     roles: ["sales_to", "sales_canvas", "branch", "admin"]
   },
   {

@@ -12,8 +12,9 @@ import UIText from "@app/libs/ui/UIText";
 import UITextField from "@app/libs/ui/UITextField";
 import React, { useEffect, useState } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
-import { Alert, View, Image } from "reactxp";
-import IconSignIn from '@app/libs/ui/Icons/IconSignIn';
+import { Alert, View, Image, Platform } from "reactxp";
+import IconSignIn from "@app/libs/ui/Icons/IconSignIn";
+import { windowWidth, windowHeight } from "@app/libs/ui/Styles/Style";
 
 const background = require("@app/assets/images/pattern.png");
 
@@ -22,6 +23,7 @@ const LoginForm = withRouter(({ history }: RouteComponentProps) => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [hover, setHover] = useState(false);
+  console.log(Platform.getType());
 
   useEffect(() => {
     (async () => {
@@ -36,17 +38,20 @@ const LoginForm = withRouter(({ history }: RouteComponentProps) => {
   }, []);
 
   return (
-    <UICol size={4} xs={12} sm={12} style={{ alignItems: 'center' }}>
-      <UICard style={{
-        maxWidth: 450,
-        padding: 25,
-        backgroundColor: "#f7fafc",
-        borderColor: '#fff',
-        borderRadius: 4
-      }}>
+    <UICol size={4} xs={12} sm={12} style={{ alignItems: "center" }}>
+      <UICard
+        style={{
+          width: (windowWidth * 90) / 100,
+          maxWidth: 400,
+          padding: 25,
+          backgroundColor: "#f7fafc",
+          borderColor: "#fff",
+          borderRadius: 4
+        }}
+      >
         <UIText
           size="extralarge"
-          style={{ paddingTop: 20, textAlign: "center" }}
+          style={{ paddingTop: 20, paddingBottom: 35, textAlign: "center" }}
         >
           MBGP - Sales App
         </UIText>
@@ -59,8 +64,8 @@ const LoginForm = withRouter(({ history }: RouteComponentProps) => {
             setUsername(value);
           }}
           fieldStyle={{
-            borderColor: '#e0e0e0',
-            backgroundColor: '#fff',
+            borderColor: "#e0e0e0",
+            backgroundColor: "#fff"
           }}
         />
 
@@ -72,43 +77,48 @@ const LoginForm = withRouter(({ history }: RouteComponentProps) => {
             setPassword(value);
           }}
           fieldStyle={{
-            borderColor: '#e0e0e0',
-            backgroundColor: '#fff',
+            borderColor: "#e0e0e0",
+            backgroundColor: "#fff"
           }}
         />
-        <UIRow style={{
-          marginTop: 15,
-          justifyContent: 'flex-end'
-        }}>
+        <UIRow
+          style={{
+            marginTop: 15,
+            justifyContent: "flex-end"
+          }}
+        >
           {loading ? (
             <UILoading />
           ) : (
-              <UIButton
-                onPress={async () => {
-                  setLoading(true);
-                  const res = await login(username, password);
-                  if (!res) {
-                    Alert.show("Gagal Login");
-                    setLoading(false);
-                  } else {
-                    setLoading(false);
-                    global.setSession(res);
-                    history.replace("/");
-                    // global.setSidebar(isSize(['md', 'lg']));
-                  }
-                }}
-                attr={{
-                  onMouseOver: () => setHover(true),
-                  onMouseLeave: () => setHover(false)
-                }}
-                style={{
-                  ...(hover ? { opacity: 1 } : { opacity: 0.8 })
-                }}
-              >
-                <IconSignIn color="#fff" width={20} height={20} />
-                <UIText style={{ color: "#fff" }} size="small"> Login</UIText>
-              </UIButton>
-            )}
+            <UIButton
+              onPress={async () => {
+                setLoading(true);
+                const res = await login(username, password);
+                if (!res) {
+                  Alert.show("Gagal Login");
+                  setLoading(false);
+                } else {
+                  setLoading(false);
+                  global.setSession(res);
+                  history.replace("/");
+                  // global.setSidebar(isSize(['md', 'lg']));
+                }
+              }}
+              attr={{
+                onMouseOver: () => setHover(true),
+                onMouseLeave: () => setHover(false)
+              }}
+              style={{
+                ...(hover ? { opacity: 1 } : { opacity: 0.8 })
+              }}
+            >
+              <IconSignIn color="#fff" width={20} height={20} />
+              <UIText style={{ color: "#fff" }} size="small">
+                {" "}
+                Login
+              </UIText>
+            </UIButton>
+          )}
         </UIRow>
       </UICard>
     </UICol>
@@ -117,40 +127,43 @@ const LoginForm = withRouter(({ history }: RouteComponentProps) => {
 
 export default () => {
   const imgstyle: any = {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
+    position: "absolute",
+    width: windowWidth,
+    height: windowHeight
   };
   const style: any = {
-    position: 'absolute',
-    width: '100%',
-    height: (window.innerHeight * 50 / 100),
+    top: 0,
+    position: "absolute",
+    width: windowWidth,
+    height: (windowHeight * 50) / 100
   };
   const styleTitle: any = {
-    display: 'flex',
+    display: "flex",
     marginBottom: 60,
-    alignItems: 'center'
-  }
+    alignItems: "center"
+  };
+
   return (
     <UIContainer>
-      <View style={style}>
-        <Image resizeMode="cover" style={imgstyle} source={background} />
-      </View>
       <UIBody
         style={{
-          position: "static",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: '#172b4d'
+          backgroundColor: "#172b4d"
         }}
       >
+        <View style={style}>
+          <Image resizeMode="cover" style={imgstyle} source={background} />
+        </View>
         <View style={styleTitle}>
-          <UIText size="extralarge" style={{ color: "#fff" }}>Welcome!</UIText>
+          <UIText size="extralarge" style={{ color: "#fff" }}>
+            Welcome!
+          </UIText>
         </View>
         <UIRow
           style={{
-            width: "100%"
+            width: windowWidth
           }}
         >
           <UICol size={4} xs={0} sm={0} />

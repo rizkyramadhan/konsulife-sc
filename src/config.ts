@@ -14,7 +14,7 @@ export const MainStyle: any = {
   errorColor: "#dc3545",
   successColor: "#28a745",
   warningColor: "#ffc107",
-  backgroundSidebar: '#fff',
+  backgroundSidebar: "#fff",
   pattern: require("@app/assets/images/pattern.png")
 };
 
@@ -24,6 +24,6 @@ export default {
   hasura_admin_secret: "figure1234",
   // wsSAP: "http://172.16.145.3:8087/MBGPService/Api/"
   wsSAP: "http://116.254.101.121:5000/MBGPWebService/Api/",
-  wsBackend: "http://116.254.101.121:1000/",
+  wsBackend: "http://116.254.101.121:1000/"
   //wsBackend:"http://localhost:44343/",
 };

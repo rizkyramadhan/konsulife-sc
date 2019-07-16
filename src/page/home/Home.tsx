@@ -12,7 +12,7 @@ import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
 
 export default withRouter(
-  observer(({ showSidebar, sidebar }: any) => {
+  observer(({  }: any) => {
     const [dataSOD, setDataSOD] = useState(0);
     const [dataPOD, setDataPOD] = useState(0);
     const [dataSO, setDataSO] = useState(0);
@@ -94,8 +94,8 @@ export default withRouter(
       <UIContainer>
         <UIHeader
           pattern={true}
-          showSidebar={showSidebar}
-          sidebar={sidebar}
+          showSidebar={global.setSidebar}
+          sidebar={global.sidebar}
           center={
             <UIText size="large" style={{ color: "#fff" }}>
               Dashboard
@@ -108,7 +108,12 @@ export default withRouter(
               width: "100%"
             }}
           >
-            <UICol size={4} xs={12} sm={12} style={{ alignItems: "center" }}>
+            <UICol
+              size={4}
+              xs={6}
+              sm={6}
+              style={{ flex: 1, alignItems: "center" }}
+            >
               <UICard
                 style={{
                   borderRadius: 10,
@@ -119,7 +124,6 @@ export default withRouter(
               >
                 <UICardBody
                   style={{
-                    flex: 1,
                     alignItems: "center"
                   }}
                 >
@@ -132,13 +136,19 @@ export default withRouter(
                   >
                     {dataPOD}
                   </UIText>
-                  <UIText style={{ fontSize: 14, color: "#6d6d6d" }}>
+                  <UIText
+                    style={{
+                      fontSize: 14,
+                      color: "#6d6d6d",
+                      textAlign: "center"
+                    }}
+                  >
                     Goods Receipt PO Draft (Open)
                   </UIText>
                 </UICardBody>
               </UICard>
             </UICol>
-            <UICol size={4} xs={12} sm={12} style={{ alignItems: "center" }}>
+            <UICol size={4} xs={6} sm={6} style={{ alignItems: "center" }}>
               <UICard
                 style={{
                   borderRadius: 10,
@@ -149,7 +159,6 @@ export default withRouter(
               >
                 <UICardBody
                   style={{
-                    flex: 1,
                     alignItems: "center"
                   }}
                 >
@@ -162,13 +171,15 @@ export default withRouter(
                   >
                     {dataSOD}
                   </UIText>
-                  <UIText style={{ fontSize: 14, color: "#777" }}>
+                  <UIText
+                    style={{ fontSize: 14, color: "#777", textAlign: "center" }}
+                  >
                     Sales Order Draft (Open)
                   </UIText>
                 </UICardBody>
               </UICard>
             </UICol>
-            <UICol size={4} xs={12} sm={12} style={{ alignItems: "center" }}>
+            <UICol size={4} xs={6} sm={6} style={{ alignItems: "center" }}>
               <UICard
                 style={{
                   borderRadius: 10,
@@ -179,7 +190,6 @@ export default withRouter(
               >
                 <UICardBody
                   style={{
-                    flex: 1,
                     alignItems: "center"
                   }}
                 >
@@ -192,7 +202,9 @@ export default withRouter(
                   >
                     {dataSO}
                   </UIText>
-                  <UIText style={{ fontSize: 14, color: "#777" }}>
+                  <UIText
+                    style={{ fontSize: 14, color: "#777", textAlign: "center" }}
+                  >
                     Sales Order (Open)
                   </UIText>
                 </UICardBody>

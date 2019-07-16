@@ -105,7 +105,7 @@ export default withRouter(
               <UIText
                 size="medium"
                 style={{
-                  flexShrink: "none",
+                  flexShrink: 0,
                   width: "100%"
                 }}
               >
