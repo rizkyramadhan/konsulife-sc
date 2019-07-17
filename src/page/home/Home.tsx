@@ -16,8 +16,10 @@ export default withRouter(
     const [dataSOD, setDataSOD] = useState(0);
     const [dataPOD, setDataPOD] = useState(0);
     const [dataSO, setDataSO] = useState(0);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+      setLoading(true);
       let query: APISearchProps = {
         Table: "ODRF",
         Fields: ["DocEntry"],
@@ -88,12 +90,14 @@ export default withRouter(
 
       APISearch(query3).then((res: any) => {
         setDataPOD(res.length);
+        setLoading(false);
       });
     }, []);
     return (
       <UIContainer>
         <UIHeader
           pattern={true}
+          isLoading={loading}
           showSidebar={global.setSidebar}
           sidebar={global.sidebar}
           center={

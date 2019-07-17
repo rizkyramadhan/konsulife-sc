@@ -71,6 +71,7 @@ import FormUser from "./user/FormUser";
 import ListUser from "./user/ListUser";
 import FormWO from "./wo/FormWO";
 import ListWO from "./wo/ListWO";
+import { isSize } from "@app/libs/ui/MediaQuery";
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
@@ -194,7 +195,10 @@ const MenuItem = ({ item, history, path, setPath, setSide, child }: any) => {
           onPress={() => {
             history.replace(item.path);
             setPath(item.path);
-            if (Platform.getType() !== "web") {
+            if (
+              Platform.getType() !== "web" ||
+              (Platform.getType() == "web" && isSize(["xs", "sm"]))
+            ) {
               setSide(false);
             }
           }}
@@ -269,70 +273,65 @@ const Menu = withRouter(({ history, setSide }: MenuProps) => {
     setPath(`/${path[1]}`);
   }, []);
   return (
-    <UISimpleList
-      style={{
-        paddingTop: 0,
-        paddingBottom: 0,
-        flex: 1
-        // overflow: "auto"
-      }}
-      data={MenuList}
-      renderItems={(item, opt) => {
-        if (item.roles.indexOf(global.session.user.role) > -1)
-          return (
-            <MenuItem
-              key={opt.index}
-              item={item}
-              history={history}
-              path={path}
-              setPath={setPath}
-              setSide={setSide}
-              sperator="#e8f1ff"
-            />
-          );
-        else return;
-      }}
+    <UIBody
+      scroll={true}
+      style={{ padding: 0, paddingLeft: 0, paddingRight: 0 }}
     >
-      <View>
-        <UIButton
-          onPress={async () => {
-            await logout();
-            global.removeSession();
-            history.replace("/login");
-            setSide(false);
-          }}
-          attr={{
-            onMouseOver: () => setHover(true),
-            onMouseLeave: () => setHover(false)
-          }}
-          animation={false}
-          fill="clear"
-          style={{ width: "100%", justifyContent: "flex-start" }}
-          color="#fff"
-        >
-          <IconSignOut width={20} height={20} color="#f5365c" />
-          <UIText
-            style={{
-              color: "#525f7f",
-              paddingLeft: 15,
-              ...(hover ? { opacity: 1 } : { opacity: 0.7 })
+      <UISimpleList
+        style={{
+          paddingTop: 0,
+          paddingBottom: 0,
+          flex: 1
+        }}
+        data={MenuList}
+        renderItems={(item, opt) => {
+          if (item.roles.indexOf(global.session.user.role) > -1)
+            return (
+              <MenuItem
+                key={opt.index}
+                item={item}
+                history={history}
+                path={path}
+                setPath={setPath}
+                setSide={setSide}
+                sperator="#e8f1ff"
+              />
+            );
+          else return;
+        }}
+      >
+        <View>
+          <UIButton
+            onPress={async () => {
+              await logout();
+              global.removeSession();
+              history.replace("/login");
+              setSide(false);
             }}
+            attr={{
+              onMouseOver: () => setHover(true),
+              onMouseLeave: () => setHover(false)
+            }}
+            animation={false}
+            fill="clear"
+            style={{ width: "100%", justifyContent: "flex-start" }}
+            color="#fff"
           >
-            {" "}
-            Logout
-          </UIText>
-        </UIButton>
-
-        <UISeparator
-          style={{
-            opacity: 0.2,
-            marginTop: 0,
-            marginBottom: 0,
-            borderColor: "#9c9c9c"
-          }}
-        />
-      </View>
-    </UISimpleList>
+            <IconSignOut width={20} height={20} color="#f5365c" />
+            <UIText
+              style={{
+                color: "#525f7f",
+                paddingLeft: 15,
+                ...(hover ? { opacity: 1 } : { opacity: 0.7 })
+              }}
+            >
+              {" "}
+              Logout
+            </UIText>
+          </UIButton>
+        </View>
+      </UISimpleList>
+    </UIBody>
   );
 });
 

@@ -1,18 +1,19 @@
+import BtnCreate from "@app/components/BtnCreate";
+import global from "@app/global";
+import rawQuery from "@app/libs/gql/data/rawQuery";
+import { isSize } from "@app/libs/ui/MediaQuery";
 import UIBody from "@app/libs/ui/UIBody";
+import UICard, { UICardHeader } from "@app/libs/ui/UICard";
+import UICol from "@app/libs/ui/UICol";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
-import { observer } from "mobx-react-lite";
-import React, { useState, useEffect } from "react";
-import { withRouter } from "react-router";
-import BtnCreate from "@app/components/BtnCreate";
-import rawQuery from "@app/libs/gql/data/rawQuery";
-import global from "@app/global";
+import UIRow from "@app/libs/ui/UIRow";
 import UISearch from "@app/libs/ui/UISearch";
 import UIText from "@app/libs/ui/UIText";
-import UICard, { UICardHeader } from "@app/libs/ui/UICard";
-import UIRow from "@app/libs/ui/UIRow";
-import UICol from "@app/libs/ui/UICol";
+import { observer } from "mobx-react-lite";
+import React, { useEffect, useState } from "react";
+import { withRouter } from "react-router";
 
 interface IRute {
   id: number;
@@ -21,7 +22,7 @@ interface IRute {
 }
 
 export default withRouter(
-  observer(({ history, showSidebar, sidebar }: any) => {
+  observer(({ history }: any) => {
     const [data, setData]: any = useState<IRute[]>([]);
     const [_data, _setData]: any = useState<IRute[]>([]);
     const field = ["name", "description"];
@@ -67,8 +68,8 @@ export default withRouter(
         <UIHeader
           pattern={true}
           isLoading={loading}
-          showSidebar={showSidebar}
-          sidebar={sidebar}
+          showSidebar={global.setSidebar}
+          sidebar={global.sidebar}
           center={
             <UIText size="large" style={{ color: "#fff" }}>
               Master Route
@@ -110,7 +111,7 @@ export default withRouter(
                   <UISearch
                     style={{
                       width: "100%",
-                      maxWidth: 300
+                      ...(isSize(["md", "lg"]) ? { maxWidth: 300 } : {})
                     }}
                     fieldStyle={{
                       borderWidth: 0,
