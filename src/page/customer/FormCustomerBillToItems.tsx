@@ -132,7 +132,7 @@ export default ({ items, setItems }: any) => {
               }}>
                 <UIButton
                   style={{
-                    flexShrink: "none"
+                    flexShrink: 0
                   }}
                   color="error"
                   size="small"

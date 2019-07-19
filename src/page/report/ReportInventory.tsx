@@ -1,16 +1,18 @@
-import BtnCreate from "@app/components/BtnCreate";
+import global from "@app/global";
 import rawQuery from "@app/libs/gql/data/rawQuery";
 import UIBody from "@app/libs/ui/UIBody";
+import UICard, { UICardHeader } from "@app/libs/ui/UICard";
+import UICol from "@app/libs/ui/UICol";
 import UIContainer from "@app/libs/ui/UIContainer";
 import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
+import UIRow from "@app/libs/ui/UIRow";
+import UISearch from "@app/libs/ui/UISearch";
+import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router";
-import global from "@app/global";
-import UISearch from "@app/libs/ui/UISearch";
-import UICard, { UICardHeader } from "@app/libs/ui/UICard";
-import UIText from "@app/libs/ui/UIText";
+import { isSize } from "@app/libs/ui/MediaQuery";
 
 interface IWO {
   id: number;
@@ -26,7 +28,7 @@ interface IWO {
 }
 
 export default withRouter(
-  observer(({ history, showSidebar, sidebar }: any) => {
+  observer(({ history }: any) => {
     const [data, setData]: any = useState<IWO[]>([]);
     const [_data, _setData]: any = useState<IWO[]>([]);
     const field = [
@@ -90,17 +92,15 @@ export default withRouter(
       <UIContainer>
         <UIHeader
           pattern={true}
-          showSidebar={showSidebar}
-          sidebar={sidebar}
+          showSidebar={global.setSidebar}
+          sidebar={global.sidebar}
           center={
             <UIText size="large" style={{ color: "#fff" }}>
               Report Inventory
             </UIText>
           }
           isLoading={loading}
-        >
-          <BtnCreate path="/wo/form" />
-        </UIHeader>
+        />
         <UIBody>
           <UICard
             mode="clean"
@@ -108,31 +108,42 @@ export default withRouter(
           >
             <UICardHeader
               style={{
-                backgroundColor: "#fff",
                 flexDirection: "row",
                 alignItems: "center"
               }}
             >
-              <UIText
-                size="medium"
-                style={{
-                  flexShrink: "none",
-                  width: "100%"
-                }}
-              >
-                List Working Order
-              </UIText>
-              <UISearch
-                style={{
-                  width: "100%",
-                  maxWidth: 300
-                }}
-                fieldStyle={{
-                  borderWidth: 0,
-                  backgroundColor: "#f6f9fc"
-                }}
-                onSearch={funcSearch}
-              />
+              <UIRow style={{ flex: 1 }}>
+                <UICol
+                  size={6}
+                  xs={12}
+                  sm={12}
+                  md={6}
+                  lg={6}
+                  style={{ justifyContent: "center", height: 35 }}
+                >
+                  <UIText size="medium">List Working Order</UIText>
+                </UICol>
+                <UICol
+                  size={6}
+                  xs={12}
+                  sm={12}
+                  md={6}
+                  lg={6}
+                  style={{ justifyContent: "center", alignItems: "flex-end" }}
+                >
+                  <UISearch
+                    style={{
+                      width: "100%",
+                      ...(isSize(["md", "lg"]) ? { maxWidth: 300 } : {})
+                    }}
+                    fieldStyle={{
+                      borderWidth: 0,
+                      backgroundColor: "#f6f9fc"
+                    }}
+                    onSearch={funcSearch}
+                  />
+                </UICol>
+              </UIRow>
             </UICardHeader>
             <UIList
               style={{ flex: 1 }}

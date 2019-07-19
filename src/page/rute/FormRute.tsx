@@ -36,7 +36,7 @@ interface IRuteItem {
 }
 
 export default withRouter(
-  observer(({ history, match, showSidebar, sidebar }: any) => {
+  observer(({ history, match }: any) => {
     const [data, setData] = useState<IRute>({});
     const [items, setItems] = useState<Array<IRuteItem>>([]);
     const [saving, setSaving] = useState(false);
@@ -170,8 +170,8 @@ export default withRouter(
     return (
       <UIContainer>
         <UIHeader
-          showSidebar={showSidebar}
-          sidebar={sidebar}
+          showSidebar={global.setSidebar}
+          sidebar={global.sidebar}
           center="Form Master Rute"
           isLoading={loading}
         >

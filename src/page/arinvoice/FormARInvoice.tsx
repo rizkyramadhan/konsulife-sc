@@ -351,8 +351,8 @@ export default withRouter(
               <UIText
                 style={{
                   fontSize: 19,
-                  color: "#333",
-                  fontWeight: 400
+                  color: "#333"
+                  // fontWeight: 400
                 }}
               >
                 Detail Items

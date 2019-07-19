@@ -2,6 +2,7 @@ import { APISearch, APISearchProps, SAPFieldMap } from "@app/api";
 import { UIProps } from "@app/libs/ui/Styles/Style";
 import UISelectField from "@app/libs/ui/UISelectField";
 import React, { useEffect, useState } from "react";
+import { View } from "reactxp";
 
 interface SAPDropdownProps extends UIProps {
   value: string | number;
@@ -175,43 +176,44 @@ export default ({
   };
 
   return (
-    <UISelectField
-      items={_items}
-      value={value}
-      setValue={async (v: any, l: any, item: any) => {
-        setValue(v, l, item);
-      }}
-      label={label}
-      style={style}
-      color={color}
-      search={true}
-      loading={loading}
-      onSearch={value => {
-        setServQuery(servQuery);
-        if (searchRealtime) {
-          setLoading(true);
-          clearTimeout(servQuery);
-          let search = setTimeout(() => {
-            getData({ ...query }, value);
-          }, 500);
-          setServQuery(search);
-        } else {
-          if (value) {
-            let search = items.filter(
-              (x: any) =>
-                x.value.toLowerCase().includes(value.toLowerCase()) ||
-                x.label.toLowerCase().includes(value.toLowerCase())
-            );
-            _setItems([...search]);
+    <View style={style}>
+      <UISelectField
+        items={_items}
+        value={value}
+        setValue={async (v: any, l: any, item: any) => {
+          setValue(v, l, item);
+        }}
+        label={label}
+        color={color}
+        search={true}
+        loading={loading}
+        onSearch={value => {
+          setServQuery(servQuery);
+          if (searchRealtime) {
+            setLoading(true);
+            clearTimeout(servQuery);
+            let search = setTimeout(() => {
+              getData({ ...query }, value);
+            }, 500);
+            setServQuery(search);
           } else {
-            _setItems([...items]);
+            if (value) {
+              let search = items.filter(
+                (x: any) =>
+                  x.value.toLowerCase().includes(value.toLowerCase()) ||
+                  x.label.toLowerCase().includes(value.toLowerCase())
+              );
+              _setItems([...search]);
+            } else {
+              _setItems([...items]);
+            }
           }
-        }
 
-        //setItems([...(value ? items.filter((x: any) => x.value.toLowerCase().includes(value.toLowerCase()) || x.label.toLowerCase().includes(value.toLowerCase())) : items)]);
-      }}
-      onDismiss={(value: any) => value && setItems([...items])}
-      disable={disable}
-    />
+          //setItems([...(value ? items.filter((x: any) => x.value.toLowerCase().includes(value.toLowerCase()) || x.label.toLowerCase().includes(value.toLowerCase())) : items)]);
+        }}
+        onDismiss={(value: any) => value && setItems([...items])}
+        disable={disable}
+      />
+    </View>
   );
 };

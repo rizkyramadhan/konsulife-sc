@@ -16,9 +16,10 @@ import rawQuery from "@app/libs/gql/data/rawQuery";
 import UITabs from "@app/libs/ui/UITabs";
 import UserWareHouse from "./UserWareHouse";
 import BtnAdd from "@app/components/BtnAdd";
+import global from "@app/global";
 
 export default withRouter(
-  observer(({ match, showSidebar, sidebar }: any) => {
+  observer(({ match }: any) => {
     const [data, setData] = useState({} as any);
     const [itemsWhouse, setItemsWhouse] = useState([] as any);
     const [saving, setSaving] = useState(false);
@@ -81,8 +82,8 @@ export default withRouter(
     return (
       <UIContainer>
         <UIHeader
-          showSidebar={showSidebar}
-          sidebar={sidebar}
+          showSidebar={global.setSidebar}
+          sidebar={global.sidebar}
           center="Form User"
           isLoading={loading}
         >
@@ -265,9 +266,7 @@ export default withRouter(
                         setValue={v => {
                           setData({ ...data, sales_as_customer: v });
                         }}
-                        where={[
-                          { field: "U_IDU_BRANCH", value: data.branch },
-                        ]}
+                        where={[{ field: "U_IDU_BRANCH", value: data.branch }]}
                         mustInit={false}
                         refresh={rSalesAsCust}
                         setRefresh={(v: boolean) => setRSalesAsCust(v)}

@@ -285,7 +285,7 @@ export default withRouter(
                 action: (
                   <UIButton
                     style={{
-                      flexShrink: "none",
+                      flexShrink: 0,
                       marginRight: 0
                     }}
                     color={!editable ? "success" : "warning"}

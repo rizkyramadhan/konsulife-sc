@@ -3,7 +3,9 @@ import getSession from "@app/libs/gql/session/getSession";
 import logout from "@app/libs/gql/session/logout";
 import { Router } from "@app/libs/router/Routing";
 import SwitchRoute, { RouteState } from "@app/libs/router/SwitchRoute";
+import IconCaretDown from "@app/libs/ui/Icons/IconCaretDown";
 import IconSignOut from "@app/libs/ui/Icons/IconSignOut";
+import IconUser from "@app/libs/ui/Icons/IconUser";
 import UIBody from "@app/libs/ui/UIBody";
 import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
@@ -16,6 +18,10 @@ import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 import { Platform, View } from "reactxp";
+import FormARInvoicePrint from "./arinvoice-print/FormARInvoicePrint";
+import ListARInvoicePrint from "./arinvoice-print/ListARInvoicePrint";
+import FormARInvoiceTOPrint from "./arinvoice-to-print/FormARInvoiceTOPrint";
+import ListARInvoiceTOPrint from "./arinvoice-to-print/ListARInvoiceTOPrint";
 import FormARInvoiceTO from "./arinvoice-to/FormARInvoiceTO";
 import ListARInvoiceTO from "./arinvoice-to/ListARInvoiceTO";
 import ListInvoiceTOCust from "./arinvoice-to/ListInvoiceTOCust";
@@ -25,53 +31,47 @@ import ListInvoiceCust from "./arinvoice/ListInvoiceCust";
 import FormCustomer from "./customer/FormCustomer";
 import ListCustomer from "./customer/ListCustomer";
 import ListDraftCustomer from "./customer/ListDraftCustomer";
+import FormDOPrint from "./do-print/FormDOPrint";
+import ListDOPrint from "./do-print/ListDOPrint";
 import FormDO from "./do/FormDO";
 import ListDO from "./do/ListDO";
 import ListDOCopySO from "./do/ListDOCopySO";
+import Home from "./home/Home";
+import FormInvStockReturn from "./it-print/FormInvStockReturn";
+import FormInvStockTransfer from "./it-print/FormInvStockTransfer";
+import ListInvStockReturn from "./it-print/ListInvStockReturn";
+import ListInvStockTransfer from "./it-print/ListInvStockTransfer";
 import FormInvTransfer from "./it/FormInvTransfer";
 import FormInvTransferReturn from "./it/FormInvTransferReturn";
 import ListInvTransfer from "./it/ListInvTransfer";
 import Login from "./Login";
-import MainMenu from "./MainMenu";
 import MenuList from "./MenuList";
 import FormPayment from "./payment/FormPayment";
 import ListPayment from "./payment/ListPayment";
+import FormPRPrint from "./pr-print/FormPRPrint";
+import ListPRPrint from "./pr-print/ListPRPrint";
 import FormPR from "./pr/FormPR";
 import ListPR from "./pr/ListPR";
 import ListPRVendor from "./pr/ListPRVendor";
+import ReportAR from "./report/ReportAR";
+import ReportDO from "./report/ReportDO";
+import ReportInventory from "./report/ReportInventory";
+import ReportInventoryByWO from "./report/ReportInventoryByWO";
+import ReportPO from "./report/ReportPO";
+import ReportSO from "./report/ReportSO";
+import ReportStock from "./report/ReportStock";
 import FormRute from "./rute/FormRute";
 import ListRute from "./rute/ListRute";
 import FormSO from "./so/FormSO";
+import ListDraftSO from "./so/ListDraftSO";
 import ListSO from "./so/ListSO";
 import FormSOCanvas from "./socanvas/FormSOCanvas";
 import ListSOCanvas from "./socanvas/ListSOCanvas";
 import FormUser from "./user/FormUser";
 import ListUser from "./user/ListUser";
-import ReportPO from "./report/ReportPO";
-import ReportSO from "./report/ReportSO";
-import ReportDO from "./report/ReportDO";
-import ReportAR from "./report/ReportAR";
-import ReportStock from "./report/ReportStock";
-import ReportInventory from "./report/ReportInventory";
 import FormWO from "./wo/FormWO";
-import ListDraftSO from "./so/ListDraftSO";
 import ListWO from "./wo/ListWO";
-import IconCaretDown from "@app/libs/ui/Icons/IconCaretDown";
-import Home from "./home/Home";
-import ListDOPrint from "./do-print/ListDOPrint";
-import FormDOPrint from "./do-print/FormDOPrint";
-import ListPRPrint from "./pr-print/ListPRPrint";
-import FormPRPrint from "./pr-print/FormPRPrint";
-import ListARInvoiceTOPrint from "./arinvoice-to-print/ListARInvoiceTOPrint";
-import FormARInvoiceTOPrint from "./arinvoice-to-print/FormARInvoiceTOPrint";
-import ListARInvoicePrint from "./arinvoice-print/ListARInvoicePrint";
-import FormARInvoicePrint from "./arinvoice-print/FormARInvoicePrint";
-import ListInvStockTransfer from "./it-print/ListInvStockTransfer";
-import ListInvStockReturn from "./it-print/ListInvStockReturn";
-import FormInvStockReturn from "./it-print/FormInvStockReturn";
-import FormInvStockTransfer from "./it-print/FormInvStockTransfer";
-import IconUser from "@app/libs/ui/Icons/IconUser";
-import ReportInventoryByWO from "./report/ReportInventoryByWO";
+import { isSize } from "@app/libs/ui/MediaQuery";
 
 interface MenuProps extends RouteComponentProps<any> {
   setSide: any;
@@ -104,12 +104,7 @@ const MenuItem = ({ item, history, path, setPath, setSide, child }: any) => {
         >
           <UIButton
             onPress={() => {
-              // history.replace(item.path);
-              // setPath(item.path);
               setExpand(!expand);
-              if (Platform.getType() !== "web") {
-                setSide(false);
-              }
             }}
             attr={{
               onMouseOver: () => setHover(true),
@@ -120,7 +115,7 @@ const MenuItem = ({ item, history, path, setPath, setSide, child }: any) => {
             style={{
               margin: 0,
               width: "100%",
-              flexShrink: "none",
+              flexShrink: 0,
               justifyContent: "flex-start",
               paddingTop: 15,
               paddingBottom: 15
@@ -163,8 +158,6 @@ const MenuItem = ({ item, history, path, setPath, setSide, child }: any) => {
               paddingTop: 0,
               paddingBottom: 0,
               marginLeft: 25,
-              flex: 1,
-              overflow: "auto",
               borderWidth: 0,
               borderLeftWidth: 2,
               borderColor: "#009688"
@@ -202,7 +195,10 @@ const MenuItem = ({ item, history, path, setPath, setSide, child }: any) => {
           onPress={() => {
             history.replace(item.path);
             setPath(item.path);
-            if (Platform.getType() !== "web") {
+            if (
+              Platform.getType() !== "web" ||
+              (Platform.getType() == "web" && isSize(["xs", "sm"]))
+            ) {
               setSide(false);
             }
           }}
@@ -215,7 +211,7 @@ const MenuItem = ({ item, history, path, setPath, setSide, child }: any) => {
           style={{
             margin: 0,
             width: "100%",
-            flexShrink: "none",
+            // flexShrink: 0,
             justifyContent: "flex-start",
             paddingTop: 15,
             paddingBottom: 15,
@@ -277,70 +273,65 @@ const Menu = withRouter(({ history, setSide }: MenuProps) => {
     setPath(`/${path[1]}`);
   }, []);
   return (
-    <UISimpleList
-      style={{
-        paddingTop: 0,
-        paddingBottom: 0,
-        flex: 1,
-        overflow: "auto"
-      }}
-      data={MenuList}
-      renderItems={(item, opt) => {
-        if (item.roles.indexOf(global.session.user.role) > -1)
-          return (
-            <MenuItem
-              key={opt.index}
-              item={item}
-              history={history}
-              path={path}
-              setPath={setPath}
-              setSide={setSide}
-              sperator="#e8f1ff"
-            />
-          );
-        else return;
-      }}
+    <UIBody
+      scroll={true}
+      style={{ padding: 0, paddingLeft: 0, paddingRight: 0 }}
     >
-      <View>
-        <UIButton
-          onPress={async () => {
-            await logout();
-            global.removeSession();
-            history.replace("/login");
-            setSide(false);
-          }}
-          attr={{
-            onMouseOver: () => setHover(true),
-            onMouseLeave: () => setHover(false)
-          }}
-          animation={false}
-          fill="clear"
-          style={{ width: "100%", justifyContent: "flex-start" }}
-          color="#fff"
-        >
-          <IconSignOut width={20} height={20} color="#f5365c" />
-          <UIText
-            style={{
-              color: "#525f7f",
-              paddingLeft: 15,
-              ...(hover ? { opacity: 1 } : { opacity: 0.7 })
+      <UISimpleList
+        style={{
+          paddingTop: 0,
+          paddingBottom: 0,
+          flex: 1
+        }}
+        data={MenuList}
+        renderItems={(item, opt) => {
+          if (item.roles.indexOf(global.session.user.role) > -1)
+            return (
+              <MenuItem
+                key={opt.index}
+                item={item}
+                history={history}
+                path={path}
+                setPath={setPath}
+                setSide={setSide}
+                sperator="#e8f1ff"
+              />
+            );
+          else return;
+        }}
+      >
+        <View>
+          <UIButton
+            onPress={async () => {
+              await logout();
+              global.removeSession();
+              history.replace("/login");
+              setSide(false);
             }}
+            attr={{
+              onMouseOver: () => setHover(true),
+              onMouseLeave: () => setHover(false)
+            }}
+            animation={false}
+            fill="clear"
+            style={{ width: "100%", justifyContent: "flex-start" }}
+            color="#fff"
           >
-            {" "}
-            Logout
-          </UIText>
-        </UIButton>
-
-        <UISeparator
-          style={{
-            opacity: 0.2,
-            marginTop: 0,
-            marginBottom: 0,
-            borderColor: "#9c9c9c"
-          }}
-        />
-      </View>
-    </UISimpleList>
+            <IconSignOut width={20} height={20} color="#f5365c" />
+            <UIText
+              style={{
+                color: "#525f7f",
+                paddingLeft: 15,
+                ...(hover ? { opacity: 1 } : { opacity: 0.7 })
+              }}
+            >
+              {" "}
+              Logout
+            </UIText>
+          </UIButton>
+        </View>
+      </UISimpleList>
+    </UIBody>
   );
 });
 
@@ -382,11 +373,6 @@ export default observer((_props: any) => {
           visible={global.sidebar}
           setVisible={global.setSidebar}
           sidebar={
-            // <UIGradient
-            //   style={{ flex: 1 }}
-            //   angle={30}
-            //   colors={["#7F53AC", "#647DEE"]}
-            // >
             <View style={{ flex: 1 }}>
               {/* <Image
                 source={require("@app/libs/sample/imgs/logo.png")}
@@ -431,13 +417,12 @@ export default observer((_props: any) => {
               />
               <Menu setSide={global.setSidebar} />
             </View>
-            // </UIGradient>
           }
         >
           <SwitchRoute
             routes={{
-              "/": <MainMenu />,
-              "/home": <Home />,
+              // "/": <MainMenu />,
+              "/": <Home />,
               "/rute": <ListRute />,
               "/rute/form/:id?": <FormRute />,
               "/wo": <ListWO />,
