@@ -11,11 +11,26 @@ import UISelectField from "@app/libs/ui/UISelectField";
 import { APISearch } from "@app/api";
 import IconTrash from "@app/libs/ui/Icons/IconTrash";
 import global from "@app/global";
+import UITextField from '@app/libs/ui/UITextField';
+import { encodeSAPDate } from '@app/utils/Helper';
 
 export default ({ data, items, setItems }: any) => {
   const [uoMEntry, setUoMEntry] = useState<any>({});
   const [iUoMEntry, setIUoMEntry] = useState<any>({});
 
+  const getDisc = async (idx:any, itemCode:any, qty:any) => {
+    const res = await APISearch({
+      CustomQuery: `GetDiscVolume,${itemCode},${data.CardCode},${encodeSAPDate(data.DocDate,"/")},${qty}`
+    });
+    if (Array.isArray(res) && res.length > 0) {
+      let disc = parseFloat(res[0]["Discount"]);
+      if(isNaN(disc)) disc = 0;
+      
+      items[idx]["DiscPrcnt"] = disc.toFixed(2);
+      setTotalPrice(idx);
+      setItems([...items]);
+    }
+  }
   const getPrice = async (idx: any, value: any) => {
     const res = await APISearch({
       CustomQuery: `UnitPriceSO,${value},${data.CardCode}`
@@ -196,6 +211,7 @@ export default ({ data, items, setItems }: any) => {
                     await getUoM(idx, v);
                     await getStockInWhs(idx, v, items[idx].WhsCode);
                     await getPrice(idx, v);
+                    await getDisc(idx,v,items[idx]["Quantity"]);
                   }}
                 />
               )
@@ -261,10 +277,29 @@ export default ({ data, items, setItems }: any) => {
                 );
               }
             },
-            { key: "Quantity", size: 12, label: "Quantity" },
+            { key: "Quantity", size: 12, component: (
+              <UITextField
+                type="text"
+                label="Quantity"
+                value={(item as any).item.Quantity}
+                onChangeText={async (v) => {
+                  const idx = items.findIndex(
+                    (x: any) => x.Key === item.pkval
+                  );
+                  await getDisc(idx,items[idx].ItemCode,v);
+                }}
+                setValue={(v) => {
+                  const idx = items.findIndex(
+                    (x: any) => x.Key === item.pkval
+                  );
+                  items[idx]["Quantity"] = v;
+                  setItems([...items]);
+                }}
+            />) 
+            },
             { key: "OnHand", size: 12, label: "Qty In Whs", type: "field" },
             { key: "Price", size: 12, label: "Unit Price", type: "field" },
-            { key: "DiscPrcnt", size: 12, label: "Disc Prcnt" },
+            { key: "DiscPrcnt", size: 12, label: "Disc Prcnt", type:"field" },
             {
               key: "TaxCode",
               size: 12,

@@ -88,8 +88,27 @@ export default withRouter(
       };
 
       APISearch(query).then((res: any) => {
+        let poNum: any[] = [];
+        let soNum: any[] = [];
+        let doNum: any[] = [];
+        res.forEach((val: any) => {
+          if (val.NumAtCard !== null && val.NumAtCard !== "") {
+            poNum.push(val.NumAtCard);
+          }
+          if (val.U_IDU_SO_INTNUM !== null && val.U_IDU_SO_INTNUM !== "") {
+            soNum.push(val.U_IDU_SO_INTNUM);
+          }
+          if (val.U_IDU_SO_INTNUM !== null && val.U_IDU_SO_INTNUM !== "") {
+            doNum.push(val.U_IDU_SO_INTNUM);
+          }
+        });
+
         res[0].DocDate = today;
         res[0].DocDueDate = today;
+        res[0].NumAtCard = poNum.join(";");
+        res[0].U_IDU_SO_INTNUM = soNum.join(";");
+        res[0].U_IDU_DO_INTNUM = doNum.join(";");
+        res[0].Comments = soNum.join(";");
         res[0].U_BRANCH = global.session.user.branch;
         res[0].U_USERID = global.session.user.username;
         res[0].U_GENERATED = "W";
@@ -309,7 +328,8 @@ export default withRouter(
                   {
                     key: "Comments",
                     label: "Remark",
-                    size: 12
+                    size: 12,
+                    type: "field",
                   }
                 ]
               }

@@ -77,7 +77,7 @@ export default withRouter(
         setData({
           ...data,
           U_IDU_SO_INTNUM: itemSelectSONUmber.join(";"),
-          Comments: "",
+          Comments: itemSelectSONUmber.join(";"),
           DocDate: today
         });
       });
@@ -302,7 +302,8 @@ export default withRouter(
                   {
                     key: "Comments",
                     label: "Remark",
-                    size: 12
+                    size: 12,
+                    type:"field"
                   }
                 ]
               }

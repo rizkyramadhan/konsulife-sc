@@ -65,16 +65,9 @@ export default withRouter(
     const [qShip, setQShip] = useState(false);
     const [qBill, setQBill] = useState(false);
 
-    useEffect(() => {
-      (data as any).SlpCode = !!global.session.user.slp_id || "-1";
-      (data as any).U_BRANCH = global.session.user.branch;
-      (data as any).U_USERID = global.session.user.username;
-      setData({ ...data });
-
+    const getWO = (sales_id: string) => {
       rawQuery(`{
-        work_order (where: {status: {_eq: "open"}, sales_id: {_eq: "${
-          global.getSession().user.slp_id
-        }"}}) {
+        work_order (where: {status: {_eq: "open"}, sales_id: {_eq: "${sales_id}"}}) {
           number
         }
       }`).then(res => {
@@ -86,6 +79,14 @@ export default withRouter(
         });
         setWOList([...wo]);
       });
+    };
+
+    useEffect(() => {
+      (data as any).SlpCode = !!global.session.user.slp_id || "-1";
+      (data as any).U_BRANCH = global.session.user.branch;
+      (data as any).U_USERID = global.session.user.username;
+      setData({ ...data });
+
     }, []);
 
     const validation = () => {
@@ -115,7 +116,6 @@ export default withRouter(
 
       let zeroPrice = false;
       items.forEach((v: any) => {
-        // if (v.PriceBefDi === "" || v.PriceBefDi === "0" || v.PriceBefDi === 0) {
         if (v.Price === "" || v.Price === "0" || v.Price === 0) {
           zeroPrice = true;
         }
@@ -147,6 +147,8 @@ export default withRouter(
         await APIPost("SalesOrder", {
           ...data,
           U_IDU_SO_INTNUM: number.format,
+          U_ID_DO_INTNUM: number.format,
+          Comments: number.format,
           Lines: [...Lines_IT]
         }).then(() => {
           updateLastNumbering(number.id, number.last_count + 1);
@@ -165,6 +167,8 @@ export default withRouter(
         console.error({
           ...data,
           U_IDU_SO_INTNUM: number.format,
+          U_ID_DO_INTNUM: number.format,
+          Comments: number.format,
           Lines: [...Lines_IT]
         });
       } finally {
@@ -274,7 +278,7 @@ export default withRouter(
                       />
                     )
                   },
-                  { key: "NumAtCard", label: "PO Customer No", size: 12 }
+                  { key: "NumAtCard", label: "Customer Ref No.", size: 12 }
                 ]
               },
               {
@@ -364,11 +368,11 @@ export default withRouter(
                   },
                   {
                     key: "GroupNum",
-                    label: "Payment Method",
+                    label: "Payment Term",
                     size: 12,
                     component: (
                       <SAPDropdown
-                        label="Payment Method"
+                        label="Payment Term"
                         field="PaymentTerms"
                         value={(data as any).GroupNum}
                         setValue={v => {
@@ -384,6 +388,31 @@ export default withRouter(
                 label: "General",
                 sublabel: "Informasi Sales Order",
                 value: [
+                  {
+                    key: "SlpCode",
+                    label: "Sales Name",
+                    size: 12,
+                    component: (
+                      <SAPDropdown
+                        label="Sales Name"
+                        field="SAPSalesCode"
+                        where={[
+                          {
+                            field: "U_IDU_BRANCH",
+                            value: global.getSession().user.branch
+                          }
+                        ]}
+                        value={(data as any).SlpCode}
+                        setValue={(v) => {
+                          setData({
+                            ...data,
+                            SlpCode: v
+                          });
+                          getWO(v);
+                        }}
+                      />
+                    )
+                  },
                   {
                     key: "U_WONUM",
                     size: 12,
@@ -412,18 +441,6 @@ export default withRouter(
                   }
                 ]
               },
-              { type: "empty", key: "c" },
-              {
-                key: "optional",
-                label: "Optional",
-                value: [
-                  {
-                    key: "Comments",
-                    label: "Remark",
-                    size: 12
-                  }
-                ]
-              }
             ]}
             setValue={(value: any, key: any) => {
               if (key === "DocDate") {

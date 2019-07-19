@@ -31,14 +31,16 @@ const defData = {
   TrsfrSum: "",
   TrsfrDate: today,
   TrsfrRef: "",
-  U_Remark: "",
+  JrnlMemo: "",
+  Comments: "",
   U_SONUM: "",
   U_IDU_PAYNUM: "",
   U_USERID: global.session.user.username,
   U_GENERATED: "W",
   U_BRANCH: global.session.user.branch,
   U_WONUM: "",
-  Method: "cash"
+  Method: "cash",
+  RemarkMethod : "SO",
 };
 
 export default withRouter(
@@ -47,6 +49,7 @@ export default withRouter(
     const [WOList, setWOList] = useState<any[]>([]);
     const [saving, setSaving] = useState(false);
     const [_items, _setItems] = useState<any[]>([]);
+    const [_inv, _setInv] = useState<any[]>([]);
 
     const validation = () => {
       const err: any = [];
@@ -107,6 +110,7 @@ export default withRouter(
           "TP",
           global.getSession().user.branch || ""
         );
+
         await APIPost("IncomingPayment", {
           ...data,
           U_IDU_PAYNUM: number.format,
@@ -193,6 +197,30 @@ export default withRouter(
         });
         _setItems([...items]);
       });
+
+
+      query = {
+        Table: "OINV",
+        Fields: ["U_IDU_SI_INTNUM"],
+        Condition: [
+          {
+            field: "DocStatus",
+            cond: "=",
+            value: "O"
+          },
+          ...cond
+        ]
+      };
+
+      APISearch(query).then((res: any) => {
+        let items = res.map((item: any) => {
+          return {
+            value: item["U_IDU_SI_INTNUM"],
+            label: item["U_IDU_SI_INTNUM"]
+          };
+        });
+        _setInv([...items]);
+      });
     }, []);
 
     return (
@@ -240,16 +268,45 @@ export default withRouter(
                     )
                   },
                   {
-                    key: "U_SONUM",
+                    key: "RemarkMethod",
                     size: 12,
-                    label: "No. SO",
+                    label: "Remark With",
+                    component: (
+                      <UISelectField
+                        label="Method"
+                        items={[
+                          { label: "Sales Order", value: "SO" },
+                          { label: "Invoice", value: "INV" }
+                        ]}
+                        value={(data as any).RemarkMethod}
+                        setValue={v => {
+                          setData({
+                            ...data,
+                            RemarkMethod : v,
+                          });
+                        }}
+                      />
+                    )
+                  },
+                  {
+                    key: "SONumb",
+                    size: 12,
+                    label: data.RemarkMethod,
                     component: (
                       <UITagField
-                        label="No. SO"
-                        items={_items}
+                        label= {data.RemarkMethod}
+                        items={data.RemarkMethod == "SO"?_items:_inv}
                         value={(data as any).U_SONUM}
                         setValue={(v: any) => {
+                          let remArr:any = [];
+                          
+                          v.forEach((el:any) => {
+                            let elArr = el.split("/");
+                            let elStr = elArr[0] + elArr[elArr.length -1];
+                            remArr.push(elStr);
+                          });
                           data.U_SONUM = v.join(";");
+                          data.JrnlMemo = remArr.join(";");
                         }}
                       />
                     )
@@ -315,7 +372,7 @@ export default withRouter(
                       />
                     )
                   },
-                  { key: "U_Remark", size: 12, label: "Remarks" }
+                  { key: "Comments", size: 12, label: "Remarks" }
                 ]
               }
             ]}

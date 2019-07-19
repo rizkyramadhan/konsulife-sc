@@ -238,7 +238,7 @@ export default withRouter(
                   {
                     key: "U_IDU_SI_INTNUM",
                     type: "field",
-                    label: "SO Number",
+                    label: "INV Number",
                     size: 10
                   },
                   {

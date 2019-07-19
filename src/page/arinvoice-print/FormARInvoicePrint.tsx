@@ -15,12 +15,6 @@ import { withRouter } from "react-router";
 import { View } from "reactxp";
 import FormARInvoiceDetailPrint from "./FormARInvoiceDetailPrint";
 
-// const date = new Date();
-// const today = `${date.getFullYear()}-${lpad(
-//   (date.getMonth() + 1).toString(),
-//   2
-// )}-${lpad(date.getDate().toString(), 2)}`;
-
 const defaultData = {
   CardCode: "",
   CardName: "",
@@ -91,6 +85,7 @@ export default withRouter(
       };
 
       APISearch(query).then((res: any) => {
+        res[0].U_IDU_DO_INTNUM = res[0].U_IDU_SO_INTNUM;
         res[0].DiscPrcnt = parseFloat(res[0].DiscPrcnt).toFixed(2);
         res[0].DiscSum = parseFloat(res[0].DiscSum).toFixed(2);
         res[0].VatSum = parseFloat(res[0].VatSum).toFixed(2);
@@ -254,7 +249,7 @@ export default withRouter(
                   {
                     key: "U_IDU_SI_INTNUM",
                     type: "field",
-                    label: "SO Number",
+                    label: "INV Number",
                     size: 12
                   },
                   {

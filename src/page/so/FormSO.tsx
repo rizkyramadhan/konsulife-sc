@@ -126,6 +126,7 @@ export default withRouter(
         await APIPost("SalesOrder", {
           ...data,
           U_IDU_SO_INTNUM: number.format,
+          Comments: number.format,
           Lines: [...Lines_IT]
         });
         updateLastNumbering(number.id, number.last_count + 1);
@@ -143,6 +144,7 @@ export default withRouter(
         console.error({
           ...data,
           U_IDU_SO_INTNUM: number.format,
+          Comments: number.format,
           Lines: [...Lines_IT]
         });
       } finally {
@@ -341,11 +343,11 @@ export default withRouter(
                   },
                   {
                     key: "GroupNum",
-                    label: "Payment Method",
+                    label: "Payment Term",
                     size: 12,
                     component: (
                       <SAPDropdown
-                        label="Payment Method"
+                        label="Payment Term"
                         field="PaymentTerms"
                         value={(data as any).GroupNum}
                         setValue={v => {
@@ -362,6 +364,30 @@ export default withRouter(
                 sublabel: "Informasi Sales Order",
                 value: [
                   {
+                    key: "SlpCode",
+                    label: "Sales Name",
+                    size: 12,
+                    component: (
+                      <SAPDropdown
+                        label="Sales Name"
+                        field="SAPSalesCode"
+                        where={[
+                          {
+                            field: "U_IDU_BRANCH",
+                            value: global.getSession().user.branch
+                          }
+                        ]}
+                        value={(data as any).SlpCode}
+                        setValue={(v) => {
+                          setData({
+                            ...data,
+                            SlpCode: v
+                          });
+                        }}
+                      />
+                    )
+                  },
+                  {
                     key: "DocDate",
                     size: 6,
                     type: "date",
@@ -375,18 +401,6 @@ export default withRouter(
                   }
                 ]
               },
-              { type: "empty", key: "c" },
-              {
-                key: "optional",
-                label: "Optional",
-                value: [
-                  {
-                    key: "Comments",
-                    label: "Remark",
-                    size: 12
-                  }
-                ]
-              }
             ]}
             setValue={(value: any, key: any) => {
               if (key === "DocDate") {

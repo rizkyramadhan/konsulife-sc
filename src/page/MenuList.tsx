@@ -53,7 +53,7 @@ export default [
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
         path: "/rute",
-        roles: ["admin", "branch"]
+        roles: ["branch"]
       }
     ]
   },
@@ -66,7 +66,7 @@ export default [
     ),
     subtitle: "Lorem Ipsum is simply dummy text.",
     icon: <IconReceipt width={20} height={20} color="#968686" />,
-    roles: ["admin", "branch"],
+    roles: ["branch"],
     children: [
       {
         title: (
@@ -76,7 +76,7 @@ export default [
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
         path: "/report-inventory",
-        roles: ["admin", "branch"]
+        roles: ["branch"]
       },
       {
         title: (
@@ -86,7 +86,7 @@ export default [
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
         path: "/report-stock",
-        roles: ["admin", "branch"]
+        roles: ["branch"]
       },
       {
         title: (
@@ -96,7 +96,7 @@ export default [
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
         path: "/report-po",
-        roles: ["admin", "branch"]
+        roles: ["branch"]
       },
       {
         title: (
@@ -106,7 +106,7 @@ export default [
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
         path: "/report-so",
-        roles: ["admin", "branch"]
+        roles: ["branch"]
       },
       {
         title: (
@@ -116,7 +116,7 @@ export default [
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
         path: "/report-do",
-        roles: ["admin", "branch"]
+        roles: ["branch"]
       },
       {
         title: (
@@ -126,7 +126,7 @@ export default [
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
         path: "/report-ar-invoice",
-        roles: ["admin", "branch"]
+        roles: ["branch"]
       }
     ]
   },
@@ -139,7 +139,7 @@ export default [
     ),
     subtitle: "Lorem Ipsum is simply dummy text.",
     icon: <IconPrint width={20} height={20} color="#5e72e4" />,
-    roles: ["admin", "branch", "inventory"],
+    roles: ["branch", "inventory"],
     children: [
       {
         title: (
@@ -149,7 +149,7 @@ export default [
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
         path: "/pr",
-        roles: ["admin", "branch", "inventory"]
+        roles: ["branch", "inventory"]
       },
       {
         title: (
@@ -159,7 +159,7 @@ export default [
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
         path: "/it",
-        roles: ["admin", "branch", "inventory"]
+        roles: ["branch", "inventory"]
       }
     ]
   },
@@ -172,7 +172,7 @@ export default [
     ),
     subtitle: "Lorem Ipsum is simply dummy text.",
     icon: <IconCartPlus width={20} height={20} color="#ffd600" />,
-    roles: ["admin", "branch", "sales_to"],
+    roles: ["branch", "sales_to"],
     children: [
       {
         title: (
@@ -182,7 +182,7 @@ export default [
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
         path: "/so",
-        roles: ["admin", "branch", "sales_to"]
+        roles: ["branch", "sales_to"]
       },
       {
         title: (
@@ -192,7 +192,7 @@ export default [
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
         path: "/do",
-        roles: ["admin", "branch"]
+        roles: ["branch"]
       },
       {
         title: (
@@ -202,7 +202,7 @@ export default [
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
         path: "/ar-invoice-to",
-        roles: ["admin", "branch"]
+        roles: ["branch"]
       }
     ]
   },
@@ -215,7 +215,7 @@ export default [
     ),
     subtitle: "Lorem Ipsum is simply dummy text.",
     icon: <IconTruck width={20} height={20} color="#28a745" />,
-    roles: ["admin", "branch", "sales_canvas"],
+    roles: ["branch", "sales_canvas"],
     children: [
       {
         title: (
@@ -225,7 +225,7 @@ export default [
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
         path: "/wo",
-        roles: ["admin", "branch"]
+        roles: ["branch"]
       },
       {
         title: (
@@ -235,7 +235,7 @@ export default [
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
         path: "/so-canvas",
-        roles: ["admin", "branch", "sales_canvas"]
+        roles: ["branch", "sales_canvas"]
       },
       {
         title: (
@@ -245,7 +245,7 @@ export default [
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
         path: "/ar-invoice",
-        roles: ["admin", "branch"]
+        roles: ["branch"]
       }
     ]
   },
@@ -260,7 +260,7 @@ export default [
     subtitle: "Lorem Ipsum is simply dummy text.",
     icon: <IconMoneyCheck width={20} height={20} color="#f3a4b5" />,
     path: "/payment-receipt",
-    roles: ["admin", "branch", "sales_to", "sales_canvas"],
+    roles: ["branch", "sales_to", "sales_canvas"],
     children: [
       {
         title: (
@@ -270,7 +270,7 @@ export default [
         ),
         subtitle: "Lorem Ipsum is simply dummy text.",
         path: "/payment-receipt",
-        roles: ["admin", "branch", "sales_to", "sales_canvas"]
+        roles: ["branch", "sales_to", "sales_canvas"]
       }
     ]
   },
@@ -284,6 +284,6 @@ export default [
     subtitle: "Lorem Ipsum is simply dummy text.",
     icon: <IconAddressCard width={20} height={20} color="#11cdef" />,
     path: "/customer",
-    roles: ["sales_to", "sales_canvas", "branch", "admin"]
+    roles: ["sales_to", "sales_canvas", "branch"]
   }
 ];

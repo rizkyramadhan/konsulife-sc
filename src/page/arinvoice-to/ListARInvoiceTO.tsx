@@ -130,7 +130,7 @@ export default withRouter(
                   width: "100%"
                 }}
               >
-                List AR Invoice
+                List Open Delivery Order
               </UIText>
               <UISearch
                 style={{

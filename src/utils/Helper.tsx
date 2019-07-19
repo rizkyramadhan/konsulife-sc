@@ -25,9 +25,9 @@ export const formatFormalDate = function (val:string)
       return day + ' ' + monthNames[monthIndex] + ' ' + year;
 }
 
-export const encodeSAPDate = function (dateval: string) {
+export const encodeSAPDate = function (dateval: string, separator:string) {
     let re = /-/gi;
-    return dateval.replace(re, "");
+    return dateval.replace(re, separator);
 }
 
 export function getShortDate(date: Date, sperator: string = "-") {

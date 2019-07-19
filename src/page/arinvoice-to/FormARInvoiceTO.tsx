@@ -105,7 +105,7 @@ export default withRouter(
         res[0].NumAtCard = poNum.join(";");
         res[0].U_IDU_SO_INTNUM = soNum.join(";");
         res[0].U_IDU_DO_INTNUM = doNum.join(";");
-
+        res[0].Comments = soNum.join(";");
         res[0].U_BRANCH = global.session.user.branch;
         res[0].U_USERID = global.session.user.username;
         res[0].U_GENERATED = "W";
@@ -294,7 +294,8 @@ export default withRouter(
                   {
                     key: "Comments",
                     label: "Remark",
-                    size: 12
+                    size: 12,
+                    type:"field"
                   }
                 ]
               }
