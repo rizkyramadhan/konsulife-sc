@@ -13,7 +13,7 @@ import UITabs from "@app/libs/ui/UITabs";
 import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
-import { withRouter } from "react-router";
+import { withRouter } from "@app/libs/router/Routing";
 import { View } from "reactxp";
 import FormCustomerBillToItems from "./FormCustomerBillToItems";
 import FormCustomerCPItems from "./FormCustomerCPItems";

@@ -11,7 +11,7 @@ import UITabs from "@app/libs/ui/UITabs";
 import UIText from "@app/libs/ui/UIText";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
-import { withRouter } from "react-router";
+import { withRouter } from "@app/libs/router/Routing";
 import FormPRDetailItems from "./FormPRDetailItems";
 import IconCheck from '@app/libs/ui/Icons/IconCheck';
 import { getLastNumbering, updateLastNumbering } from '@app/utils';

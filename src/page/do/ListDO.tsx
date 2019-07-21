@@ -4,7 +4,7 @@ import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
 import { observer } from "mobx-react-lite";
 import React, { useState, useEffect } from "react";
-import { withRouter } from "react-router";
+import { withRouter } from "@app/libs/router/Routing";
 import { APISearch, APISearchProps } from "@app/api";
 import UISearch from "@app/libs/ui/UISearch";
 import global from "@app/global";

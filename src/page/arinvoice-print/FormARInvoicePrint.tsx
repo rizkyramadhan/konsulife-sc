@@ -11,7 +11,7 @@ import { decodeSAPDateToFormal } from "@app/utils/Helper";
 import _ from "lodash";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
-import { withRouter } from "react-router";
+import { withRouter } from "@app/libs/router/Routing";
 import { View } from "reactxp";
 import FormARInvoiceDetailPrint from "./FormARInvoiceDetailPrint";
 

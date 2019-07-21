@@ -9,7 +9,7 @@ import UITabs from "@app/libs/ui/UITabs";
 import { getLastNumbering, updateLastNumbering, lpad } from "@app/utils";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
-import { withRouter } from "react-router";
+import { withRouter } from "@app/libs/router/Routing";
 import { View } from "reactxp";
 import FormARInvoiceDetailTO from "./FormARInvoiceDetailTO";
 import UIField from "@app/libs/ui/UIField";

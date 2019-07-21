@@ -10,7 +10,7 @@ import UITabs from "@app/libs/ui/UITabs";
 import { lpad, getLastNumbering, updateLastNumbering } from "@app/utils";
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
-import { withRouter } from "react-router";
+import { withRouter } from "@app/libs/router/Routing";
 import { View } from "reactxp";
 import rawQuery from "@app/libs/gql/data/rawQuery";
 import UISelectField from "@app/libs/ui/UISelectField";

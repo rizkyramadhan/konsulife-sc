@@ -9,7 +9,7 @@ import UIText from "@app/libs/ui/UIText";
 import { getLastNumbering, updateLastNumbering, lpad } from "@app/utils";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
-import { withRouter } from "react-router";
+import { withRouter } from "@app/libs/router/Routing";
 import { View } from "reactxp";
 import FormARInvoiceDetailItems from "./FormARInvoiceDetailItems";
 import rawQuery from "@app/libs/gql/data/rawQuery";

@@ -12,7 +12,7 @@ import UISearch from "@app/libs/ui/UISearch";
 import UIText from "@app/libs/ui/UIText";
 import { decodeSAPDateToFormal } from "@app/utils/Helper";
 import React, { useEffect, useState } from "react";
-import { withRouter } from "react-router";
+import { withRouter } from "@app/libs/router/Routing";
 
 interface IRute {
   id: number;

@@ -5,7 +5,7 @@ import UIJsonField from "@app/libs/ui/UIJsonField";
 import UITabs from "@app/libs/ui/UITabs";
 import { observer } from "mobx-react-lite";
 import React, { useState, useEffect } from "react";
-import { withRouter } from "react-router";
+import { withRouter } from "@app/libs/router/Routing";
 import { View } from "reactxp";
 import FormInvStockDetails from "./FormInvStockDetails";
 import { decodeSAPDateToFormal } from "@app/utils/Helper";

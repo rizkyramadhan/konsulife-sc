@@ -1,3 +1,5 @@
+import RouteList from "@app/page/RouteList";
+
 export const decodeSAPDate = function(dateval: string) {
   return [dateval.slice(0, 4), dateval.slice(4, 6), dateval.slice(6, 8)].join(
     "-"
@@ -39,10 +41,10 @@ export const formatFormalDate = function(val: string) {
   return day + " " + monthNames[monthIndex] + " " + year;
 };
 
-export const encodeSAPDate = function (dateval: string, separator:string) {
-    let re = /-/gi;
-    return dateval.replace(re, separator);
-}
+export const encodeSAPDate = function(dateval: string, separator: string) {
+  let re = /-/gi;
+  return dateval.replace(re, separator);
+};
 
 export function getShortDate(date: Date, sperator: string = "-") {
   return (
@@ -60,3 +62,31 @@ export function lpad(str: string, padString: string, length: number) {
   }
   return str;
 }
+
+export const getParams: any = (path: string) => {
+  let result: any = {};
+  let fPattern: any = [];
+  let aPath = path.split("/");
+  Object.keys(RouteList).forEach(p => {
+    let pattern = p.split("/");
+    let status = true;
+    if (pattern.length === aPath.length) {
+      for (let i = 0; i < pattern.length; i++) {
+        if (pattern[i].substring(0, 1) != ":" && pattern[i] != aPath[i]) {
+          status = false;
+        }
+      }
+      if (status) {
+        fPattern = pattern;
+      }
+    }
+  });
+  fPattern.map((x: any, i: number) => {
+    if (x.substring(0, 1) == ":") {
+      if (x.substring(x.length - 1, x.length) == "?" && !!aPath[i]) {
+        result[x.slice(1, x.length - 1)] = aPath[i];
+      } else result[x.slice(1, x.length)] = aPath[i];
+    }
+  });
+  return result;
+};

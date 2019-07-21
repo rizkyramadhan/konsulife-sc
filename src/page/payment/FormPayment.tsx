@@ -9,7 +9,7 @@ import UIJsonField from "@app/libs/ui/UIJsonField";
 import { getLastNumbering, updateLastNumbering, lpad } from "@app/utils";
 import { observer } from "mobx-react-lite";
 import React, { useState, useEffect } from "react";
-import { withRouter } from "react-router";
+import { withRouter } from "@app/libs/router/Routing";
 import UITagField from "@app/libs/ui/UITagField";
 import rawQuery from "@app/libs/gql/data/rawQuery";
 import UISelectField from "@app/libs/ui/UISelectField";

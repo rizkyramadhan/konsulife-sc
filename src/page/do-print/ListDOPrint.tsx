@@ -5,7 +5,7 @@ import UIHeader from "@app/libs/ui/UIHeader";
 import UIList from "@app/libs/ui/UIList";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
-import { withRouter } from "react-router";
+import { withRouter } from "@app/libs/router/Routing";
 import global from "@app/global";
 import BtnCreate from "@app/components/BtnCreate";
 import UIText from "@app/libs/ui/UIText";

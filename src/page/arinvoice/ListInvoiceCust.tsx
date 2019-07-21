@@ -6,7 +6,7 @@ import UIList from "@app/libs/ui/UIList";
 import UISearch from "@app/libs/ui/UISearch";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
-import { withRouter } from "react-router";
+import { withRouter } from "@app/libs/router/Routing";
 import global from "@app/global";
 import UICard, { UICardHeader } from "@app/libs/ui/UICard";
 import UIText from "@app/libs/ui/UIText";

@@ -13,7 +13,7 @@ import { getLastNumbering, lpad, updateLastNumbering } from "@app/utils";
 import _ from "lodash";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
-import { withRouter } from "react-router";
+import { withRouter } from "@app/libs/router/Routing";
 import FormSODetailItems from "./FormSODetailItems";
 import UITextField from "@app/libs/ui/UITextField";
 

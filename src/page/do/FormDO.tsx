@@ -13,7 +13,7 @@ import UIText from "@app/libs/ui/UIText";
 import { getLastNumbering, updateLastNumbering, lpad } from "@app/utils";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
-import { withRouter } from "react-router";
+import { withRouter } from "@app/libs/router/Routing";
 import FormDODetailItems from "./FormDODetailItems";
 
 const date = new Date();

@@ -6,7 +6,7 @@ import UIJsonField from "@app/libs/ui/UIJsonField";
 import UITabs from "@app/libs/ui/UITabs";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
-import { withRouter } from "react-router";
+import { withRouter } from "@app/libs/router/Routing";
 import FormDOPrintDetail from "./FormDOPrintDetail";
 import { ReportPost } from "@app/report";
 import BtnExport from "@app/components/BtnExport";
