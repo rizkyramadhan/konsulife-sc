@@ -109,8 +109,8 @@ export default withRouter(
           ]
         };
 
-        APISearch(query).then((res: any) => {
-          setData({ ...data, GroupNum: res[0]["PymntGroup"] });
+        APISearch(query).then((pay: any) => {
+          setData({ ...data, GroupNum: pay[0]["PymntGroup"] });
         });
       });
 
@@ -333,72 +333,22 @@ export default withRouter(
                     type: "field"
                   },
                   {
-                    key: "Discount",
+                    key: "DiscSum",
                     size: 8,
-                    component: (
-                      <UIField
-                        label="Disc"
-                        fieldStyle={{ backgroundColor: "#ececeb" }}
-                      >
-                        {(() => {
-                          let discPrcnt = (data as any)["DiscPrcnt"];
-                          if (isNaN(parseFloat(discPrcnt))) discPrcnt = "0";
-
-                          let totalItems = _.sumBy(item, "LineTotal");
-                          let disc = (totalItems * parseFloat(discPrcnt)) / 100;
-
-                          return disc.toFixed(2);
-                        })()}
-                      </UIField>
-                    )
+                    label: "Disc",
+                    type: "field"
                   },
                   {
-                    key: "Ppn",
+                    key: "VatSum",
                     size: 12,
-                    component: (
-                      <UIField
-                        label="PPN (10%)"
-                        fieldStyle={{ backgroundColor: "#ececeb" }}
-                      >
-                        {(() => {
-                          let discPrcnt = (data as any)["DiscPrcnt"];
-                          if (isNaN(parseFloat(discPrcnt))) discPrcnt = "0";
-
-                          let totalItems = _.sumBy(item, "LineTotal");
-                          let disc = (totalItems * parseFloat(discPrcnt)) / 100;
-
-                          let total = totalItems - disc;
-                          let tax = (total * 10) / 100;
-
-                          return tax.toFixed(2);
-                        })()}
-                      </UIField>
-                    )
+                    label: "PPN (10%)",
+                    type: "field"
                   },
                   {
-                    key: "TotalAfterTax",
+                    key: "DocTotal",
                     size: 12,
-                    component: (
-                      <UIField
-                        label="Total After Tax"
-                        fieldStyle={{ backgroundColor: "#ececeb" }}
-                      >
-                        {(() => {
-                          let discPrcnt = (data as any)["DiscPrcnt"];
-                          if (isNaN(parseFloat(discPrcnt))) discPrcnt = "0";
-
-                          let totalItems = _.sumBy(item, "LineTotal");
-                          let disc = (totalItems * parseFloat(discPrcnt)) / 100;
-
-                          let total = totalItems - disc;
-                          let tax = (total * 10) / 100;
-
-                          let total_net = total + tax;
-
-                          return total_net.toFixed(2);
-                        })()}
-                      </UIField>
-                    )
+                    label: "Total After Tax",
+                    type: "field"
                   }
                 ]
               }

@@ -109,8 +109,8 @@ export default withRouter(
           ]
         };
 
-        APISearch(query).then((res: any) => {
-          setData({ ...data, GroupNum: res[0]["PymntGroup"] });
+        APISearch(query).then((pay: any) => {
+          setData({ ...data, GroupNum: pay[0]["PymntGroup"] });
         });
 
       });

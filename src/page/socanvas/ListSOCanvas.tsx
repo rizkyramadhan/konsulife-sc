@@ -14,7 +14,7 @@ import UICard, { UICardHeader } from "@app/libs/ui/UICard";
 import { decodeSAPDateToFormal } from "@app/utils/Helper";
 
 export default withRouter(
-  observer(({ showSidebar, sidebar }: any) => {
+  observer(({ history,showSidebar, sidebar }: any) => {
     const [data, setData] = useState([]);
     const [_data, _setData] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -161,7 +161,10 @@ export default withRouter(
             <UIList
               style={{ flex: 1 }}
               primaryKey="DocNum"
-              selection="detail"
+              selection="single"
+              onSelect={d => {
+                history.push(`/so-canvas/view/${d.DocEntry}`);
+              }}
               fields={{
                 CardCode: {
                   table: {

@@ -50,6 +50,7 @@ import FormInvTransfer from "./it/FormInvTransfer";
 import FormInvTransferReturn from "./it/FormInvTransferReturn";
 import ListInvTransfer from "./it/ListInvTransfer";
 import React from "react";
+import ViewSOCanvas from './socanvas/ViewSOCanvas';
 
 export default {
   // "/": <MainMenu />,
@@ -63,6 +64,7 @@ export default {
   "/so/form": <FormSO />,
   "/so-canvas": <ListSOCanvas />,
   "/so-canvas/form": <FormSOCanvas />,
+  "/so-canvas/view/:id": <ViewSOCanvas />,
   "/do": <ListDO />,
   "/do/open/:CardCode/:CardName/": <ListDOPrint />,
   "/do/view/:CardCode/:CardName/:id": <FormDOPrint />,
