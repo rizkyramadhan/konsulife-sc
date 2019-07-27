@@ -1,6 +1,6 @@
 import React from "react";
-import { View } from "reactxp";
+import Home from "./psikolog/Home";
 
 export default () => {
-  return <View />;
+  return <Home />;
 };
