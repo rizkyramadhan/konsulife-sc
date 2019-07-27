@@ -5,7 +5,6 @@ import React from "react";
 import { View } from "reactxp";
 import Schedule from "./pasien/Schedule";
 import Home from "./psikolog/Home";
-import { session } from "@app/session";
 
 export default observer((_: any) => {
   const data = useObservable({
@@ -23,7 +22,7 @@ export default observer((_: any) => {
             }}
             style={{ display: "flex", height: "auto", width: 200 }}
           >
-            Pasien {session.coba}
+            Pasien
           </UIButton>
           <UIButton
             onPress={() => {
