@@ -1,4 +1,4 @@
-package com.sfanew;
+package com.konsulifesc;
 
 import com.facebook.react.ReactActivity;
 

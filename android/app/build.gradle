@@ -102,7 +102,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.sfanew"
+        applicationId "com.konsulifesc"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
