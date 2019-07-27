@@ -25,14 +25,24 @@ const Session = types.model({
   user: SessionUser
 });
 
+const Booking = types.model({
+  date: types.string,
+  time: types.string,
+  psikolog: types.string
+});
+
 const Store = types
   .model({
     session: Session,
-    sidebar: types.boolean
+    sidebar: types.boolean,
+    booking: Booking
   })
   .views(self => ({
     getSession() {
       return self.session;
+    },
+    getBooking() {
+      return self.booking;
     }
   }))
   .actions(self => ({
@@ -50,6 +60,9 @@ const Store = types
         };
       }
       self.session = n;
+    },
+    setBooking(s: any) {
+      self.booking = s;
     },
     removeSession() {
       self.session = DefaultSession;
@@ -82,8 +95,15 @@ const DefaultSession = {
   }
 };
 
+const DefaultBooking = {
+  date: "",
+  time: "",
+  psikolog: ""
+};
+
 // create an instance from a snapshot
 export default Store.create({
   session: DefaultSession,
-  sidebar: false
+  sidebar: false,
+  booking: DefaultBooking
 });

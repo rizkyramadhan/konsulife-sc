@@ -9,8 +9,7 @@ export default observer(() => {
   return (
     <UIContainer>
       <UIBody>
-        <UIList primaryKey={"id"} items={psikolog.jadwal} 
-        />
+        <UIList primaryKey={"id"} items={psikolog.jadwal} />
       </UIBody>
     </UIContainer>
   );

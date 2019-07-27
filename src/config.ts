@@ -4,12 +4,12 @@ export const DEBUG = __DEV__;
 export const DEV = __DEV__;
 
 export const MainStyle: any = {
-  textColor: "#525f7f",
+  textColor: "#4d5b6a",
   backgroundColor: "#f0f4f7",
-  color: "#1d6ef7",
+  color: "#128CDE",
   fieldTextColor: "#404040",
   fieldColor: "#a7a7a7",
-  primaryColor: "#1d6ef7",
+  primaryColor: "#128CDE",
   secondaryColor: "#FA2E69",
   errorColor: "#dc3545",
   successColor: "#28a745",
