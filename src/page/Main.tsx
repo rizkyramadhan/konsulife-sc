@@ -1,13 +1,14 @@
+import { Router, withRouter } from "@app/libs/router/Routing";
+import SwitchRoute, { RouteState } from "@app/libs/router/SwitchRoute";
 import UIButton from "@app/libs/ui/UIButton";
 import UIContainer from "@app/libs/ui/UIContainer";
 import { observer, useObservable } from "mobx-react-lite";
 import React, { useEffect } from "react";
-import { View, Storage } from "reactxp";
-import Schedule from "./pasien/Schedule";
+import { Storage, View } from "reactxp";
+import Package from "./pasien/order/Package";
+import PaymentMet from "./pasien/order/PaymentMet";
+import Schedule from "./pasien/order/Schedule";
 import Home from "./psikolog/Home";
-import { Router, withRouter } from "@app/libs/router/Routing";
-import SwitchRoute from "@app/libs/router/SwitchRoute";
-import Package from "./pasien/Package";
 
 const Dashboard = withRouter(({ history }: any) => {
   return (
@@ -62,16 +63,18 @@ export default observer((_: any) => {
     return <View />;
   }
 
+  const routeList = {
+    "/": <Dashboard />,
+    "/psikolog": <Home />,
+    "/pasien": <Schedule />,
+    "/pasien/package": <Package />,
+    "/pasien/payment": <PaymentMet />
+  };
+
+  RouteState.setRootPaths(Object.keys(routeList));
   return (
     <Router>
-      <SwitchRoute
-        routes={{
-          "/": <Dashboard />,
-          "/psikolog": <Home />,
-          "/pasien": <Schedule />,
-          "/pasien/package": <Package />
-        }}
-      />
+      <SwitchRoute routes={routeList} />
     </Router>
   );
 });

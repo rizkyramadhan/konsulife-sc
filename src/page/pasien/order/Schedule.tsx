@@ -16,6 +16,7 @@ import { observer } from "mobx-react-lite";
 import React from "react";
 import { withRouter } from "react-router";
 import { Button, Image, Modal, ScrollView, View } from "reactxp";
+import UIHeader from "@app/libs/ui/UIHeader";
 
 const defaultUser = require("@app/assets/images/dokter.png");
 
@@ -168,6 +169,18 @@ export default withRouter(
     return (
       <UIContainer>
         <UIBody>
+          <UIHeader
+            ishowSide={false}
+            center={
+              <UIText
+                style={{
+                  fontSize: 20
+                }}
+              >
+                Atur Jadwal
+              </UIText>
+            }
+          />
           <UICard
             mode="clean"
             style={{

@@ -15,7 +15,8 @@ export const pasien = observable({
       description:
         "Anda dapat berkonsultasi dengan dokter psikolog terbaik kami melalui panggilan suara tanpa gangguan.",
       duration: 90,
-      channel: "call"
+      channel: "call",
+      price: "500.000"
     },
     {
       id: 2,
@@ -23,7 +24,8 @@ export const pasien = observable({
       description:
         "Anda dapat berkonsultasi dengan dokter psikolog terbaik kami melalui pesan chat pribadi.",
       duration: 90,
-      channel: "call"
+      channel: "chat",
+      price: "400.000"
     },
     {
       id: 3,
@@ -31,7 +33,8 @@ export const pasien = observable({
       description:
         "Anda dapat berkonsultasi dengan dokter psikolog terbaik kami melalui panggilan suara tanpa gangguan.",
       duration: 50,
-      channel: "call"
+      channel: "call",
+      price: "350.000"
     },
     {
       id: 4,
@@ -39,7 +42,8 @@ export const pasien = observable({
       description:
         "Anda dapat berkonsultasi dengan dokter psikolog terbaik kami melalui pesan chat pribadi.",
       duration: 50,
-      channel: "call"
+      channel: "chat",
+      price: "250.000"
     }
   ],
   psikolog: [
